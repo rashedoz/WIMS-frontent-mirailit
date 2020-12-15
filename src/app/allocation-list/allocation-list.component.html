@@ -1,0 +1,288 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header">
+                            <h5>Allocation List </h5>
+                            <button class="btn btn-primary float-right" routerLink="/allocation" ><i
+                                    class=" icofont icofont-plus "></i> Allocate a Room</button>
+                            <!-- <span class="code-header ">use class <code>table</code> inside table element</span> -->
+                        </div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12 ">
+
+                                    <input type="text" style="padding:8px;margin:15px auto;width:30%;" placeholder="Search by person or room number " (keyup)="updateFilter($event)" />
+
+                                    <ngx-datatable #dataTable class="material table-bordered expandable" [rows]="rows"
+                                    [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                                    [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [limit]="10"
+                                    (page)="setPage($event)">
+
+                                    <!-- Row Detail Template -->
+                                    <ngx-datatable-row-detail rowHeight="auto">
+                                        <ng-template let-row="row" let-expanded="expanded"
+                                            ngx-datatable-row-detail-template>
+                                            <div class="w-100">
+                                                <table
+                                                    class="table table-xs table-hover table-bordered table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Room</th>
+                                                            <th scope="col">Building</th>
+                                                            <th scope="col">Check In</th>
+                                                            <th scope="col">Check Out</th>
+                                                            <th scope="col">Price</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let item of row.details; let i=index">
+                                                            <th>{{i+1}}</th>
+                                                            <td>{{item.Room}}</td>
+                                                            <td>
+                                                                {{item.Building? item.Building : ''}}
+                                                            </td>
+                                                            <td *ngIf="item.CheckIn"><button class="btn btn-info btn-mini">{{ getDateTimeFormat(item.CheckIn) }}</button></td>
+                                                            <td *ngIf="item.CheckOut"><button class="btn btn-info btn-mini">{{ getDateTimeFormat(item.CheckOut) }}</button></td>
+                                                            <td *ngIf="!item.CheckIn">Not Checked In</td>
+                                                            <td *ngIf="!item.CheckOut">Not Checked Out</td>
+                                                            <td>{{item.Price}} /-</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </ng-template>
+                                    </ngx-datatable-row-detail>
+                                    <!-- Column Templates -->
+
+                                    <ngx-datatable-column [width]="120" name="Details" [resizeable]="false"
+                                        [sortable]="false" [draggable]="false" [canAutoResize]="false">
+                                        <ng-template let-row="row" let-expanded="expanded"
+                                            ngx-datatable-cell-template>
+                                            <!--<a href="javascript:void(0)" [class.datatable-icon-right]="!expanded"
+                                                [class.datatable-icon-down]="expanded" title="Expand/Collapse Row"
+                                                (click)="toggleExpandRow(row)">
+                                            </a>-->
+                                            <button class="btn btn-info btn-mini" *ngIf="!expanded" (click)="toggleExpandRow(row)">View Details</button>
+                                            <button class="btn btn-secondary btn-mini" *ngIf="expanded" (click)="toggleExpandRow(row)">Hide Details</button>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <!--<ngx-datatable-column [width]="10" name="Sl" prop="Id" [draggable]="false"
+                                    [sortable]="false">
+                                        <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                                            <span > {{ rowIndex + 1 }} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>-->
+
+                                    <ngx-datatable-column [width]="100" name="Allocated To" prop="Visitor" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span *ngIf="value" title="{{ value }}"> <strong>{{ value }}</strong> </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="80" name="No of Rooms" prop="NoOfRooms" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span title="{{ value }}"> <strong>{{ value }}</strong> </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="100" name="From" prop="FromDate" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span title="{{ value | amDateFormat:'DD MMM YYYY' }}"> {{ value | amDateFormat:'DD MMM YYYY' }} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="100" name="To" prop="ToDate" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span title="{{ value | amDateFormat:'DD MMM YYYY' }}"> {{ value | amDateFormat:'DD MMM YYYY'}} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="100" name="Payment" prop="SubTotal" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                            <span title="{{ row.SubTotal }}"> <strong class="text-danger">Payble: </strong> <strong> {{ row.SubTotal }}</strong> &#2547;<br/> <strong class="text-danger">Paid: </strong> <strong> {{ row.Paid }}</strong> &#2547; <strong class="text-danger"> Discount:</strong> <strong> {{ row.Discount }}</strong> &#2547; </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+
+                                    <ngx-datatable-column [width]="200" name="Action" prop="Id" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-row="row" ngx-datatable-cell-template>
+
+                                            <button class="btn btn-success btn-mini mr-2" (click)="getBookingRooms(row.Id, CheckInTemplate)" ><i
+                                                class="icofont-tick-boxed"></i> Check In/Out </button>
+
+                                            <!--<button class="btn btn-warning btn-mini mr-2" *ngIf="row.check_in_date_time && !row.check_out_date_time" (click)="getItem('CheckOut',row,template)" ><i
+                                                class="icofont-logout"></i> Check Out</button>-->
+
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                </ngx-datatable>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <ng-template #template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="entryForm">
+
+
+                        <div class="form-group">
+                            <label class="col-form-label">Name </label>
+                                <input type="text" formControlName="name"  type="text"class="form-control" />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-form-label">Room No </label>
+                                        <input type="text" formControlName="room_no"  type="text"class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label class="col-form-label ">Room Type </label>
+                                        <input type="text" formControlName="room_type"  type="text"class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <!-- <label class="col-form-label">Check In </label>                             -->
+
+
+                                        <mat-form-field>
+                                            <input  readonly matInput [ngxMatDatetimePicker]="picker" formControlName="check_in" placeholder="Check-in date time"
+                                              [min]="minDate" [max]="maxDate" [disabled]="checkInDisabled">
+                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                            <ngx-mat-datetime-picker #picker [showSpinners]="showSpinners" [showSeconds]="showSeconds"
+                                              [stepHour]="stepHour" [stepMinute]="stepMinute" [stepSecond]="stepSecond" [touchUi]="touchUi"
+                                              [color]="color" [enableMeridian]="enableMeridian">
+                                            </ngx-mat-datetime-picker>
+                                          </mat-form-field>
+
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <mat-form-field>
+                                        <input  readonly matInput [ngxMatDatetimePicker]="picker2" formControlName="check_out" placeholder="Check-out date time"
+                                          [min]="minDate" [max]="maxDate" [disabled]="checkOutDisabled">
+                                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                        <ngx-mat-datetime-picker #picker2 [showSpinners]="showSpinners" [showSeconds]="showSeconds"
+                                          [stepHour]="stepHour" [stepMinute]="stepMinute" [stepSecond]="stepSecond" [touchUi]="touchUi"
+                                          [color]="color" [enableMeridian]="enableMeridian">
+                                        </ngx-mat-datetime-picker>
+                                      </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i> Close</button>
+
+                <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()"><i
+                        class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+
+            </div>
+
+        </div>
+    </ng-template>
+
+    <ng-template #CheckInTemplate>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-xs table-hover table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Room</th>
+                                        <th scope="col">Building</th>
+                                        <th scope="col">Check In</th>
+                                        <th scope="col">Check Out</th>
+                                        <th scope="col">Check In/Out</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of bookingRooms; let i=index">
+                                        <th>{{i+1}}</th>
+                                        <td>{{item.Room}}</td>
+                                        <td>
+                                            {{item.Building? item.Building : ''}}
+                                        </td>
+                                        <td *ngIf="item.CheckIn"><button class="btn btn-info btn-mini">{{ getDateTimeFormat(item.CheckIn) }}</button></td>
+                                        <td *ngIf="item.CheckOut"><button class="btn btn-info btn-mini">{{ getDateTimeFormat(item.CheckOut) }}</button></td>
+                                        <td *ngIf="!item.CheckIn">Not Checked In</td>
+                                        <td *ngIf="!item.CheckOut">Not Checked Out</td>
+                                        <th>
+                                            <button *ngIf="item.CheckIn && item.CheckOut" class="btn btn-secondary btn-mini"><i class="icofont-check"></i> Closed</button>
+                                            <button *ngIf="!item.CheckIn" (click)="checkInRoom(item)" class="btn btn-success btn-mini"><i class="icofont-check"></i> Check In</button>
+                                            <button *ngIf="item.CheckIn && !item.CheckOut" (click)="checkOutRoom(item)" class="btn btn-warning btn-mini"><i class="icofont-check"></i> Check Out</button>
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i> Close</button>
+
+                <button class="btn btn-success btn-outline-success" (click)="onFormSubmitCheckInOut()"><i
+                        class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+
+            </div>
+
+        </div>
+    </ng-template>
+
+</block-ui>

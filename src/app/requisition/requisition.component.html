@@ -1,0 +1,92 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header">
+                            <h5>Requisition List </h5>
+                            <!-- <button class="btn btn-primary float-right" (click)="openModal(template)"><i
+                                    class=" icofont icofont-plus "></i> Create Requisition</button> -->
+                            <!-- <span class="code-header ">use class <code>table</code> inside table element</span> -->
+                        </div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12 ">
+                                    <ngx-datatable class="material table-bordered" [rows]="rows"
+                                    [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                                    [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [limit]="10"
+                                    (page)="setPage($event)">
+
+                                    <ngx-datatable-column [width]="10" name="#" prop="id" [draggable]="false"
+                                    [sortable]="false">
+                                    <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                                        <span > {{ rowIndex + 1 }} </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="100" name="Room Type" prop="room_type" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span title="{{ value }}"> {{ value }} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="100" name="From" prop="from_date" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span title="{{ value }}"> {{ value | amDateFormat:'DD MMM YYYY'}} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="100" name="To" prop="to_date" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span title="{{ value }}"> {{ value | amDateFormat:'DD MMM YYYY'}} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="100" name="Facilities" prop="facilities" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span title="{{ value }}"> {{ value }} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="100" name="Status" prop="status" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span title="{{ value }}"> {{ value }} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="100" name="Requisition Date" prop="created_at" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span title="{{ value }}"> {{ value | amDateFormat:'DD MMM YYYY h:mm a'}} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="100" name="Action" prop="id" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                            <button class="btn btn-danger btn-mini mr-2" *ngIf="row.status == 'Pending'" (click)="rejectReq(row)" ><i
+                                                    class="icofont-ui-delete"></i>Reject</button>
+                                            <button class="btn btn-info btn-mini" *ngIf="row.status == 'Pending'" routerLink="/booking/{{row.id}}"><i
+                                                    class="icofont-check"></i>Book</button>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                </ngx-datatable>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div> 
+
+    
+</block-ui>

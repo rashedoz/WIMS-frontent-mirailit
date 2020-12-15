@@ -1,0 +1,262 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header">
+                            <h5>Room List </h5>
+                            <button class="btn btn-primary float-right" (click)="openModal(template)">
+                                <i class=" icofont icofont-plus "></i> Create Room
+                            </button>
+                        </div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12 ">
+                                    <ngx-datatable class="material table-bordered" [rows]="rows"
+                                    [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                                    [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [limit]="10"
+                                    (page)="setPage($event)">
+
+                                    <ngx-datatable-column [width]="10" name="Id" prop="Id" [draggable]="false"
+                                    [sortable]="false">
+                                    <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                                        <span > {{ rowIndex + 1 }} </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="100" name="Room No" prop="Name" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span title="{{ value }}"> {{ value }} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="100" name="Floor" prop="Floor" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span title="{{ value }}"> {{ value }} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="100" name="Building" prop="Building" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span title="{{ value }}"> {{ value }} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                   
+
+                                    <ngx-datatable-column [width]="20" name="Is Active?" prop="IsActive"
+                                        [draggable]="false" [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span title="{{value === true? 'Yes':'No'}}">
+                                                {{value === true? 'Yes':'No'}} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="20" name="Action" prop="Id" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                            <button class="btn btn-info btn-mini" (click)="getItem(row.Id,template)"><i
+                                                    class="icofont icofont-edit"></i>Edit</button>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                </ngx-datatable>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div> 
+
+    <ng-template #template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="entryForm" class="col-sm-12">
+                    <div class="row">                                                
+                        <div class="col-sm-6 row-border-bottom">
+                            <div class="row row-border-right">
+                                <div class="col-md-6 px-4">                    
+                                    <div class="form-group row">
+                                        <label class="col-form-label required">Dormitory Name </label> 
+                                        <ng-select placeholder="Select dormitory" (change)="onDormitoryChange($event)" formControlName="DormitoryId" [items]="dormitoryDropDownList" [clearable]='false' [clearOnBackspace]='false'
+                                            bindLabel="Name" bindValue="Id"  [ngClass]="{ 'is-invalid': submitted && f.DormitoryId.errors }">
+                                        </ng-select>
+                                        <div *ngIf="submitted && f.DormitoryId.errors" class="error-text">
+                                            <span *ngIf="f.DormitoryId.errors.required" class="text-danger"> Dormitory  is required</span> 
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 px-4">                    
+                                    <div class="form-group row">
+                                        <label class="col-form-label required">Building Name </label> 
+                                        <ng-select placeholder="Select Building" (change)="onBuildingChange($event)" formControlName="BuildingId" [items]="buildingDropDownList" [clearable]='false' [clearOnBackspace]='false'
+                                            bindLabel="Name" bindValue="Id"  [ngClass]="{ 'is-invalid': submitted && f.BuildingId.errors }" >
+                                        </ng-select>
+                                        <div *ngIf="submitted && f.BuildingId.errors" class="error-text">
+                                            <span *ngIf="f.BuildingId.errors.required" class="text-danger"> Building  is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 px-4">                    
+                                    <div class="form-group row">
+                                        <label class="col-form-label required">Floor Name </label> 
+                                        <ng-select placeholder="Select floor" formControlName="FloorId" [items]="floorDropDownList" [clearable]='false' [clearOnBackspace]='false'
+                                            bindLabel="Name" bindValue="Id"  [ngClass]="{ 'is-invalid': submitted && f.FloorId.errors }">
+                                        </ng-select>
+                                        <div *ngIf="submitted && f.FloorId.errors" class="error-text">
+                                            <span *ngIf="f.FloorId.errors.required" class="text-danger"> Floor  is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 px-4">                    
+                                    <div class="form-group row">
+                                        <label class="col-form-label required">Room No </label>                                                 
+                                        <input type="text" formControlName="Name"  [ngClass]="{ 'is-invalid': submitted && f.Name.errors }" type="text" class="form-control" />
+                                        <div *ngIf="submitted && f.Name.errors" class="error-text">
+                                            <span *ngIf="f.Name.errors.required" class="text-danger"> Room no is required</span>
+                                            <span *ngIf="f.Name.errors.maxlength" class="text-danger">Room no must be not then 250 characters</span>
+                                        </div>                                               
+                                    </div>
+                                </div>
+                                <div class="col-md-3 px-4">                    
+                                    <div class="form-group row">
+                                        <label class="col-form-label required">Room Price </label>                                                 
+                                        <input type="text" formControlName="Price"  numeric numericType="number"
+                                        [ngClass]="{ 'is-invalid': submitted && f.Price.errors }" type="text" class="form-control" />
+                                        <div *ngIf="submitted && f.Price.errors" class="error-text">
+                                            <span *ngIf="f.Price.errors.required" class="text-danger"> Price is required</span>
+                                        </div>                                               
+                                    </div>
+                                </div>
+                                <div class="col-md-12 px-4"> 
+                                    <div class="row">                  
+                                        <div class="col-md-4">
+                                            <div class="form-group row text-left">
+                                                <div class="col-sm-12 mt-2">
+                                                    <div class="checkbox-fade fade-in-primary">
+                                                        <label>
+                                                            <input type="checkbox" formControlName="IsEmployee">
+                                                            <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span> Is Employee?
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group row text-left">
+                                                <div class="col-sm-12 mt-2">
+                                                    <div class="checkbox-fade fade-in-primary">
+                                                        <label>
+                                                            <input type="checkbox" formControlName="IsCivil">
+                                                            <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span> Is Civil?
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group row text-left">
+                                                <div class="col-sm-12 mt-2">
+                                                    <div class="checkbox-fade fade-in-primary">
+                                                        <label>
+                                                            <input type="checkbox" formControlName="IsActive">
+                                                            <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span> Is Active?
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 row-border-bottom"> 
+                            <div class="row">
+                                <div class="col-md-6 px-4">                    
+                                    <div class="form-group row">
+                                        <label class="col-form-label required">Room Type </label> 
+                                        <ng-select placeholder="Select room type"  formControlName="RoomType" [items]="roomTypeList" [clearable]='false' [clearOnBackspace]='false'
+                                            bindLabel="name" bindValue="id"  [ngClass]="{ 'is-invalid': submitted && f.RoomType.errors }" >
+                                        </ng-select>
+                                        <div *ngIf="submitted && f.RoomType.errors" class="error-text">
+                                            <span *ngIf="f.RoomType.errors.required" class="text-danger"> Type  is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 px-4">                    
+                                    <div class="form-group row">
+                                        <label class="col-form-label required">Allowed </label> 
+                                        <ng-select placeholder="Select"  formControlName="RoomGenderType" [items]="genderTypeList" [clearable]='false' [clearOnBackspace]='false'
+                                            bindLabel="name" bindValue="id"  [ngClass]="{ 'is-invalid': submitted && f.RoomGenderType.errors }">
+                                        </ng-select>
+                                        <div *ngIf="submitted && f.RoomGenderType.errors" class="error-text">
+                                            <span *ngIf="f.RoomGenderType.errors.required" class="text-danger">Gender type  is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 px-4">                    
+                                    <div class="form-group row">
+                                        <label class="col-form-label required">Facilities </label> 
+                                        <ng-select placeholder="Select facilities" [multiple]='true'  formControlName="Facilities" [items]="facilitiesDropDownList" [clearable]='false' [clearOnBackspace]='false'
+                                            bindLabel="Name" bindValue="Id"  [ngClass]="{ 'is-invalid': submitted && f.Facilities.errors }">
+                                        </ng-select>
+                                        <div *ngIf="submitted && f.Facilities.errors" class="error-text">
+                                            <span *ngIf="f.Facilities.errors.required" class="text-danger">Facility  is required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 px-4">                    
+                                    <div class="form-group row">
+                                        <label class="col-form-label">Description </label> 
+                                        <textarea class="form-control" placeholder="Enter description" rows="2"  formControlName="Description"  [ngClass]="{ 'is-invalid': submitted && f.Description.errors }" >  </textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-group row">
+                                <label class=" col-sm-2 col-form-label "><b>Room Images </b></label>   
+                                <div class="col-sm-6 pt-2">                             
+                                    <input type="file" (change)="onSelectFile($event)" accept="image/png, image/jpeg" multiple />
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div class="col-12 col-lg-3 col-md-4 col-sm-6 mb-2" *ngFor='let url of urls'>
+                            <img [src]="url" class="img-fluid border border-secondary">
+                        </div>
+
+                        <div class="col-12 col-lg-3 col-md-4 col-sm-6 mb-2" *ngFor='let url of roomImageList'>
+                            <img [src]="baseUrl+url" class="img-fluid border border-secondary">
+                        </div>
+                    </div>
+
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i> Close</button>
+
+                <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()"><i
+                        class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+
+            </div>
+
+        </div>
+    </ng-template>
+</block-ui>

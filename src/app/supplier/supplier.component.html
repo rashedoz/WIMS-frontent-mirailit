@@ -1,0 +1,167 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-default">
+                        <div class="card-header">
+                            <h5>Supplier List </h5>
+                            <button class="btn btn-primary float-right" (click)="openModal(template)"><i
+                                    class=" icofont icofont-plus "></i> Add Supplier</button>
+                            <!-- <span class="code-header ">use class <code>table</code> inside table element</span> -->
+                        </div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12 ">
+                                    <ngx-datatable class="material table-bordered" [rows]="rows"
+                                        [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                                        [headerHeight]="40" [footerHeight]="50" rowHeight="auto"  [limit]="10"
+                                      >
+
+                                        <ngx-datatable-column [width]="350" name="Supplier Name" prop="name"
+                                            [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column [width]="350" name="Mobile Number" prop="mobile"
+                                            [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column [width]="350" name="Addres 1" prop="address_one"
+                                            [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <!-- <ngx-datatable-column name="Is Active?" prop="IsActive" [draggable]="false"
+                                            [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{value === true? 'Yes':'No'}}">
+                                                    {{value === true? 'Yes':'No'}} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column> -->
+
+                                        <ngx-datatable-column name="Action" prop="Id" [draggable]="false"
+                                            [sortable]="false">
+                                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                                <button class="btn btn-secondary btn-mini"
+                                                    ><i
+                                                        class="icofont icofont-edit"></i>Edit</button>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                    </ngx-datatable>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <ng-template #template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="entryForm" class="col-sm-12">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Supplier Name </label>
+                        <div class="col-sm-8">
+                            <input type="text" formControlName="name"
+                                [ngClass]="{ 'is-invalid': submitted && f.name.errors }" type="text"
+                                class="form-control" />
+
+                            <div *ngIf="submitted && f.name.errors" class="error-text">
+                                <span *ngIf="f.name.errors.required" class="text-danger"> Supplier name is required</span>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Mobile </label>
+                        <div class="col-sm-8">
+                            <input type="text" formControlName="mobile"
+                                [ngClass]="{ 'is-invalid': submitted && f.mobile.errors }" type="text"
+                                class="form-control" />
+
+                            <div *ngIf="submitted && f.mobile.errors" class="error-text">
+                                <span *ngIf="f.mobile.errors.required" class="text-danger"> Mobile number is required</span>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Alternative Mobile </label>
+                        <div class="col-sm-8">
+                            <input type="text" formControlName="alternative_mobile" type="text"  class="form-control" />
+
+
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Address One </label>
+                        <div class="col-sm-8">
+                            <textarea type="text" rows="1" formControlName="address_one"
+                                [ngClass]="{ 'is-invalid': submitted && f.address_one.errors }" type="text"
+                                class="form-control" > </textarea>
+
+                            <div *ngIf="submitted && f.address_one.errors" class="error-text">
+                                <span *ngIf="f.address_one.errors.required" class="text-danger"> Address one is required</span>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Address Two  </label>
+                        <div class="col-sm-8">
+                            <textarea type="text" rows="1" formControlName="address_two"  type="text"
+                                class="form-control" ></textarea>
+
+
+                        </div>
+                    </div>
+
+                    <!-- <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row text-left">
+                                <label class="col-sm-6 col-form-label">Is Active? </label>
+                                <div class="col-sm-4 mt-2">
+                                    <div class="checkbox-fade fade-in-default">
+                                        <label>
+                                            <input type="checkbox" formControlName="isActive">
+                                            <span class="cr"><i
+                                                    class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i> Close</button>
+
+                <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()"><i
+                        class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+
+            </div>
+
+        </div>
+    </ng-template>
+</block-ui>

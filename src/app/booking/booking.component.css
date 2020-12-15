@@ -1,0 +1,14 @@
+.counter-card-1 .card-block-big{
+    cursor: pointer;
+}
+
+.custom-font-size{
+    font-size: 16px;
+    font-weight: 900;
+}
+
+.button-submit{
+    margin-top: 31px !important;
+    margin-left: 12px !important;
+    padding: 0.375rem 0.75rem !important;
+}

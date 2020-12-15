@@ -1,0 +1,195 @@
+<block-ui>
+  <div class="row mt-4">
+    <div class="col-lg-12">
+      <div class="card table-1-card">
+        <div class="card-header text-center">
+          <!-- <h5 > Welcome to Training Module</h5> -->
+        </div>
+        <div class="card-block mb-2">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group row  px-1">
+                <label class="col-form-label"><b>Booking</b> </label>
+                <ng-select [(ngModel)]="selectedBooking_id" (change)="onChangeBooking($event)" [clearable]="true"
+                  [disabled]="isBookingDisabled" [clearOnBackspace]="true" [items]="pendingBookingList"
+                  bindLabel="Visitor" bindValue="Id" placeholder="Select a booking">
+                  <ng-template ng-option-tmp let-item="item">
+                    <h5 class="text-dark">{{item.Rooms}}</h5>
+                    <p class="text-black-50 mb-0"> {{item.Visitor}} </p>
+                    <p class="text-black-50 mb-0">Booking Date: {{item.BookDate | amDateFormat:'DD MMM YYYY h:mm a'}}
+                    </p>
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-md-9" *ngIf="selectedBooking_id">
+              <div class="row px-3" *ngIf="selectedBookingObj">
+                <div class="col-md-12">
+                  <h6 class="bd-highlight-default">Booking Details ({{selectedBookingObj.Rooms}})</h6>
+                </div>
+                <div class="col-md-12 mx-3">
+                  <div class="row">
+                    <div class="col-md-3 py-1" *ngIf="selectedBookingObj.Visitor">
+                      <b>Name :</b> {{selectedBookingObj.Visitor}} </div>
+                    <!-- <div class="col-md-3 py-1">
+                          <b>Room No :</b> {{selectedBookingObj.room_id.name}}
+                        </div>
+                        <div class="col-md-5 py-1">
+                          <b>Room Price :</b> {{selectedBookingObj.room_id.price}} Tk (Per Day)
+                        </div> -->
+                    <div class="col-md-3 py-1">
+                      <b>From Date :</b> {{selectedBookingObj.FromDate| amDateFormat:'DD MMM YYYY'}} </div>
+                    <div class="col-md-3 py-1">
+                      <b>To Date :</b> {{selectedBookingObj.ToDate| amDateFormat:'DD MMM YYYY'}} </div>
+                    <div class="col-md-3 py-1">
+                      <b>Booking Date :</b> {{selectedBookingObj.BookDate | amDateFormat:'DD MMM YYYY'}} </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col-lg-8">
+      <div class="card table-1-card">
+        <div class="card-header">
+          <form [formGroup]="searchForm">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group ">
+                  <label class="col-form-label required"><b>Allocating For</b></label>
+                  <ng-select placeholder="Select user" formControlName="user" [items]="userList" [clearable]='false'
+                    [clearOnBackspace]='false' bindLabel="Name" bindValue="Id"
+                    [ngClass]="{ 'is-invalid': submitted && s.user.errors }"></ng-select>
+                  <div *ngIf="submitted && s.user.errors" class="error-text">
+                    <small *ngIf="s.user.errors.required" class="text-danger">User is required</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group ">
+                  <label class="col-form-label required"><b>Date</b></label>
+                  <input type="text" readonly class="form-control" bsDaterangepicker formControlName="dateRange"
+                    [bsConfig]="bsConfig" [ngClass]="{ 'is-invalid': submitted && s.dateRange.errors }">
+                  <div *ngIf="submitted && s.dateRange.errors" class="error-text">
+                    <small *ngIf="s.dateRange.errors.required" class="text-danger">Search date is required</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label required"><b>Room Type </b></label>
+                  <ng-select placeholder="Select room type" formControlName="room_type" [items]="roomType"
+                    [clearable]='false' [clearOnBackspace]='false' bindLabel="roomType" bindValue="roomType"
+                    [ngClass]="{ 'is-invalid': submitted && s.room_type.errors }"></ng-select>
+                  <div *ngIf="submitted && s.room_type.errors" class="error-text">
+                    <span *ngIf="s.room_type.errors.required" class="text-danger"> Type is required</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row pt-1">
+                  <button class="btn btn-primary mx-3 btn-block mt-4" (click)="searchRoom()"><i
+                      class=" icofont-search-property "></i> Search</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="card-block mb-2">
+          <div class="container">
+            <div class="row" *ngFor="let room of roomList; let i=index">
+              <div class="col-md-2">
+                <img src="http://placehold.it/350x280" alt="placehold.it/350x280" class="img img-fluid" />
+              </div>
+              <div class="col-md-10">
+                <div class="row bd-highlight">
+                  <div class="col-sm-4"> <b>Room :</b> <span class="custom-font-size"> {{room.name}}</span> </div>
+                  <div class="col-sm-4"> <b>Floor : </b><span class="custom-font-size"> {{room.floor_id.name}}</span>
+                  </div>
+                  <div class="col-sm-4"><b> Price :</b> <span class="custom-font-size"> {{room.price}}</span></div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="row my-3">
+                  <div class="col-sm-6"> <b>Facilities :</b> <span> Geyser,Refrigerator,TV,Washing Machine,High-speed
+                      Internet </span> </div>
+                  <div class="col-sm-3"> <b>Room Type : </b><span> {{room.room_type}}</span> </div>
+                  <div class="col-sm-3"><b> Gender Type :</b> <span> {{room.gender_type}}</span></div>
+                </div>
+                <p>
+                  <a class="float-right btn btn-outline-info" (click)="allocate(room)"> <i class="icofont-checked"></i>
+                    Allocate</a>
+                </p>
+              </div>
+              <div class="col-md-12">
+                <hr>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="card table-1-card">
+        <div class="card-header">
+          <h6>Details</h6>
+        </div>
+        <div class="card-block mb-2">
+          <table class="table" *ngIf="bookingRooms">
+            <thead>
+              <tr>
+                <th scope="col">Room No</th>
+                <th scope="col">Day Count</th>
+                <th scope="col">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let room of bookingRooms; let i=index">
+                <td>{{room.Name}}</td>
+                <td>{{selectedBookingObj.day_count}}</td>
+                <td>{{room.Price * selectedBookingObj.day_count}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <hr />
+          <table class="table table-xs table-hover table-striped">
+            <tbody>
+              <tr>
+                <th>Sub-Total</th>
+                <th class="text-right pr-4">{{paybleAmount}}</th>
+              </tr>
+              <tr>
+                <th>Discount</th>
+                <td>
+                  <input type="number" class=" ml-3 form-control form-control-sm text-right" numeric
+                    numericType="number" (change)="onChangeDiscount(discount)" [(ngModel)]="discount">
+                </td>
+              </tr>
+              <!--<tr>
+                <th>Net-Total</th>
+                <th class="text-right pr-4">{{paybleAmount - discount}}</th>
+              </tr>-->
+              <tr>
+                <th>Paid Amount</th>
+                <td>
+                  <input type="number" class=" ml-3  form-control form-control-sm text-right" numeric
+                    numericType="number" (change)="onChangePaid(paidAmount)" [(ngModel)]="paidAmount">
+                </td>
+              </tr>
+              <tr>
+                <th>Due Amount</th>
+                <th class="text-right pr-4">{{paybleAmount - discount - paidAmount}}</th>
+              </tr>
+            </tbody>
+          </table>
+          <div class="form-group row pt-1">
+            <button class="btn btn-primary mx-3 btn-block mt-4" (click)="onAllocationSubmit()"> Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>
