@@ -1,27 +1,32 @@
 import { Component, TemplateRef, ViewChild, ElementRef, ViewEncapsulation, OnInit } from '@angular/core';
 import { ColumnMode } from '@swimlane/ngx-datatable';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { Router } from '@angular/router';
 import { CommonService } from '../_services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { MatDialog } from '@angular/material/dialog';
 import { Page } from '../_models/page';
 
 
 @Component({
-  selector: 'app-product-type',
-  templateUrl: './product-type.component.html',
+  selector: 'app-data-plan',
+  templateUrl: './data-plan.component.html',
   encapsulation: ViewEncapsulation.None
 })
 
-export class ProductTypeComponent implements OnInit {
+export class DataPlanComponent implements OnInit {
 
   entryForm: FormGroup;
+  planHistoryList: FormArray;
+  planFormArray: any;
+
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
-  formTitle = 'Add Product Type';
+  modalTitle = 'Add Data Plan';
   btnSaveText = 'Save';
+  modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
+  modalRef: BsModalRef;
 
   page = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
@@ -32,10 +37,10 @@ export class ProductTypeComponent implements OnInit {
   scrollBarHorizontal = (window.innerWidth < 1200);
 
   constructor(
+    private modalService: BsModalService,
     public formBuilder: FormBuilder,
     private _service: CommonService,
     private toastr: ToastrService,
-    private dialog: MatDialog,
     private router: Router
   ) {
     this.page.pageNumber = 0;
@@ -48,9 +53,12 @@ export class ProductTypeComponent implements OnInit {
 
   ngOnInit() {
     this.entryForm = this.formBuilder.group({
-      Id: [null],
-      Name: [null, [Validators.required, Validators.maxLength(250)]],
+      id: [null],
+      planHistory: this.formBuilder.array([this.initPlanHistory()])
     });
+    this.planHistoryList = this.entryForm.get('planHistory') as FormArray;
+    this.planFormArray = this.entryForm.get('planHistory')['controls'];
+
     this.getList();
   }
 
@@ -58,10 +66,31 @@ export class ProductTypeComponent implements OnInit {
     return this.entryForm.controls;
   }
 
-  setPage(pageInfo) {
-    this.page.pageNumber = pageInfo.offset;
-    this.getList();
+
+  get plan_his(): FormArray {
+    return this.entryForm.get('planHistory') as FormArray;
   }
+
+  initPlanHistory() {
+    return this.formBuilder.group({
+      plan: [null, [Validators.required]]
+    });
+  }
+
+  addPlanHistory() {
+    this.planHistoryList.push(this.initPlanHistory());
+  }
+
+  removePlanHistory(i) {
+    if (this.planHistoryList.length > 1) {
+      this.planHistoryList.removeAt(i);
+    }
+  }
+
+  // setPage(pageInfo) {
+  //   this.page.pageNumber = pageInfo.offset;
+  //   this.getList();
+  // }
 
   getList() {
     this.loadingIndicator = true;
@@ -69,7 +98,7 @@ export class ProductTypeComponent implements OnInit {
     //   size: this.page.size,
     //   pageNumber: this.page.pageNumber
     // };
-    this._service.get('product/get-product-type-list').subscribe(res => {
+    this._service.get('subscription/get-data-plan-list').subscribe(res => {
 
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
@@ -90,26 +119,26 @@ export class ProductTypeComponent implements OnInit {
     );
   }
 
-  getItem(id) {
-    this.blockUI.start('Getting data...');
-    this._service.get('product-type/get/' + id).subscribe(res => {
+  // getItem(id) {
+  //   this.blockUI.start('Getting data...');
+  //   this._service.get('product-type/get/' + id).subscribe(res => {
 
-      this.blockUI.stop();
+  //     this.blockUI.stop();
 
-      if (!res) {
-        this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
-        return;
-      }
-      this.formTitle = 'Update ProductType';
-      this.btnSaveText = 'Update';
-      this.entryForm.controls['Id'].setValue(res.Record.Id);
-      this.entryForm.controls['Name'].setValue(res.Record.Name);
+  //     if (!res) {
+  //       this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
+  //       return;
+  //     }
+  //     this.formTitle = 'Update ProductType';
+  //     this.btnSaveText = 'Update';
+  //     this.entryForm.controls['Id'].setValue(res.Record.Id);
+  //     this.entryForm.controls['Name'].setValue(res.Record.Name);
 
-    }, err => {
-      this.blockUI.stop();
-      this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
-    });
-  }
+  //   }, err => {
+  //     this.blockUI.stop();
+  //     this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+  //   });
+  // }
 
   onFormSubmit() {
     this.submitted = true;
@@ -119,12 +148,20 @@ export class ProductTypeComponent implements OnInit {
 
     this.blockUI.start('Saving...');
 
+    let plans = [];
+    this.planHistoryList.value.forEach(element => {
+      plans.push({
+        plan: element.plan,
+      })
+    });
+
+
     const obj = {
      // Id: this.entryForm.value.Id ? this.entryForm.value.Id : 0,
-      product_type: this.entryForm.value.Name.trim()
+     plans: plans
     };
 
-    const request = this._service.post('product/save-product-type', obj);
+    const request = this._service.post('subscription/save-data-plan', obj);
 
     request.subscribe(
       data => {
@@ -132,7 +169,7 @@ export class ProductTypeComponent implements OnInit {
         if (data.IsReport == "Success") {
           this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
           this.getList();
-          this.clearForm();
+          this.modalHide();
         } else {
           this.toastr.error(data.Msg, 'Error!', { closeButton: true, disableTimeOut: true });
         }
@@ -145,11 +182,17 @@ export class ProductTypeComponent implements OnInit {
 
   }
 
-  clearForm() {
+  modalHide() {
     this.entryForm.reset();
+    this.modalRef.hide();
     this.submitted = false;
-    this.formTitle = 'Add Product Type';
+    this.modalTitle = 'Add Data Plan';
     this.btnSaveText = 'Save';
-    // this.entryForm.controls['IsActive'].setValue(true);
+  }
+
+  openModal(template: TemplateRef<any>) {
+
+      this.modalRef = this.modalService.show(template, this.modalConfig);
+
   }
 }

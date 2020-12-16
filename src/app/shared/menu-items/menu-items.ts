@@ -44,7 +44,6 @@ const MENUITEMS = [
 
     ]
   },
-
   {
     label: 'Configurations',
     permission: '',
@@ -52,6 +51,13 @@ const MENUITEMS = [
       {
         state: 'product-type',
         name: 'Product Type',
+        type: 'link',
+        icon: 'ti-control-forward',
+        permission: ''
+      },
+      {
+        state: 'data-plan-list',
+        name: 'Data Plan',
         type: 'link',
         icon: 'ti-control-forward',
         permission: ''
@@ -82,6 +88,65 @@ const MENUITEMS = [
 
     ]
   },
+  {
+    label: 'none',
+    permission: '',
+    main: [
+        {
+            name: 'Stock',
+            type: 'sub',
+            permission: '',
+            icon: 'icofont-brand-microsoft',
+            children: [
+                {
+                    state: 'all-sim-list',
+                    name: 'All SIM List',
+                    type: 'link',
+                    icon: 'ti-control-forward',
+                    permission: '',
+                },
+                {
+                    state: 'updatable-sim-list',
+                    name: 'Updatable SIM List',
+                    type: 'link',
+                    icon: 'ti-control-forward',
+                    permission: '',
+                },
+                {
+                    state: 'cancelled-product-list',
+                    name: 'Cancelled Product List',
+                    type: 'link',
+                    icon: 'ti-control-forward',
+                    permission: '',
+                },
+
+            ]
+        },
+    ]
+},
+  {
+    label: 'none',
+    permission: '',
+    main: [
+        {
+            name: 'Subscription',
+            type: 'sub',
+            permission: '',
+            icon: 'icofont-brand-microsoft',
+            children: [
+                {
+                    state: 'create-subscription',
+                    name: 'Create Subscription',
+                    type: 'link',
+                    icon: 'ti-control-forward',
+                    permission: '',
+                }
+
+
+            ]
+        },
+    ]
+},
   //  {
   //   label: '',
   //   permission: 'Admin',

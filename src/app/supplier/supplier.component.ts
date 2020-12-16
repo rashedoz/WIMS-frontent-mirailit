@@ -52,10 +52,10 @@ export class SupplierComponent implements OnInit {
   ngOnInit() {
     this.entryForm = this.formBuilder.group({
       id: [null],
-      name: [null, [Validators.required]],    
-      mobile: [null, [Validators.required]],    
-      alternative_mobile: [null],    
-      address_one: [null,[Validators.required]],    
+      name: [null, [Validators.required]],
+      mobile: [null, [Validators.required]],
+      alternative_mobile: [null],
+      address_one: [null,[Validators.required]],
       address_two: [null]
 
     });
@@ -133,13 +133,13 @@ export class SupplierComponent implements OnInit {
     this._service.post('supplier/save-supplier', obj).subscribe(
       data => {
         this.blockUI.stop();
-        if (data) {
-          this.toastr.success(data.Message, 'Success!', { timeOut: 2000 });
+        if (data.IsReport == "Success") {
+          this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
           this.modalHide();
           this.getList();
 
         } else {
-          this.toastr.error(data.Message, 'Error!', { timeOut: 2000 });
+          this.toastr.error(data.Msg, 'Error!', { timeOut: 2000 });
         }
       },
       err => {
@@ -159,7 +159,7 @@ export class SupplierComponent implements OnInit {
   }
 
   openModal(template: TemplateRef<any>) {
-    
+
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 }

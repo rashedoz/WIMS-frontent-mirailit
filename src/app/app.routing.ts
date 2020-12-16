@@ -61,6 +61,31 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./purchase-entry/purchase-entry.module').then(m => m.PurchaseEntryModule),
         // canActivate: [AuthGuard]
       },
+      {
+        path: 'all-sim-list',
+        loadChildren: () => import('./all-sim-list/all-sim-list.module').then(m => m.AllSIMListModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'updatable-sim-list',
+        loadChildren: () => import('./updatable-sim-list/updatable-sim-list.module').then(m => m.UpdatableSIMListModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'cancelled-sim-list',
+        loadChildren: () => import('./cancelled-sim-list/cancelled-sim-list.module').then(m => m.CancelledSIMListModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'data-plan-list',
+        loadChildren: () => import('./data-plan/data-plan.module').then(m => m.DataPlanModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'create-subscription',
+        loadChildren: () => import('./create-subscription/create-subscription.module').then(m => m.CreateSubscriptionModule),
+        // canActivate: [AuthGuard]
+      },
       // {
       //   path: 'building',
       //   loadChildren: () => import('./building/building.module').then(m => m.BuildingModule),

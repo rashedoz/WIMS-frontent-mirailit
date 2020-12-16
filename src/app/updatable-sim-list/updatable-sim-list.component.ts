@@ -1,41 +1,44 @@
 import { Component, TemplateRef, ViewChild, ElementRef, ViewEncapsulation, OnInit } from '@angular/core';
 import { ColumnMode } from '@swimlane/ngx-datatable';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonService } from '../_services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { MatDialog } from '@angular/material/dialog';
 import { Page } from '../_models/page';
 
 
 @Component({
-  selector: 'app-product-type',
-  templateUrl: './product-type.component.html',
+  selector: 'app-updatable-sim-list',
+  templateUrl: './updatable-sim-list.component.html',
   encapsulation: ViewEncapsulation.None
 })
 
-export class ProductTypeComponent implements OnInit {
+export class UpdatableSIMListComponent implements OnInit {
 
   entryForm: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
-  formTitle = 'Add Product Type';
+  modalTitleSIM = 'Add SIM Details';
   btnSaveText = 'Save';
+  modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
+  modalRef: BsModalRef;
 
   page = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
   rows = [];
   loadingIndicator = false;
   ColumnMode = ColumnMode;
-
   scrollBarHorizontal = (window.innerWidth < 1200);
 
+  SIMItemList: Array<any> = [];
+
   constructor(
+    private modalService: BsModalService,
     public formBuilder: FormBuilder,
     private _service: CommonService,
     private toastr: ToastrService,
-    private dialog: MatDialog,
     private router: Router
   ) {
     this.page.pageNumber = 0;
@@ -47,21 +50,16 @@ export class ProductTypeComponent implements OnInit {
 
 
   ngOnInit() {
-    this.entryForm = this.formBuilder.group({
-      Id: [null],
-      Name: [null, [Validators.required, Validators.maxLength(250)]],
-    });
+
     this.getList();
   }
 
-  get f() {
-    return this.entryForm.controls;
-  }
 
-  setPage(pageInfo) {
-    this.page.pageNumber = pageInfo.offset;
-    this.getList();
-  }
+
+  // setPage(pageInfo) {
+  //   this.page.pageNumber = pageInfo.offset;
+  //   this.getList();
+  // }
 
   getList() {
     this.loadingIndicator = true;
@@ -69,7 +67,7 @@ export class ProductTypeComponent implements OnInit {
     //   size: this.page.size,
     //   pageNumber: this.page.pageNumber
     // };
-    this._service.get('product/get-product-type-list').subscribe(res => {
+    this._service.get('stock/get-updatable-sim-list').subscribe(res => {
 
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
@@ -90,66 +88,61 @@ export class ProductTypeComponent implements OnInit {
     );
   }
 
-  getItem(id) {
-    this.blockUI.start('Getting data...');
-    this._service.get('product-type/get/' + id).subscribe(res => {
 
-      this.blockUI.stop();
 
-      if (!res) {
-        this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
-        return;
-      }
-      this.formTitle = 'Update ProductType';
-      this.btnSaveText = 'Update';
-      this.entryForm.controls['Id'].setValue(res.Record.Id);
-      this.entryForm.controls['Name'].setValue(res.Record.Name);
+  onFormSubmitSIM() {
 
-    }, err => {
-      this.blockUI.stop();
-      this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+    let sim_details = [];
+    this.blockUI.start('Updating...');
+    this.SIMItemList.filter(x=>x.iccid).forEach(element => {
+      sim_details.push({
+        id:element.id,
+        ICCID_no: element.iccid,
+      });
     });
-  }
-
-  onFormSubmit() {
-    this.submitted = true;
-    if (this.entryForm.invalid) {
-      return;
-    }
-
-    this.blockUI.start('Saving...');
-
     const obj = {
-     // Id: this.entryForm.value.Id ? this.entryForm.value.Id : 0,
-      product_type: this.entryForm.value.Name.trim()
+      sim_details : sim_details
     };
-
-    const request = this._service.post('product/save-product-type', obj);
-
-    request.subscribe(
+    this._service.put('stock/update-bulk-sim-detail', obj).subscribe(
       data => {
         this.blockUI.stop();
         if (data.IsReport == "Success") {
           this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+          this.modalHideSIM();
           this.getList();
-          this.clearForm();
+
         } else {
-          this.toastr.error(data.Msg, 'Error!', { closeButton: true, disableTimeOut: true });
+          this.toastr.error(data.Msg, 'Error!', { timeOut: 2000 });
         }
       },
       err => {
         this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
       }
     );
 
   }
 
-  clearForm() {
-    this.entryForm.reset();
+
+  modalHideSIM() {
+
+    this.modalRef.hide();
     this.submitted = false;
-    this.formTitle = 'Add Product Type';
+    this.modalTitleSIM = 'Add SIM Details';
     this.btnSaveText = 'Save';
-    // this.entryForm.controls['IsActive'].setValue(true);
+    this.SIMItemList = [];
   }
+
+
+  openModalSIM(template: TemplateRef<any>) {
+    this.rows.forEach(element => {
+      this.SIMItemList.push({
+        "id":element.id,
+        "sim_auto_serial_no":element.sim_auto_serial_no,
+        "iccid":"",
+      });
+    });
+    this.modalRef = this.modalService.show(template, this.modalConfig);
+  }
+
 }

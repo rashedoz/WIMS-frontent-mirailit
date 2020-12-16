@@ -1,0 +1,105 @@
+<block-ui>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card card-border-primary">
+            <div class="card-header">
+                <h5>Data Plan List </h5>
+                <button class="btn btn-secondary btn-sm float-right" (click)="openModal(template)"><i
+                  class=" icofont icofont-plus "></i> Add Data Plan</button>
+            </div>
+            <div class="card-block ">
+                <div class="row ">
+                    <div class="col-lg-12 ">
+                        <ngx-datatable class="material table-bordered" [rows]="rows"
+                            [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                            [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [limit]="10">
+
+                            <ngx-datatable-column [width]="10" name="Sl" prop="id" [draggable]="false"
+                                [sortable]="false">
+                                <ng-template let-row="row"  ngx-datatable-cell-template>
+                                    <span > {{ row.id }} </span>
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="Plan Name" prop="plan" [draggable]="false"
+                                [sortable]="false">
+                                <ng-template let-value="value" ngx-datatable-cell-template>
+                                    <span title="{{ value }}"> {{ value }} </span>
+                                </ng-template>
+                            </ngx-datatable-column>
+
+
+                            <ngx-datatable-column [width]="50" name="Action" prop="Id" [draggable]="false"
+                                [sortable]="false">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    <button class="btn btn-info btn-mini" ><i
+                                            class="icofont icofont-edit"></i>Edit</button>
+                                </ng-template>
+                            </ngx-datatable-column>
+                        </ngx-datatable>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+
+    <ng-template #template>
+      <div class="modal-header ">
+          <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+          <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+              <i class="icofont icofont-close"></i>
+          </button>
+      </div>
+      <div class="modal-body pb-0">
+          <app-card>
+            <form [formGroup]="entryForm">
+            <div class="row">
+
+              <div class="col-sm-12" formArrayName="planHistory" *ngFor="let item of planFormArray; let i = index;">
+                <div [formGroupName]="i">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="form-group">
+                              <label class="col-form-label required"> Plan Name</label>
+
+                              <input  [ngClass]="{ 'is-invalid': submitted && plan_his.controls[i].get('plan').errors}" formControlName="plan" type="text" class="form-control">
+                              <div *ngIf="submitted && plan_his.controls[i].get('plan').errors" class="error-text">
+                                  <small *ngIf="plan_his.controls[i].get('plan').errors.required" class="text-danger"> Plan is required</small>
+
+                                  </div>
+                          </div>
+                        </div>
+                        <div class="col-md-3 mt-2">
+                                <div class="form-group mt-4">
+                                  <label class="col-form-label">&nbsp;</label>
+                                    <button  *ngIf="planFormArray.length > 1"  class="btn btn-danger mr-1 btn-mini pull-right"
+                                      title="Delete this plan" (click)="removePlanHistory(i)"> <i class="icofont-ui-delete"></i> </button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-success btn-mini pull-right ml-3" title="Add new plan"
+            (click)="addPlanHistory()"><i class="icofont-plus "></i> Add More</button>
+
+          </div>
+          </form>
+          </app-card>
+      </div>
+      <div class="modal-footer">
+          <div class="pr-4">
+              <button class="btn btn-outline-secondary btn-sm mr-2" (click)="modalHide()"> <i
+                      class="icofont icofont-close"></i> Close</button>
+
+              <button class="btn btn-secondary btn-sm" (click)="onFormSubmit()"><i
+                      class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+          </div>
+
+      </div>
+  </ng-template>
+
+</block-ui>
