@@ -140,6 +140,13 @@ const MENUITEMS = [
                     type: 'link',
                     icon: 'ti-control-forward',
                     permission: '',
+                },
+                {
+                    state: 'subscription-list',
+                    name: 'Subscription List',
+                    type: 'link',
+                    icon: 'ti-control-forward',
+                    permission: '',
                 }
 
 

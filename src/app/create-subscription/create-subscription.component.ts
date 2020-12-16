@@ -32,6 +32,12 @@ export class CreateSubscriptionComponent implements OnInit {
   itemHistoryList: FormArray;
   itemFormArray: any;
 
+  fromRowData:any;
+
+  subTotal:number =0;
+  discount:number=0;
+  paidAmount:number=0;
+
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
   modalTitle = "Add ";
@@ -74,8 +80,8 @@ export class CreateSubscriptionComponent implements OnInit {
   ngOnInit() {
     this.entryForm = this.formBuilder.group({
       id: [null],
-      customer: [null],
-      session: [null],
+      customer: [null, [Validators.required]],
+      session: [null, [Validators.required]],
       itemHistory: this.formBuilder.array([this.initItemHistory()]),
     });
     this.itemHistoryList = this.entryForm.get("itemHistory") as FormArray;
@@ -150,66 +156,113 @@ export class CreateSubscriptionComponent implements OnInit {
       }
   }
 
-  // onFormSubmit() {
-  //   this.submitted = true;
-  //   if (this.entryForm.invalid) {
-  //     return;
-  //   }
-  //   let purchase_details = [];
-  //   this.blockUI.start('Saving...');
+  onChangeDiscount(value) {
+    if (parseFloat(value) > this.subTotal) {
+      this.discount = this.subTotal;
+    }
+  }
 
-  //   this.purchaseItemList.forEach(element => {
-  //     purchase_details.push({
-  //       product_type:element.product_type_id,
-  //       qty: Number(element.qty),
-  //       total_amount: Number(element.amount)
-  //     });
-  //   });
+  onChangePaid(value) {
+    if (parseFloat(value) > this.subTotal - this.discount) {
+      this.paidAmount = this.subTotal - this.discount;
+    }
+  }
 
-  //   const obj = {
-  //     supplier:this.entryForm.value.supplier,
-  //     total_amount:this.totalAmount,
-  //     purchase_details:purchase_details
-  //   };
+  onFormSubmit() {
+    this.submitted = true;
+    if (this.entryForm.invalid) {
+      return;
+    }
+    let subscribed_items = [];
+    let subscribed_relocation_items = [];
+    this.blockUI.start('Saving...');
 
-  //   this._service.post('purchase/entry-sim-purchase', obj).subscribe(
-  //     data => {
-  //       this.blockUI.stop();
-  //       if (data.IsReport == "Success") {
-  //         this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
-  //         this.modalHide();
-  //         this.getList();
+    this.fromRowData.itemHistory.filter(x=> x.sim && x.sim_iccid && x.plan && x.amount).forEach(element => {
+      subscribed_items.push({
+        session:this.entryForm.value.session,
+        sim: element.sim.id,
+        ICCID_no:element.sim_iccid,
+        plan: element.plan,
+        amount: Number(element.amount),
+        customer:this.entryForm.value.customer
+      });
 
-  //       } else {
-  //         this.toastr.error(data.Msg, 'Error!', { timeOut: 2000 });
-  //       }
-  //     },
-  //     err => {
-  //       this.blockUI.stop();
-  //       this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
-  //     }
-  //   );
+      subscribed_relocation_items.push({
+        sim: element.sim.id,
+        plan: element.plan,
+        actual_price: Number(element.amount),
+        discount:0,
+        payable_amount: Number(element.amount),
+        changes_price:0,
+        refund_amount:0,    
+        customer:this.entryForm.value.customer
+      });
 
-  // }
 
-  modalHide() {
+    });
+
+    const bill ={
+        total_amount:Number(this.subTotal),
+        discount:Number(this.discount),
+        payable_amount: Number(this.paidAmount),
+        session: this.entryForm.value.session,
+        customer:this.entryForm.value.customer,
+        so_far_paid:0,
+        parent_refund_amount:0
+    }
+    
+
+    const obj = {
+      customer:this.entryForm.value.customer,
+      bill:bill,
+      subscribed_items:subscribed_items,
+      subscribed_relocation_items:subscribed_relocation_items
+
+    };
+
+
+    this._service.post('subscription/create-new-subscription', obj).subscribe(
+      data => {
+        this.blockUI.stop();
+        if (data.IsReport == "Success") {
+          this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });         
+          this.formReset(); 
+
+        } else {
+          this.toastr.error(data.Msg, 'Error!', { timeOut: 2000 });
+        }
+      },
+      err => {
+        this.blockUI.stop();
+        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+      }
+    );
+
+  }
+
+
+
+  itemTotal(){
+    this.fromRowData = this.entryForm.getRawValue();   
+    if(this.fromRowData.itemHistory.length > 0){
+      this.subTotal = this.fromRowData.itemHistory.map(x => Number(x.amount)).reduce((a, b) => a + b);
+    }
+  }
+
+  formReset(){
+
     this.entryForm.reset();
-    this.modalRef.hide();
-    this.submitted = false;
-    this.modalTitle = "Add ";
-    this.btnSaveText = "Save";
+    Object.keys(this.entryForm.controls).forEach(key => {
+      this.entryForm.controls[key].setErrors(null)
+    });
+    this.subTotal=0;
+    this.discount=0;
+    this.paidAmount=0;
+
+    this.getCustomerList();
+    this.getSIMList();
+    this.getPlanList();
   }
 
-  // itemTotal(){
-
-  //   if(this.purchaseItemList.length > 0){
-  //     this.totalAmount = this.purchaseItemList.map(x => Number(x.amount)).reduce((a, b) => a + b);
-  //     return this.totalAmount;
-  //   }
-
-  // }
-
-  openModal(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template, this.modalConfig);
-  }
+ 
 }

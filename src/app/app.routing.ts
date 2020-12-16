@@ -86,6 +86,11 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./create-subscription/create-subscription.module').then(m => m.CreateSubscriptionModule),
         // canActivate: [AuthGuard]
       },
+      {
+        path: 'subscription-list',
+        loadChildren: () => import('./subscription-list/subscription-list.module').then(m => m.SubscriptionListModule),
+        // canActivate: [AuthGuard]
+      },
       // {
       //   path: 'building',
       //   loadChildren: () => import('./building/building.module').then(m => m.BuildingModule),
