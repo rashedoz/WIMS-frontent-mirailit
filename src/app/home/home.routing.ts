@@ -6,7 +6,7 @@ export const HomeRoutes: Routes = [{
   path: '',
   component: HomeComponent,
   data: {
-    breadcrumb: 'Home',
+    breadcrumb: 'Dashboard',
     icon: 'icofont-home bg-c-blue',
     status: false
   }

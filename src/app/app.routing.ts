@@ -56,6 +56,11 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./customer/customer.module').then(m => m.CustomerModule),
         // canActivate: [AuthGuard]
       },
+      {
+        path: 'purchase-entry',
+        loadChildren: () => import('./purchase-entry/purchase-entry.module').then(m => m.PurchaseEntryModule),
+        // canActivate: [AuthGuard]
+      },
       // {
       //   path: 'building',
       //   loadChildren: () => import('./building/building.module').then(m => m.BuildingModule),

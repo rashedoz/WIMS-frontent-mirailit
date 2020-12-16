@@ -70,6 +70,13 @@ const MENUITEMS = [
         icon: 'ti-control-forward',
         permission: ''
       },
+      {
+        state: 'purchase-entry',
+        name: 'Purchase Entry',
+        type: 'link',
+        icon: 'ti-control-forward',
+        permission: ''
+      },
 
 
 

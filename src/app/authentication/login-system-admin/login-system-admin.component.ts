@@ -46,7 +46,7 @@ export class LoginSystemAdminComponent implements OnInit {
     if (this.LoginForm.invalid) {
       return;
     }
-    this.blockUI.start('Loging...');
+    this.blockUI.start('Login..');
     // let url;
     // switch (this.LoginForm.value.user_type) {
     //   case "Admin":
