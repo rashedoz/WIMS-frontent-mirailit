@@ -25,15 +25,13 @@ export class RegisterSystemAdminComponent implements OnInit {
   ngOnInit() {
     this.RegistrerForm = this.formBuilder.group({
       email: [null, [Validators.required, Validators.email, Validators.maxLength(50)]],
-      password: [null, [Validators.required, Validators.minLength(6)]],
-      confirmPassword: [null, Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required],
       firstName: [null, [Validators.required]],
       lastName: [null, [Validators.required]]
-    }
-  //   , {
-  //     validator: MustMatch('password', 'confirmPassword')
-  // }
-  );
+    }, {
+      validator: MustMatch('password', 'confirmPassword')
+  });
   }
 
   get f() {

@@ -23,11 +23,11 @@ import { BsDatepickerConfig } from "ngx-bootstrap/datepicker";
 import { Page } from "./../_models/page";
 
 @Component({
-  selector: "app-create-subscription",
-  templateUrl: "./create-subscription.component.html",
+  selector: "app-add-product-subscription",
+  templateUrl: "./add-product-subscription.component.html",
   encapsulation: ViewEncapsulation.None,
 })
-export class CreateSubscriptionComponent implements OnInit {
+export class AddProductSubscriptionComponent implements OnInit {
   entryForm: FormGroup;
   itemHistoryList: FormArray;
   itemFormArray: any;
@@ -54,6 +54,9 @@ export class CreateSubscriptionComponent implements OnInit {
   bsConfig: Partial<BsDatepickerConfig>;
 
   customerList: Array<any> = [];
+  itemList: Array<any> = [];
+  subscriptionList: Array<any> = [];
+  subscriptionItemList: Array<any> = [];
   simList: Array<any> = [];
   planList: Array<any> = [];
 
@@ -81,7 +84,7 @@ export class CreateSubscriptionComponent implements OnInit {
     this.entryForm = this.formBuilder.group({
       id: [null],
       customer: [null, [Validators.required]],
-      session: [null, [Validators.required]],
+      subscription: [null, [Validators.required]],
       itemHistory: this.formBuilder.array([this.initItemHistory()]),
     });
     this.itemHistoryList = this.entryForm.get("itemHistory") as FormArray;
@@ -98,6 +101,24 @@ export class CreateSubscriptionComponent implements OnInit {
 
   get item_his(): FormArray {
     return this.entryForm.get("itemHistory") as FormArray;
+  }
+
+  onCustomerChange(e){   
+    if(e){
+      this.getItemList(e.id);
+    }
+  }
+
+  getItemList(customerId) {
+    this._service.get("subscription/get-subscribed-item-list?customer"+customerId).subscribe(
+      (res) => {
+        this.itemList = res;
+        const key = 'subscription';
+        this.subscriptionList = [...new Map(this.itemList.map(item =>
+          [item[key], item])).values()];       
+      },
+      (err) => {}
+    );
   }
 
   initItemHistory() {
@@ -176,10 +197,10 @@ export class CreateSubscriptionComponent implements OnInit {
     let subscribed_items = [];
     let subscribed_relocation_items = [];
     this.blockUI.start('Saving...');
-
+    this.fromRowData = this.entryForm.getRawValue();  
     this.fromRowData.itemHistory.filter(x=> x.sim && x.sim_iccid && x.plan && x.amount).forEach(element => {
       subscribed_items.push({
-        session:this.entryForm.value.session,
+        subscription:this.entryForm.value.subscription,
         sim: element.sim.id,
         ICCID_no:element.sim_iccid,
         plan: element.plan,
@@ -188,6 +209,8 @@ export class CreateSubscriptionComponent implements OnInit {
       });
 
       subscribed_relocation_items.push({
+        subscription:this.entryForm.value.subscription,
+        customer:this.entryForm.value.customer,
         sim: element.sim.id,
         plan: element.plan,
         actual_price: Number(element.amount),
@@ -195,33 +218,20 @@ export class CreateSubscriptionComponent implements OnInit {
         payable_amount: Number(element.amount),
         changes_price:0,
         refund_amount:0,    
-        customer:this.entryForm.value.customer
+       
       });
 
-
     });
-
-    const bill ={
-        total_amount:Number(this.subTotal),
-        discount:Number(this.discount),
-        payable_amount: Number(this.paidAmount),
-        session: this.entryForm.value.session,
-        customer:this.entryForm.value.customer,
-        so_far_paid:0,
-        parent_refund_amount:0
-    }
-    
+  
 
     const obj = {
       customer:this.entryForm.value.customer,
-      bill:bill,
+      subscription:this.entryForm.value.subscription,
       subscribed_items:subscribed_items,
       subscribed_relocation_items:subscribed_relocation_items
-
     };
 
-
-    this._service.post('subscription/create-new-subscription', obj).subscribe(
+    this._service.post('subscription/add-products-to-subscription', obj).subscribe(
       data => {
         this.blockUI.stop();
         if (data.IsReport == "Success") {

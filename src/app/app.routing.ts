@@ -82,13 +82,53 @@ export const AppRoutes: Routes = [
         // canActivate: [AuthGuard]
       },
       {
+        path: 'subscription',
+        loadChildren: () => import('./subscription/subscription.module').then(m => m.SubscriptionModule),
+        // canActivate: [AuthGuard]
+      },
+      {
         path: 'create-subscription',
         loadChildren: () => import('./create-subscription/create-subscription.module').then(m => m.CreateSubscriptionModule),
         // canActivate: [AuthGuard]
       },
       {
+        path: 'add-product-to-subscription',
+        loadChildren: () => import('./add-product-subscription/add-product-subscription.module').then(m => m.AddProductSubscriptionModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'remove-product-from-current-month',
+        loadChildren: () => import('./remove-product-current-month/remove-product-subscription.module').then(m => m.RemoveProductSubscriptionModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'remove-product-from-next-month',
+        loadChildren: () => import('./remove-product-next-month/remove-product-next-month.module').then(m => m.RemoveProductNextMonthModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'cancel-entrie-subscription-from-current-month',
+        loadChildren: () => import('./cancel-entire-sub-current-month/cancel-entire-sub-current-month.module').then(m => m.CancelEntireSubCurrentMonthModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'cancel-entrie-subscription-from-next-month',
+        loadChildren: () => import('./cancel-entire-sub-next-month/cancel-entire-sub-next-month.module').then(m => m.CancelEntireSubNextMonthModule),
+        // canActivate: [AuthGuard]
+      },
+      {
         path: 'subscription-list',
         loadChildren: () => import('./subscription-list/subscription-list.module').then(m => m.SubscriptionListModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'change-current-month-subscription',
+        loadChildren: () => import('./change-current-month-sub/change-current-month-sub.module').then(m => m.ChangeCurrentMonthSubModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'change-next-month-subscription',
+        loadChildren: () => import('./change-next-month-sub/change-next-month-sub.module').then(m => m.ChangeNextMonthSubModule),
         // canActivate: [AuthGuard]
       },
       // {

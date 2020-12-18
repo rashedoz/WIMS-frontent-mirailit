@@ -133,7 +133,7 @@ export class SupplierComponent implements OnInit {
     this._service.post('supplier/save-supplier', obj).subscribe(
       data => {
         this.blockUI.stop();
-        if (data.IsReport == "Success") {
+        if (data) {
           this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
           this.modalHide();
           this.getList();

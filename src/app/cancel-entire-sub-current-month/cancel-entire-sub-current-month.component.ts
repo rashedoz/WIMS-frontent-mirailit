@@ -23,11 +23,11 @@ import { BsDatepickerConfig } from "ngx-bootstrap/datepicker";
 import { Page } from "./../_models/page";
 
 @Component({
-  selector: "app-create-subscription",
-  templateUrl: "./create-subscription.component.html",
+  selector: "app-cancel-entire-sub-current-month",
+  templateUrl: "./cancel-entire-sub-current-month.component.html",
   encapsulation: ViewEncapsulation.None,
 })
-export class CreateSubscriptionComponent implements OnInit {
+export class CancelEntireSubCurrentMonthComponent implements OnInit {
   entryForm: FormGroup;
   itemHistoryList: FormArray;
   itemFormArray: any;
@@ -54,6 +54,9 @@ export class CreateSubscriptionComponent implements OnInit {
   bsConfig: Partial<BsDatepickerConfig>;
 
   customerList: Array<any> = [];
+  itemList: Array<any> = [];
+  subscriptionList: Array<any> = [];
+  subscriptionItemList: Array<any> = [];
   simList: Array<any> = [];
   planList: Array<any> = [];
 
@@ -81,8 +84,8 @@ export class CreateSubscriptionComponent implements OnInit {
     this.entryForm = this.formBuilder.group({
       id: [null],
       customer: [null, [Validators.required]],
-      session: [null, [Validators.required]],
-      itemHistory: this.formBuilder.array([this.initItemHistory()]),
+      subscription: [null, [Validators.required]],
+      itemHistory: this.formBuilder.array([]),
     });
     this.itemHistoryList = this.entryForm.get("itemHistory") as FormArray;
     this.itemFormArray = this.entryForm.get("itemHistory")["controls"];
@@ -100,24 +103,72 @@ export class CreateSubscriptionComponent implements OnInit {
     return this.entryForm.get("itemHistory") as FormArray;
   }
 
-  initItemHistory() {
-    return this.formBuilder.group({
-      sim: [null, [Validators.required]],
-      sim_iccid: [null, [Validators.required]],
-      plan: [null, [Validators.required]],
-      amount: [null, [Validators.required]],
-    });
-  }
-
-  addItemHistory() {
-    this.itemHistoryList.push(this.initItemHistory());
-  }
-
-  removeItemHistory(i) {
-    if (this.itemHistoryList.length > 1) {
-      this.itemHistoryList.removeAt(i);
+  onCustomerChange(e){   
+    if(e){
+      this.getItemList(e.id);
     }
   }
+
+  onSubscriptionChange(e){   
+    if(e){
+     this.subscriptionItemList = this.itemList.filter(x=>x.subscription == e.subscription);
+     if (this.subscriptionItemList.length > 0) {
+      let itemHistoryControl = <FormArray>(
+        this.entryForm.controls.itemHistory
+      );
+      while (this.itemHistoryList.length !== 0) {
+        itemHistoryControl.removeAt(0);
+      }
+      this.subscriptionItemList.forEach(element => {
+        // this.getObjFromArray(this.degreeDropDownList,element.DegreeId);
+        itemHistoryControl.push(
+          this.formBuilder.group({
+            id: new FormControl({value:element.id, disabled: true}, Validators.required),
+            sim: new FormControl({value:element.sim, disabled: true}, Validators.required),     
+            plan: new FormControl({value:element.plan, disabled: true}, Validators.required),
+            amount: new FormControl({value:element.amount, disabled: true}, Validators.required)
+          })
+        );
+      });
+    }
+
+    }
+  }
+
+  getItemList(customerId) {
+    this._service.get("subscription/get-subscribed-item-list?customer"+customerId).subscribe(
+      (res) => {
+        this.itemList = res;
+        const key = 'subscription';
+        this.subscriptionList = [...new Map(this.itemList.map(item =>
+          [item[key], item])).values()];     
+          
+      },
+      (err) => {}
+    );
+  }
+
+  // initItemHistory() {
+  //   return this.formBuilder.group({
+  //     id:[null],
+  //     sim: [null, [Validators.required]],
+  //     sim_iccid: [null, [Validators.required]],
+  //     plan: [null, [Validators.required]],
+  //     amount: [null, [Validators.required]],
+  //     refund_amount: [null],
+  //     is_removed: [null]
+  //   });
+  // }
+
+  // addItemHistory() {
+  //   this.itemHistoryList.push(this.initItemHistory());
+  // }
+
+  // removeItemHistory(i) {
+  //   if (this.itemHistoryList.length > 1) {
+  //     this.itemHistoryList.removeAt(i);
+  //   }
+  // }
 
   getCustomerList() {
     this._service.get("user-list?is_customer=true").subscribe(
@@ -156,72 +207,46 @@ export class CreateSubscriptionComponent implements OnInit {
       }
   }
 
-  onChangeDiscount(value) {
-    if (parseFloat(value) > this.subTotal) {
-      this.discount = this.subTotal;
-    }
-  }
+  // onChangeDiscount(value) {
+  //   if (parseFloat(value) > this.subTotal) {
+  //     this.discount = this.subTotal;
+  //   }
+  // }
 
-  onChangePaid(value) {
-    if (parseFloat(value) > this.subTotal - this.discount) {
-      this.paidAmount = this.subTotal - this.discount;
-    }
-  }
+  // onChangePaid(value) {
+  //   if (parseFloat(value) > this.subTotal - this.discount) {
+  //     this.paidAmount = this.subTotal - this.discount;
+  //   }
+  // }
 
   onFormSubmit() {
     this.submitted = true;
     if (this.entryForm.invalid) {
       return;
     }
-    let subscribed_items = [];
     let subscribed_relocation_items = [];
     this.blockUI.start('Saving...');
-
-    this.fromRowData.itemHistory.filter(x=> x.sim && x.sim_iccid && x.plan && x.amount).forEach(element => {
-      subscribed_items.push({
-        session:this.entryForm.value.session,
-        sim: element.sim.id,
-        ICCID_no:element.sim_iccid,
-        plan: element.plan,
-        amount: Number(element.amount),
-        customer:this.entryForm.value.customer
-      });
-
+    this.fromRowData = this.entryForm.getRawValue();  
+    this.fromRowData.itemHistory.forEach(element => {
       subscribed_relocation_items.push({
-        sim: element.sim.id,
-        plan: element.plan,
-        actual_price: Number(element.amount),
-        discount:0,
-        payable_amount: Number(element.amount),
-        changes_price:0,
-        refund_amount:0,    
-        customer:this.entryForm.value.customer
+        customer:this.entryForm.value.customer,
+        subscription:this.entryForm.value.subscription,
+        sim: element.sim,    
+        plan: element.plan       
       });
-
 
     });
 
-    const bill ={
-        total_amount:Number(this.subTotal),
-        discount:Number(this.discount),
-        payable_amount: Number(this.paidAmount),
-        session: this.entryForm.value.session,
-        customer:this.entryForm.value.customer,
-        so_far_paid:0,
-        parent_refund_amount:0
-    }
     
-
     const obj = {
       customer:this.entryForm.value.customer,
-      bill:bill,
-      subscribed_items:subscribed_items,
+      subscription:this.entryForm.value.subscription,
       subscribed_relocation_items:subscribed_relocation_items
-
     };
 
 
-    this._service.post('subscription/create-new-subscription', obj).subscribe(
+
+    this._service.post('subscription/cancel-entire-subscription-from-current-month', obj).subscribe(
       data => {
         this.blockUI.stop();
         if (data.IsReport == "Success") {
@@ -242,12 +267,12 @@ export class CreateSubscriptionComponent implements OnInit {
 
 
 
-  itemTotal(){
-    this.fromRowData = this.entryForm.getRawValue();   
-    if(this.fromRowData.itemHistory.length > 0){
-      this.subTotal = this.fromRowData.itemHistory.map(x => Number(x.amount)).reduce((a, b) => a + b);
-    }
-  }
+  // itemTotal(){
+  //   this.fromRowData = this.entryForm.getRawValue();   
+  //   if(this.fromRowData.itemHistory.length > 0){
+  //     this.subTotal = this.fromRowData.itemHistory.map(x => Number(x.amount)).reduce((a, b) => a + b);
+  //   }
+  // }
 
   formReset(){
     this.submitted = false;
@@ -258,7 +283,7 @@ export class CreateSubscriptionComponent implements OnInit {
     let itemHistoryControl = <FormArray>(
       this.entryForm.controls.itemHistory
     );
-    while (this.itemHistoryList.length !== 1) {
+    while (this.itemHistoryList.length !== 0) {
       itemHistoryControl.removeAt(0);
     }
     this.subTotal=0;

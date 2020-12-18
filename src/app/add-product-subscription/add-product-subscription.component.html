@@ -4,7 +4,7 @@
       <div class="col-lg-12">
         <div class="card card-border-default">
           <div class="card-header">
-            <h5>Create Subscription </h5>
+            <h5>Add Product To Subscription </h5>
             <!-- <span class="code-header ">use class <code>table</code> inside table element</span> -->
           </div>
           <div class="card-block ">
@@ -14,7 +14,7 @@
                 <div class="form-group row">
                   <label class="col-sm-4 col-form-label">Customer </label>
                   <div class="col-sm-8">
-                    <ng-select [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false" formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
+                    <ng-select (change)="onCustomerChange($event)" [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false" formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
                       bindLabel="first_name" bindValue="id" placeholder="Select a customer">
                     </ng-select>
                     <div *ngIf="submitted && f.customer.errors" class="error-text">
@@ -28,11 +28,25 @@
               </div>
               <div class="col-lg-6">
                 <div class="form-group row">
-                  <label class="col-sm-4 col-form-label">Session </label>
+                  <label class="col-sm-4 col-form-label">Subscription </label>
                   <div class="col-sm-8">
-                    <input type="text" formControlName="session" class="form-control"  [ngClass]="{ 'is-invalid': submitted && f.session.errors }" placeholder="Type session">
-                    <div *ngIf="submitted && f.session.errors" class="error-text">
-                      <span *ngIf="f.session.errors.required" class="text-danger"> Session is required</span>
+                    <ng-select  [ngClass]="{ 'is-invalid': submitted && f.subscription.errors }" [clearable]="false" formControlName="subscription" [clearOnBackspace]="false" [items]="subscriptionList"
+                    bindLabel="subscription" bindValue="subscription" placeholder="Select subscription">
+
+                    <ng-template ng-option-tmp let-item="item" let-index="index">
+                     
+                      <div style="margin: 10px 0;" >
+                          <div class="card-body">                            
+                              <h6 class="card-subtitle mb-2 text-muted">Subscription No: {{item.subscription}}</h6>
+                              <p class="card-text">  Session : {{item.session}}</p>
+                          </div>
+                      </div>
+                  </ng-template>
+
+
+                  </ng-select>
+                    <div *ngIf="submitted && f.subscription.errors" class="error-text">
+                      <span *ngIf="f.subscription.errors.required" class="text-danger"> Subscription is required</span>
 
                   </div>
                   </div>
@@ -113,7 +127,7 @@
               </div>
 
               <div class="col-lg-4 offset-lg-8">
-                <table class="table table-xs table-hover table-striped">
+                <!-- <table class="table table-xs table-hover table-striped">
                     <tbody>
                         <tr>
                             <th>Sub-Total {{itemTotal()}}</th>
@@ -140,7 +154,7 @@
                         </tr>
                        
                     </tbody>
-                </table>
+                </table> -->
 
                 <button class="btn btn-secondary btn-sm w-50 float-right" (click)="onFormSubmit()">
                     <i class="icofont-save"></i> {{btnSaveText}}

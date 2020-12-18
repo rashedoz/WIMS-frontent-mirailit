@@ -4,7 +4,7 @@
       <div class="col-lg-12">
         <div class="card card-border-default">
           <div class="card-header">
-            <h5>Create Subscription </h5>
+            <h5>Change Current Month Subscription </h5>
             <!-- <span class="code-header ">use class <code>table</code> inside table element</span> -->
           </div>
           <div class="card-block ">
@@ -14,7 +14,7 @@
                 <div class="form-group row">
                   <label class="col-sm-4 col-form-label">Customer </label>
                   <div class="col-sm-8">
-                    <ng-select [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false" formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
+                    <ng-select (change)="onCustomerChange($event)" [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false" formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
                       bindLabel="first_name" bindValue="id" placeholder="Select a customer">
                     </ng-select>
                     <div *ngIf="submitted && f.customer.errors" class="error-text">
@@ -28,11 +28,25 @@
               </div>
               <div class="col-lg-6">
                 <div class="form-group row">
-                  <label class="col-sm-4 col-form-label">Session </label>
+                  <label class="col-sm-4 col-form-label">Subscription </label>
                   <div class="col-sm-8">
-                    <input type="text" formControlName="session" class="form-control"  [ngClass]="{ 'is-invalid': submitted && f.session.errors }" placeholder="Type session">
-                    <div *ngIf="submitted && f.session.errors" class="error-text">
-                      <span *ngIf="f.session.errors.required" class="text-danger"> Session is required</span>
+                    <ng-select (change)="onSubscriptionChange($event)" [ngClass]="{ 'is-invalid': submitted && f.subscription.errors }" [clearable]="false" formControlName="subscription" [clearOnBackspace]="false" [items]="subscriptionList"
+                    bindLabel="subscription" bindValue="subscription" placeholder="Select subscription">
+
+                    <ng-template ng-option-tmp let-item="item" let-index="index">
+                     
+                      <div style="margin: 10px 0;" >
+                          <div class="card-body">                            
+                              <h6 class="card-subtitle mb-2 text-muted">Subscription No: {{item.subscription}}</h6>
+                              <p class="card-text">  Session : {{item.session}}</p>
+                          </div>
+                      </div>
+                  </ng-template>
+
+
+                  </ng-select>
+                    <div *ngIf="submitted && f.subscription.errors" class="error-text">
+                      <span *ngIf="f.subscription.errors.required" class="text-danger"> Subscription is required</span>
 
                   </div>
                   </div>
@@ -58,11 +72,12 @@
                   <table class="table table-xs table-hover table-bordered table-striped">
                     <thead>
                       <tr>
-                        <th width="20%" scope="col">SIM</th>
-                        <th width="20%" scope="col">ICCID</th>
-                        <th width="20%" scope="col">Plan</th>
-                        <th width="20%" scope="col">Amount</th>
-                        <th width="20%" scope="col">Action</th>
+                        <th width="15%" scope="col">SIM</th>
+                        <th width="15%" scope="col">Plan</th>
+                        <th width="15%" scope="col">Amount</th>
+                        <th width="20%" scope="col">New Plan</th>
+                        <th width="15%" scope="col">Changes Plan</th>
+                        <th width="20%" scope="col">New Plan Amount</th>
                       </tr>
                     </thead>
                     <tbody formArrayName="itemHistory" *ngFor="let item of itemFormArray; let i = index;">
@@ -75,14 +90,7 @@
                                   is required</small>
 
                               </div>
-                            </th>
-                            <th>
-                              <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim_iccid').errors}" formControlName="sim_iccid"  />
-                              <div *ngIf="submitted && item_his.controls[i].get('sim_iccid').errors" class="error-text">
-                                <small *ngIf="item_his.controls[i].get('sim_iccid').errors.required" class="text-danger"> SIM ICCID is required</small>
-
-                              </div>
-                            </th>
+                            </th>         
                             <th>
                               <ng-select [clearable]="false" appendTo="body" [clearOnBackspace]="false" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('plan').errors}" formControlName="plan"  [items]="planList"
                             bindLabel="plan" bindValue="id" placeholder="Select a plan"></ng-select>
@@ -96,58 +104,38 @@
                             <div *ngIf="submitted && item_his.controls[i].get('amount').errors" class="error-text">
                               <small *ngIf="item_his.controls[i].get('amount').errors.required" class="text-danger"> Amount is required</small>
                             </div>
-                            </th>
+                            </th>   
                             <th>
-                              <button class="btn btn-success btn-mini pull-right mr-3" title="Add new item"
-                                (click)="addItemHistory()"><i class="icofont-plus "></i> Add More</button>
-                              <button *ngIf="itemFormArray.length > 1" class="btn btn-danger mr-1 btn-mini pull-right"
-                                title="Delete this item" (click)="removeItemHistory(i)"> <i class="icofont-ui-delete"></i>
-                              </button>
-                              
-                            </th>
+                              <ng-select [clearable]="false" appendTo="body" [clearOnBackspace]="false" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('new_plan').errors}" formControlName="new_plan"  [items]="planList"
+                            bindLabel="plan" bindValue="id" placeholder="Select a plan"></ng-select>
+                            <div *ngIf="submitted && item_his.controls[i].get('new_plan').errors" class="error-text">
+                              <small *ngIf="item_his.controls[i].get('new_plan').errors.required" class="text-danger"> New plan is required</small>
+
+                            </div>
+                            </th>    
+                            <th>
+                              <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('plan_changes').errors}" formControlName="plan_changes"  />
+                            <div *ngIf="submitted && item_his.controls[i].get('plan_changes').errors" class="error-text">
+                              <small *ngIf="item_his.controls[i].get('plan_changes').errors.required" class="text-danger"> Changes plan is required</small>
+                            </div>
+                            </th> 
+                            <th>
+                              <input type="text" numeric numericType="decimal" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('new_amount').errors}" formControlName="new_amount"  />
+                            <div *ngIf="submitted && item_his.controls[i].get('new_amount').errors" class="error-text">
+                              <small *ngIf="item_his.controls[i].get('new_amount').errors.required" class="text-danger"> New Amount is required</small>
+                            </div>
+                            </th>            
 
                         </tr>
                     </tbody>
                   </table>
+                  
+                <button class="btn btn-secondary btn-sm w-40 float-right" (click)="onFormSubmit()">
+                  <i class="icofont-save"></i> {{btnSaveText}}
+              </button>
                 </div>
-              </div>
+              </div>      
 
-              <div class="col-lg-4 offset-lg-8">
-                <table class="table table-xs table-hover table-striped">
-                    <tbody>
-                        <tr>
-                            <th>Sub-Total {{itemTotal()}}</th>
-                            <th class="text-right pr-4">{{subTotal}}</th>
-                        </tr>
-                        <tr>
-                            <th>Discount</th>
-                            <td class="pr-1">
-                                <input  type="text" class="form-control form-control-sm text-right pr-3"
-                                    numeric numericType="number" (change)="onChangeDiscount(discount)" [(ngModel)]="discount" [ngModelOptions]="{standalone: true}">
-                            </td>
-                        </tr>
-                      <tr>
-                            <th>Net-Total</th>
-                            <th class="text-right pr-4">{{subTotal - discount}}</th>
-                        </tr>
-                         <tr>
-                            <th>Paid Amount</th>
-                            <td class="pr-1"> 
-                                <input type="text" class="form-control form-control-sm text-right pr-3"
-                                    numeric numericType="number" (change)="onChangePaid(paidAmount)"
-                                    [(ngModel)]="paidAmount" [ngModelOptions]="{standalone: true}">
-                            </td>
-                        </tr>
-                       
-                    </tbody>
-                </table>
-
-                <button class="btn btn-secondary btn-sm w-50 float-right" (click)="onFormSubmit()">
-                    <i class="icofont-save"></i> {{btnSaveText}}
-                </button>
-            </div>
-
-        
 
             </div>
           </div>
