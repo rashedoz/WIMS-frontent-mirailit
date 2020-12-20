@@ -59,13 +59,13 @@ export class PurchaseEntryComponent implements OnInit {
 
 
   ngOnInit() {
-    this.entryFormSIM = this.formBuilder.group({     
+    this.entryFormSIM = this.formBuilder.group({
       supplier: [null, [Validators.required]]
     });
-    this.entryFormDevice = this.formBuilder.group({     
+    this.entryFormDevice = this.formBuilder.group({
       supplier: [null, [Validators.required]]
     });
-    this.entryFormSIMDevice = this.formBuilder.group({     
+    this.entryFormSIMDevice = this.formBuilder.group({
       supplier: [null, [Validators.required]]
     });
 
@@ -81,7 +81,7 @@ export class PurchaseEntryComponent implements OnInit {
     return this.entryFormDevice.controls;
   }
   get sd() {
-    return this.entryFormSIMDevice.controls; 
+    return this.entryFormSIMDevice.controls;
   }
 
   getSupplierList(){
@@ -131,7 +131,7 @@ export class PurchaseEntryComponent implements OnInit {
 
   }
 
-  
+
 
   onFormSubmitSIM() {
     this.submitted = true;
@@ -140,7 +140,7 @@ export class PurchaseEntryComponent implements OnInit {
     }
     let purchase_details = [];
     this.blockUI.start('Saving...');
-    
+
     this.purchaseItemList.forEach(element => {
       purchase_details.push({
         product_type:element.product_type_id,
@@ -184,7 +184,7 @@ export class PurchaseEntryComponent implements OnInit {
     }
     let purchase_details = [];
     this.blockUI.start('Saving...');
-    
+
     this.purchaseItemList.forEach(element => {
       purchase_details.push({
         product_type:element.product_type_id,
@@ -227,8 +227,16 @@ export class PurchaseEntryComponent implements OnInit {
       return;
     }
     let purchase_details = [];
-  //  this.blockUI.start('Saving...');
-    
+
+    // this.purchaseItemList.forEach(element => {
+    //   if(Number(element.qty) == 0 && Number(element.amount) == 0){
+    //     this.toastr.warning("Qty and Amount can't be empty", 'Warning!', { closeButton: true, disableTimeOut: true });
+    //     return;
+    //   }
+    // });
+
+   this.blockUI.start('Saving...');
+
     this.purchaseItemList.forEach(element => {
       purchase_details.push({
         product_type:element.product_type_id,
@@ -242,7 +250,7 @@ export class PurchaseEntryComponent implements OnInit {
       total_amount: Number(this.totalAmount),
       purchase_details:purchase_details
     };
- 
+
     this._service.post('purchase/entry-sim-device-purchase', obj).subscribe(
       data => {
         this.blockUI.stop();
@@ -296,7 +304,7 @@ export class PurchaseEntryComponent implements OnInit {
     this.totalAmount = 0;
   }
 
-  itemTotal(){  
+  itemTotal(){
     // this.totalAmount = this.purchaseItemList.map(x => x.qty * x.amount).reduce((a, b) => a + b, 0);
     if(this.purchaseItemList.length > 0){
       this.totalAmount = this.purchaseItemList.map(x => Number(x.amount)).reduce((a, b) => a + b);
@@ -314,12 +322,12 @@ export class PurchaseEntryComponent implements OnInit {
       "qty":0,
       "amount":0
     });
-  });  
+  });
   this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 
   openModalDevice(template: TemplateRef<any>) {
-  let deviceProductList =  this.productTypeList.filter(x=> x.product_type === "Device");
+  let deviceProductList =  this.productTypeList.filter(x=> x.product_type  != "SIM");
   deviceProductList.forEach(element => {
     this.purchaseItemList.push({
       "product_type_id":element.id,
@@ -327,11 +335,11 @@ export class PurchaseEntryComponent implements OnInit {
       "qty":0,
       "amount":0
     });
-  });  
+  });
   this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 
- openModalSIMDevice(template: TemplateRef<any>) { 
+ openModalSIMDevice(template: TemplateRef<any>) {
   this.productTypeList.forEach(element => {
     this.purchaseItemList.push({
       "product_type_id":element.id,
@@ -339,7 +347,7 @@ export class PurchaseEntryComponent implements OnInit {
       "qty":0,
       "amount":0
     });
-  });  
+  });
   this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 }

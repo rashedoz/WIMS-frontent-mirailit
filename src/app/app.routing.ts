@@ -146,6 +146,11 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./payment-list/payment-list.module').then(m => m.PaymentListModule),
         // canActivate: [AuthGuard]
       },
+      {
+        path: 'member-list',
+        loadChildren: () => import('./member-list/member-list.module').then(m => m.MemberListModule),
+        // canActivate: [AuthGuard]
+      },
       // {
       //   path: 'building',
       //   loadChildren: () => import('./building/building.module').then(m => m.BuildingModule),

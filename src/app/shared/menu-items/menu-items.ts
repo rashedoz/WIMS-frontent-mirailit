@@ -63,6 +63,13 @@ const MENUITEMS = [
         permission: ''
       },
       {
+        state: 'member-list',
+        name: 'Member',
+        type: 'link',
+        icon: 'ti-control-forward',
+        permission: ''
+      },
+      {
         state: 'customer',
         name: 'Customer',
         type: 'link',
