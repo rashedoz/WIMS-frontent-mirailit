@@ -1,6 +1,5 @@
 import { Component, TemplateRef, ViewChild, ElementRef, ViewEncapsulation, OnInit } from '@angular/core';
 import { ColumnMode } from '@swimlane/ngx-datatable';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonService } from '../_services/common.service';
@@ -10,20 +9,17 @@ import { Page } from '../_models/page';
 
 
 @Component({
-  selector: 'app-updatable-sim-list',
-  templateUrl: './updatable-sim-list.component.html',
+  selector: 'app-bill-list',
+  templateUrl: './bill-list.component.html',
   encapsulation: ViewEncapsulation.None
 })
 
-export class UpdatableSIMListComponent implements OnInit {
+export class BillListComponent implements OnInit {
 
   entryForm: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
-  modalTitleSIM = 'Add SIM Details';
-  btnSaveText = 'Save';
-  modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
-  modalRef: BsModalRef;
+
 
   page = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
@@ -32,10 +28,7 @@ export class UpdatableSIMListComponent implements OnInit {
   ColumnMode = ColumnMode;
   scrollBarHorizontal = (window.innerWidth < 1200);
 
-  SIMItemList: Array<any> = [];
-
   constructor(
-    private modalService: BsModalService,
     public formBuilder: FormBuilder,
     private _service: CommonService,
     private toastr: ToastrService,
@@ -67,7 +60,7 @@ export class UpdatableSIMListComponent implements OnInit {
     //   size: this.page.size,
     //   pageNumber: this.page.pageNumber
     // };
-    this._service.get('stock/get-updatable-sim-list').subscribe(res => {
+    this._service.get('stock/get-sim-list').subscribe(res => {
 
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
@@ -86,65 +79,6 @@ export class UpdatableSIMListComponent implements OnInit {
       }, 1000);
     }
     );
-  }
-
-
-
-  onFormSubmitSIM() {
-
-    let sim_details = [];
-    this.blockUI.start('Updating...');
-    this.SIMItemList.filter(x=>x.iccid).forEach(element => {
-      sim_details.push({
-        id:element.id,
-        ICCID_no: element.iccid,
-      });
-    });
-    const obj = {
-      sim_details : sim_details
-    };
-    this._service.put('stock/update-bulk-sim-detail', obj).subscribe(
-      data => {
-        this.blockUI.stop();
-        if (data.IsReport == "Success") {
-          this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
-          this.modalHideSIM();
-          this.getList();
-
-        } else if (data.IsReport == "Warning") {
-          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-        } else {
-          this.toastr.error(data.Msg, 'Error!', { timeOut: 2000 });
-        }
-      },
-      err => {
-        this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
-      }
-    );
-
-  }
-
-
-  modalHideSIM() {
-
-    this.modalRef.hide();
-    this.submitted = false;
-    this.modalTitleSIM = 'Add SIM Details';
-    this.btnSaveText = 'Save';
-    this.SIMItemList = [];
-  }
-
-
-  openModalSIM(template: TemplateRef<any>) {
-    this.rows.forEach(element => {
-      this.SIMItemList.push({
-        "id":element.id,
-        "sim_auto_serial_no":element.sim_auto_serial_no,
-        "iccid":"",
-      });
-    });
-    this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 
 }

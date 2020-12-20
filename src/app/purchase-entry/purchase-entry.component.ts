@@ -22,6 +22,8 @@ export class PurchaseEntryComponent implements OnInit {
   entryFormSIMDevice: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
+  @ViewChild('dataTable', { static: false }) table: any;
+
   modalTitleSIM = 'Add SIM';
   modalTitleDevice = 'Add Device';
   modalTitleSIMDevice = 'Add SIM & Device';
@@ -36,7 +38,6 @@ export class PurchaseEntryComponent implements OnInit {
   ColumnMode = ColumnMode;
 
   scrollBarHorizontal = (window.innerWidth < 1200);
-
   supplierList : Array<any> = [];
   productTypeList : Array<any> = [];
   purchaseItemList : Array<any> = [];
@@ -124,6 +125,12 @@ export class PurchaseEntryComponent implements OnInit {
     );
   }
 
+  toggleExpandRow(row) {
+    if(!row.details) row.details = row.purchase_details;
+    this.table.rowDetail.toggleExpandRow(row);
+
+  }
+
   
 
   onFormSubmitSIM() {
@@ -156,6 +163,8 @@ export class PurchaseEntryComponent implements OnInit {
           this.modalHideSIM();
           this.getList();
 
+        } else if (data.IsReport == "Warning") {
+          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
         } else {
           this.toastr.error(data.Msg, 'Error!', { timeOut: 2000 });
         }
@@ -198,6 +207,8 @@ export class PurchaseEntryComponent implements OnInit {
           this.modalHideSIM();
           this.getList();
 
+        } else if (data.IsReport == "Warning") {
+          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
         } else {
           this.toastr.error(data.Msg, 'Error!', { timeOut: 2000 });
         }
@@ -240,6 +251,8 @@ export class PurchaseEntryComponent implements OnInit {
           this.modalHideSIM();
           this.getList();
 
+        } else if (data.IsReport == "Warning") {
+          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
         } else {
           this.toastr.error(data.Msg, 'Error!', { timeOut: 2000 });
         }

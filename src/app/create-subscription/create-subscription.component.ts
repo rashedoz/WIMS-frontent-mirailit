@@ -204,7 +204,7 @@ export class CreateSubscriptionComponent implements OnInit {
     const bill ={
         total_amount:Number(this.subTotal),
         discount:Number(this.discount),
-        payable_amount: Number(this.paidAmount),
+        payable_amount: Number(this.subTotal) - Number(this.discount),
         session: this.entryForm.value.session,
         customer:this.entryForm.value.customer,
         so_far_paid:0,
@@ -220,7 +220,6 @@ export class CreateSubscriptionComponent implements OnInit {
 
     };
 
-
     this._service.post('subscription/create-new-subscription', obj).subscribe(
       data => {
         this.blockUI.stop();
@@ -228,6 +227,8 @@ export class CreateSubscriptionComponent implements OnInit {
           this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });         
           this.formReset(); 
 
+        } else if (data.IsReport == "Warning") {
+          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
         } else {
           this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
         }

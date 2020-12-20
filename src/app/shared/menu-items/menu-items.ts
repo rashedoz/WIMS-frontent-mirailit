@@ -106,110 +106,130 @@ const MENUITEMS = [
                     permission: '',
                 },
                 {
+                    state: 'all-device-list',
+                    name: 'All Device List',
+                    type: 'link',
+                    icon: 'ti-control-forward',
+                    permission: '',
+                },
+                {
                     state: 'updatable-sim-list',
                     name: 'Updatable SIM List',
                     type: 'link',
                     icon: 'ti-control-forward',
                     permission: '',
                 },
-                {
-                    state: 'cancelled-product-list',
-                    name: 'Cancelled Product List',
-                    type: 'link',
-                    icon: 'ti-control-forward',
-                    permission: '',
-                },
+                // {
+                //     state: 'cancelled-product-list',
+                //     name: 'Cancelled Product List',
+                //     type: 'link',
+                //     icon: 'ti-control-forward',
+                //     permission: '',
+                // },
 
             ]
         },
     ]
 },
-  {
-    label: 'none',
-    permission: '',
-    main: [
-        {
-            name: 'Subscription',
-            type: 'sub',
-            permission: '',
-            icon: 'icofont-brand-microsoft',
-            children: [
-                {
-                    state: 'subscription',
-                    name: 'Subscription',
-                    type: 'link',
-                    icon: 'ti-control-forward',
-                    permission: '',
-                },
-                {
-                    state: 'create-subscription',
-                    name: 'Create Subscription',
-                    type: 'link',
-                    icon: 'ti-control-forward',
-                    permission: '',
-                },
-                {
-                    state: 'add-product-to-subscription',
-                    name: 'Add Product To Sub.',
-                    type: 'link',
-                    icon: 'ti-control-forward',
-                    permission: '',
-                },
-                {
-                    state: 'subscription-list',
-                    name: 'Subscription List',
-                    type: 'link',
-                    icon: 'ti-control-forward',
-                    permission: '',
-                },
-                {
-                    state: 'change-current-month-subscription',
-                    name: 'Change Current Month Sub.',
-                    type: 'link',
-                    icon: 'ti-control-forward',
-                    permission: '',
-                },
-                {
-                    state: 'change-next-month-subscription',
-                    name: 'Change Next Month Sub.',
-                    type: 'link',
-                    icon: 'ti-control-forward',
-                    permission: '',
-                },
-                {
-                    state: 'remove-product-from-current-month',
-                    name: 'Remove Product Current Month',
-                    type: 'link',
-                    icon: 'ti-control-forward',
-                    permission: '',
-                },
-                {
-                    state: 'remove-product-from-next-month',
-                    name: 'Remove Product Next Month',
-                    type: 'link',
-                    icon: 'ti-control-forward',
-                    permission: '',
-                },
-                {
-                    state: 'cancel-entrie-subscription-from-current-month',
-                    name: 'Cancel Entire Sub Current Month',
-                    type: 'link',
-                    icon: 'ti-control-forward',
-                    permission: '',
-                },
-                {
-                    state: 'cancel-entrie-subscription-from-next-month',
-                    name: 'Cancel Entire Sub Next Month',
-                    type: 'link',
-                    icon: 'ti-control-forward',
-                    permission: '',
-                }
-
-
-            ]
-        },
-    ]
+{
+  label: 'none',
+  permission: '',
+  main: [
+    {
+      state: 'subscription',
+      name: 'Subscription',
+      type: 'link',
+      icon: 'ti-control-forward',
+      permission: ''
+    }
+  ]
 },
+//   {
+//     label: 'none',
+//     permission: '',
+//     main: [
+//         {
+//             name: 'Subscription',
+//             type: 'sub',
+//             permission: '',
+//             icon: 'icofont-brand-microsoft',
+//             children: [
+//                 {
+//                     state: 'subscription',
+//                     name: 'Subscription',
+//                     type: 'link',
+//                     icon: 'ti-control-forward',
+//                     permission: '',
+//                 },
+//                 {
+//                     state: 'create-subscription',
+//                     name: 'Create Subscription',
+//                     type: 'link',
+//                     icon: 'ti-control-forward',
+//                     permission: '',
+//                 },
+//                 {
+//                     state: 'add-product-to-subscription',
+//                     name: 'Add Product To Sub.',
+//                     type: 'link',
+//                     icon: 'ti-control-forward',
+//                     permission: '',
+//                 },
+//                 {
+//                     state: 'subscription-list',
+//                     name: 'Subscription List',
+//                     type: 'link',
+//                     icon: 'ti-control-forward',
+//                     permission: '',
+//                 },
+//                 {
+//                     state: 'change-current-month-subscription',
+//                     name: 'Change Current Month Sub.',
+//                     type: 'link',
+//                     icon: 'ti-control-forward',
+//                     permission: '',
+//                 },
+//                 {
+//                     state: 'change-next-month-subscription',
+//                     name: 'Change Next Month Sub.',
+//                     type: 'link',
+//                     icon: 'ti-control-forward',
+//                     permission: '',
+//                 },
+//                 {
+//                     state: 'remove-product-from-current-month',
+//                     name: 'Remove Product Current Month',
+//                     type: 'link',
+//                     icon: 'ti-control-forward',
+//                     permission: '',
+//                 },
+//                 {
+//                     state: 'remove-product-from-next-month',
+//                     name: 'Remove Product Next Month',
+//                     type: 'link',
+//                     icon: 'ti-control-forward',
+//                     permission: '',
+//                 },
+//                 {
+//                     state: 'cancel-entrie-subscription-from-current-month',
+//                     name: 'Cancel Entire Sub Current Month',
+//                     type: 'link',
+//                     icon: 'ti-control-forward',
+//                     permission: '',
+//                 },
+//                 {
+//                     state: 'cancel-entrie-subscription-from-next-month',
+//                     name: 'Cancel Entire Sub Next Month',
+//                     type: 'link',
+//                     icon: 'ti-control-forward',
+//                     permission: '',
+//                 }
+
+
+//             ]
+//         },
+//     ]
+// },
   //  {
   //   label: '',
   //   permission: 'Admin',

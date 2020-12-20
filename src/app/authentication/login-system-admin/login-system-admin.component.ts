@@ -65,7 +65,7 @@ export class LoginSystemAdminComponent implements OnInit {
       data => {
         this.blockUI.stop();
         if (data) {
-          this.toastr.success('Logging Successfully', 'Success!', { timeOut: 2000 });
+          this.toastr.success('Login Successfully', 'Success!', { timeOut: 2000 });
           this.router.navigate([this.returnUrl]);
           this.menuItems.refreshMenu();
         }else{

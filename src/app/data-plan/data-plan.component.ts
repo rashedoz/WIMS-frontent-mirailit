@@ -170,6 +170,8 @@ export class DataPlanComponent implements OnInit {
           this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
           this.getList();
           this.modalHide();
+        } else if (data.IsReport == "Warning") {
+          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
         } else {
           this.toastr.error(data.Msg, 'Error!', { closeButton: true, disableTimeOut: true });
         }

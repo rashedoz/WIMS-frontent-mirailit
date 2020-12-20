@@ -67,6 +67,11 @@ export const AppRoutes: Routes = [
         // canActivate: [AuthGuard]
       },
       {
+        path: 'all-device-list',
+        loadChildren: () => import('./all-device-list/all-device-list.module').then(m => m.AllDeviceListModule),
+        // canActivate: [AuthGuard]
+      },
+      {
         path: 'updatable-sim-list',
         loadChildren: () => import('./updatable-sim-list/updatable-sim-list.module').then(m => m.UpdatableSIMListModule),
         // canActivate: [AuthGuard]
@@ -129,6 +134,11 @@ export const AppRoutes: Routes = [
       {
         path: 'change-next-month-subscription',
         loadChildren: () => import('./change-next-month-sub/change-next-month-sub.module').then(m => m.ChangeNextMonthSubModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'bill-list',
+        loadChildren: () => import('./bill-list/bill-list.module').then(m => m.BillListModule),
         // canActivate: [AuthGuard]
       },
       // {

@@ -238,7 +238,10 @@ export class AddProductSubscriptionComponent implements OnInit {
           this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });         
           this.formReset(); 
 
-        } else {
+        } else if (data.IsReport == "Warning") {
+          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+        }
+         else {
           this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
         }
       },

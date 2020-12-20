@@ -24291,3 +24291,6 @@ bs-datepicker-container { z-index: 3000; }
     }
 }
 
+.danger-border {
+    border-top-color: #e74c3c;
+}
