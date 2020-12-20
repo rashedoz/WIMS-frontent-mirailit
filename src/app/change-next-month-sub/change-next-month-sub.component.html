@@ -33,9 +33,9 @@
                     bindLabel="subscription" bindValue="subscription" placeholder="Select subscription">
 
                     <ng-template ng-option-tmp let-item="item" let-index="index">
-                     
+
                       <div style="margin: 10px 0;" >
-                          <div class="card-body">                            
+                          <div class="card-body">
                               <h6 class="card-subtitle mb-2 text-muted">Subscription No: {{item.subscription}}</h6>
                               <!-- <p class="card-text">  Session : {{item.session}}</p> -->
                           </div>
@@ -50,7 +50,7 @@
                   </div>
                   </div>
                 </div>
-              </div> 
+              </div>
 
               <div class="col-lg-3">
                 <div class="form-group row">
@@ -103,7 +103,7 @@
                                   is required</small>
 
                               </div>
-                            </th>         
+                            </th>
                             <th>
                               <ng-select [clearable]="false" appendTo="body" [clearOnBackspace]="false" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('plan').errors}" formControlName="plan"  [items]="planList"
                             bindLabel="plan" bindValue="id" placeholder="Select a plan"></ng-select>
@@ -117,37 +117,37 @@
                             <div *ngIf="submitted && item_his.controls[i].get('amount').errors" class="error-text">
                               <small *ngIf="item_his.controls[i].get('amount').errors.required" class="text-danger"> Amount is required</small>
                             </div>
-                            </th>   
+                            </th>
                             <th>
-                              <ng-select [clearable]="false" appendTo="body" [clearOnBackspace]="false" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('new_plan').errors}" formControlName="new_plan"  [items]="planList"
+                              <ng-select [clearable]="true" appendTo="body" [clearOnBackspace]="false" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('new_plan').errors}" formControlName="new_plan"  [items]="planList"
                             bindLabel="plan" bindValue="id" placeholder="Select a plan"></ng-select>
                             <div *ngIf="submitted && item_his.controls[i].get('new_plan').errors" class="error-text">
                               <small *ngIf="item_his.controls[i].get('new_plan').errors.required" class="text-danger"> New plan is required</small>
 
                             </div>
-                            </th>    
+                            </th>
                             <th>
                               <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('plan_changes').errors}" formControlName="plan_changes"  />
                             <div *ngIf="submitted && item_his.controls[i].get('plan_changes').errors" class="error-text">
                               <small *ngIf="item_his.controls[i].get('plan_changes').errors.required" class="text-danger"> Changes plan is required</small>
                             </div>
-                            </th> 
+                            </th>
                             <th>
                               <input type="text" numeric numericType="decimal" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('new_amount').errors}" formControlName="new_amount"  />
                             <div *ngIf="submitted && item_his.controls[i].get('new_amount').errors" class="error-text">
                               <small *ngIf="item_his.controls[i].get('new_amount').errors.required" class="text-danger"> New Amount is required</small>
                             </div>
-                            </th>            
+                            </th>
 
                         </tr>
                     </tbody>
                   </table>
-                  
-                <button class="btn btn-secondary btn-sm w-40 float-right" (click)="onFormSubmit()">
+
+                <button class="btn btn-info btn-sm w-40 float-right" (click)="onFormSubmit()">
                   <i class="icofont-save"></i> {{btnSaveText}}
               </button>
                 </div>
-              </div>      
+              </div>
 
 
             </div>

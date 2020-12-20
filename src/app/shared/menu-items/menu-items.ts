@@ -82,9 +82,7 @@ const MENUITEMS = [
         type: 'link',
         icon: 'ti-control-forward',
         permission: ''
-      },
-
-
+      }
 
     ]
   },
@@ -138,6 +136,32 @@ const MENUITEMS = [
     {
       state: 'subscription',
       name: 'Subscription',
+      type: 'link',
+      icon: 'ti-control-forward',
+      permission: ''
+    }
+  ]
+},
+{
+  label: 'none',
+  permission: '',
+  main: [
+    {
+      state: 'bill-list',
+      name: 'Bills',
+      type: 'link',
+      icon: 'ti-control-forward',
+      permission: ''
+    }
+  ]
+},
+{
+  label: 'none',
+  permission: '',
+  main: [
+    {
+      state: 'payment-list',
+      name: 'Payments',
       type: 'link',
       icon: 'ti-control-forward',
       permission: ''

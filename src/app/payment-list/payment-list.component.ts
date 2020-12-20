@@ -7,25 +7,25 @@ import { CommonService } from '../_services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
-import { BillStatus } from '../_models/enums';
+import { PaymentType } from '../_models/enums';
 
 
 @Component({
-  selector: 'app-bill-list',
-  templateUrl: './bill-list.component.html',
+  selector: 'app-payment-list',
+  templateUrl: './payment-list.component.html',
   encapsulation: ViewEncapsulation.None
 })
 
-export class BillListComponent implements OnInit {
+export class PaymentListComponent implements OnInit {
 
   entryForm: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
 
-  billStatus = BillStatus;
   page = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
 
+  PaymentType = PaymentType;
   modalTitle = 'Payment';
   btnSaveText = 'Save';
   modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
@@ -67,9 +67,7 @@ export class BillListComponent implements OnInit {
    this.getCustomerList();
   }
 
-  getBillStatus(id){
-    return  this.billStatus[id];
-  }
+
 
   getCustomerList() {
     this._service.get("user-list?is_customer=true").subscribe(
@@ -87,7 +85,7 @@ export class BillListComponent implements OnInit {
   }
 
   getBillListByCustomer(customerId) {
-    this._service.get("subscription/get-bill-list?custome="+customerId).subscribe(
+    this._service.get("payment/get-payment-list?custome="+customerId).subscribe(
       (res) => {
         this.rows = res;
         console.log(this.rows);
@@ -109,80 +107,79 @@ export class BillListComponent implements OnInit {
     );
   }
 
-  onChangeDiscount(value) {
-    if (parseFloat(value) > this.subTotal) {
-      this.discount = this.subTotal;
-    }
-  }
+  // onChangeDiscount(value) {
+  //   if (parseFloat(value) > this.subTotal) {
+  //     this.discount = this.subTotal;
+  //   }
+  // }
 
-  onChangePaid(value) {
-    if (parseFloat(value) > this.subTotal - this.discount) {
-      this.paidAmount = this.subTotal - this.discount;
-    }
-  }
+  // onChangePaid(value) {
+  //   if (parseFloat(value) > this.subTotal - this.discount) {
+  //     this.paidAmount = this.subTotal - this.discount;
+  //   }
+  // }
 
-  onFormSubmit() {
-    this.submitted = true;
+  // onFormSubmit() {
+  //   this.submitted = true;
 
-    this.blockUI.start('Saving...');
+  //   this.blockUI.start('Saving...');
 
-   if(this.paidAmount === 0 ||  this.paidAmount === null){
-    this.toastr.warning("Paid amount can't be empty", 'Warning!', { closeButton: true, disableTimeOut: true });
-    return;
-   }
+  //  if(this.paidAmount === 0 ||  this.paidAmount === null){
+  //   this.toastr.warning("Paid amount can't be empty", 'Warning!', { closeButton: true, disableTimeOut: true });
+  //   return;
+  //  }
 
-    const obj = {
-      customer:this.customer,
-      bill:this.billItem.id,
-      transaction_type:"Payment In",
-      payment_method:1,
-      session:this.billItem.session,
-      discount:Number(this.discount),
-      paid_amount:Number(this.paidAmount),
-      refund_amount:0,
-      due:0,
-      balance:0
-    };
-
-
-
-    this._service.post('payment/save-payment', obj).subscribe(
-      data => {
-        this.blockUI.stop();
-        if (data.IsReport == "Success") {
-          this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
-          this.modalHide();
-        } else if (data.IsReport == "Warning") {
-          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-        } else {
-          this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
-        }
-      },
-      err => {
-        this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
-      }
-    );
-
-  }
+  //   const obj = {
+  //     customer:this.customer,
+  //     bill:this.billItem.id,
+  //     transaction_type:"Payment In",
+  //     payment_method:1,
+  //     session:this.billItem.session,
+  //     discount:Number(this.discount),
+  //     paid_amount:Number(this.paidAmount),
+  //     refund_amount:0,
+  //     due:0,
+  //     balance:0
+  //   };
 
 
 
-  modalHide() {
-    this.modalRef.hide();
-    this.submitted = false;
-    this.btnSaveText = 'Save';
-    this.billItem = null;
-    this.customer = null;
-    this.rows = [];
-  }
+  //   this._service.post('payment/save-payment', obj).subscribe(
+  //     data => {
+  //       this.blockUI.stop();
+  //       if (data.IsReport == "Success") {
+  //         this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
+  //         this.modalHide();
+  //       } else if (data.IsReport == "Warning") {
+  //         this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+  //       } else {
+  //         this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+  //       }
+  //     },
+  //     err => {
+  //       this.blockUI.stop();
+  //       this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+  //     }
+  //   );
 
-  openModal(row, template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template, this.modalConfig);
-    this.subTotal = row.payable_amount;
-    this.billItem = row;
-  //  this.discount = row.discount;
+  // }
 
-  }
+
+
+  // modalHide() {
+  //   this.modalRef.hide();
+  //   this.submitted = false;
+  //   this.btnSaveText = 'Save';
+  //   this.billItem = null;
+  //   this.customer = null;
+  //   this.rows = [];
+  // }
+
+  // openModal(row, template: TemplateRef<any>) {
+  //   this.modalRef = this.modalService.show(template, this.modalConfig);
+  //   this.subTotal = row.payable_amount;
+  //   this.billItem = row;
+
+  // }
 
 }

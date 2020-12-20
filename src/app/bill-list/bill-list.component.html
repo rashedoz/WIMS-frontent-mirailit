@@ -9,28 +9,66 @@
                             <h5>Bill List </h5>
                         </div>
                         <div class="card-block ">
-                            <div class="row ">
+                          <div class="row">
+                            <div class="col-lg-4">
+                              <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Customer </label>
+                                <div class="col-sm-8">
+                                  <ng-select (change)="onCustomerChange($event)" [clearable]="false" [(ngModel)]="customer" [clearOnBackspace]="false" [items]="customerList"
+                                    bindLabel="first_name" bindValue="id" placeholder="Select a customer">
+                                  </ng-select>
+                                  <!-- <div *ngIf="submitted && f.customer.errors" class="error-text">
+                                    <span *ngIf="f.customer.errors.required" class="text-danger"> Customer is required</span>
+
+                                </div> -->
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                            <div class="row">
                                 <div class="col-lg-12 ">
-                                  <ngx-datatable class="material table-bordered" [rows]="rows"
+                                  <ngx-datatable class="material table-bordered" [rows]="rows" [scrollbarH]="true"
                                   [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
                                   [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
 
-                                  <ngx-datatable-column [width]="8" name="SL" prop="id" [draggable]="false" [sortable]="false">
-                                      <ng-template let-row="row" ngx-datatable-cell-template>
-                                          <span > {{ row.id }} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="200" name="SIM SL" prop="sim_auto_serial_no" [draggable]="false" [sortable]="false">
-                                      <ng-template let-row="row" ngx-datatable-cell-template>
-                                          <span > {{ row.sim_auto_serial_no }} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
-
-                                  <ngx-datatable-column [width]="200" name="ICCID" prop="ICCID_no" [draggable]="false"
-                                      [sortable]="false">
+                                  <ngx-datatable-column [width]="100" name="Subscription" prop="subscription" [draggable]="false" [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>
+                                          <span > {{ value.id }} </span>
+                                      </ng-template>
+                                  </ngx-datatable-column>
+                                  <ngx-datatable-column [width]="100" name="Session" prop="session" [draggable]="false" [sortable]="false">
+                                      <ng-template let-value="value" ngx-datatable-cell-template>
+                                          <span > {{ value }} </span>
+                                      </ng-template>
+                                  </ngx-datatable-column>
+                                  <ngx-datatable-column [width]="100" name="Total Amount" prop="total_amount" [draggable]="false" [sortable]="false">
+                                      <ng-template let-value="value" ngx-datatable-cell-template>
+                                          <span > {{ value }} </span>
+                                      </ng-template>
+                                  </ngx-datatable-column>
+
+                                  <ngx-datatable-column [width]="100" name="Discount" prop="discount" [draggable]="false" [sortable]="false">
+                                      <ng-template let-value="value" ngx-datatable-cell-template>
+                                          <span > {{ value }} </span>
+                                      </ng-template>
+                                  </ngx-datatable-column>
+
+                                  <ngx-datatable-column [width]="150" name="Payable Amount" prop="payable_amount" [draggable]="false" [sortable]="false">
+                                      <ng-template let-value="value" ngx-datatable-cell-template>
+                                          <span > {{ value }} </span>
+                                      </ng-template>
+                                  </ngx-datatable-column>
+
+                                  <ngx-datatable-column [width]="100" name="So Far Paid" prop="so_far_paid" [draggable]="false" [sortable]="false">
+                                      <ng-template let-value="value" ngx-datatable-cell-template>
+                                          <span > {{ value }} </span>
+                                      </ng-template>
+                                  </ngx-datatable-column>
+
+                                  <ngx-datatable-column [width]="100" name="Status" prop="status" [draggable]="false" [sortable]="false">
+                                      <ng-template let-value="value" ngx-datatable-cell-template>
+                                          <span > {{ billStatus[value] }} </span>
                                       </ng-template>
                                   </ngx-datatable-column>
 
@@ -38,6 +76,13 @@
                                       [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
                                           <span >  {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
+                                      </ng-template>
+                                  </ngx-datatable-column>
+
+                                  <ngx-datatable-column [width]="80" name="Action" prop="id" [draggable]="false"
+                                      [sortable]="false">
+                                      <ng-template let-row="row" ngx-datatable-cell-template>
+                                          <button  *ngIf="row.status != 3" (click)="openModal(row ,template)" class="btn btn-info btn-mini"><i class="icofont icofont-checked"></i>Pay</button>
                                       </ng-template>
                                   </ngx-datatable-column>
 
@@ -51,5 +96,68 @@
         </div>
 
     </div>
+
+    <ng-template #template>
+      <div class="modal-header ">
+          <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+          <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+              <i class="icofont icofont-close"></i>
+          </button>
+      </div>
+      <div class="modal-body pb-0">
+          <app-card>
+            <div class="table-responsive">
+              <table class="table table-styling">
+                  <thead>
+                      <tr class="table-primary">
+                          <th>Subscription:</th>
+                          <th *ngIf="billItem">{{billItem.subscription.id}}</th>
+                          <th>Session:</th>
+                          <th *ngIf="billItem">{{billItem.session}}</th>
+                      </tr>
+                  </thead>
+              </table>
+          </div>
+
+            <table class="table table-xs table-hover table-striped">
+              <tbody>
+                  <tr>
+                      <th>Sub-Total </th>
+                      <th width="40%" class="text-right pr-4">{{subTotal}}</th>
+                  </tr>
+                  <tr>
+                      <th>Discount</th>
+                      <td class="pr-1">
+                          <input  type="text" class="form-control form-control-sm text-right pr-3"
+                              numeric numericType="number" (change)="onChangeDiscount(discount)" [(ngModel)]="discount" [ngModelOptions]="{standalone: true}">
+                      </td>
+                  </tr>
+                <tr>
+                      <th>Net-Total</th>
+                      <th class="text-right pr-4">{{subTotal - discount}}</th>
+                  </tr>
+                   <tr>
+                      <th>Paid Amount</th>
+                      <td class="pr-1">
+                          <input type="text" class="form-control form-control-sm text-right pr-3"
+                              numeric numericType="number" (change)="onChangePaid(paidAmount)"
+                              [(ngModel)]="paidAmount" [ngModelOptions]="{standalone: true}">
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+          </app-card>
+      </div>
+      <div class="modal-footer">
+          <div class="pr-4">
+              <button class="btn btn-outline-secondary btn-sm mr-2" (click)="modalHide()"> <i
+                      class="icofont icofont-close"></i> Close</button>
+
+              <button class="btn btn-info btn-sm" (click)="onFormSubmit()"><i
+                      class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+          </div>
+
+      </div>
+  </ng-template>
 
 </block-ui>

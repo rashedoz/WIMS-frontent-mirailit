@@ -4,7 +4,7 @@
         <div class="card card-border-primary">
             <div class="card-header">
                 <h5>Data Plan List </h5>
-                <button class="btn btn-secondary btn-sm float-right" (click)="openModal(template)"><i
+                <button class="btn btn-info btn-sm float-right" (click)="openModal(template)"><i
                   class=" icofont icofont-plus "></i> Add Data Plan</button>
             </div>
             <div class="card-block ">
@@ -29,7 +29,7 @@
                             </ngx-datatable-column>
 
 
-                            <ngx-datatable-column [width]="50" name="Action" prop="Id" [draggable]="false"
+                            <ngx-datatable-column [width]="50" name="Action" prop="id" [draggable]="false"
                                 [sortable]="false">
                                 <ng-template let-row="row" ngx-datatable-cell-template>
                                     <button class="btn btn-info btn-mini" ><i
@@ -55,39 +55,36 @@
       </div>
       <div class="modal-body pb-0">
           <app-card>
-            <form [formGroup]="entryForm">
-            <div class="row">
 
-              <div class="col-sm-12" formArrayName="planHistory" *ngFor="let item of planFormArray; let i = index;">
-                <div [formGroupName]="i">
-                    <div class="row">
-                        <div class="col-md-9">
-                            <div class="form-group">
-                              <label class="col-form-label required"> Plan Name</label>
+            <!-- <table class="table table-xs table-hover table-striped">
+              <tbody>
+                  <tr>
+                      <th>Sub-Total </th>
+                      <th class="text-right pr-4">{{subTotal}}</th>
+                  </tr>
+                  <tr>
+                      <th>Discount</th>
+                      <td class="pr-1">
+                          <input  type="text" class="form-control form-control-sm text-right pr-3"
+                              numeric numericType="number" (change)="onChangeDiscount(discount)" [(ngModel)]="discount" [ngModelOptions]="{standalone: true}">
+                      </td>
+                  </tr>
+                <tr>
+                      <th>Net-Total</th>
+                      <th class="text-right pr-4">{{subTotal - discount}}</th>
+                  </tr>
+                   <tr>
+                      <th>Paid Amount</th>
+                      <td class="pr-1">
+                          <input type="text" class="form-control form-control-sm text-right pr-3"
+                              numeric numericType="number" (change)="onChangePaid(paidAmount)"
+                              [(ngModel)]="paidAmount" [ngModelOptions]="{standalone: true}">
+                      </td>
+                  </tr>
 
-                              <input  [ngClass]="{ 'is-invalid': submitted && plan_his.controls[i].get('plan').errors}" formControlName="plan" type="text" class="form-control">
-                              <div *ngIf="submitted && plan_his.controls[i].get('plan').errors" class="error-text">
-                                  <small *ngIf="plan_his.controls[i].get('plan').errors.required" class="text-danger"> Plan is required</small>
+              </tbody>
+          </table> -->
 
-                                  </div>
-                          </div>
-                        </div>
-                        <div class="col-md-3 mt-2">
-                                <div class="form-group mt-4">
-                                  <label class="col-form-label">&nbsp;</label>
-                                    <button  *ngIf="planFormArray.length > 1"  class="btn btn-danger mr-1 btn-mini pull-right"
-                                      title="Delete this plan" (click)="removePlanHistory(i)"> <i class="icofont-ui-delete"></i> </button>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <button class="btn btn-success btn-mini pull-right ml-3" title="Add new plan"
-            (click)="addPlanHistory()"><i class="icofont-plus "></i> Add More</button>
-
-          </div>
-          </form>
           </app-card>
       </div>
       <div class="modal-footer">
@@ -95,7 +92,7 @@
               <button class="btn btn-outline-secondary btn-sm mr-2" (click)="modalHide()"> <i
                       class="icofont icofont-close"></i> Close</button>
 
-              <button class="btn btn-secondary btn-sm" (click)="onFormSubmit()"><i
+              <button class="btn btn-info btn-sm" (click)="onFormSubmit()"><i
                       class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
           </div>
 

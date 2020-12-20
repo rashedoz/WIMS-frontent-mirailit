@@ -103,7 +103,7 @@
                               <button *ngIf="itemFormArray.length > 1" class="btn btn-danger mr-1 btn-mini pull-right"
                                 title="Delete this item" (click)="removeItemHistory(i)"> <i class="icofont-ui-delete"></i>
                               </button>
-                              
+
                             </th>
 
                         </tr>
@@ -132,22 +132,22 @@
                         </tr>
                          <!-- <tr>
                             <th>Paid Amount</th>
-                            <td class="pr-1"> 
+                            <td class="pr-1">
                                 <input type="text" class="form-control form-control-sm text-right pr-3"
                                     numeric numericType="number" (change)="onChangePaid(paidAmount)"
                                     [(ngModel)]="paidAmount" [ngModelOptions]="{standalone: true}">
                             </td>
                         </tr> -->
-                       
+
                     </tbody>
                 </table>
 
-                <button class="btn btn-secondary btn-sm w-50 float-right" (click)="onFormSubmit()">
+                <button class="btn btn-info btn-sm w-50 float-right" (click)="onFormSubmit()">
                     <i class="icofont-save"></i> {{btnSaveText}}
                 </button>
             </div>
 
-        
+
 
             </div>
           </div>
