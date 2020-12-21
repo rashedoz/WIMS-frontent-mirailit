@@ -21,7 +21,9 @@ import { ToastrService } from "ngx-toastr";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { BsDatepickerConfig } from "ngx-bootstrap/datepicker";
 import { Page } from "./../_models/page";
+import { SubsItemsStaus } from "./../_models/enums";
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
+
 
 @Component({
   selector: "app-remove-product-next-month",
@@ -43,7 +45,7 @@ export class RemoveProductNextMonthComponent implements OnInit {
   @BlockUI() blockUI: NgBlockUI;
   modalTitle = "Add ";
   btnSaveText = "Remove Item From Next Month";
-
+  SubsItemsStaus = SubsItemsStaus;
   modalConfig: any = { class: "gray modal-lg", backdrop: "static" };
   modalRef: BsModalRef;
 
@@ -105,16 +107,15 @@ export class RemoveProductNextMonthComponent implements OnInit {
     return this.entryForm.get("itemHistory") as FormArray;
   }
 
-  onCustomerChange(e){   
+  onCustomerChange(e){
     if(e){
       this.getItemList(e.id);
     }
   }
 
-  onSubscriptionChange(e){   
+  onSubscriptionChange(e){
     if(e){
-     this.subscriptionItemList = this.itemList.filter(x=>x.subscription == e.subscription);
- console.log( this.subscriptionItemList);
+      this.subscriptionItemList = e.subscribed_items;
      if (this.subscriptionItemList.length > 0) {
       let itemHistoryControl = <FormArray>(
         this.entryForm.controls.itemHistory
@@ -124,15 +125,31 @@ export class RemoveProductNextMonthComponent implements OnInit {
       }
       this.subscriptionItemList.forEach(element => {
         // this.getObjFromArray(this.degreeDropDownList,element.DegreeId);
-        itemHistoryControl.push(
+
+        if(element.status == 2){
+          itemHistoryControl.push(
           this.formBuilder.group({
             id: new FormControl({value:element.id, disabled: true}, Validators.required),
-            sim: new FormControl({value:element.sim, disabled: true}, Validators.required),     
+            sim: new FormControl({value:element.sim, disabled: true}, Validators.required),
             plan: new FormControl({value:element.plan, disabled: true}, Validators.required),
             amount: new FormControl({value:element.amount, disabled: true}, Validators.required),
+            status: new FormControl({value:element.status, disabled: true}, Validators.required),
+            is_removed: new FormControl({value:true, disabled: true})
+          })
+          );
+        }else {
+          itemHistoryControl.push(
+          this.formBuilder.group({
+            id: new FormControl({value:element.id, disabled: true}, Validators.required),
+            sim: new FormControl({value:element.sim, disabled: true}, Validators.required),
+            plan: new FormControl({value:element.plan, disabled: true}, Validators.required),
+            amount: new FormControl({value:element.amount, disabled: true}, Validators.required),
+            status: new FormControl({value:element.status, disabled: true}, Validators.required),
             is_removed: new FormControl(null)
           })
-        );
+          );
+        }
+
       });
     }
 
@@ -140,13 +157,14 @@ export class RemoveProductNextMonthComponent implements OnInit {
   }
 
   getItemList(customerId) {
-    this._service.get("subscription/get-subscribed-item-list?customer="+customerId).subscribe(
+    this._service.get("subscription/get-active-subscription-list?customer="+customerId).subscribe(
       (res) => {
-        this.itemList = res;
-        const key = 'subscription';
-        this.subscriptionList = [...new Map(this.itemList.map(item =>
-          [item[key], item])).values()];     
-          
+      //  this.itemList = res;
+
+        this.subscriptionList = res;
+        // const key = 'subscription';
+        // this.subscriptionList = [...new Map(this.itemList.map(item =>
+        //   [item[key], item])).values()];
       },
       (err) => {}
     );
@@ -230,17 +248,17 @@ export class RemoveProductNextMonthComponent implements OnInit {
     }
     let subscribed_relocation_items = [];
     this.blockUI.start('Saving...');
-    this.fromRowData = this.entryForm.getRawValue();  
+    this.fromRowData = this.entryForm.getRawValue();
     this.fromRowData.itemHistory.filter(x=> x.is_removed).forEach(element => {
       subscribed_relocation_items.push({
         customer:this.entryForm.value.customer,
         subscription:this.entryForm.value.subscription,
-        sim: element.sim       
+        sim: element.sim
       });
 
     });
 
-    
+
 
     const obj = {
       customer:this.entryForm.value.customer,
@@ -257,9 +275,9 @@ export class RemoveProductNextMonthComponent implements OnInit {
                 data => {
                   this.blockUI.stop();
                   if (data.IsReport == "Success") {
-                    this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });         
-                    this.formReset(); 
-          
+                    this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
+                    this.formReset();
+
                   } else if (data.IsReport == "Warning") {
                     this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
                   } else {
@@ -286,7 +304,7 @@ export class RemoveProductNextMonthComponent implements OnInit {
 
 
   // itemTotal(){
-  //   this.fromRowData = this.entryForm.getRawValue();   
+  //   this.fromRowData = this.entryForm.getRawValue();
   //   if(this.fromRowData.itemHistory.length > 0){
   //     this.subTotal = this.fromRowData.itemHistory.map(x => Number(x.amount)).reduce((a, b) => a + b);
   //   }
@@ -313,5 +331,5 @@ export class RemoveProductNextMonthComponent implements OnInit {
     this.getPlanList();
   }
 
- 
+
 }

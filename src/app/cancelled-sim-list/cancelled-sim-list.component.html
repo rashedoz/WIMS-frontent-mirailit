@@ -15,24 +15,42 @@
                                   [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
                                   [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
 
-                                  <ngx-datatable-column [width]="8" name="SIM Id" prop="sim" [draggable]="false" [sortable]="false">
+
+                                  <ngx-datatable-column [width]="100" name="Customer" prop="customer" [draggable]="false" [sortable]="false">
+                                    <ng-template let-value="value" ngx-datatable-cell-template>
+                                        <span > {{ value }} </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                                  <ngx-datatable-column [width]="8" name="SIM Id" prop="sim_id" [draggable]="false" [sortable]="false">
                                       <ng-template let-row="row" ngx-datatable-cell-template>
-                                          <span > {{ row.sim }} </span>
+                                          <span > {{ row.sim_id }} </span>
                                       </ng-template>
                                   </ngx-datatable-column>
+                                  <ngx-datatable-column [width]="8" name="SIM ICCID_no" prop="sim" [draggable]="false" [sortable]="false">
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                        <span > {{ row.sim }} </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="8" name="SIM SL" prop="alias" [draggable]="false" [sortable]="false">
+                                  <ngx-datatable-column [width]="100" name="SIM SL" prop="alias" [draggable]="false" [sortable]="false">
                                       <ng-template let-row="row" ngx-datatable-cell-template>
                                           <span > {{ row.alias }} </span>
                                       </ng-template>
                                   </ngx-datatable-column>
-   
-                                  <ngx-datatable-column [width]="80" name="Created Date" prop="created_at" [draggable]="false"
+
+                                  <ngx-datatable-column [width]="80" name="Cancellation  Request Date" prop="updated_at" [draggable]="false"
                                       [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
                                           <span >  {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
                                       </ng-template>
                                   </ngx-datatable-column>
+
+                                  <ngx-datatable-column [width]="8" name="Action" prop="id" [draggable]="false" [sortable]="false">
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                        <!-- <span > {{ row.sim }} </span> -->
+                                    </ng-template>
+                                </ngx-datatable-column>
 
                               </ngx-datatable>
                                 </div>

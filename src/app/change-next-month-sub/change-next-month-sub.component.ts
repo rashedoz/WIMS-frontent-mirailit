@@ -114,7 +114,7 @@ export class ChangeNextMonthSubComponent implements OnInit {
 
   onSubscriptionChange(e){
     if(e){
-     this.subscriptionItemList = this.itemList.filter(x=>x.subscription == e.subscription);
+      this.subscriptionItemList = e.subscribed_items;
 
      if (this.subscriptionItemList.length > 0) {
       let itemHistoryControl = <FormArray>(
@@ -128,7 +128,7 @@ export class ChangeNextMonthSubComponent implements OnInit {
         itemHistoryControl.push(
           this.formBuilder.group({
             id: new FormControl({value:element.id, disabled: true}, Validators.required),
-            session: new FormControl({value:element.session, disabled: true}, Validators.required),
+            // session: new FormControl({value:element.session, disabled: true}, Validators.required),
             sim: new FormControl({value:element.sim, disabled: true}, Validators.required),
             plan: new FormControl({value:element.plan, disabled: true}, Validators.required),
             amount: new FormControl({value:element.amount, disabled: true}, Validators.required),
@@ -169,12 +169,14 @@ export class ChangeNextMonthSubComponent implements OnInit {
   // }
 
   getItemList(customerId) {
-    this._service.get("subscription/get-subscribed-item-list?customer="+customerId).subscribe(
+    this._service.get("subscription/get-active-subscription-list?customer="+customerId).subscribe(
       (res) => {
-        this.itemList = res;
-        const key = 'subscription';
-        this.subscriptionList = [...new Map(this.itemList.map(item =>
-          [item[key], item])).values()];
+      //  this.itemList = res;
+
+        this.subscriptionList = res;
+        // const key = 'subscription';
+        // this.subscriptionList = [...new Map(this.itemList.map(item =>
+        //   [item[key], item])).values()];
       },
       (err) => {}
     );

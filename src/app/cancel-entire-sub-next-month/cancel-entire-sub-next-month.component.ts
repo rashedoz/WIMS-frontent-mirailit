@@ -105,15 +105,15 @@ export class CancelEntireSubNextMonthComponent implements OnInit {
     return this.entryForm.get("itemHistory") as FormArray;
   }
 
-  onCustomerChange(e){   
+  onCustomerChange(e){
     if(e){
       this.getItemList(e.id);
     }
   }
 
-  onSubscriptionChange(e){   
+  onSubscriptionChange(e){
     if(e){
-     this.subscriptionItemList = this.itemList.filter(x=>x.subscription == e.subscription);
+      this.subscriptionItemList = e.subscribed_items;
      if (this.subscriptionItemList.length > 0) {
       let itemHistoryControl = <FormArray>(
         this.entryForm.controls.itemHistory
@@ -126,7 +126,7 @@ export class CancelEntireSubNextMonthComponent implements OnInit {
         itemHistoryControl.push(
           this.formBuilder.group({
             id: new FormControl({value:element.id, disabled: true}, Validators.required),
-            sim: new FormControl({value:element.sim, disabled: true}, Validators.required),     
+            sim: new FormControl({value:element.sim, disabled: true}, Validators.required),
             plan: new FormControl({value:element.plan, disabled: true}, Validators.required),
             amount: new FormControl({value:element.amount, disabled: true}, Validators.required)
           })
@@ -138,13 +138,14 @@ export class CancelEntireSubNextMonthComponent implements OnInit {
   }
 
   getItemList(customerId) {
-    this._service.get("subscription/get-subscribed-item-list?customer="+customerId).subscribe(
+    this._service.get("subscription/get-active-subscription-list?customer="+customerId).subscribe(
       (res) => {
-        this.itemList = res;
-        const key = 'subscription';
-        this.subscriptionList = [...new Map(this.itemList.map(item =>
-          [item[key], item])).values()];     
-          
+      //  this.itemList = res;
+
+        this.subscriptionList = res;
+        // const key = 'subscription';
+        // this.subscriptionList = [...new Map(this.itemList.map(item =>
+        //   [item[key], item])).values()];
       },
       (err) => {}
     );
@@ -228,18 +229,18 @@ export class CancelEntireSubNextMonthComponent implements OnInit {
     }
     let subscribed_relocation_items = [];
     this.blockUI.start('Saving...');
-    this.fromRowData = this.entryForm.getRawValue();  
+    this.fromRowData = this.entryForm.getRawValue();
     this.fromRowData.itemHistory.forEach(element => {
       subscribed_relocation_items.push({
         customer:this.entryForm.value.customer,
         subscription:this.entryForm.value.subscription,
-        sim: element.sim,    
-        plan: element.plan       
+        sim: element.sim,
+        plan: element.plan
       });
 
     });
 
-    
+
     const obj = {
       customer:this.entryForm.value.customer,
       subscription:this.entryForm.value.subscription,
@@ -255,9 +256,9 @@ export class CancelEntireSubNextMonthComponent implements OnInit {
                 data => {
                   this.blockUI.stop();
                   if (data.IsReport == "Success") {
-                    this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });         
-                    this.formReset(); 
-          
+                    this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
+                    this.formReset();
+
                   } else if (data.IsReport == "Warning") {
                     this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
                   } else {
@@ -282,7 +283,7 @@ export class CancelEntireSubNextMonthComponent implements OnInit {
 
 
   // itemTotal(){
-  //   this.fromRowData = this.entryForm.getRawValue();   
+  //   this.fromRowData = this.entryForm.getRawValue();
   //   if(this.fromRowData.itemHistory.length > 0){
   //     this.subTotal = this.fromRowData.itemHistory.map(x => Number(x.amount)).reduce((a, b) => a + b);
   //   }
@@ -309,5 +310,5 @@ export class CancelEntireSubNextMonthComponent implements OnInit {
     this.getPlanList();
   }
 
- 
+
 }

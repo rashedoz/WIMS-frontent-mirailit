@@ -31,13 +31,13 @@
                   <label class="col-sm-4 col-form-label">Subscription </label>
                   <div class="col-sm-8">
                     <ng-select (change)="onSubscriptionChange($event)" [ngClass]="{ 'is-invalid': submitted && f.subscription.errors }" [clearable]="false" formControlName="subscription" [clearOnBackspace]="false" [items]="subscriptionList"
-                    bindLabel="subscription" bindValue="subscription" placeholder="Select subscription">
+                    bindLabel="id" bindValue="id" placeholder="Select subscription">
 
                     <ng-template ng-option-tmp let-item="item" let-index="index">
 
                       <div style="margin: 10px 0;" >
                           <div class="card-body">
-                              <h6 class="card-subtitle mb-2 text-muted">Subscription No: {{item.subscription}}</h6>
+                              <h6 class="card-subtitle mb-2 text-muted">Subscription No: {{item.id}}</h6>
                               <!-- <p class="card-text">  Session : {{item.session}}</p> -->
                           </div>
                       </div>
@@ -79,7 +79,7 @@
                       </tr>
                     </thead>
                     <tbody formArrayName="itemHistory" *ngFor="let item of itemFormArray; let i = index;">
-                        <tr  [formGroupName]="i">
+                        <tr  [formGroupName]="i" [ngClass]="{ 'table-secondary': item_his.controls[i].get('status').value == 2 }">
                             <th>
                               <ng-select [clearable]="false" appendTo="body" (change)="onSIMChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}" formControlName="sim" [clearOnBackspace]="false" [items]="simList"
                               bindLabel="id" placeholder="Select a sim"></ng-select>
@@ -108,10 +108,10 @@
                               <div class="checkbox-fade fade-in-default">
                                 <label>
                                     <input type="checkbox" formControlName="is_removed">
-                                    <span class="cr"><i
-                                            class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                    <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>  {{item_his.controls[i].get('status').value == 2 ? SubsItemsStaus[item_his.controls[i].get('status').value] : ''}}
                                 </label>
-                            </div>
+
+                              </div>
 
                             </th>
 

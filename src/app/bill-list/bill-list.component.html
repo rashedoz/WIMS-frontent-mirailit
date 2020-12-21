@@ -126,6 +126,10 @@
                       <th width="40%" class="text-right pr-4">{{subTotal}}</th>
                   </tr>
                   <tr>
+                      <th>So Far Paid </th>
+                      <th width="40%" class="text-right pr-4">{{billItem.so_far_paid}}</th>
+                  </tr>
+                  <tr>
                       <th>Discount</th>
                       <td class="pr-1">
                           <input  type="text" class="form-control form-control-sm text-right pr-3"
@@ -134,7 +138,7 @@
                   </tr>
                 <tr>
                       <th>Net-Total</th>
-                      <th class="text-right pr-4">{{subTotal - discount}}</th>
+                      <th class="text-right pr-4">{{subTotal - discount - billItem.so_far_paid}}</th>
                   </tr>
                    <tr>
                       <th>Paid Amount</th>

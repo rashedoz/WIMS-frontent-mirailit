@@ -105,16 +105,17 @@ export class ChangeCurrentMonthSubComponent implements OnInit {
     return this.entryForm.get("itemHistory") as FormArray;
   }
 
-  onCustomerChange(e){   
+  onCustomerChange(e){
     if(e){
       this.getItemList(e.id);
     }
   }
 
-  onSubscriptionChange(e){   
+  onSubscriptionChange(e){
     if(e){
-     this.subscriptionItemList = this.itemList.filter(x=>x.subscription == e.subscription);
- 
+    //  this.subscriptionItemList = this.itemList.filter(x=>x.subscription == e.subscription);
+     this.subscriptionItemList = e.subscribed_items;
+
      if (this.subscriptionItemList.length > 0) {
       let itemHistoryControl = <FormArray>(
         this.entryForm.controls.itemHistory
@@ -127,8 +128,8 @@ export class ChangeCurrentMonthSubComponent implements OnInit {
         itemHistoryControl.push(
           this.formBuilder.group({
             id: new FormControl({value:element.id, disabled: true}, Validators.required),
-            session: new FormControl({value:element.session, disabled: true}, Validators.required),
-            sim: new FormControl({value:element.sim, disabled: true}, Validators.required),     
+            // session: new FormControl({value:element.session, disabled: true}, Validators.required),
+            sim: new FormControl({value:element.sim, disabled: true}, Validators.required),
             plan: new FormControl({value:element.plan, disabled: true}, Validators.required),
             amount: new FormControl({value:element.amount, disabled: true}, Validators.required),
             plan_changes: new FormControl(null),
@@ -151,7 +152,7 @@ export class ChangeCurrentMonthSubComponent implements OnInit {
     return this.formBuilder.group({
       id: [null],
       session: [null],
-      sim: [{value:null, disabled: true}, [Validators.required]],     
+      sim: [{value:null, disabled: true}, [Validators.required]],
       plan: [{value:null, disabled: true}, [Validators.required]],
       amount: [{value:null, disabled: true}, [Validators.required]],
       plan_changes: [null],
@@ -174,12 +175,14 @@ export class ChangeCurrentMonthSubComponent implements OnInit {
   // }
 
   getItemList(customerId) {
-    this._service.get("subscription/get-subscribed-item-list?customer="+customerId).subscribe(
+    this._service.get("subscription/get-active-subscription-list?customer="+customerId).subscribe(
       (res) => {
-        this.itemList = res;
-        const key = 'subscription';
-        this.subscriptionList = [...new Map(this.itemList.map(item =>
-          [item[key], item])).values()];       
+      //  this.itemList = res;
+
+        this.subscriptionList = res;
+        // const key = 'subscription';
+        // this.subscriptionList = [...new Map(this.itemList.map(item =>
+        //   [item[key], item])).values()];
       },
       (err) => {}
     );
@@ -240,7 +243,7 @@ export class ChangeCurrentMonthSubComponent implements OnInit {
       return;
     }
     let subscribed_items = [];
-    let subscribed_relocation_items = [];  
+    let subscribed_relocation_items = [];
 
    this.fromRowData = this.entryForm.getRawValue();
     this.fromRowData.itemHistory.filter(x=> x.plan_changes && x.new_plan && x.changes_price && x.actual_price && (x.payable_amount || x.refund_amount) ).forEach(element => {
@@ -249,37 +252,37 @@ export class ChangeCurrentMonthSubComponent implements OnInit {
         subscription:this.entryForm.value.subscription,
         session:element.session,
         customer:this.entryForm.value.customer,
-        sim: element.sim,     
+        sim: element.sim,
         plan: element.new_plan,
         amount: Number(element.actual_price),
-       
+
       });
 
       // subscribed_relocation_items.push({
       //   subscription:this.entryForm.value.subscription,
       //   customer:this.entryForm.value.customer,
-      //   sim: element.sim,     
+      //   sim: element.sim,
       //   plan: element.new_plan,
       //   plan_changes: element.plan_changes,
       //   changes_price: Math.abs(element.amount - element.new_amount),
       //   actual_price: Number(element.new_amount),
       //   discount:0,
-      //   payable_amount: Math.abs(element.amount - element.new_amount),      
-      //   refund_amount:0,    
-      // });  
-      
+      //   payable_amount: Math.abs(element.amount - element.new_amount),
+      //   refund_amount:0,
+      // });
+
       subscribed_relocation_items.push({
         subscription:this.entryForm.value.subscription,
         customer:this.entryForm.value.customer,
-        sim: element.sim,     
+        sim: element.sim,
         plan: element.new_plan,
         plan_changes: element.plan_changes,
         changes_price: Number(element.changes_price),
         actual_price: Number(element.actual_price),
         discount:0,
-        payable_amount: Number(element.payable_amount),      
-        refund_amount:Number(element.refund_amount),    
-      }); 
+        payable_amount: Number(element.payable_amount),
+        refund_amount:Number(element.refund_amount),
+      });
 
 
     });
@@ -294,7 +297,7 @@ export class ChangeCurrentMonthSubComponent implements OnInit {
 
     const obj = {
       subscription:this.entryForm.value.subscription,
-      customer:this.entryForm.value.customer,     
+      customer:this.entryForm.value.customer,
       subscribed_items:subscribed_items,
       subscribed_relocation_items:subscribed_relocation_items
     };
@@ -308,9 +311,9 @@ export class ChangeCurrentMonthSubComponent implements OnInit {
                 data => {
                   this.blockUI.stop();
                   if (data.IsReport == "Success") {
-                    this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });         
-                    this.formReset(); 
-          
+                    this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
+                    this.formReset();
+
                   } else if (data.IsReport == "Warning") {
                     this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
                   } else {
@@ -333,14 +336,14 @@ export class ChangeCurrentMonthSubComponent implements OnInit {
 
 
 
-    
+
 
   }
 
 
 
   itemTotal(){
-    this.fromRowData = this.entryForm.getRawValue();   
+    this.fromRowData = this.entryForm.getRawValue();
     if(this.fromRowData.itemHistory.length > 0){
       this.subTotal = this.fromRowData.itemHistory.map(x => Number(x.amount)).reduce((a, b) => a + b);
     }
@@ -350,7 +353,7 @@ export class ChangeCurrentMonthSubComponent implements OnInit {
     this.submitted = false;
     this.entryForm.reset();
     Object.keys(this.entryForm.controls).forEach((key,i) => {
-      this.entryForm.controls[key].setErrors(null);      
+      this.entryForm.controls[key].setErrors(null);
     });
 
     let itemHistoryControl = <FormArray>(
@@ -369,5 +372,5 @@ export class ChangeCurrentMonthSubComponent implements OnInit {
     this.getPlanList();
   }
 
- 
+
 }

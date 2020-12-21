@@ -105,15 +105,15 @@ export class RemoveProductSubscriptionComponent implements OnInit {
     return this.entryForm.get("itemHistory") as FormArray;
   }
 
-  onCustomerChange(e){   
+  onCustomerChange(e){
     if(e){
       this.getItemList(e.id);
     }
   }
 
-  onSubscriptionChange(e){   
+  onSubscriptionChange(e){
     if(e){
-     this.subscriptionItemList = this.itemList.filter(x=>x.subscription == e.subscription);
+     this.subscriptionItemList = e.subscribed_items;
  console.log( this.subscriptionItemList);
      if (this.subscriptionItemList.length > 0) {
       let itemHistoryControl = <FormArray>(
@@ -127,7 +127,7 @@ export class RemoveProductSubscriptionComponent implements OnInit {
         itemHistoryControl.push(
           this.formBuilder.group({
             id: new FormControl({value:element.id, disabled: true}, Validators.required),
-            sim: new FormControl({value:element.sim, disabled: true}, Validators.required),     
+            sim: new FormControl({value:element.sim, disabled: true}, Validators.required),
             plan: new FormControl({value:element.plan, disabled: true}, Validators.required),
             amount: new FormControl({value:element.amount, disabled: true}, Validators.required),
             refund_amount: new FormControl(null),
@@ -140,14 +140,16 @@ export class RemoveProductSubscriptionComponent implements OnInit {
     }
   }
 
+
   getItemList(customerId) {
-    this._service.get("subscription/get-subscribed-item-list?customer="+customerId).subscribe(
+    this._service.get("subscription/get-active-subscription-list?customer="+customerId).subscribe(
       (res) => {
-        this.itemList = res;
-        const key = 'subscription';
-        this.subscriptionList = [...new Map(this.itemList.map(item =>
-          [item[key], item])).values()];     
-          
+      //  this.itemList = res;
+
+        this.subscriptionList = res;
+        // const key = 'subscription';
+        // this.subscriptionList = [...new Map(this.itemList.map(item =>
+        //   [item[key], item])).values()];
       },
       (err) => {}
     );
@@ -231,7 +233,7 @@ export class RemoveProductSubscriptionComponent implements OnInit {
     }
     let removal_items = [];
     this.blockUI.start('Saving...');
-    this.fromRowData = this.entryForm.getRawValue();  
+    this.fromRowData = this.entryForm.getRawValue();
     this.fromRowData.itemHistory.filter(x=> x.is_removed).forEach(element => {
       removal_items.push({
         id: element.id,
@@ -241,7 +243,7 @@ export class RemoveProductSubscriptionComponent implements OnInit {
 
     });
 
-    
+
 
     const obj = {
       customer:this.entryForm.value.customer,
@@ -258,9 +260,9 @@ export class RemoveProductSubscriptionComponent implements OnInit {
                 data => {
                   this.blockUI.stop();
                   if (data.IsReport == "Success") {
-                    this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });         
-                    this.formReset(); 
-          
+                    this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
+                    this.formReset();
+
                   } else if (data.IsReport == "Warning") {
                     this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
                   } else {
@@ -287,7 +289,7 @@ export class RemoveProductSubscriptionComponent implements OnInit {
 
 
   // itemTotal(){
-  //   this.fromRowData = this.entryForm.getRawValue();   
+  //   this.fromRowData = this.entryForm.getRawValue();
   //   if(this.fromRowData.itemHistory.length > 0){
   //     this.subTotal = this.fromRowData.itemHistory.map(x => Number(x.amount)).reduce((a, b) => a + b);
   //   }
@@ -314,5 +316,5 @@ export class RemoveProductSubscriptionComponent implements OnInit {
     this.getPlanList();
   }
 
- 
+
 }
