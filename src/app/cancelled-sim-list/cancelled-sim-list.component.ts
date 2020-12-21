@@ -21,7 +21,7 @@ export class CancelledSIMListComponent implements OnInit {
   @BlockUI() blockUI: NgBlockUI;
 
   modalTitleSIM = 'Add Items For Return to Stock';
-  btnSaveText = 'Add Items';
+  btnSaveText = 'Return to Stock';
   modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
   modalRef: BsModalRef;
 
@@ -106,7 +106,7 @@ export class CancelledSIMListComponent implements OnInit {
       return;
     }
     this.blockUI.start('Returning...');
-    this._service.put('stock/return-sim-to-stock-from-cancellation', obj).subscribe(
+    this._service.post('stock/return-sim-to-stock-from-cancellation', obj).subscribe(
       data => {
         this.blockUI.stop();
         if (data.IsReport == "Success") {
