@@ -258,6 +258,10 @@ export class RemoveProductNextMonthComponent implements OnInit {
 
     });
 
+    if(subscribed_relocation_items.length === 0){
+      this.toastr.warning('No item selected', 'Warning!', { closeButton: true, disableTimeOut: true });
+      return;
+    }
 
 
     const obj = {
