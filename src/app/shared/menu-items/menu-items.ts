@@ -69,9 +69,23 @@ const MENUITEMS = [
         icon: 'ti-control-forward',
         permission: ''
       },
+      // {
+      //   state: 'customer',
+      //   name: 'Customer',
+      //   type: 'link',
+      //   icon: 'ti-control-forward',
+      //   permission: ''
+      // },
       {
-        state: 'customer',
-        name: 'Customer',
+        state: 'wholesaler-list',
+        name: 'Wholesaler List',
+        type: 'link',
+        icon: 'ti-control-forward',
+        permission: ''
+      },
+      {
+        state: 'retailer-list',
+        name: 'Retailer List',
         type: 'link',
         icon: 'ti-control-forward',
         permission: ''
@@ -103,20 +117,20 @@ const MENUITEMS = [
             permission: '',
             icon: 'icofont-brand-microsoft',
             children: [
+                  {
+                    state: 'sim-stock-history',
+                    name: 'SIM Stock History',
+                    type: 'link',
+                    icon: 'ti-control-forward',
+                    permission: '',
+                },
                 {
                     state: 'all-sim-list',
                     name: 'All SIM List',
                     type: 'link',
                     icon: 'ti-control-forward',
                     permission: '',
-                },
-                {
-                    state: 'all-device-list',
-                    name: 'All Device List',
-                    type: 'link',
-                    icon: 'ti-control-forward',
-                    permission: '',
-                },
+                },               
                 {
                     state: 'updatable-sim-list',
                     name: 'Updatable SIM List',
@@ -124,13 +138,29 @@ const MENUITEMS = [
                     icon: 'ti-control-forward',
                     permission: '',
                 },
-                // {
-                //     state: 'cancelled-product-list',
-                //     name: 'Cancelled Product List',
-                //     type: 'link',
-                //     icon: 'ti-control-forward',
-                //     permission: '',
-                // },
+                {
+                    state: 'cancelled-sim-list',
+                    name: 'Cancelled SIM List',
+                    type: 'link',
+                    icon: 'ti-control-forward',
+                    permission: '',
+                },
+                
+                {
+                  state: 'all-device-list',
+                  name: 'All Device List',
+                  type: 'link',
+                  icon: 'ti-control-forward',
+                  permission: '',
+              },
+              {
+                  state: 'updatable-device-list',
+                  name: 'Updatable Device List',
+                  type: 'link',
+                  icon: 'ti-control-forward',
+                  permission: '',
+              },
+ 
 
             ]
         },

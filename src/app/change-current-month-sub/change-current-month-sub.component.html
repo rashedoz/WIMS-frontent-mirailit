@@ -69,7 +69,7 @@
             <div class="row ">
               <div class="col-lg-12">
                 <div class="table-responsive">
-                  <table class="table table-xs table-hover table-bordered table-striped">
+                  <table class="table table-sm table-hover table-bordered table-striped">
                     <thead>
                       <tr>
                         <th width="15%" scope="col">SIM</th>
@@ -77,7 +77,10 @@
                         <th width="15%" scope="col">Amount</th>
                         <th width="20%" scope="col">New Plan</th>
                         <th width="15%" scope="col">Changes Plan</th>
-                        <th width="20%" scope="col">New Plan Amount</th>
+                        <th width="20%" scope="col">Changes Price</th>
+                        <th width="20%" scope="col">Actual Price</th>
+                        <th width="20%" scope="col">Payable Amount</th>
+                        <th width="20%" scope="col">Refund Amount</th>
                       </tr>
                     </thead>
                     <tbody formArrayName="itemHistory" *ngFor="let item of itemFormArray; let i = index;">
@@ -120,9 +123,27 @@
                             </div>
                             </th>
                             <th>
-                              <input type="text" numeric numericType="decimal" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('new_amount').errors}" formControlName="new_amount"  />
-                            <div *ngIf="submitted && item_his.controls[i].get('new_amount').errors" class="error-text">
-                              <small *ngIf="item_his.controls[i].get('new_amount').errors.required" class="text-danger"> New Amount is required</small>
+                              <input type="text" numeric numericType="decimal" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('changes_price').errors}" formControlName="changes_price"  />
+                            <div *ngIf="submitted && item_his.controls[i].get('changes_price').errors" class="error-text">
+                              <small *ngIf="item_his.controls[i].get('changes_price').errors.required" class="text-danger"> Changes Price is required</small>
+                            </div>
+                            </th>
+                            <th>
+                              <input type="text" numeric numericType="decimal" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('actual_price').errors}" formControlName="actual_price"  />
+                            <div *ngIf="submitted && item_his.controls[i].get('actual_price').errors" class="error-text">
+                              <small *ngIf="item_his.controls[i].get('actual_price').errors.required" class="text-danger"> Actual Price is required</small>
+                            </div>
+                            </th>
+                            <th>
+                              <input type="text" numeric numericType="decimal" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('payable_amount').errors}" formControlName="payable_amount"  />
+                            <div *ngIf="submitted && item_his.controls[i].get('payable_amount').errors" class="error-text">
+                              <small *ngIf="item_his.controls[i].get('payable_amount').errors.required" class="text-danger"> Payable amount is required</small>
+                            </div>
+                            </th>
+                            <th>
+                              <input type="text" numeric numericType="decimal" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('refund_amount').errors}" formControlName="refund_amount"  />
+                            <div *ngIf="submitted && item_his.controls[i].get('refund_amount').errors" class="error-text">
+                              <small *ngIf="item_his.controls[i].get('refund_amount').errors.required" class="text-danger"> Refund amount is required</small>
                             </div>
                             </th>
 
@@ -130,10 +151,11 @@
                     </tbody>
                   </table>
 
-                <button class="btn btn-info btn-sm w-40 float-right" (click)="onFormSubmit()">
+                
+                </div>
+                <button class="btn btn-info btn-sm  mt-3 float-right" (click)="onFormSubmit()">
                   <i class="icofont-save"></i> {{btnSaveText}}
               </button>
-                </div>
               </div>
 
 

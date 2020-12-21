@@ -85,7 +85,7 @@ export class PaymentListComponent implements OnInit {
   }
 
   getBillListByCustomer(customerId) {
-    this._service.get("payment/get-payment-list?custome="+customerId).subscribe(
+    this._service.get("payment/get-payment-list?customer="+customerId).subscribe(
       (res) => {
         this.rows = res;
         console.log(this.rows);

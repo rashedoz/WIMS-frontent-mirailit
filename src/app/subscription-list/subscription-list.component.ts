@@ -1,5 +1,5 @@
 import { Component, TemplateRef, ViewChild, ElementRef, ViewEncapsulation, OnInit } from '@angular/core';
-import { ColumnMode } from '@swimlane/ngx-datatable';
+import { ColumnMode,DatatableComponent } from '@swimlane/ngx-datatable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonService } from '../_services/common.service';
@@ -20,10 +20,12 @@ export class SubscriptionListComponent implements OnInit {
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
 
-
+  @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
   page = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
   rows = [];
+  tempRows = [];
+  customerList = [];
   loadingIndicator = false;
   ColumnMode = ColumnMode;
   scrollBarHorizontal = (window.innerWidth < 1200);
@@ -66,7 +68,8 @@ export class SubscriptionListComponent implements OnInit {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
         return;
       }
-      this.rows = res;
+      this.tempRows = res;
+      this.customerList = res;
       // this.page.totalElements = res.Total;
       // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
@@ -79,6 +82,21 @@ export class SubscriptionListComponent implements OnInit {
       }, 1000);
     }
     );
+  }
+
+  updateFilter(event) {
+    const val = event.target.value.toLowerCase();
+
+    // filter our data
+    const temp = this.tempRows.filter(function (d) {
+      return d.customer.toLowerCase().indexOf(val) !== -1 ||
+        !val;
+    });
+
+    // update the rows
+    this.customerList = temp;
+    // Whenever the filter changes, always go back to the first page
+    this.table.offset = 0;
   }
 
 }

@@ -9,9 +9,21 @@
                             <h5>Subscription List </h5>
                         </div>
                         <div class="card-block ">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                  <div class="form-group row">
+                                    <!-- <label class="col-sm-4 col-form-label">Member </label> -->
+                                    <div class="col-sm-8">
+                                      <input type="text" class="form-control" placeholder="Search customer" (keyup)="updateFilter($event)" />
+                                      
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
                             <div class="row ">
                                 <div class="col-lg-12 ">
-                                  <ngx-datatable class="material table-bordered" [rows]="rows"
+                                  <ngx-datatable #table class="material table-bordered" [rows]="customerList"
                                   [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
                                   [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
 

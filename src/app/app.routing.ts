@@ -77,6 +77,11 @@ export const AppRoutes: Routes = [
         // canActivate: [AuthGuard]
       },
       {
+        path: 'updatable-device-list',
+        loadChildren: () => import('./updatable-device-list/updatable-device-list.module').then(m => m.UpdatableDeviceListModule),
+        // canActivate: [AuthGuard]
+      },
+      {
         path: 'cancelled-sim-list',
         loadChildren: () => import('./cancelled-sim-list/cancelled-sim-list.module').then(m => m.CancelledSIMListModule),
         // canActivate: [AuthGuard]
@@ -151,71 +156,22 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./member-list/member-list.module').then(m => m.MemberListModule),
         // canActivate: [AuthGuard]
       },
-      // {
-      //   path: 'building',
-      //   loadChildren: () => import('./building/building.module').then(m => m.BuildingModule),
-      //   // canActivate: [AuthGuard]
-      // },
-      // {
-      //   path: 'floor',
-      //   loadChildren: () => import('./floor/floor.module').then(m => m.FloorModule),
-      //   // canActivate: [AuthGuard]
-      // },
-      // {
-      //   path: 'facilities',
-      //   loadChildren: () => import('./facilities/facilities.module').then(m => m.FacilitiesModule),
-      //   // canActivate: [AuthGuard]
-      // },
-      // {
-      //   path: 'room',
-      //   loadChildren: () => import('./room/room.module').then(m => m.RoomModule),
-      //   // canActivate: [AuthGuard]
-      // },
-      // {
-      //   path: 'requisition',
-      //   loadChildren: () => import('./requisition/requisition.module').then(m => m.RequisitionModule),
-      //   // canActivate: [AuthGuard]
-      // },
-      // {
-      //   path: 'booking',
-      //   loadChildren: () => import('./booking/booking.module').then(m => m.BookingModule),
-      //   // canActivate: [AuthGuard]
-      // },
-      // {
-      //   path: 'booking/:requisition_id',
-      //   loadChildren: () => import('./booking/booking.module').then(m => m.BookingModule),
-      //   // canActivate: [AuthGuard]
-      // },
-      // {
-      //   path: 'booking-list',
-      //   loadChildren: () => import('./booking-list/booking-list.module').then(m => m.BookingListModule),
-      //   // canActivate: [AuthGuard]
-      // },
-      // {
-      //   path: 'allocation',
-      //   loadChildren: () => import('./allocation/allocation.module').then(m => m.AllocationModule),
-      //   // canActivate: [AuthGuard]
-      // },
-      // {
-      //   path: 'allocation-list',
-      //   loadChildren: () => import('./allocation-list/allocation-list.module').then(m => m.AllocationListModule),
-      //   // canActivate: [AuthGuard]
-      // },
-      // {
-      //   path: 'check-inout',
-      //   loadChildren: () => import('./check-inout/check-inout.module').then(m => m.CheckInoutModule),
-      //   // canActivate: [AuthGuard]
-      // },
-      // {
-      //   path: 'payment',
-      //   loadChildren: () => import('./payment/payment.module').then(m => m.PaymentModule),
-      //   // canActivate: [AuthGuard]
-      // },
-      // {
-      //   path: 'allocation/:booking_id',
-      //   loadChildren: () => import('./allocation/allocation.module').then(m => m.AllocationModule),
-      //   // canActivate: [AuthGuard]
-      // },
+      {
+        path: 'wholesaler-list',
+        loadChildren: () => import('./wholesaler-list/wholesaler-list.module').then(m => m.WholesalerListModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'retailer-list',
+        loadChildren: () => import('./retailer-list/retailer-list.module').then(m => m.RetailerListModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'sim-stock-history',
+        loadChildren: () => import('./sim-stock-history/sim-stock-history.module').then(m => m.SIMStockHistoryModule),
+        // canActivate: [AuthGuard]
+      },
+      
     ]
   }, {
     path: '**',

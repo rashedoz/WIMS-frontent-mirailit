@@ -87,7 +87,7 @@ export class BillListComponent implements OnInit {
   }
 
   getBillListByCustomer(customerId) {
-    this._service.get("subscription/get-bill-list?custome="+customerId).subscribe(
+    this._service.get("subscription/get-bill-list?customer="+customerId).subscribe(
       (res) => {
         this.rows = res;
         console.log(this.rows);

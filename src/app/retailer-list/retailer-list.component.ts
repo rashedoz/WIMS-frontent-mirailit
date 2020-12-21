@@ -11,19 +11,19 @@ import { Page } from './../_models/page';
 
 
 @Component({
-  selector: 'app-wholesaler-list',
-  templateUrl: './wholesaler-list.component.html',
+  selector: 'app-retailer-list',
+  templateUrl: './retailer-list.component.html',
   encapsulation: ViewEncapsulation.None
 })
 
-export class WholesalerListComponent implements OnInit {
+export class RetailerListComponent implements OnInit {
 
   RegistrerForm: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
-  customerTypeList = [{id:1,name:"Wholesaler"},{id:2,name:"Retailer"}]
+  customerTypeList = [{id:1,name:"Retailer"},{id:2,name:"Retailer"}]
 
-  modalTitle = 'Add Wholesaler';
+  modalTitle = 'Add Retailer';
   btnSaveText = 'Save';
 
   modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
@@ -75,7 +75,7 @@ export class WholesalerListComponent implements OnInit {
 
   getList() {
     this.loadingIndicator = true;
-    this._service.get('user-list?is_customer=true&is_wholesaler=true').subscribe(res => {
+    this._service.get('user-list?is_customer=true&is_retailer=true').subscribe(res => {
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
         return;
@@ -97,7 +97,7 @@ export class WholesalerListComponent implements OnInit {
 
   getItem(id, template: TemplateRef<any>) {
     this.blockUI.start('Getting data...');
-    this._service.get('Wholesaler/GetWholesalerById/' + id).subscribe(res => {
+    this._service.get('Retailer/GetRetailerById/' + id).subscribe(res => {
       this.blockUI.stop();
       if (!res.Success) {
         this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
@@ -130,8 +130,8 @@ export class WholesalerListComponent implements OnInit {
       last_name: this.RegistrerForm.value.lastName.trim(),
       mobile: this.RegistrerForm.value.mobile.trim(),
       is_customer: 1,
-      is_wholesaler: 1 ,
-      is_retailer: 0,
+      is_retailer: 1 ,
+      is_wholesaler: 0,
       is_staff: 0,
       is_superuser:0
     };
@@ -160,7 +160,7 @@ export class WholesalerListComponent implements OnInit {
     this.RegistrerForm.reset();
     this.modalRef.hide();
     this.submitted = false;
-    this.modalTitle = 'Add Wholesaler';
+    this.modalTitle = 'Add Retailer';
     this.btnSaveText = 'Save';
   }
 

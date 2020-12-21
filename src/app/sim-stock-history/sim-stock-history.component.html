@@ -1,0 +1,105 @@
+<block-ui>
+    <div class="row" *ngIf="stock">
+
+        <div class="col-md-6 col-xl-4 mb-3">
+            <div class="card client-blocks dark-primary-border">
+                <div class="card-block">
+                    <h5>Stock Quantity</h5>
+                    <ul>
+                        <li>
+                            <i class="icofont icofont-cubes"></i>
+                        </li>
+                        <li class="text-right">
+                            {{stock.stock_qty}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-4 mb-3">
+            <div class="card client-blocks success-border">
+                <div class="card-block">
+                    <h5>Available Stock Quantity </h5>
+                    <ul>
+                        <li>
+                            <i class="icofont icofont-cube text-success"></i>
+                        </li>
+                        <li class="text-right text-success">
+                            {{stock.available_stock_qty}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-6 col-xl-4 mb-3">
+            <div class="card client-blocks warning-border">
+                <div class="card-block">
+                    <h5>Cancelled Quantity</h5>
+                    <ul>
+                        <li>
+                            <i class="icofont icofont-error text-warning"></i>
+                        </li>
+                        <li class="text-right text-warning">
+                            {{stock.cancelled_qty}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-md-6 col-xl-4 mb-3">
+            <div class="card client-blocks dark-primary-border">
+                <div class="card-block">
+                    <h5>Returned Quantity</h5>
+                    <ul>
+                        <li>
+                            <i class="icofont icofont-reply-all"></i>
+                        </li>
+                        <li class="text-right">
+                            {{stock.returned_qty}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-4 mb-3">
+            <div class="card client-blocks danger-border">
+                <div class="card-block">
+                    <h5>Damaged Quantity </h5>
+                    <ul>
+                        <li>
+                            <i class="icofont icofont-close-squared-alt text-danger"></i>
+                        </li>
+                        <li class="text-right text-danger">
+                            {{stock.damaged_qty}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-4 mb-3">
+            <div class="card client-blocks">
+                <div class="card-block">
+                    <h5>Subscribed Quantity</h5>
+                    <ul>
+                        <li>
+                            <i class="icofont icofont-exchange text-primary"></i>
+                        </li>
+                        <li class="text-right text-primary">
+                            {{stock.subscribed_qty}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>    
+
+</block-ui>

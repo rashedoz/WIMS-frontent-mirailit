@@ -21,6 +21,7 @@ import { ToastrService } from "ngx-toastr";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { BsDatepickerConfig } from "ngx-bootstrap/datepicker";
 import { Page } from "./../_models/page";
+import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 
 @Component({
   selector: "app-create-subscription",
@@ -41,7 +42,7 @@ export class CreateSubscriptionComponent implements OnInit {
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
   modalTitle = "Add ";
-  btnSaveText = "Save";
+  btnSaveText = "Create Subscription";
 
   modalConfig: any = { class: "gray modal-lg", backdrop: "static" };
   modalRef: BsModalRef;
@@ -58,6 +59,7 @@ export class CreateSubscriptionComponent implements OnInit {
   planList: Array<any> = [];
 
   constructor(
+    private confirmService: ConfirmService,
     private modalService: BsModalService,
     public formBuilder: FormBuilder,
     private _service: CommonService,
@@ -220,24 +222,44 @@ export class CreateSubscriptionComponent implements OnInit {
 
     };
 
-    this._service.post('subscription/create-new-subscription', obj).subscribe(
-      data => {
-        this.blockUI.stop();
-        if (data.IsReport == "Success") {
-          this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });         
-          this.formReset(); 
+    this.confirmService.confirm('Are you sure?', 'You are creating a new subscription.')
+    .subscribe(
+        result => {
+            if (result) {             
+            
+                
+                this._service.post('subscription/create-new-subscription', obj).subscribe(
+                  data => {
+                    this.blockUI.stop();
+                    if (data.IsReport == "Success") {
+                      this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });         
+                      this.formReset(); 
+            
+                    } else if (data.IsReport == "Warning") {
+                      this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+                    } else {
+                      this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+                    }
+                  },
+                  err => {
+                    this.blockUI.stop();
+                    this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+                  }
+                );
 
-        } else if (data.IsReport == "Warning") {
-          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-        } else {
-          this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
-        }
-      },
-      err => {
-        this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
-      }
+
+
+            }
+            else{
+                this.blockUI.stop();
+            }
+        },
+
     );
+
+
+
+
 
   }
 

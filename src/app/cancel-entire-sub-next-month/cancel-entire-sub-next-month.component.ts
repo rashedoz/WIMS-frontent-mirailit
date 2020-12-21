@@ -21,6 +21,7 @@ import { ToastrService } from "ngx-toastr";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { BsDatepickerConfig } from "ngx-bootstrap/datepicker";
 import { Page } from "./../_models/page";
+import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 
 @Component({
   selector: "app-cancel-entire-sub-next-month",
@@ -41,7 +42,7 @@ export class CancelEntireSubNextMonthComponent implements OnInit {
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
   modalTitle = "Add ";
-  btnSaveText = "Save";
+  btnSaveText = "Cancel Entire Subscription From Current Month";
 
   modalConfig: any = { class: "gray modal-lg", backdrop: "static" };
   modalRef: BsModalRef;
@@ -61,6 +62,7 @@ export class CancelEntireSubNextMonthComponent implements OnInit {
   planList: Array<any> = [];
 
   constructor(
+    private confirmService: ConfirmService,
     private modalService: BsModalService,
     public formBuilder: FormBuilder,
     private _service: CommonService,
@@ -136,7 +138,7 @@ export class CancelEntireSubNextMonthComponent implements OnInit {
   }
 
   getItemList(customerId) {
-    this._service.get("subscription/get-subscribed-item-list?customer"+customerId).subscribe(
+    this._service.get("subscription/get-subscribed-item-list?customer="+customerId).subscribe(
       (res) => {
         this.itemList = res;
         const key = 'subscription';
@@ -245,23 +247,34 @@ export class CancelEntireSubNextMonthComponent implements OnInit {
     };
 
 
-    this._service.post('subscription/cancel-entire-subscription-from-next-month', obj).subscribe(
-      data => {
-        this.blockUI.stop();
-        if (data.IsReport == "Success") {
-          this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });         
-          this.formReset(); 
+    this.confirmService.confirm('Are you sure?', 'You are canceling the entire subscription from next month .')
+    .subscribe(
+        result => {
+            if (result) {
+              this._service.post('subscription/cancel-entire-subscription-from-next-month', obj).subscribe(
+                data => {
+                  this.blockUI.stop();
+                  if (data.IsReport == "Success") {
+                    this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });         
+                    this.formReset(); 
+          
+                  } else if (data.IsReport == "Warning") {
+                    this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+                  } else {
+                    this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+                  }
+                },
+                err => {
+                  this.blockUI.stop();
+                  this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+                }
+              );
+            }
+            else{
+                this.blockUI.stop();
+            }
+        },
 
-        } else if (data.IsReport == "Warning") {
-          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-        } else {
-          this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
-        }
-      },
-      err => {
-        this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
-      }
     );
 
   }

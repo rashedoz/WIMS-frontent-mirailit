@@ -15,25 +15,18 @@
                                   [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
                                   [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
 
-                                  <ngx-datatable-column [width]="8" name="SL" prop="id" [draggable]="false" [sortable]="false">
+                                  <ngx-datatable-column [width]="8" name="SIM Id" prop="sim" [draggable]="false" [sortable]="false">
                                       <ng-template let-row="row" ngx-datatable-cell-template>
-                                          <span > {{ row.id }} </span>
+                                          <span > {{ row.sim }} </span>
                                       </ng-template>
                                   </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="200" name="SIM SL" prop="sim_auto_serial_no" [draggable]="false" [sortable]="false">
+                                  <ngx-datatable-column [width]="8" name="SIM SL" prop="alias" [draggable]="false" [sortable]="false">
                                       <ng-template let-row="row" ngx-datatable-cell-template>
-                                          <span > {{ row.sim_auto_serial_no }} </span>
+                                          <span > {{ row.alias }} </span>
                                       </ng-template>
                                   </ngx-datatable-column>
-
-                                  <ngx-datatable-column [width]="200" name="ICCID" prop="ICCID_no" [draggable]="false"
-                                      [sortable]="false">
-                                      <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
-
+   
                                   <ngx-datatable-column [width]="80" name="Created Date" prop="created_at" [draggable]="false"
                                       [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>

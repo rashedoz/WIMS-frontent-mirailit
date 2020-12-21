@@ -227,7 +227,7 @@ export class PurchaseEntryComponent implements OnInit {
       return;
     }
     let purchase_details = [];
-
+    let emptyList = [];
     // this.purchaseItemList.forEach(element => {
     //   if(Number(element.qty) == 0 && Number(element.amount) == 0){
     //     this.toastr.warning("Qty and Amount can't be empty", 'Warning!', { closeButton: true, disableTimeOut: true });
@@ -235,9 +235,15 @@ export class PurchaseEntryComponent implements OnInit {
     //   }
     // });
 
+    // this.purchaseItemList.forEach(element => {
+    //   if(Number(element.qty) == 0 && Number(element.amount) == 0){
+    //    emptyList.push({product_type:element.product_type_id});
+    //   }
+    // });
+
    this.blockUI.start('Saving...');
 
-    this.purchaseItemList.forEach(element => {
+    this.purchaseItemList.filter(x=> Number(x.qty) != 0 && Number(x.amount) != 0).forEach(element => {
       purchase_details.push({
         product_type:element.product_type_id,
         qty: Number(element.qty),
@@ -245,12 +251,17 @@ export class PurchaseEntryComponent implements OnInit {
       });
     });
 
+    if(purchase_details.length < 2 ){
+        this.toastr.warning("Qty and Amount can't be empty", 'Warning!', { closeButton: true, disableTimeOut: true });
+        return;
+    }
     const obj = {
       supplier:this.entryFormSIMDevice.value.supplier,
       total_amount: Number(this.totalAmount),
       purchase_details:purchase_details
     };
 
+ 
     this._service.post('purchase/entry-sim-device-purchase', obj).subscribe(
       data => {
         this.blockUI.stop();

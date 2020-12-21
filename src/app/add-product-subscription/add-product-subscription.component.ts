@@ -21,6 +21,7 @@ import { ToastrService } from "ngx-toastr";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { BsDatepickerConfig } from "ngx-bootstrap/datepicker";
 import { Page } from "./../_models/page";
+import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 
 @Component({
   selector: "app-add-product-subscription",
@@ -41,7 +42,7 @@ export class AddProductSubscriptionComponent implements OnInit {
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
   modalTitle = "Add ";
-  btnSaveText = "Save";
+  btnSaveText = "Add Prodcuts to Subscriptoin";
 
   modalConfig: any = { class: "gray modal-lg", backdrop: "static" };
   modalRef: BsModalRef;
@@ -61,6 +62,7 @@ export class AddProductSubscriptionComponent implements OnInit {
   planList: Array<any> = [];
 
   constructor(
+    private confirmService: ConfirmService,
     private modalService: BsModalService,
     public formBuilder: FormBuilder,
     private _service: CommonService,
@@ -110,7 +112,7 @@ export class AddProductSubscriptionComponent implements OnInit {
   }
 
   getItemList(customerId) {
-    this._service.get("subscription/get-subscribed-item-list?customer"+customerId).subscribe(
+    this._service.get("subscription/get-subscribed-item-list?customer="+customerId).subscribe(
       (res) => {
         this.itemList = res;
         const key = 'subscription';
@@ -231,25 +233,39 @@ export class AddProductSubscriptionComponent implements OnInit {
       subscribed_relocation_items:subscribed_relocation_items
     };
 
-    this._service.post('subscription/add-products-to-subscription', obj).subscribe(
-      data => {
-        this.blockUI.stop();
-        if (data.IsReport == "Success") {
-          this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });         
-          this.formReset(); 
 
-        } else if (data.IsReport == "Warning") {
-          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-        }
-         else {
-          this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
-        }
-      },
-      err => {
-        this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
-      }
+    this.confirmService.confirm('Are you sure?', 'You are adding items to this subscription.')
+    .subscribe(
+        result => {
+            if (result) {
+              this._service.post('subscription/add-products-to-subscription', obj).subscribe(
+                data => {
+                  this.blockUI.stop();
+                  if (data.IsReport == "Success") {
+                    this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });         
+                    this.formReset(); 
+          
+                  } else if (data.IsReport == "Warning") {
+                    this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+                  }
+                   else {
+                    this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+                  }
+                },
+                err => {
+                  this.blockUI.stop();
+                  this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+                }
+              );
+            }
+            else{
+                this.blockUI.stop();
+            }
+        },
+
     );
+
+
 
   }
 

@@ -7,7 +7,7 @@ import { CommonService } from '../_services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
-
+import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 
 @Component({
   selector: 'app-subscription',
@@ -24,7 +24,7 @@ export class SubscriptionComponent implements OnInit {
 
 
   modalTitle = 'Generate Monthly Bill';
-  btnSaveText = 'Save';
+  btnSaveText = 'Generate';
   modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
   modalRef: BsModalRef;
 
@@ -37,6 +37,7 @@ export class SubscriptionComponent implements OnInit {
   scrollBarHorizontal = (window.innerWidth < 1200);
 
   constructor(
+    private confirmService: ConfirmService,
     public formBuilder: FormBuilder,
     private modalService: BsModalService,
     private _service: CommonService,
@@ -73,24 +74,36 @@ export class SubscriptionComponent implements OnInit {
     const obj = { 
      invoice_month: this.entryFormBill.value.invoice_month.trim()
     };
+  
+    this.confirmService.confirm('Are you sure?', 'You are generating the monthly bill.')
+    .subscribe(
+        result => {
+            if (result) {
+              const request = this._service.post('subscription/generate-monthly-bill', obj);
+              request.subscribe(
+                data => {
+                  this.blockUI.stop();
+                  if (data) {
+                    this.toastr.success(data.data, 'Success!', { timeOut: 2000 });
+                    this.modalHide();
+                  } else {
+                    this.toastr.error(data.Msg, 'Error!', { closeButton: true, disableTimeOut: true });
+                  }
+                },
+                err => {
+                  this.blockUI.stop();
+                  this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+                }
+              );
+            }
+            else{
+                this.blockUI.stop();
+            }
+        },
 
-    const request = this._service.post('subscription/generate-monthly-bill', obj);
-
-    request.subscribe(
-      data => {
-        this.blockUI.stop();
-        if (data) {
-          this.toastr.success(data.data, 'Success!', { timeOut: 2000 });
-          this.modalHide();
-        } else {
-          this.toastr.error(data.Msg, 'Error!', { closeButton: true, disableTimeOut: true });
-        }
-      },
-      err => {
-        this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
-      }
     );
+
+
   }
 
 
@@ -99,7 +112,6 @@ export class SubscriptionComponent implements OnInit {
     this.entryFormBill.reset();
     this.modalRef.hide();
     this.submitted = false;
-    this.btnSaveText = 'Save';
   }
 
   openModal(template: TemplateRef<any>) {
