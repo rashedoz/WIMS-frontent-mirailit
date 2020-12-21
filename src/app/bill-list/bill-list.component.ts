@@ -124,13 +124,13 @@ export class BillListComponent implements OnInit {
   onFormSubmit() {
     this.submitted = true;
 
-    this.blockUI.start('Saving...');
+
 
    if(this.paidAmount === 0 ||  this.paidAmount === null){
     this.toastr.warning("Paid amount can't be empty", 'Warning!', { closeButton: true, disableTimeOut: true });
     return;
    }
-
+   this.blockUI.start('Saving...');
     const obj = {
       customer:this.customer,
       bill:this.billItem.id,

@@ -21,7 +21,7 @@ export class ProductTypeComponent implements OnInit {
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
   formTitle = 'Add Product Type';
-  btnSaveText = 'Save';
+  btnSaveText = 'Add Product Type';
 
   page = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';

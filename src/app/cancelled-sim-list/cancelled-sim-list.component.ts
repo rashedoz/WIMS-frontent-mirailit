@@ -6,7 +6,7 @@ import { CommonService } from '../_services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
-
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-cancelled-sim-list',
@@ -20,6 +20,12 @@ export class CancelledSIMListComponent implements OnInit {
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
 
+  modalTitleSIM = 'Add Items For Return to Stock';
+  btnSaveText = 'Add Items';
+  modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
+  modalRef: BsModalRef;
+
+  simList = [];
 
   page = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
@@ -29,6 +35,7 @@ export class CancelledSIMListComponent implements OnInit {
   scrollBarHorizontal = (window.innerWidth < 1200);
 
   constructor(
+    private modalService: BsModalService,
     public formBuilder: FormBuilder,
     private _service: CommonService,
     private toastr: ToastrService,
@@ -43,7 +50,6 @@ export class CancelledSIMListComponent implements OnInit {
 
 
   ngOnInit() {
-
     this.getList();
   }
 
@@ -67,6 +73,7 @@ export class CancelledSIMListComponent implements OnInit {
         return;
       }
       this.rows = res;
+
       // this.page.totalElements = res.Total;
       // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
@@ -80,5 +87,66 @@ export class CancelledSIMListComponent implements OnInit {
     }
     );
   }
+
+  onFormSubmitSIM() {
+
+    let returned_sim_list = [];
+  //
+    this.simList.filter(x=>x.selected).forEach(element => {
+      returned_sim_list.push({
+        id:element.id
+      });
+    });
+    const obj = {
+      returned_sim_list : returned_sim_list
+    };
+
+    if(returned_sim_list.length == 0){
+      this.toastr.warning('No item selected', 'Warning!', { closeButton: true, disableTimeOut: true });
+      return;
+    }
+    this.blockUI.start('Returning...');
+    this._service.put('stock/return-sim-to-stock-from-cancellation', obj).subscribe(
+      data => {
+        this.blockUI.stop();
+        if (data.IsReport == "Success") {
+          this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+          this.modalHideSIM();
+          this.getList();
+
+        } else if (data.IsReport == "Warning") {
+          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+        } else {
+          this.toastr.error(data.Msg, 'Error!', { timeOut: 2000 });
+        }
+      },
+      err => {
+        this.blockUI.stop();
+        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+      }
+    );
+
+  }
+
+
+  modalHideSIM() {
+    this.modalRef.hide();
+    this.submitted = false;
+    this.simList = [];
+  }
+
+
+  openModalSIM(template: TemplateRef<any>) {
+    this.rows.forEach(element => {
+      this.simList.push({
+        id: element.id,
+        sim_id: element.sim_id,
+        sim: element.sim,
+        selected: false
+      })
+    });
+    this.modalRef = this.modalService.show(template, this.modalConfig);
+  }
+
 
 }

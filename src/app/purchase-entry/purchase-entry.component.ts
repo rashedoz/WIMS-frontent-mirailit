@@ -241,7 +241,7 @@ export class PurchaseEntryComponent implements OnInit {
     //   }
     // });
 
-   this.blockUI.start('Saving...');
+
 
     this.purchaseItemList.filter(x=> Number(x.qty) != 0 && Number(x.amount) != 0).forEach(element => {
       purchase_details.push({
@@ -261,7 +261,8 @@ export class PurchaseEntryComponent implements OnInit {
       purchase_details:purchase_details
     };
 
- 
+    this.blockUI.start('Saving...');
+
     this._service.post('purchase/entry-sim-device-purchase', obj).subscribe(
       data => {
         this.blockUI.stop();
