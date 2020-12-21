@@ -249,7 +249,7 @@ export class RemoveProductNextMonthComponent implements OnInit {
     let subscribed_relocation_items = [];
     this.blockUI.start('Saving...');
     this.fromRowData = this.entryForm.getRawValue();
-    this.fromRowData.itemHistory.filter(x=> x.is_removed).forEach(element => {
+    this.fromRowData.itemHistory.filter(x=> x.is_removed && x.status != 2).forEach(element => {
       subscribed_relocation_items.push({
         customer:this.entryForm.value.customer,
         subscription:this.entryForm.value.subscription,
