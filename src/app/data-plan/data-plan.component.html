@@ -4,7 +4,7 @@
         <div class="card card-border-primary">
             <div class="card-header">
                 <h5>Data Plan List </h5>
-                <button class="btn btn-secondary btn-sm float-right" (click)="openModal(template)"><i
+                <button class="btn btn-primary btn-sm float-right" (click)="openModal(template)"><i
                   class=" icofont icofont-plus "></i> Add Data Plan</button>
             </div>
             <div class="card-block ">
@@ -92,11 +92,17 @@
       </div>
       <div class="modal-footer">
           <div class="pr-4">
-              <button class="btn btn-outline-secondary btn-sm mr-2" (click)="modalHide()"> <i
+              <!-- <button class="btn btn-outline-secondary btn-sm mr-2" (click)="modalHide()"> <i
                       class="icofont icofont-close"></i> Close</button>
 
               <button class="btn btn-secondary btn-sm" (click)="onFormSubmit()"><i
-                      class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+                      class="icofont icofont-check-circled"></i> {{btnSaveText}}</button> -->
+
+                      <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i> Close</button>
+
+                <button class="btn btn-success btn-outline-success btn-sm" (click)="onFormSubmit()"><i
+                        class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
           </div>
 
       </div>

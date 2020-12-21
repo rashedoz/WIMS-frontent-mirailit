@@ -132,6 +132,16 @@ export const AppRoutes: Routes = [
         // canActivate: [AuthGuard]
       },
       {
+        path: 'wholesaler-subscription-list',
+        loadChildren: () => import('./wholesaler-subscription-list/wholesaler-subscription-list.module').then(m => m.WholesalerSubscriptionListModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'retailer-subscription-list',
+        loadChildren: () => import('./retailer-subscription-list/retailer-subscription-list.module').then(m => m.RetailerSubscriptionListModule),
+        // canActivate: [AuthGuard]
+      },
+      {
         path: 'change-current-month-subscription',
         loadChildren: () => import('./change-current-month-sub/change-current-month-sub.module').then(m => m.ChangeCurrentMonthSubModule),
         // canActivate: [AuthGuard]
@@ -171,7 +181,7 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./sim-stock-history/sim-stock-history.module').then(m => m.SIMStockHistoryModule),
         // canActivate: [AuthGuard]
       },
-      
+
     ]
   }, {
     path: '**',

@@ -29,13 +29,12 @@
                                   [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
                                   [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
 
-
                                   <ngx-datatable-column [width]="100" name="First Name" prop="first_name" [draggable]="false" [sortable]="false">
                                     <ng-template let-value="value" ngx-datatable-cell-template>
                                         <span > {{ value }} </span>
                                     </ng-template>
                                 </ngx-datatable-column>
-                                  <ngx-datatable-column [width]="100" name="Last Name" prop="lirst_name" [draggable]="false" [sortable]="false">
+                                  <ngx-datatable-column [width]="100" name="Last Name" prop="last_name" [draggable]="false" [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
                                           <span > {{ value }} </span>
                                       </ng-template>

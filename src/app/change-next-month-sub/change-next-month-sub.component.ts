@@ -106,16 +106,16 @@ export class ChangeNextMonthSubComponent implements OnInit {
     return this.entryForm.get("itemHistory") as FormArray;
   }
 
-  onCustomerChange(e){   
+  onCustomerChange(e){
     if(e){
       this.getItemList(e.id);
     }
   }
 
-  onSubscriptionChange(e){   
+  onSubscriptionChange(e){
     if(e){
      this.subscriptionItemList = this.itemList.filter(x=>x.subscription == e.subscription);
- 
+
      if (this.subscriptionItemList.length > 0) {
       let itemHistoryControl = <FormArray>(
         this.entryForm.controls.itemHistory
@@ -129,15 +129,12 @@ export class ChangeNextMonthSubComponent implements OnInit {
           this.formBuilder.group({
             id: new FormControl({value:element.id, disabled: true}, Validators.required),
             session: new FormControl({value:element.session, disabled: true}, Validators.required),
-            sim: new FormControl({value:element.sim, disabled: true}, Validators.required),     
+            sim: new FormControl({value:element.sim, disabled: true}, Validators.required),
             plan: new FormControl({value:element.plan, disabled: true}, Validators.required),
             amount: new FormControl({value:element.amount, disabled: true}, Validators.required),
-            new_plan: new FormControl(null),
             plan_changes: new FormControl(null),
-            changes_price: new FormControl(null),
-            actual_price: new FormControl(null),
-            payable_amount: new FormControl(null),
-            refund_amount: new FormControl(null)
+            new_plan: new FormControl(null),
+            new_amount: new FormControl(null),
           })
         );
       });
@@ -152,15 +149,12 @@ export class ChangeNextMonthSubComponent implements OnInit {
     return this.formBuilder.group({
       id: [null],
       session: [null],
-      sim: [{value:null, disabled: true}, [Validators.required]],     
+      sim: [{value:null, disabled: true}, [Validators.required]],
       plan: [{value:null, disabled: true}, [Validators.required]],
       amount: [{value:null, disabled: true}, [Validators.required]],
       plan_changes: [null],
       new_plan: [null],
-      changes_price: [null],
-      actual_price: [null],
-      payable_amount: [null],
-      refund_amount: [null]
+      new_amount: [null]
     });
   }
 
@@ -180,7 +174,7 @@ export class ChangeNextMonthSubComponent implements OnInit {
         this.itemList = res;
         const key = 'subscription';
         this.subscriptionList = [...new Map(this.itemList.map(item =>
-          [item[key], item])).values()];       
+          [item[key], item])).values()];
       },
       (err) => {}
     );
@@ -241,24 +235,23 @@ export class ChangeNextMonthSubComponent implements OnInit {
       return;
     }
     let subscribed_items = [];
-    let subscribed_relocation_items = [];  
+    let subscribed_relocation_items = [];
 
    this.fromRowData = this.entryForm.getRawValue();
-    this.fromRowData.itemHistory.filter(x=> x.plan_changes && x.new_plan && x.changes_price && x.actual_price && (x.payable_amount || x.refund_amount)).forEach(element => {
-     
+   this.fromRowData.itemHistory.filter(x=> x.plan_changes && x.new_plan && x.new_amount).forEach(element => {
       subscribed_relocation_items.push({
         subscription:this.entryForm.value.subscription,
         customer:this.entryForm.value.customer,
         session:this.entryForm.value.session,
-        sim: element.sim,     
+        sim: element.sim,
         plan: element.new_plan,
         plan_changes: element.plan_changes,
-        changes_price: Number(element.changes_price),
-        actual_price: Number(element.actual_price),
+        changes_price: Math.abs(element.amount - element.new_amount),
+        actual_price: Number(element.new_amount),
         discount:0,
-        payable_amount: Number(element.payable_amount),      
-        refund_amount:Number(element.refund_amount),     
-      });    
+        payable_amount: Math.abs(element.amount - element.new_amount),
+        refund_amount:0,
+      });
 
 
     });
@@ -276,7 +269,7 @@ export class ChangeNextMonthSubComponent implements OnInit {
     };
 
 
-    
+
     this.confirmService.confirm('Are you sure?', 'You are changing the next month subscription.')
     .subscribe(
         result => {
@@ -285,9 +278,9 @@ export class ChangeNextMonthSubComponent implements OnInit {
                 data => {
                   this.blockUI.stop();
                   if (data) {
-                    this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });         
-                    this.formReset(); 
-          
+                    this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
+                    this.formReset();
+
                   } else {
                     this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
                   }
@@ -306,14 +299,14 @@ export class ChangeNextMonthSubComponent implements OnInit {
     );
 
 
-    
+
 
   }
 
 
 
   itemTotal(){
-    this.fromRowData = this.entryForm.getRawValue();   
+    this.fromRowData = this.entryForm.getRawValue();
     if(this.fromRowData.itemHistory.length > 0){
       this.subTotal = this.fromRowData.itemHistory.map(x => Number(x.amount)).reduce((a, b) => a + b);
     }
@@ -323,7 +316,7 @@ export class ChangeNextMonthSubComponent implements OnInit {
     this.submitted = false;
     this.entryForm.reset();
     Object.keys(this.entryForm.controls).forEach((key,i) => {
-      this.entryForm.controls[key].setErrors(null);      
+      this.entryForm.controls[key].setErrors(null);
     });
 
     let itemHistoryControl = <FormArray>(
@@ -342,5 +335,5 @@ export class ChangeNextMonthSubComponent implements OnInit {
     this.getPlanList();
   }
 
- 
+
 }

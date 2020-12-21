@@ -14,6 +14,28 @@
                     </div>
                 </div>
                 <div class="col-md-12 mb-3">
+                    <div class="card card-hover dark-primary-border counter-card-1" [routerLink]="['/wholesaler-subscription-list']" routerLinkActive="router-link-active" >
+                        <div class="card-block-big">
+                            <div>
+                                <h6>Wholesaler Subscription List</h6>
+
+                            </div>
+                            <!-- <i class="icofont icofont-listing-number"></i> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <div class="card card-hover dark-primary-border counter-card-1" [routerLink]="['/retailer-subscription-list']" routerLinkActive="router-link-active" >
+                        <div class="card-block-big">
+                            <div>
+                                <h6>Retailer Subscription List</h6>
+
+                            </div>
+                            <!-- <i class="icofont icofont-listing-number"></i> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mb-3">
                     <div class="card card-hover dark-primary-border counter-card-2" [routerLink]="['/create-subscription']" routerLinkActive="router-link-active">
                         <div class="card-block-big">
                             <div>
@@ -157,7 +179,7 @@
         </div>
         <div class="modal-footer">
             <div class="pr-4">
-                <button class="btn btn-outline-secondary btn-sm mr-2" (click)="modalHide()"> <i
+                <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHide()"> <i
                         class="icofont icofont-close"></i> Close</button>
 
                 <button class="btn btn-info btn-sm" (click)="onFormSubmitBill()"><i

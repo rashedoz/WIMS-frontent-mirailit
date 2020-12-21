@@ -7,14 +7,14 @@
                     <div class="card card-border-default">
                         <div class="card-header">
                             <h5>Wholesaler List </h5>
-                            <button class="btn btn-primary float-right" (click)="openModal(template)"><i
+                            <button class="btn btn-primary btn-sm float-right" (click)="openModal(template)"><i
                                     class=" icofont icofont-plus "></i> Add Wholesaler</button>
                             <!-- <span class="code-header ">use class <code>table</code> inside table element</span> -->
                         </div>
                         <div class="card-block ">
                             <div class="row ">
                                 <div class="col-lg-12 ">
-                                    <ngx-datatable class="material table-bordered" [rows]="rows"
+                                    <ngx-datatable  class="material table-bordered" [rows]="rows"
                                         [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
                                         [headerHeight]="40" [footerHeight]="50" rowHeight="auto"  [limit]="10"
                                       >

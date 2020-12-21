@@ -9,21 +9,24 @@
                             <h5>Subscription List </h5>
                         </div>
                         <div class="card-block ">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                  <div class="form-group row">
-                                    <!-- <label class="col-sm-4 col-form-label">Member </label> -->
-                                    <div class="col-sm-8">
-                                      <input type="text" class="form-control" placeholder="Search customer" (keyup)="updateFilter($event)" />
+                          <div class="row ">
+                            <div class="col-lg-6">
 
-                                    </div>
-                                  </div>
+                              <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Retailer </label>
+                                <div class="col-sm-8">
+                                  <ng-select (change)="onCustomerChange($event)"  [clearable]="false"  [clearOnBackspace]="false" [items]="customerList"
+                                    bindLabel="first_name" bindValue="id" placeholder="Search a retailer">
+                                  </ng-select>
                                 </div>
                               </div>
 
+                            </div>
+                          </div>
+
                             <div class="row ">
                                 <div class="col-lg-12 ">
-                                  <ngx-datatable #dataTable class="material table-bordered" [rows]="customerList"
+                                  <ngx-datatable #dataTable class="material table-bordered" [rows]="rows"
                                   [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
                                   [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
 
@@ -78,7 +81,7 @@
                                       </ng-template>
                                   </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="200" name="Wholesaler Name" prop="customer" [draggable]="false" [sortable]="false">
+                                  <ngx-datatable-column [width]="200" name="Retailer Name" prop="customer" [draggable]="false" [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
                                           <span > {{ value }} </span>
                                       </ng-template>
