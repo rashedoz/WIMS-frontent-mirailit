@@ -21,6 +21,7 @@ import { ToastrService } from "ngx-toastr";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { BsDatepickerConfig } from "ngx-bootstrap/datepicker";
 import { Page } from "./../_models/page";
+import { SubscriptionStatus } from "./../_models/enums";
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 
 @Component({
@@ -38,7 +39,7 @@ export class ChangeCurrentMonthSubComponent implements OnInit {
   subTotal:number =0;
   discount:number=0;
   paidAmount:number=0;
-
+  SubscriptionStatus = SubscriptionStatus;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
   modalTitle = "Add ";

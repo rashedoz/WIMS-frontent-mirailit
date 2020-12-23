@@ -56,7 +56,7 @@ export class SubscriptionComponent implements OnInit {
     this.entryFormBill = this.formBuilder.group({
       invoice_month: [null, [Validators.required]],
     });
-   
+
   }
 
   get f() {
@@ -71,10 +71,10 @@ export class SubscriptionComponent implements OnInit {
 
     this.blockUI.start('Saving...');
 
-    const obj = { 
+    const obj = {
      invoice_month: this.entryFormBill.value.invoice_month.trim()
     };
-  
+
     this.confirmService.confirm('Are you sure?', 'You are generating the monthly bill.')
     .subscribe(
         result => {
@@ -83,11 +83,13 @@ export class SubscriptionComponent implements OnInit {
               request.subscribe(
                 data => {
                   this.blockUI.stop();
-                  if (data) {
-                    this.toastr.success(data.data, 'Success!', { timeOut: 2000 });
+                  if (data.IsReport == "Success") {
+                    this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
                     this.modalHide();
+                  } else if (data.IsReport == "Warning") {
+                    this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
                   } else {
-                    this.toastr.error(data.Msg, 'Error!', { closeButton: true, disableTimeOut: true });
+                    this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
                   }
                 },
                 err => {

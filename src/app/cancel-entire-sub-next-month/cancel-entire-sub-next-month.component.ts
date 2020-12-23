@@ -42,7 +42,7 @@ export class CancelEntireSubNextMonthComponent implements OnInit {
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
   modalTitle = "Add ";
-  btnSaveText = "Cancel Entire Subscription From Current Month";
+  btnSaveText = "Cancel Entire Subscription From Next Month";
 
   modalConfig: any = { class: "gray modal-lg", backdrop: "static" };
   modalRef: BsModalRef;
