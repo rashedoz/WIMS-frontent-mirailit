@@ -21,6 +21,7 @@ import { ToastrService } from "ngx-toastr";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { BsDatepickerConfig } from "ngx-bootstrap/datepicker";
 import { Page } from "./../_models/page";
+import { SubscriptionStatus } from "./../_models/enums";
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 
 @Component({
@@ -32,7 +33,7 @@ export class CancelEntireSubNextMonthComponent implements OnInit {
   entryForm: FormGroup;
   itemHistoryList: FormArray;
   itemFormArray: any;
-
+  SubscriptionStatus = SubscriptionStatus;
   fromRowData:any;
 
   subTotal:number =0;

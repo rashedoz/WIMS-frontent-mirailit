@@ -22,6 +22,7 @@ import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { BsDatepickerConfig } from "ngx-bootstrap/datepicker";
 import { Page } from "./../_models/page";
 import { SubsItemsStaus } from "./../_models/enums";
+import { SubscriptionStatus } from "./../_models/enums";
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 
 
@@ -36,7 +37,7 @@ export class RemoveProductNextMonthComponent implements OnInit {
   itemFormArray: any;
 
   fromRowData:any;
-
+  SubscriptionStatus =SubscriptionStatus;
   subTotal:number =0;
   discount:number=0;
   paidAmount:number=0;

@@ -34,12 +34,18 @@
 
                     <ng-template ng-option-tmp let-item="item" let-index="index">
 
-                      <div style="margin: 10px 0;" >
-                          <div class="card-body">
-                              <h6 class="card-subtitle mb-2 text-muted">Subscription No: {{item.id}}</h6>
-                              <!-- <p class="card-text">  Session : {{item.session}}</p> -->
+                      <div>
+                        <div class="card-body">
+                          <div class="row mb-3">
+                            <div class="col-sm-6 pt-2"><h6 class="card-subtitle text-muted">Subscription No: {{item.id}}</h6></div>
+                            <div class="col-sm-6">
+                              <span *ngIf="item.status == 1" class=" card-subtitle"> Status : <strong class="label label-success">{{ SubscriptionStatus[item.status] }}</strong></span>
+                              <span *ngIf="item.status == 2" class=" card-subtitle"> Status : <strong class="label label-warning">{{ SubscriptionStatus[item.status] }}</strong></span>
+                            </div>
                           </div>
-                      </div>
+                           <p class="card-text">  Id : {{item.alias}}</p>
+                        </div>
+                    </div>
                   </ng-template>
 
 
