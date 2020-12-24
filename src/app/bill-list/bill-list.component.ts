@@ -174,7 +174,8 @@ export class BillListComponent implements OnInit {
     this.btnSaveText = 'Save';
     this.billItem = null;
     this.customer = null;
-    this.rows = [];
+    this.subTotal = 0;
+    this.discount = 0;
   }
 
   openModal(row, template: TemplateRef<any>) {

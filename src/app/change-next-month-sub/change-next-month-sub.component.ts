@@ -108,6 +108,13 @@ export class ChangeNextMonthSubComponent implements OnInit {
   }
 
   onCustomerChange(e){
+    this.entryForm.controls['subscription'].setValue(null);
+    let itemHistoryControl = <FormArray>(
+      this.entryForm.controls.itemHistory
+    );
+    while (this.itemHistoryList.length !== 0) {
+      itemHistoryControl.removeAt(0);
+    }
     if(e){
       this.getItemList(e.id);
     }
@@ -280,10 +287,12 @@ export class ChangeNextMonthSubComponent implements OnInit {
               this._service.post('subscription/change-next-month-data-plan', obj).subscribe(
                 data => {
                   this.blockUI.stop();
-                  if (data) {
+                  if (data.IsReport == "Success") {
                     this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
                     this.formReset();
 
+                  } else if (data.IsReport == "Warning") {
+                    this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
                   } else {
                     this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
                   }

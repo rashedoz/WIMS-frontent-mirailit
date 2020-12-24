@@ -7,7 +7,7 @@
                     <div class="card card-border-primary">
                         <div class="card-header">
                             <h5>SIM List </h5>
-                            <button class="btn btn-info btn-sm float-right" (click)="openModalSIM(template)"><i
+                            <button class="btn btn-primary btn-sm float-right" (click)="openModalSIM(template)"><i
                               class=" icofont icofont-plus "></i> Update SIM Details</button>
                         </div>
                         <div class="card-block ">
@@ -17,31 +17,38 @@
                                   [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
                                   [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
 
-                                  <ngx-datatable-column [width]="10" name="SL" prop="id" [draggable]="false" [sortable]="false">
+                                  <ngx-datatable-column [width]="8" name="SIM ID No" prop="id" [draggable]="false" [sortable]="false">
                                     <ng-template let-row="row" ngx-datatable-cell-template>
                                         <span > {{ row.id }} </span>
                                     </ng-template>
                                 </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="100" name="SIM SL" prop="sim_auto_serial_no" [draggable]="false" [sortable]="false">
-                                      <ng-template let-row="row" ngx-datatable-cell-template>
-                                          <span > {{ row.sim_auto_serial_no }} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
+                                <ngx-datatable-column [width]="200" name="SIM Alias" prop="sim_auto_serial_no" [draggable]="false" [sortable]="false">
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                        <span > {{ row.sim_auto_serial_no }} </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="30" name="ICCID" prop="ICCID_no" [draggable]="false"
-                                      [sortable]="false">
-                                      <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
+                                <ngx-datatable-column [width]="100" name="ICCID No" prop="ICCID_no" [draggable]="false"
+                                    [sortable]="false">
+                                    <ng-template let-value="value" ngx-datatable-cell-template>
+                                        <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="80" name="Created Date" prop="created_at" [draggable]="false"
-                                      [sortable]="false">
-                                      <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span >  {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
+                                <ngx-datatable-column [width]="80" name="Status" prop="status" [draggable]="false"
+                                    [sortable]="false">
+                                    <ng-template let-value="value" ngx-datatable-cell-template>
+                                        <span > {{ StockStatus[value]}} </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                                <ngx-datatable-column [width]="80" name="Stock Entry Date" prop="created_at" [draggable]="false"
+                                    [sortable]="false">
+                                    <ng-template let-value="value" ngx-datatable-cell-template>
+                                        <span >  {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
 
                               </ngx-datatable>
                                 </div>
@@ -100,7 +107,7 @@
               <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideSIM()"> <i
                       class="icofont icofont-close"></i> Close</button>
 
-              <button class="btn btn-info btn-sm" (click)="onFormSubmitSIM()"><i
+              <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmitSIM()"><i
                       class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
           </div>
 

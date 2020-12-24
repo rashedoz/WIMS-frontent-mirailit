@@ -108,7 +108,14 @@ export class RemoveProductNextMonthComponent implements OnInit {
     return this.entryForm.get("itemHistory") as FormArray;
   }
 
-  onCustomerChange(e){
+  onCustomerChange(e){  
+    this.entryForm.controls['subscription'].setValue(null);
+    let itemHistoryControl = <FormArray>(
+      this.entryForm.controls.itemHistory
+    );
+    while (this.itemHistoryList.length !== 0) {
+      itemHistoryControl.removeAt(0);
+    }
     if(e){
       this.getItemList(e.id);
     }
@@ -158,6 +165,7 @@ export class RemoveProductNextMonthComponent implements OnInit {
   }
 
   getItemList(customerId) {
+    
     this._service.get("subscription/get-active-subscription-list?customer="+customerId).subscribe(
       (res) => {
       //  this.itemList = res;

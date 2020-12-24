@@ -7,7 +7,7 @@ import { CommonService } from '../_services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
-
+import { StockStatus } from '../_models/enums';
 
 @Component({
   selector: 'app-updatable-sim-list',
@@ -24,7 +24,7 @@ export class UpdatableSIMListComponent implements OnInit {
   btnSaveText = 'Save';
   modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
   modalRef: BsModalRef;
-
+  StockStatus = StockStatus;
   page = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
   rows = [];

@@ -76,7 +76,7 @@
                                         </ng-template>
                                     </ngx-datatable-column>  
 
-                                    <ngx-datatable-column [width]="350" name="Purchsed Date" prop="created_at"
+                                    <ngx-datatable-column [width]="350" name="Purchase Date" prop="created_at"
                                         [draggable]="false" [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
                                             <span > {{ value | amDateFormat:'DD-MMM-YYYY' }} </span>
@@ -168,10 +168,10 @@
         <div class="modal-footer">
             <div class="pr-4">
 
-                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHideSIM()"> <i
+                <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideSIM()"> <i
                         class="icofont icofont-close"></i> Close</button>
 
-                <button class="btn btn-success btn-outline-success" (click)="onFormSubmitSIM()"><i
+                <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmitSIM()"><i
                         class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
 
             </div>
@@ -253,10 +253,10 @@
         <div class="modal-footer">
             <div class="pr-4">
 
-                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHideDevice()"> <i
+                <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideDevice()"> <i
                         class="icofont icofont-close"></i> Close</button>
 
-                <button class="btn btn-success btn-outline-success" (click)="onFormSubmitDevice()"><i
+                <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmitDevice()"><i
                         class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
 
             </div>
@@ -338,10 +338,10 @@
         <div class="modal-footer">
             <div class="pr-4">
 
-                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHideSIMDevice()"> <i
+                <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideSIMDevice()"> <i
                         class="icofont icofont-close"></i> Close</button>
 
-                <button class="btn btn-success btn-outline-success" (click)="onFormSubmitSIMDevice()"><i
+                <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmitSIMDevice()"><i
                         class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
 
             </div>

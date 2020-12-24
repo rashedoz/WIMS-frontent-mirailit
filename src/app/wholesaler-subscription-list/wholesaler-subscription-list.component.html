@@ -26,11 +26,9 @@
 
                             <div class="row ">
                                 <div class="col-lg-12 ">
-                                  <ngx-datatable #dataTable class="material table-bordered" [rows]="rows"
-                                  [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                  [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
-
-
+                                <ngx-datatable #dataTable class="material table-bordered" [rows]="rows" [loadingIndicator]="loadingIndicator"
+                                  [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
+                                  [rowHeight]="'auto'" [limit]="10">
 
                                          <!-- Row Detail Template -->
                                          <ngx-datatable-row-detail  [rowHeight]="'100%'">
@@ -69,17 +67,12 @@
                                           </ng-template>
                                       </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="8" name="SL" prop="id" [draggable]="false" [sortable]="false">
-                                      <ng-template let-row="row" ngx-datatable-cell-template>
-                                          <span > {{ row.id }} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
+                                      <ngx-datatable-column [width]="100" name="Subscription No" prop="id" [draggable]="false" [sortable]="false">
+                                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                            <span > {{ row.id }} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>  
 
-                                  <ngx-datatable-column [width]="200" name="Subscripton No" prop="alias" [draggable]="false" [sortable]="false">
-                                      <ng-template let-row="row" ngx-datatable-cell-template>
-                                          <span > {{ row.alias }} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
 
                                   <ngx-datatable-column [width]="200" name="Wholesaler Name" prop="customer" [draggable]="false" [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
@@ -93,7 +86,7 @@
                                       </ng-template>
                                   </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="100" name="Cancellation Date" prop="cancellation_date" [draggable]="false" [sortable]="false">
+                                  <ngx-datatable-column [width]="150" name="Cancellation Date" prop="cancellation_date" [draggable]="false" [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
                                         <span *ngIf="value" >  {{ value | amDateFormat:'DD-MMM-YYYY'}} </span>
                                         <span *ngIf="!value" >  --- </span>
@@ -101,7 +94,8 @@
                                   </ngx-datatable-column>
                                   <ngx-datatable-column [width]="100" name="Subscripton Status" prop="status" [draggable]="false" [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
-                                        <span >  {{ SubscriptionStatus[value]}} </span>
+                                        <span *ngIf="value == 1" > <strong class="label label-success">{{ SubscriptionStatus[value] }}</strong> </span>
+                                          <span *ngIf="value == 2" ><strong class="label label-danger">{{ SubscriptionStatus[value] }}</strong> </span>
                                       </ng-template>
                                   </ngx-datatable-column>
 

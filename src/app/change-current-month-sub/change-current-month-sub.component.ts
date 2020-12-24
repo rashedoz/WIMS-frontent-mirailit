@@ -107,6 +107,13 @@ export class ChangeCurrentMonthSubComponent implements OnInit {
   }
 
   onCustomerChange(e){
+    this.entryForm.controls['subscription'].setValue(null);
+    let itemHistoryControl = <FormArray>(
+      this.entryForm.controls.itemHistory
+    );
+    while (this.itemHistoryList.length !== 0) {
+      itemHistoryControl.removeAt(0);
+    }
     if(e){
       this.getItemList(e.id);
     }

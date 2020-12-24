@@ -107,6 +107,13 @@ export class RemoveProductSubscriptionComponent implements OnInit {
   }
 
   onCustomerChange(e){
+    this.entryForm.controls['subscription'].setValue(null);
+    let itemHistoryControl = <FormArray>(
+      this.entryForm.controls.itemHistory
+    );
+    while (this.itemHistoryList.length !== 0) {
+      itemHistoryControl.removeAt(0);
+    }
     if(e){
       this.getItemList(e.id);
     }
@@ -131,7 +138,7 @@ export class RemoveProductSubscriptionComponent implements OnInit {
             sim: new FormControl({value:element.sim, disabled: true}, Validators.required),
             plan: new FormControl({value:element.plan, disabled: true}, Validators.required),
             amount: new FormControl({value:element.amount, disabled: true}, Validators.required),
-            refund_amount: new FormControl(null),
+            refund_amount: new FormControl(0),
             is_removed: new FormControl(null)
           })
         );
@@ -233,7 +240,7 @@ export class RemoveProductSubscriptionComponent implements OnInit {
       return;
     }
     let removal_items = [];
-    this.blockUI.start('Saving...');
+    
     this.fromRowData = this.entryForm.getRawValue();
     this.fromRowData.itemHistory.filter(x=> x.is_removed).forEach(element => {
       removal_items.push({
@@ -244,8 +251,12 @@ export class RemoveProductSubscriptionComponent implements OnInit {
 
     });
 
+    if(removal_items.length == 0){
+      this.toastr.warning('No item selected', 'Warning!', { closeButton: true, disableTimeOut: false });
+      return;
+    }
 
-
+    this.blockUI.start('Saving...');
     const obj = {
       customer:this.entryForm.value.customer,
       subscription:this.entryForm.value.subscription,
