@@ -28,6 +28,8 @@ export class BillListComponent implements OnInit {
   emptyGuid = '00000000-0000-0000-0000-000000000000';
 
   modalTitle = 'Payment';
+  modalTitleBill = 'Generate Monthly Bill';
+  btnSaveTextBill = 'Generate';
   btnSaveText = 'Save';
   modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
   modalRef: BsModalRef;
