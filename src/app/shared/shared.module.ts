@@ -40,8 +40,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 
-import { NgxMatDatetimePickerModule } from '@angular-material-components/datetime-picker';
-import { NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+// import { NgxMatDatetimePickerModule } from '@angular-material-components/datetime-picker';
+// import { NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 import { NgxMatMomentModule } from '@angular-material-components/moment-adapter';
 
 
@@ -66,9 +67,9 @@ import { NgxMatMomentModule } from '@angular-material-components/moment-adapter'
       FlexLayoutModule,
 
       TimepickerModule.forRoot(),
-
-      NgxMatDatetimePickerModule,
-      NgxMatTimepickerModule,
+      BsDropdownModule.forRoot(),
+      // NgxMatDatetimePickerModule,
+      // NgxMatTimepickerModule,
       MatCheckboxModule,
       MatDatepickerModule,
       MatInputModule,
@@ -119,9 +120,9 @@ import { NgxMatMomentModule } from '@angular-material-components/moment-adapter'
       FlexLayoutModule,
       BsDatepickerModule,
       TimepickerModule,
-      NgxMatDatetimePickerModule,
-      NgxMatTimepickerModule,
-
+      // NgxMatDatetimePickerModule,
+      // NgxMatTimepickerModule,
+      BsDropdownModule,
       MatCheckboxModule,
       MatDatepickerModule,
       MatInputModule,

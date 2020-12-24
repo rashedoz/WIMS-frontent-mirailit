@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
 import { BillStatus } from '../_models/enums';
-
+import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 
 @Component({
   selector: 'app-bill-list',
@@ -19,6 +19,7 @@ import { BillStatus } from '../_models/enums';
 export class BillListComponent implements OnInit {
 
   entryForm: FormGroup;
+  entryFormBill: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
 
@@ -46,6 +47,7 @@ export class BillListComponent implements OnInit {
   billItem;
 
   constructor(
+    private confirmService: ConfirmService,
     private modalService: BsModalService,
     public formBuilder: FormBuilder,
     private _service: CommonService,
@@ -65,6 +67,9 @@ export class BillListComponent implements OnInit {
   ngOnInit() {
 
    this.getCustomerList();
+   this.entryFormBill = this.formBuilder.group({
+    invoice_month: [null, [Validators.required]],
+  });
   }
 
   getBillStatus(id){
@@ -184,6 +189,70 @@ export class BillListComponent implements OnInit {
     this.subTotal = row.payable_amount;
     this.billItem = row;
   //  this.discount = row.discount;
+
+  }
+
+
+
+  get f() {
+    return this.entryFormBill.controls;
+  }
+
+  onFormSubmitBill() {
+    this.submitted = true;
+    if (this.entryFormBill.invalid) {
+      return;
+    }
+
+    this.blockUI.start('Saving...');
+
+    const obj = {
+     invoice_month: this.entryFormBill.value.invoice_month.trim()
+    };
+
+    this.confirmService.confirm('Are you sure?', 'You are generating the monthly bill.')
+    .subscribe(
+        result => {
+            if (result) {
+              const request = this._service.post('subscription/generate-monthly-bill', obj);
+              request.subscribe(
+                data => {
+                  this.blockUI.stop();
+                  if (data.IsReport == "Success") {
+                    this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+                    this.modalHide();
+                  } else if (data.IsReport == "Warning") {
+                    this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+                  } else {
+                    this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+                  }
+                },
+                err => {
+                  this.blockUI.stop();
+                  this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+                }
+              );
+            }
+            else{
+                this.blockUI.stop();
+            }
+        },
+
+    );
+
+
+  }
+
+
+
+  modalHideBill() {
+    this.entryFormBill.reset();
+    this.modalRef.hide();
+    this.submitted = false;
+  }
+
+  openModalBill(template: TemplateRef<any>) {
+      this.modalRef = this.modalService.show(template, this.modalConfig);
 
   }
 

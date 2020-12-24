@@ -140,12 +140,12 @@ export class ChangeCurrentMonthSubComponent implements OnInit {
             sim: new FormControl({value:element.sim, disabled: true}, Validators.required),
             plan: new FormControl({value:element.plan, disabled: true}, Validators.required),
             amount: new FormControl({value:element.amount, disabled: true}, Validators.required),
-            plan_changes: new FormControl(null),
+            plan_changes: new FormControl({value:null, disabled: true}),
             new_plan: new FormControl(null),
-            changes_price: new FormControl(null),
-            actual_price: new FormControl(null),
-            payable_amount: new FormControl(null),
-            refund_amount: new FormControl(null)
+            changes_price: new FormControl({value:null, disabled: true}),
+            actual_price: new FormControl({value:null, disabled: true}),
+            payable_amount: new FormControl({value:null, disabled: true}),
+            refund_amount: new FormControl({value:null, disabled: true})
           })
         );
       });
@@ -163,12 +163,12 @@ export class ChangeCurrentMonthSubComponent implements OnInit {
       sim: [{value:null, disabled: true}, [Validators.required]],
       plan: [{value:null, disabled: true}, [Validators.required]],
       amount: [{value:null, disabled: true}, [Validators.required]],
-      plan_changes: [null],
+      plan_changes: [{value:null, disabled: true}],
       new_plan: [null],
-      changes_price: [null],
-      actual_price: [null],
-      payable_amount: [null],
-      refund_amount: [null]
+      changes_price: [{value:null, disabled: true}],
+      actual_price: [{value:null, disabled: true}],
+      payable_amount: [{value:null, disabled: true}],
+      refund_amount: [{value:null, disabled: true}]
     });
   }
 
@@ -244,6 +244,51 @@ export class ChangeCurrentMonthSubComponent implements OnInit {
       this.paidAmount = this.subTotal - this.discount;
     }
   }
+
+  onPlanChange(e, item) {
+    if (e){
+
+     let old_price =   Number(item.controls["amount"].value);
+     item.controls["actual_price"].setValue(Number(e.plan_unit_price));
+     let new_price =   Math.abs(old_price - Number(e.plan_unit_price));
+     item.controls["changes_price"].setValue(new_price);
+     item.controls["payable_amount"].setValue(new_price);
+
+     let old_plan = this.arrayToPlan(this.planList,item.controls["plan"].value);
+     let new_plan = this.arrayToPlan(this.planList,e.id);
+     let old_plan_number =  old_plan.substring(1, old_plan.Length - 2);
+     let new_plan_number =  new_plan.substring(1, new_plan.Length - 2);
+
+     let change_number =  new_plan_number - old_plan_number;
+     if(change_number > 0){
+      item.controls["plan_changes"].setValue("+"+change_number+"GB");
+      item.controls["refund_amount"].disable();
+     }else {
+      item.controls["plan_changes"].setValue(change_number+"GB");
+
+      item.controls["refund_amount"].enable();
+      item.controls["refund_amount"].setValidators([Validators.required]);
+      item.controls["refund_amount"].updateValueAndValidity();
+
+      item.controls["refund_amount"].enable();
+
+     }
+
+      } else {
+        item.controls["plan_changes"].setValue(null);
+        item.controls["actual_price"].setValue(null);
+        item.controls["changes_price"].setValue(null);
+        item.controls["payable_amount"].setValue(null);
+        item.controls["refund_amount"].setValue(null);
+        item.controls["refund_amount"].disable();
+        item.controls["refund_amount"].setValidators(null);
+        item.controls["refund_amount"].updateValueAndValidity();;
+        // item.controls["changes_price"].enable();
+        // item.controls["payable_amount"].enable();
+        // item.controls["actual_price"].enable();
+      }
+  }
+
 
   onFormSubmit() {
     this.submitted = true;
@@ -378,6 +423,10 @@ export class ChangeCurrentMonthSubComponent implements OnInit {
     this.getCustomerList();
     this.getSIMList();
     this.getPlanList();
+  }
+
+  arrayToPlan(array,id){
+    return array.find(x=>x.id == id).plan;
   }
 
 

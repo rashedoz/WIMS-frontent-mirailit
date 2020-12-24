@@ -6,6 +6,7 @@ import { CommonService } from '../_services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
+import { StockStatus } from '../_models/enums';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -19,7 +20,7 @@ export class CancelledSIMListComponent implements OnInit {
   entryForm: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
-
+  StockStatus = StockStatus;
   modalTitleSIM = 'Add Items For Return to Stock';
   btnSaveText = 'Return to Stock';
   modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
@@ -66,14 +67,14 @@ export class CancelledSIMListComponent implements OnInit {
     //   size: this.page.size,
     //   pageNumber: this.page.pageNumber
     // };
-    this._service.get('stock/get-cancelled-sim-list').subscribe(res => {
+    this._service.get('stock/get-cancelled-sim-list').subscribe((res:any) => {
 
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
         return;
       }
-      this.rows = res;
 
+      this.rows = res;
       // this.page.totalElements = res.Total;
       // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
@@ -140,8 +141,8 @@ export class CancelledSIMListComponent implements OnInit {
     this.rows.forEach(element => {
       this.simList.push({
         id: element.id,
-        sim_id: element.sim_id,
-        sim: element.sim,
+        sim_id: element.id,
+        sim: element.ICCID_no,
         selected: false
       })
     });

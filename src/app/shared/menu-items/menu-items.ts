@@ -130,7 +130,7 @@ const MENUITEMS = [
                     type: 'link',
                     icon: 'ti-control-forward',
                     permission: '',
-                },               
+                },
                 {
                     state: 'updatable-sim-list',
                     name: 'Updatable SIM List',
@@ -145,7 +145,7 @@ const MENUITEMS = [
                     icon: 'ti-control-forward',
                     permission: '',
                 },
-                
+
                 {
                   state: 'all-device-list',
                   name: 'All Device List',
@@ -160,7 +160,7 @@ const MENUITEMS = [
                   icon: 'ti-control-forward',
                   permission: '',
               },
- 
+
 
             ]
         },
@@ -179,17 +179,39 @@ const MENUITEMS = [
     }
   ]
 },
+// {
+//   label: 'none',
+//   permission: '',
+//   main: [
+//     {
+//       state: 'bill-list',
+//       name: 'Bills',
+//       type: 'link',
+//       icon: 'ti-control-forward',
+//       permission: ''
+//     }
+//   ]
+// },
 {
   label: 'none',
   permission: '',
   main: [
-    {
-      state: 'bill-list',
-      name: 'Bills',
-      type: 'link',
-      icon: 'ti-control-forward',
-      permission: ''
-    }
+      {
+          name: 'Bill',
+          type: 'sub',
+          permission: '',
+          icon: 'icofont-brand-microsoft',
+          children: [
+                {
+                  state: 'bill-list',
+                  name: 'Bill List',
+                  type: 'link',
+                  icon: 'ti-control-forward',
+                  permission: '',
+              },
+
+          ]
+      },
   ]
 },
 {

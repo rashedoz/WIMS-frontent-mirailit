@@ -73,7 +73,8 @@ export class DataPlanComponent implements OnInit {
 
   initPlanHistory() {
     return this.formBuilder.group({
-      plan: [null, [Validators.required]]
+      plan: [null, [Validators.required]],
+      price: [null, [Validators.required]]
     });
   }
 
@@ -151,7 +152,8 @@ export class DataPlanComponent implements OnInit {
     let plans = [];
     this.planHistoryList.value.forEach(element => {
       plans.push({
-        plan: element.plan,
+        plan: element.plan.trim(),
+        plan_unit_price: element.price
       })
     });
 

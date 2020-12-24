@@ -21,6 +21,7 @@ import { ToastrService } from "ngx-toastr";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { BsDatepickerConfig } from "ngx-bootstrap/datepicker";
 import { Page } from "./../_models/page";
+import { SubscriptionStatus } from "./../_models/enums";
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 
 @Component({
@@ -32,7 +33,7 @@ export class AddProductSubscriptionComponent implements OnInit {
   entryForm: FormGroup;
   itemHistoryList: FormArray;
   itemFormArray: any;
-
+  SubscriptionStatus = SubscriptionStatus;
   fromRowData:any;
 
   subTotal:number =0;
@@ -105,19 +106,28 @@ export class AddProductSubscriptionComponent implements OnInit {
     return this.entryForm.get("itemHistory") as FormArray;
   }
 
-  onCustomerChange(e){   
+  onCustomerChange(e){
+    this.entryForm.controls['subscription'].setValue(null);
     if(e){
       this.getItemList(e.id);
     }
   }
+  onPlanChange(e, item) {
+    if (e){
+       item.controls["amount"].setValue(e.plan_unit_price);
+       item.controls["amount"].disable();
+      }
+  }
 
   getItemList(customerId) {
-    this._service.get("subscription/get-subscribed-item-list?customer="+customerId).subscribe(
+    this._service.get("subscription/get-active-subscription-list?customer="+customerId).subscribe(
       (res) => {
-        this.itemList = res;
-        const key = 'subscription';
-        this.subscriptionList = [...new Map(this.itemList.map(item =>
-          [item[key], item])).values()];       
+      //  this.itemList = res;
+
+        this.subscriptionList = res;
+        // const key = 'subscription';
+        // this.subscriptionList = [...new Map(this.itemList.map(item =>
+        //   [item[key], item])).values()];
       },
       (err) => {}
     );
@@ -199,7 +209,7 @@ export class AddProductSubscriptionComponent implements OnInit {
     let subscribed_items = [];
     let subscribed_relocation_items = [];
     this.blockUI.start('Saving...');
-    this.fromRowData = this.entryForm.getRawValue();  
+    this.fromRowData = this.entryForm.getRawValue();
     this.fromRowData.itemHistory.filter(x=> x.sim && x.sim_iccid && x.plan && x.amount).forEach(element => {
       subscribed_items.push({
         subscription:this.entryForm.value.subscription,
@@ -219,12 +229,12 @@ export class AddProductSubscriptionComponent implements OnInit {
         discount:0,
         payable_amount: Number(element.amount),
         changes_price:0,
-        refund_amount:0,    
-       
+        refund_amount:0,
+
       });
 
     });
-  
+
 
     const obj = {
       customer:this.entryForm.value.customer,
@@ -242,9 +252,9 @@ export class AddProductSubscriptionComponent implements OnInit {
                 data => {
                   this.blockUI.stop();
                   if (data.IsReport == "Success") {
-                    this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });         
-                    this.formReset(); 
-          
+                    this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
+                    this.formReset();
+
                   } else if (data.IsReport == "Warning") {
                     this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
                   }
@@ -272,7 +282,7 @@ export class AddProductSubscriptionComponent implements OnInit {
 
 
   itemTotal(){
-    this.fromRowData = this.entryForm.getRawValue();   
+    this.fromRowData = this.entryForm.getRawValue();
     if(this.fromRowData.itemHistory.length > 0){
       this.subTotal = this.fromRowData.itemHistory.map(x => Number(x.amount)).reduce((a, b) => a + b);
     }
@@ -299,5 +309,5 @@ export class AddProductSubscriptionComponent implements OnInit {
     this.getPlanList();
   }
 
- 
+
 }

@@ -9,6 +9,35 @@
                             <h5>Subscription List </h5>
                         </div>
                         <div class="card-block ">
+                          <div class="row">
+                            <div class="col-md-12">
+                              <div class="btn-group float-right" dropdown placement="bottom right">
+                                <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
+                                        aria-controls="dropdown-basic">
+                                  Subscription <span class="caret"></span>
+                                </button>
+
+                                <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu dropdown-menu-right"
+                                    role="menu" aria-labelledby="button-animated">
+                                  <li role="menuitem"><a class="dropdown-item" [routerLink]="['/create-subscription']" routerLinkActive="router-link-active" > Create Subscription</a></li>
+                                  <li role="menuitem"><a class="dropdown-item" [routerLink]="['/add-product-to-subscription']" routerLinkActive="router-link-active" >Add Product To Subscription </a></li>
+                                  <li role="menuitem"><a class="dropdown-item" [routerLink]="['/subscription-list']" routerLinkActive="router-link-active" >All Subscription List</a></li>
+                                  <li role="menuitem"><a class="dropdown-item" [routerLink]="['/wholesaler-subscription-list']" routerLinkActive="router-link-active" > Wholesaler Subscription List</a></li>
+                                  <li role="menuitem"><a class="dropdown-item" [routerLink]="['/retailer-subscription-list']" routerLinkActive="router-link-active" > Retailer Subscription List</a></li>
+                                  <hr>
+                                  <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-current-month-subscription']" routerLinkActive="router-link-active" >Change Current Month Subscription </a></li>
+                                  <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-current-month']" routerLinkActive="router-link-active" >Remove Product From Current Month </a></li>
+                                  <li role="menuitem"><a class="dropdown-item" [routerLink]="['/cancel-entrie-subscription-from-current-month']" routerLinkActive="router-link-active" >Cancel Entrie Subscription From Current Month </a></li>
+                                  <hr>
+                                  <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-next-month-subscription']" routerLinkActive="router-link-active" >Change Next Month Subscription </a></li>
+                                  <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-next-month']" routerLinkActive="router-link-active" >Remove Product From Next Month </a></li>
+                                  <li role="menuitem"><a class="dropdown-item" [routerLink]="['/cancel-entrie-subscription-from-next-month']" routerLinkActive="router-link-active" >Cancel Entrie Subscription From Next Month </a></li>
+
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                          <hr>
                             <div class="row">
                                 <div class="col-lg-6">
                                   <div class="form-group row">
@@ -34,23 +63,22 @@
                                          <ngx-datatable-row-detail  [rowHeight]="'100%'">
                                           <ng-template let-row="row" let-expanded="expanded"
                                               ngx-datatable-row-detail-template>
-                                              <div class="w-100">
+                                              <div class="w-50">
                                                   <table
                                                       class="table table-xs table-hover table-bordered table-striped">
                                                       <thead>
                                                           <tr>
                                                               <th width="40%" scope="col">SIM</th>
                                                               <th width="30%" scope="col">Plan</th>
-                                                              <th width="30%" scope="col">Status</th>
                                                           </tr>
                                                       </thead>
                                                       <tbody>
                                                           <tr *ngFor="let item of row.details">
-                                                              <th>{{item.sim}}</th>
-                                                              <th>{{item.plan}}</th>
-                                                              <th>
+                                                              <th> {{item.sim}}  <em *ngIf="item.status === 2 "> -- {{SubsItemsStaus[item.status]}}</em></th>
+                                                              <th> {{item.plan}} </th>
+                                                              <!-- <th>
                                                                   {{SubsItemsStaus[item.status]}}
-                                                                </th>
+                                                                </th> -->
                                                           </tr>
                                                       </tbody>
                                                   </table>
@@ -69,9 +97,9 @@
                                           </ng-template>
                                       </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="100" name="Subscription No" prop="id" [draggable]="false" [sortable]="false">
+                                  <ngx-datatable-column [width]="300" name="Subscription No" prop="id" [draggable]="false" [sortable]="false">
                                       <ng-template let-row="row" ngx-datatable-cell-template>
-                                          <span > {{ row.id }} </span>
+                                          <span > {{ row.id }}  <em *ngIf="row.future_state"> <small>--{{row.future_state}}</small></em> </span>
                                       </ng-template>
                                   </ngx-datatable-column>
 
@@ -100,7 +128,7 @@
                                       </ng-template>
                                   </ngx-datatable-column>
                                   <ngx-datatable-column [width]="150" name="Subscripton Status" prop="status" [draggable]="false" [sortable]="false">
-                                      <ng-template let-value="value" ngx-datatable-cell-template>                                       
+                                      <ng-template let-value="value" ngx-datatable-cell-template>
                                         <span *ngIf="value == 1" > <strong class="label label-success">{{ SubscriptionStatus[value] }}</strong> </span>
                                           <span *ngIf="value == 2" ><strong class="label label-danger">{{ SubscriptionStatus[value] }}</strong> </span>
                                       </ng-template>

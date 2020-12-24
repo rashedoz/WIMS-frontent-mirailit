@@ -18,7 +18,8 @@ export enum StatusTypes {
     SUBSCRIBED = 2,
     RETURNED = 3,
     CANCELLED = 4,
-    DAMAMGED = 5
+    DAMAMGED = 5,
+    SOLD = 6
   }
 
   export enum SubscriptionStatus {

@@ -28,6 +28,13 @@
                                 </ng-template>
                             </ngx-datatable-column>
 
+                            <ngx-datatable-column name="Plan Price" prop="plan_unit_price" [draggable]="false"
+                                [sortable]="false">
+                                <ng-template let-value="value" ngx-datatable-cell-template>
+                                    <span title="{{ value }}"> {{ value }} </span>
+                                </ng-template>
+                            </ngx-datatable-column>
+
 
                             <!-- <ngx-datatable-column [width]="50" name="Action" prop="Id" [draggable]="false"
                                 [sortable]="false">
@@ -61,18 +68,27 @@
               <div class="col-sm-12" formArrayName="planHistory" *ngFor="let item of planFormArray; let i = index;">
                 <div [formGroupName]="i">
                     <div class="row">
-                        <div class="col-md-9">
+                        <div class="col-md-5">
                             <div class="form-group">
                               <label class="col-form-label required"> Plan Name</label>
 
                               <input  [ngClass]="{ 'is-invalid': submitted && plan_his.controls[i].get('plan').errors}" formControlName="plan" type="text" class="form-control">
                               <div *ngIf="submitted && plan_his.controls[i].get('plan').errors" class="error-text">
-                                  <small *ngIf="plan_his.controls[i].get('plan').errors.required" class="text-danger"> Plan is required</small>
+                                  <small *ngIf="plan_his.controls[i].get('plan').errors.required" class="text-danger"> Plan name is required</small>
+                                  </div>
+                          </div>
+                          </div>
+                          <div class="col-md-5">
+                            <div class="form-group">
+                              <label class="col-form-label required"> Price</label>
 
+                              <input  [ngClass]="{ 'is-invalid': submitted && plan_his.controls[i].get('price').errors}" formControlName="price" type="text" numeric numericType="decimal" class="form-control">
+                              <div *ngIf="submitted && plan_his.controls[i].get('price').errors" class="error-text">
+                                  <small *ngIf="plan_his.controls[i].get('price').errors.required" class="text-danger"> Price is required</small>
                                   </div>
                           </div>
                         </div>
-                        <div class="col-md-3 mt-2">
+                        <div class="col-md-2 mt-2">
                                 <div class="form-group mt-4">
                                   <label class="col-form-label">&nbsp;</label>
                                     <button  *ngIf="planFormArray.length > 1"  class="btn btn-danger mr-1 btn-mini pull-right"

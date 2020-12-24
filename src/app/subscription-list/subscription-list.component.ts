@@ -87,7 +87,25 @@ export class SubscriptionListComponent implements OnInit {
   }
 
   toggleExpandRow(row) {
-    if(!row.details) row.details = row.subscribed_items;
+    let items : any = [];
+    if(row.future_state){
+      row.subscribed_items.forEach(element => {
+        items.push({
+          sim:element.sim,
+          plan:element.plan,
+          status:null
+        });
+      });
+    }else {
+      row.subscribed_items.forEach(element => {
+        items.push({
+          sim:element.sim,
+          plan:element.plan,
+          status:element.status
+        });
+      });
+    }
+    row.details = items;
     this.table.rowDetail.toggleExpandRow(row);
 
   }

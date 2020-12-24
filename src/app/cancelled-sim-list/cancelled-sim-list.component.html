@@ -18,35 +18,34 @@
                                   [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
                                   [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
 
-
-                                  <ngx-datatable-column [width]="100" name="Customer" prop="customer" [draggable]="false" [sortable]="false">
+                                  <ngx-datatable-column [width]="8" name="SIM Id" prop="id" [draggable]="false" [sortable]="false">
+                                      <ng-template let-value="value" ngx-datatable-cell-template>
+                                          <span > {{ value }} </span>
+                                      </ng-template>
+                                  </ngx-datatable-column>
+                                  <ngx-datatable-column [width]="8" name="SIM ICCID_no" prop="ICCID_no" [draggable]="false" [sortable]="false">
                                     <ng-template let-value="value" ngx-datatable-cell-template>
                                         <span > {{ value }} </span>
                                     </ng-template>
                                 </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="8" name="SIM Id" prop="sim_id" [draggable]="false" [sortable]="false">
-                                      <ng-template let-row="row" ngx-datatable-cell-template>
-                                          <span > {{ row.sim_id }} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
-                                  <ngx-datatable-column [width]="8" name="SIM ICCID_no" prop="sim" [draggable]="false" [sortable]="false">
-                                    <ng-template let-row="row" ngx-datatable-cell-template>
-                                        <span > {{ row.sim }} </span>
-                                    </ng-template>
-                                </ngx-datatable-column>
-
-                                  <ngx-datatable-column [width]="100" name="SIM SL" prop="alias" [draggable]="false" [sortable]="false">
-                                      <ng-template let-row="row" ngx-datatable-cell-template>
-                                          <span > {{ row.alias }} </span>
+                                  <ngx-datatable-column [width]="100" name="SIM SL" prop="sim_auto_serial_no" [draggable]="false" [sortable]="false">
+                                      <ng-template let-value="value" ngx-datatable-cell-template>
+                                          <span > {{ value }} </span>
                                       </ng-template>
                                   </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="80" name="Cancellation  Request Date" prop="updated_at" [draggable]="false"
+                                  <ngx-datatable-column [width]="80" name="Status" prop="status" [draggable]="false"
                                       [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span >  {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
-                                      </ng-template>
+                                        <span *ngIf="value === 1" > <strong class="label label-success">{{ StockStatus[value] }}</strong> </span>
+                                          <span *ngIf="value === 2" > <strong class="label label-info">{{ StockStatus[value] }}</strong> </span>
+                                          <span *ngIf="value === 3" > <strong class="label label-secondary">{{ StockStatus[value] }}</strong> </span>
+                                          <span *ngIf="value === 4" > <strong class="label label-warning">{{ StockStatus[value] }}</strong> </span>
+                                          <span *ngIf="value === 5" > <strong class="label label-danger">{{ StockStatus[value] }}</strong> </span>
+                                          <span *ngIf="value === 6" > <strong class="label label-primary">{{ StockStatus[value] }}</strong> </span>
+
+                                        </ng-template>
                                   </ngx-datatable-column>
 
                               </ngx-datatable>

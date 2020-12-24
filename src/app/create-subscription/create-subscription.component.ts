@@ -158,6 +158,13 @@ export class CreateSubscriptionComponent implements OnInit {
       }
   }
 
+  onPlanChange(e, item) {
+    if (e){
+       item.controls["amount"].setValue(e.plan_unit_price);
+       item.controls["amount"].disable();
+      }
+  }
+
   onChangeDiscount(value) {
     if (parseFloat(value) > this.subTotal) {
       this.discount = this.subTotal;
@@ -196,7 +203,7 @@ export class CreateSubscriptionComponent implements OnInit {
         discount:0,
         payable_amount: Number(element.amount),
         changes_price:0,
-        refund_amount:0,    
+        refund_amount:0,
         customer:this.entryForm.value.customer
       });
 
@@ -212,7 +219,7 @@ export class CreateSubscriptionComponent implements OnInit {
         so_far_paid:0,
         parent_refund_amount:0
     }
-    
+
 
     const obj = {
       customer:this.entryForm.value.customer,
@@ -225,16 +232,16 @@ export class CreateSubscriptionComponent implements OnInit {
     this.confirmService.confirm('Are you sure?', 'You are creating a new subscription.')
     .subscribe(
         result => {
-            if (result) {             
-            
-                
+            if (result) {
+
+
                 this._service.post('subscription/create-new-subscription', obj).subscribe(
                   data => {
                     this.blockUI.stop();
                     if (data.IsReport == "Success") {
-                      this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });         
-                      this.formReset(); 
-            
+                      this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
+                      this.formReset();
+
                     } else if (data.IsReport == "Warning") {
                       this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
                     } else {
@@ -266,7 +273,7 @@ export class CreateSubscriptionComponent implements OnInit {
 
 
   itemTotal(){
-    this.fromRowData = this.entryForm.getRawValue();   
+    this.fromRowData = this.entryForm.getRawValue();
     if(this.fromRowData.itemHistory.length > 0){
       this.subTotal = this.fromRowData.itemHistory.map(x => Number(x.amount)).reduce((a, b) => a + b);
     }
@@ -293,5 +300,5 @@ export class CreateSubscriptionComponent implements OnInit {
     this.getPlanList();
   }
 
- 
+
 }
