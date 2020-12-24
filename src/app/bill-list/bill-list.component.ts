@@ -126,7 +126,7 @@ export class BillListComponent implements OnInit {
 
 
 
-   if(this.paidAmount === 0 ||  this.paidAmount === null){
+   if(Number(this.paidAmount) == 0){
     this.toastr.warning("Paid amount can't be empty", 'Warning!', { closeButton: true, disableTimeOut: true });
     return;
    }
@@ -152,6 +152,7 @@ export class BillListComponent implements OnInit {
         if (data.IsReport == "Success") {
           this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
           this.modalHide();
+          this.getBillListByCustomer(this.customer);
         } else if (data.IsReport == "Warning") {
           this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
         } else {
@@ -172,10 +173,10 @@ export class BillListComponent implements OnInit {
     this.modalRef.hide();
     this.submitted = false;
     this.btnSaveText = 'Save';
-    this.billItem = null;
-    this.customer = null;
+    this.billItem = {};
     this.subTotal = 0;
     this.discount = 0;
+    this.paidAmount = 0;
   }
 
   openModal(row, template: TemplateRef<any>) {
