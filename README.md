@@ -1,2 +1,2 @@
-# PSC Dormitory Module -- Admin Panel
+# WIMS -- Admin Panel
 
