@@ -2,42 +2,50 @@ import { Component, TemplateRef, ViewChild, ElementRef, ViewEncapsulation, OnIni
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { CommonService } from '../_services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
-import { StockStatus } from '../_models/enums';
 
 
 @Component({
-  selector: 'app-all-device-list',
-  templateUrl: './all-device-list.component.html',
+  selector: 'app-device-stock-history',
+  templateUrl: './device-stock-history.component.html',
+  styleUrls: ['./device-stock-history.component.css'],
   encapsulation: ViewEncapsulation.None
 })
 
-export class AllDeviceListComponent implements OnInit {
+export class DeviceStockHistoryComponent implements OnInit {
 
-  entryForm: FormGroup;
+  entryFormBill: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
 
-  StockStatus = StockStatus;
+
+  // modalTitle = 'Generate Monthly Bill';
+  // btnSaveText = 'Save';
+  // modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
+  // modalRef: BsModalRef;
+
 
   page = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
   rows = [];
+  stock :any = {};
   loadingIndicator = false;
   ColumnMode = ColumnMode;
   scrollBarHorizontal = (window.innerWidth < 1200);
 
   constructor(
     public formBuilder: FormBuilder,
+    private modalService: BsModalService,
     private _service: CommonService,
     private toastr: ToastrService,
     private router: Router
   ) {
-    this.page.pageNumber = 0;
-    this.page.size = 10;
+    // this.page.pageNumber = 0;
+    // this.page.size = 10;
     window.onresize = () => {
       this.scrollBarHorizontal = (window.innerWidth < 1200);
     };
@@ -45,10 +53,33 @@ export class AllDeviceListComponent implements OnInit {
 
 
   ngOnInit() {
-
-    this.getList();
+    this.getData();
+   
   }
 
+  getData() {
+    this._service.get('stock/get-current-device-stock-history').subscribe(res => {    
+      this.stock = res;    
+    }, err => {}
+    );
+  }
+
+
+
+
+
+  // modalHide() {
+  //   this.entryFormBill.reset();
+  //   this.modalRef.hide();
+  //   this.submitted = false;
+  //   this.btnSaveText = 'Save';
+  // }
+
+  // openModal(template: TemplateRef<any>) {
+
+  //     this.modalRef = this.modalService.show(template, this.modalConfig);
+
+  // }
 
 
   // setPage(pageInfo) {
@@ -56,31 +87,6 @@ export class AllDeviceListComponent implements OnInit {
   //   this.getList();
   // }
 
-  getList() {
-    this.loadingIndicator = true;
-    // const obj = {
-    //   size: this.page.size,
-    //   pageNumber: this.page.pageNumber
-    // };
-    this._service.get('stock/get-device-list').subscribe(res => {
 
-      if (!res) {
-        this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
-        return;
-      }
-      this.rows = res;
-      // this.page.totalElements = res.Total;
-      // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-      setTimeout(() => {
-        this.loadingIndicator = false;
-      }, 1000);
-    }, err => {
-      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
-      setTimeout(() => {
-        this.loadingIndicator = false;
-      }, 1000);
-    }
-    );
-  }
 
 }

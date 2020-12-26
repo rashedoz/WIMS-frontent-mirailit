@@ -169,7 +169,9 @@ export class RemoveProductNextMonthComponent implements OnInit {
     this._service.get("subscription/get-active-subscription-list?customer="+customerId).subscribe(
       (res) => {
       //  this.itemList = res;
-
+        if(res.length === 0){
+          this.toastr.warning('This customer does not have any active subscription', 'Warning!', { closeButton: true, disableTimeOut: false });
+        }
         this.subscriptionList = res;
         // const key = 'subscription';
         // this.subscriptionList = [...new Map(this.itemList.map(item =>

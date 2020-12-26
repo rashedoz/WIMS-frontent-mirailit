@@ -1,6 +1,6 @@
 import { Component, TemplateRef, ViewChild, ElementRef, ViewEncapsulation, OnInit } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { ColumnMode } from '@swimlane/ngx-datatable';
+import { ColumnMode,DatatableComponent } from '@swimlane/ngx-datatable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonService } from './../_services/common.service';
@@ -32,9 +32,11 @@ export class WholesalerListComponent implements OnInit {
   page = new Page();
 
   rows = [];
+  tempRows = [];
+  wholesalerList = [];
   loadingIndicator = false;
   ColumnMode = ColumnMode;
-
+  @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
   scrollBarHorizontal = (window.innerWidth < 1200);
 
   constructor(
@@ -80,7 +82,8 @@ export class WholesalerListComponent implements OnInit {
         this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
         return;
       }
-      this.rows = res;
+      this.tempRows = res;
+      this.wholesalerList = res;
       // this.page.totalElements = res.Total;
       // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
@@ -170,4 +173,22 @@ export class WholesalerListComponent implements OnInit {
 
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
+
+
+  updateFilter(event) {
+    const val = event.target.value.toLowerCase();
+
+    // filter our data
+    const temp = this.tempRows.filter(function (d) {
+      return d.first_name.toLowerCase().indexOf(val) !== -1 ||
+             d.last_name.toLowerCase().indexOf(val) !== -1 ||
+        !val;
+    });
+
+    // update the rows
+    this.wholesalerList = temp;
+    // Whenever the filter changes, always go back to the first page
+    this.table.offset = 0;
+  }
+
 }

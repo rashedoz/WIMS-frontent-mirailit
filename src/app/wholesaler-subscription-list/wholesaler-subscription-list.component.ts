@@ -21,8 +21,8 @@ export class WholesalerSubscriptionListComponent implements OnInit {
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
 
-  // @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
-  @ViewChild('dataTable', { static: false }) table: any;
+  @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
+  // @ViewChild('dataTable', { static: false }) table: any;
   page = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
   rows = [];
@@ -49,7 +49,8 @@ export class WholesalerSubscriptionListComponent implements OnInit {
 
 
   ngOnInit() {
-    this.getCustomerList();
+    // this.getCustomerList();
+    this.getList();
   }
 
 
@@ -60,35 +61,36 @@ export class WholesalerSubscriptionListComponent implements OnInit {
   // }
 
 
-  getCustomerList() {
-    this._service.get("user-list?is_customer=true&is_wholesaler=true").subscribe(
-      (res) => {
-        this.customerList = res;
-      },
-      (err) => {}
-    );
-  }
+  // getCustomerList() {
+  //   this._service.get("user-list?is_customer=true&is_wholesaler=true").subscribe(
+  //     (res) => {
+  //       this.customerList = res;
+  //     },
+  //     (err) => {}
+  //   );
+  // }
 
-  onCustomerChange(e){
-    if(e){
-      this.getList(e.id);
-    }
-  }
+  // onCustomerChange(e){
+  //   if(e){
+  //     this.getList(e.id);
+  //   }
+  // }
 
 
-  getList(customerId) {
+  getList() {
     this.loadingIndicator = true;
     // const obj = {
     //   size: this.page.size,
     //   pageNumber: this.page.pageNumber
     // };
-    this._service.get('subscription/get-all-subscription-list?customer='+customerId).subscribe(res => {
+    this._service.get('subscription/get-all-subscription-list?is_wholesaler=true').subscribe(res => {
 
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
         return;
       }
-      this.rows = res;
+      this.tempRows = res;
+      this.customerList = res;
       // this.page.totalElements = res.Total;
       // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
@@ -127,16 +129,19 @@ export class WholesalerSubscriptionListComponent implements OnInit {
 
   }
 
-  // updateFilter(event) {
-  //   const val = event.target.value.toLowerCase();
+  updateFilter(event) {
+    const val = event.target.value.toLowerCase();
 
-  //   const temp = this.tempRows.filter(function (d) {
-  //     return d.customer.toLowerCase().indexOf(val) !== -1 ||
-  //       !val;
-  //   });
+    // filter our data
+    const temp = this.tempRows.filter(function (d) {
+      return d.customer.toLowerCase().indexOf(val) !== -1 ||
+        !val;
+    });
 
-  //   this.customerList = temp;
-  //   this.table.offset = 0;
-  // }
+    // update the rows
+    this.customerList = temp;
+    // Whenever the filter changes, always go back to the first page
+    this.table.offset = 0;
+  }
 
 }

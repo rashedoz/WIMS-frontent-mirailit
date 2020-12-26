@@ -12,9 +12,19 @@
                             <!-- <span class="code-header ">use class <code>table</code> inside table element</span> -->
                         </div>
                         <div class="card-block ">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                  <div class="form-group row">                                
+                                    <div class="col-sm-8">
+                                      <input type="text" class="form-control" placeholder="Search wholesaler" (keyup)="updateFilter($event)" />
+                                     
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
                             <div class="row ">
                                 <div class="col-lg-12 ">
-                                    <ngx-datatable  class="material table-bordered" [rows]="rows"
+                                    <ngx-datatable #table class="material table-bordered" [rows]="wholesalerList"
                                         [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
                                         [headerHeight]="40" [footerHeight]="50" rowHeight="auto"  [limit]="10"
                                       >

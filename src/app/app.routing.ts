@@ -181,6 +181,11 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./sim-stock-history/sim-stock-history.module').then(m => m.SIMStockHistoryModule),
         // canActivate: [AuthGuard]
       },
+      {
+        path: 'device-stock-history',
+        loadChildren: () => import('./device-stock-history/device-stock-history.module').then(m => m.DeviceStockHistoryModule),
+        // canActivate: [AuthGuard]
+      },
 
     ]
   }, {

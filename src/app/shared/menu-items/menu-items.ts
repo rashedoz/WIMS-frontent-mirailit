@@ -145,7 +145,13 @@ const MENUITEMS = [
                     icon: 'ti-control-forward',
                     permission: '',
                 },
-
+                {
+                  state: 'device-stock-history',
+                  name: 'Device Stock History',
+                  type: 'link',
+                  icon: 'ti-control-forward',
+                  permission: '',
+              },
                 {
                   state: 'all-device-list',
                   name: 'All Device List',

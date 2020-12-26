@@ -38,24 +38,20 @@
                             </div>
                           </div>
                           <hr>
-                          <div class="row ">
+                          <div class="row">
                             <div class="col-lg-6">
-
-                              <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Retailer </label>
+                              <div class="form-group row">                                  
                                 <div class="col-sm-8">
-                                  <ng-select (change)="onCustomerChange($event)"  [clearable]="false"  [clearOnBackspace]="false" [items]="customerList"
-                                    bindLabel="first_name" bindValue="id" placeholder="Search a retailer">
-                                  </ng-select>
+                                  <input type="text" class="form-control" placeholder="Search retailer" (keyup)="updateFilter($event)" />
+                                 
                                 </div>
                               </div>
-
                             </div>
                           </div>
 
                             <div class="row ">
                                 <div class="col-lg-12 ">
-                                  <ngx-datatable #dataTable class="material table-bordered" [rows]="rows" [loadingIndicator]="loadingIndicator"
+                                  <ngx-datatable #table class="material table-bordered" [rows]="customerList" [loadingIndicator]="loadingIndicator"
                                   [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
                                   [rowHeight]="'auto'" [limit]="10">
 
