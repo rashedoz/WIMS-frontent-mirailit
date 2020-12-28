@@ -1,5 +1,5 @@
 import { Component, TemplateRef, ViewChild, ElementRef, ViewEncapsulation, OnInit } from '@angular/core';
-import { ColumnMode } from '@swimlane/ngx-datatable';
+import { ColumnMode,DatatableComponent } from '@swimlane/ngx-datatable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
@@ -26,15 +26,25 @@ export class BillListComponent implements OnInit {
   billStatus = BillStatus;
   page = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
-
+  activeTable = 1;
   modalTitle = 'Payment';
   modalTitleBill = 'Generate Monthly Bill';
   btnSaveTextBill = 'Generate';
   btnSaveText = 'Save';
   modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
   modalRef: BsModalRef;
+  @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
+  @ViewChild(DatatableComponent, { static: false }) tableSIM: DatatableComponent;
+  @ViewChild(DatatableComponent, { static: false }) tableDevice: DatatableComponent;
 
   rows = [];
+
+  tempRows = [];
+  subscriptionBilList = [];
+  simBilList = [];
+  deviceBilList = [];
+
+
   loadingIndicator = false;
   ColumnMode = ColumnMode;
   scrollBarHorizontal = (window.innerWidth < 1200);
@@ -68,36 +78,106 @@ export class BillListComponent implements OnInit {
 
   ngOnInit() {
 
-   this.getCustomerList();
+  // this.getCustomerList();
    this.entryFormBill = this.formBuilder.group({
     invoice_month: [null, [Validators.required]],
   });
+
+
+  this.getSubscriptionBillList();
+
   }
 
   getBillStatus(id){
     return  this.billStatus[id];
   }
 
-  getCustomerList() {
-    this._service.get("user-list?is_customer=true").subscribe(
-      (res) => {
-        this.customerList = res;
-      },
-      (err) => {}
-    );
-  }
+  // getCustomerList() {
+  //   this._service.get("user-list?is_customer=true").subscribe(
+  //     (res) => {
+  //       this.customerList = res; 
+  //     },
+  //     (err) => {}
+  //   );
+  // }
 
-  onCustomerChange(e){
-    if(e){
-      this.getBillListByCustomer(e.id);
+  // onCustomerChange(e){
+  //   if(e){
+  //     this.getSubscriptionBillList(e.id);
+  //   }
+  // }
+
+  showBillTable(id){
+    switch (id) {
+      case 1:
+        this.getSubscriptionBillList();
+        break;
+      case 2:
+        this.getSIMBillList();
+        break;
+      case 3:
+        this.getDeviceBillList();
+        break;
+    
     }
   }
 
-  getBillListByCustomer(customerId) {
-    this._service.get("subscription/get-bill-list?customer="+customerId).subscribe(
+
+  getSubscriptionBillList() {
+    this._service.get("subscription/get-bill-list").subscribe(
       (res) => {
-        this.rows = res;
-        console.log(this.rows);
+        this.activeTable = 1;
+        this.tempRows = res;
+        this.subscriptionBilList = res;
+
+        // this.page.totalElements = res.Total;
+        // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+        setTimeout(() => {
+          this.loadingIndicator = false;
+        }, 1000);
+        // const key = 'subscription';
+        // this.subscriptionList = [...new Map(this.itemList.map(item =>
+        //   [item[key], item])).values()];
+      },
+      (err) => {
+        this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+      }
+    );
+  }
+
+  getSIMBillList() {
+    this._service.get("subscription/get-sim-sales-list").subscribe(
+      (res) => {
+        this.activeTable = 2;
+        this.tempRows = res;
+        this.simBilList = res;
+        // this.page.totalElements = res.Total;
+        // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+        setTimeout(() => {
+          this.loadingIndicator = false;
+        }, 1000);
+        // const key = 'subscription';
+        // this.subscriptionList = [...new Map(this.itemList.map(item =>
+        //   [item[key], item])).values()];
+      },
+      (err) => {
+        this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+      }
+    );
+  }
+
+  getDeviceBillList() {
+    this._service.get("subscription/get-device-sales-list").subscribe(
+      (res) => {
+        this.activeTable = 3;
+        this.tempRows = res;
+        this.deviceBilList = res;
         // this.page.totalElements = res.Total;
         // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
         setTimeout(() => {
@@ -159,7 +239,7 @@ export class BillListComponent implements OnInit {
         if (data.IsReport == "Success") {
           this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
           this.modalHide();
-          this.getBillListByCustomer(this.customer);
+        //  this.getSubscriptionBillList(this.customer);
         } else if (data.IsReport == "Warning") {
           this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
         } else {
@@ -256,6 +336,51 @@ export class BillListComponent implements OnInit {
   openModalBill(template: TemplateRef<any>) {
       this.modalRef = this.modalService.show(template, this.modalConfig);
 
+  }
+
+  updateFilterSubscription(event) {
+    const val = event.target.value.toLowerCase();
+
+    // filter our data
+    const temp = this.tempRows.filter(function (d) {
+      return d.customer.toLowerCase().indexOf(val) !== -1 ||
+        !val;
+    });
+
+    // update the rows
+    this.subscriptionBilList = temp;
+    // Whenever the filter changes, always go back to the first page
+    this.table.offset = 0;
+  }
+
+  updateFilterSIM(event) {
+    const val = event.target.value.toLowerCase();
+
+    // filter our data
+    const temp = this.tempRows.filter(function (d) {
+      return d.customer.toLowerCase().indexOf(val) !== -1 ||
+        !val;
+    });
+
+    // update the rows
+    this.simBilList = temp;
+    // Whenever the filter changes, always go back to the first page
+    this.tableSIM.offset = 0;
+  }
+
+  updateFilterDevice(event) {
+    const val = event.target.value.toLowerCase();
+
+    // filter our data
+    const temp = this.tempRows.filter(function (d) {
+      return d.customer.toLowerCase().indexOf(val) !== -1 ||
+        !val;
+    });
+
+    // update the rows
+    this.deviceBilList = temp;
+    // Whenever the filter changes, always go back to the first page
+    this.tableDevice.offset = 0;
   }
 
 }

@@ -38,5 +38,6 @@ export enum StatusTypes {
 
   export enum SubsItemsStaus {
     OK = 1,
-    CLOSE_FROM_NEXT_MONTH  = 2
+    CLOSE_FROM_NEXT_MONTH  = 2,
+    HELD_FROM_NEXT_MONTH = 3
   }
