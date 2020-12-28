@@ -6693,8 +6693,8 @@ table thead .border-bottom-info th, table tbody .border-bottom-info th, table tb
 }
 
 .header-navbar .navbar-wrapper .navbar-container .nav-left a, .header-navbar .navbar-wrapper .navbar-container .nav-right a {
-    color: #fff;
-    padding: 1.0rem .6rem;
+    /* color: #fff;
+    padding: 1.0rem .6rem; */
 }
 
 .header-navbar .navbar-wrapper .navbar-container .header-notification .profile-notification li {
