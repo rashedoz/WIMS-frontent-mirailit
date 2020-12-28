@@ -19,12 +19,14 @@ export enum StatusTypes {
     RETURNED = 3,
     CANCELLED = 4,
     DAMAMGED = 5,
-    SOLD = 6
+    SOLD = 6,
+    HELD = 7
   }
 
   export enum SubscriptionStatus {
     ACTIVE = 1,
-    CANCELLED = 2
+    CANCELLED = 2,
+    HELD = 3
   }
 
   export enum BillStatus {

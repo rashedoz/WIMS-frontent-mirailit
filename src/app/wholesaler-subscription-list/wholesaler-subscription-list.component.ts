@@ -83,7 +83,7 @@ export class WholesalerSubscriptionListComponent implements OnInit {
     //   size: this.page.size,
     //   pageNumber: this.page.pageNumber
     // };
-    this._service.get('subscription/get-all-subscription-list?is_wholesaler=true').subscribe(res => {
+    this._service.get('subscription/get-wholesaler-all-subscription-list').subscribe(res => {
 
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });

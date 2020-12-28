@@ -112,7 +112,7 @@ const MENUITEMS = [
     permission: '',
     main: [
         {
-            name: 'Stock',
+            name: 'SIM Stock',
             type: 'sub',
             permission: '',
             icon: 'icofont-brand-microsoft',
@@ -144,7 +144,23 @@ const MENUITEMS = [
                     type: 'link',
                     icon: 'ti-control-forward',
                     permission: '',
-                },
+                }
+
+
+            ]
+        },
+    ]
+},
+  {
+    label: 'none',
+    permission: '',
+    main: [
+        {
+            name: 'Device Stock',
+            type: 'sub',
+            permission: '',
+            icon: 'icofont-brand-microsoft',
+            children: [
                 {
                   state: 'device-stock-history',
                   name: 'Device Stock History',

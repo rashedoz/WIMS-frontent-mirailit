@@ -83,7 +83,7 @@ export class RetailerSubscriptionListComponent implements OnInit {
     //   size: this.page.size,
     //   pageNumber: this.page.pageNumber
     // };
-    this._service.get('subscription/get-all-subscription-list?is_retailer=true').subscribe(res => {
+    this._service.get('subscription/get-retailer-all-subscription-list').subscribe(res => {
 
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });

@@ -40,10 +40,10 @@
                           <hr>
                           <div class="row">
                             <div class="col-lg-6">
-                              <div class="form-group row">                                  
+                              <div class="form-group row">
                                 <div class="col-sm-8">
                                   <input type="text" class="form-control" placeholder="Search retailer" (keyup)="updateFilter($event)" />
-                                 
+
                                 </div>
                               </div>
                             </div>
@@ -70,7 +70,7 @@
                                                     </thead>
                                                     <tbody>
                                                         <tr *ngFor="let item of row.details">
-                                                            <th> {{item.sim}}  <em *ngIf="item.status === 2 "> -- {{SubsItemsStaus[item.status]}}</em></th>
+                                                            <th> {{item.sim}}  <em *ngIf="item.status === 2 && row.status === 1">  -- {{SubsItemsStaus[item.status]}}</em></th>
                                                             <th> {{item.plan}} </th>
                                                             <!-- <th>
                                                                 {{SubsItemsStaus[item.status]}}
@@ -95,7 +95,7 @@
 
                                       <ngx-datatable-column [width]="300" name="Subscription No" prop="id" [draggable]="false" [sortable]="false">
                                         <ng-template let-row="row" ngx-datatable-cell-template>
-                                            <span > {{ row.id }}  <em *ngIf="row.future_state"> <small>--{{row.future_state}}</small></em> </span>
+                                            <span > {{ row.id }}   <em *ngIf="row.future_state && row.status === 1"> <small>--{{row.future_state}}</small></em> </span>
                                         </ng-template>
                                     </ngx-datatable-column>
 
@@ -117,12 +117,19 @@
                                         <span *ngIf="!value" >  --- </span>
                                       </ng-template>
                                   </ngx-datatable-column>
-                                  <ngx-datatable-column [width]="120" name="Subscripton Status" prop="status" [draggable]="false" [sortable]="false">
-                                      <ng-template let-value="value" ngx-datatable-cell-template>
-                                        <span *ngIf="value == 1" > <strong class="label label-success">{{ SubscriptionStatus[value] }}</strong> </span>
+                                  <ngx-datatable-column [width]="150" name="Held Date" prop="held_date" [draggable]="false" [sortable]="false">
+                                    <ng-template let-value="value" ngx-datatable-cell-template>
+                                      <span *ngIf="value" >  {{ value | amDateFormat:'DD-MMM-YYYY'}} </span>
+                                      <span *ngIf="!value" >  --- </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <ngx-datatable-column [width]="100" name="Subscripton Status" prop="status" [draggable]="false" [sortable]="false">
+                                    <ng-template let-value="value" ngx-datatable-cell-template>
+                                      <span *ngIf="value == 1" > <strong class="label label-success">{{ SubscriptionStatus[value] }}</strong> </span>
                                         <span *ngIf="value == 2" ><strong class="label label-danger">{{ SubscriptionStatus[value] }}</strong> </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
+                                        <span *ngIf="value == 3" ><strong class="label label-warning">{{ SubscriptionStatus[value] }}</strong> </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
 
                                   <!-- <ngx-datatable-column [width]="80" name="Created Date" prop="created_at" [draggable]="false"
                                       [sortable]="false">

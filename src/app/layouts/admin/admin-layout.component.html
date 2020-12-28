@@ -33,93 +33,90 @@
                             </li>
                         </ul>
                         <ul [@mobileMenuTop]="isCollapsedMobile" class="nav-right" [ngClass]="isCollapsedMobile">
-                                                 
-                                          
-                            
-                            <!-- <li class="header-notification">
-                                <a href="javascript:;">
-                                    <i class="ti-bell"></i>
-                                    <span class="badge">5</span>
-                                </a>
-                                <ul class="show-notification">
-                                    <li>
-                                        <h6>Notifications</h6>
-                                        <label class="label label-danger">New</label>
-                                    </li>
-                                    <li>
-                                        <div class="media">
-                                            <img class="d-flex align-self-center" src="assets/images/user.png"
-                                                alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <h5 class="notification-user">John Doe</h5>
-                                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer
-                                                    elit.</p>
-                                                <span class="notification-time">30 minutes ago</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="media">
-                                            <img class="d-flex align-self-center" src="assets/images/user.png"
-                                                alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <h5 class="notification-user">Joseph William</h5>
-                                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer
-                                                    elit.</p>
-                                                <span class="notification-time">30 minutes ago</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="media">
-                                            <img class="d-flex align-self-center" src="assets/images/user.png"
-                                                alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <h5 class="notification-user">Sara Soudein</h5>
-                                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer
-                                                    elit.</p>
-                                                <span class="notification-time">30 minutes ago</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li> -->
-                            <li class="user-profile header-notification">
-                                <a href="javascript:">
-                                    <img src="assets/images/user.png" alt="User-Profile-Image">
-                                    <!-- <span>{{currentUser.FirstName}} {{currentUser.LastName}}</span> -->
-                                    <span>{{currentUser.email}}</span>
-                                    <i class="ti-angle-down"></i>
-                                </a>
-                                <ul class="show-notification profile-notification">
-                                    <!-- <li>
-                                        <a href="javascript:">
-                                            <i class="ti-settings"></i> Settings
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:">
-                                            <i class="ti-user"></i> Profile
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:">
-                                            <i class="ti-email"></i> My Messages
-                                        </a>
-                                    </li> -->
-                                    <!-- <li>
-                                        <a [routerLink]="['/change-password']">
-                                            <i class="ti-lock"></i> Change Password
-                                        </a>
-                                    </li> -->
-                                    <li>
-                                        <a href="javascript:;" (click)="userLogout()">
-                                            <i class="ti-layout-sidebar-left"></i> Logout
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
+                          <!-- <li class="header-notification">
+                              <a href="javascript:;">
+                                  <i class="ti-bell"></i>
+                                  <span class="badge">5</span>
+                              </a>
+                              <ul class="show-notification">
+                                  <li>
+                                      <h6>Notifications</h6>
+                                      <label class="label label-danger">New</label>
+                                  </li>
+                                  <li>
+                                      <div class="media">
+                                          <img class="d-flex align-self-center" src="assets/images/user.png"
+                                              alt="Generic placeholder image">
+                                          <div class="media-body">
+                                              <h5 class="notification-user">John Doe</h5>
+                                              <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer
+                                                  elit.</p>
+                                              <span class="notification-time">30 minutes ago</span>
+                                          </div>
+                                      </div>
+                                  </li>
+                                  <li>
+                                      <div class="media">
+                                          <img class="d-flex align-self-center" src="assets/images/user.png"
+                                              alt="Generic placeholder image">
+                                          <div class="media-body">
+                                              <h5 class="notification-user">Joseph William</h5>
+                                              <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer
+                                                  elit.</p>
+                                              <span class="notification-time">30 minutes ago</span>
+                                          </div>
+                                      </div>
+                                  </li>
+                                  <li>
+                                      <div class="media">
+                                          <img class="d-flex align-self-center" src="assets/images/user.png"
+                                              alt="Generic placeholder image">
+                                          <div class="media-body">
+                                              <h5 class="notification-user">Sara Soudein</h5>
+                                              <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer
+                                                  elit.</p>
+                                              <span class="notification-time">30 minutes ago</span>
+                                          </div>
+                                      </div>
+                                  </li>
+                              </ul>
+                          </li> -->
+                          <li class="user-profile header-notification">
+                              <a href="javascript:">
+                                  <img src="assets/images/user.png" alt="User-Profile-Image">
+                                  <!-- <span>{{currentUser.FirstName}} {{currentUser.LastName}}</span> -->
+                                  <span>{{currentUser.email}}</span>
+                                  <i class="ti-angle-down"></i>
+                              </a>
+                              <ul class="show-notification profile-notification">
+                                  <!-- <li>
+                                      <a href="javascript:">
+                                          <i class="ti-settings"></i> Settings
+                                      </a>
+                                  </li>
+                                  <li>
+                                      <a href="javascript:">
+                                          <i class="ti-user"></i> Profile
+                                      </a>
+                                  </li>
+                                  <li>
+                                      <a href="javascript:">
+                                          <i class="ti-email"></i> My Messages
+                                      </a>
+                                  </li> -->
+                                  <!-- <li>
+                                      <a [routerLink]="['/change-password']">
+                                          <i class="ti-lock"></i> Change Password
+                                      </a>
+                                  </li> -->
+                                  <li>
+                                      <a href="javascript:;" (click)="userLogout()">
+                                          <i class="ti-layout-sidebar-left"></i> Logout
+                                      </a>
+                                  </li>
+                              </ul>
+                          </li>
+                      </ul>
                     </div>
                 </div>
             </div>
@@ -157,7 +154,7 @@
                                 </ul>
                             </div> -->
                         </div>
-                        <div class="webkitscroller-transparent" style="height:600px; max-height: 600px;">
+                        <div class="menubar webkitscroller-transparent">
                           <div *ngFor="let asideItems of menuItems.getAll()">
                             <div class="pcoded-navigatio-lavel" *ngIf="asideItems.label != 'none'" menu-title-theme="theme5" [authorize]="asideItems.permission">{{asideItems.label}}</div>
                             <ul class="pcoded-item pcoded-left-item" item-border="none" item-border-style="solid" subitem-border="solid" *ngFor="let asideItem of asideItems.main" appAccordionLink group="{{asideItem.state}}">
