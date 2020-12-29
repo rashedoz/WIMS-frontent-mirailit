@@ -36,6 +36,7 @@ export class SellDeviceComponent implements OnInit {
   fromRowData:any;
 
   oneTimeCharge:number = 0;
+  netTotal:number = 0;
   subTotal:number =0;
   discount:number=0;
   paidAmount:number=0;
@@ -83,14 +84,14 @@ export class SellDeviceComponent implements OnInit {
   ngOnInit() {
     this.entryForm = this.formBuilder.group({
       id: [null],
-      customer: [null, [Validators.required]],  
+      customer: [null, [Validators.required]],
       itemHistory: this.formBuilder.array([this.initItemHistory()]),
     });
     this.itemHistoryList = this.entryForm.get("itemHistory") as FormArray;
     this.itemFormArray = this.entryForm.get("itemHistory")["controls"];
 
     this.getCustomerList();
-    this.getDeviceList();   
+    this.getDeviceList();
   }
 
   get f() {
@@ -104,7 +105,7 @@ export class SellDeviceComponent implements OnInit {
   initItemHistory() {
     return this.formBuilder.group({
       device: [null, [Validators.required]],
-      device_serial_no: [null, [Validators.required]],     
+      device_serial_no: [null, [Validators.required]],
       amount: [null, [Validators.required]],
     });
   }
@@ -157,9 +158,9 @@ export class SellDeviceComponent implements OnInit {
   }
 
 
-  onChangeOneTimeCharge(value) {   
+  onChangeOneTimeCharge(value) {
      this.oneTimeCharge = Number(value);
-   
+
   }
 
   onChangeDiscount(value) {
@@ -183,7 +184,7 @@ export class SellDeviceComponent implements OnInit {
     this.blockUI.start('Saving...');
 
     this.fromRowData.itemHistory.filter(x=> x.device && x.device_serial_no && x.amount).forEach(element => {
-      device_sales_details.push({   
+      device_sales_details.push({
         device: element.device.id,
         device_serial_no:element.device_serial_no,
         device_cost: Number(element.amount)
@@ -201,7 +202,6 @@ export class SellDeviceComponent implements OnInit {
       so_far_paid:0,
       device_sales_details:device_sales_details
     };
-
 
     this.confirmService.confirm('Are you sure?', 'You are selling device.')
     .subscribe(
@@ -250,7 +250,7 @@ export class SellDeviceComponent implements OnInit {
     this.fromRowData = this.entryForm.getRawValue();
     if(this.fromRowData.itemHistory.length > 0){
       this.subTotal = this.fromRowData.itemHistory.map(x => Number(x.amount)).reduce((a, b) => a + b);
-     // this.subTotal = this.subTotal + this.oneTimeCharge;
+      this.netTotal = Number(this.subTotal) + Number(this.oneTimeCharge) - Number(this.discount);
     }
   }
 

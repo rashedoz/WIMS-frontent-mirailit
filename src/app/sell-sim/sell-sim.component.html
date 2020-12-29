@@ -52,7 +52,7 @@
                   </div>
                   </div>
                 </div>
-              </div>   
+              </div>
             </div>
           </div>
         </div>
@@ -96,7 +96,7 @@
                                 <small *ngIf="item_his.controls[i].get('sim_iccid').errors.required" class="text-danger"> SIM ICCID is required</small>
 
                               </div>
-                            </th>             
+                            </th>
                             <th>
                               <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('amount').errors}" formControlName="amount"  />
                             <div *ngIf="submitted && item_his.controls[i].get('amount').errors" class="error-text">
@@ -121,18 +121,19 @@
               <div class="col-lg-4 offset-lg-8">
                 <table class="table table-xs table-hover table-striped">
                     <tbody>
+
                         <tr>
-                            <th>One Time Charge {{itemTotal()}}</th>
-                            <!-- <th class="text-right pr-4">{{oneTimeCharge}}</th> -->
-                            <td class="pr-1">
-                              <input  type="text" class="form-control form-control-sm text-right pr-3"
-                                  numeric numericType="decimal" [(ngModel)]="oneTimeCharge" (change)="onChangeOneTimeCharge(oneTimeCharge)" [ngModelOptions]="{standalone: true}">
-                          </td>
+                            <th>Sub-Total  {{itemTotal()}}</th>
+                            <th class="text-right pr-4">{{subTotal}}</th>
                         </tr>
                         <tr>
-                            <th>Sub-Total </th>
-                            <th class="text-right pr-4">{{subTotal + oneTimeCharge}}</th>
-                        </tr>
+                          <th>One Time Charge</th>
+                          <!-- <th class="text-right pr-4">{{oneTimeCharge}}</th> -->
+                          <td class="pr-1">
+                            <input  type="text" class="form-control form-control-sm text-right pr-3"
+                                numeric numericType="decimal" [(ngModel)]="oneTimeCharge" [ngModelOptions]="{standalone: true}">
+                        </td>
+                      </tr>
                         <tr>
                             <th>Discount</th>
                             <td class="pr-1">
@@ -142,8 +143,8 @@
                         </tr>
                       <tr>
                             <th>Net-Total</th>
-                            <th class="text-right pr-4">{{(subTotal + oneTimeCharge) - discount}}</th>
-                        </tr>                         
+                            <th class="text-right pr-4">{{netTotal}}</th>
+                        </tr>
 
                     </tbody>
                 </table>

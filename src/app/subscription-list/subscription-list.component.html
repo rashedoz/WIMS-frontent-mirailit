@@ -97,11 +97,12 @@
                                           </ng-template>
                                       </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="300" name="Subscription No" prop="id" [draggable]="false" [sortable]="false">
-                                      <ng-template let-row="row" ngx-datatable-cell-template>
-                                          <span > {{ row.id }}  <em *ngIf="row.future_state && row.status === 1"> <small>--{{row.future_state}}</small></em> </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
+                                      <ngx-datatable-column [width]="300" name="Subscription No" prop="id" [draggable]="false" [sortable]="false">
+                                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                            <p > {{ row.id }}  <i *ngIf="row.future_state_type == 'Will_Hold' " title="Undo Held Subscription" (click)="undoSubscription(row)" class=" mt-1 ml-2 icofont-ui-reply icofont-flip-horizontal text-warning icofont-2x"></i></p>
+                                            <p><em *ngIf="row.future_state && row.status === 1"> <small>--{{row.future_state}}</small></em></p>
+                                        </ng-template>
+                                    </ngx-datatable-column>
 
                                   <!-- <ngx-datatable-column [width]="200" name="Subscription A" prop="alias" [draggable]="false" [sortable]="false">
                                       <ng-template let-row="row" ngx-datatable-cell-template>
@@ -109,7 +110,7 @@
                                       </ng-template>
                                   </ngx-datatable-column> -->
 
-                                  <ngx-datatable-column [width]="200" name="Wholesaler Name" prop="customer" [draggable]="false" [sortable]="false">
+                                  <ngx-datatable-column [width]="200" name="Wholesaler/Retailer Name" prop="customer" [draggable]="false" [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
                                           <span > {{ value }} </span>
                                       </ng-template>
