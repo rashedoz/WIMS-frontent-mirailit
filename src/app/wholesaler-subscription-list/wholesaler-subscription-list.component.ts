@@ -136,7 +136,6 @@ export class WholesalerSubscriptionListComponent implements OnInit {
       customer:row.customer_id,
       subscription:row.id
      };
- console.log(obj)
      this.confirmService.confirm('Are you sure?', 'You are undo the subscription for held state.')
      .subscribe(
          result => {
@@ -144,7 +143,7 @@ export class WholesalerSubscriptionListComponent implements OnInit {
                const request = this._service.post('subscription/undo-future-held-subscription', obj);
                request.subscribe(
                  data => {
-              
+
                    if (data.IsReport == "Success") {
                      this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
                      this.getList();
@@ -155,13 +154,13 @@ export class WholesalerSubscriptionListComponent implements OnInit {
                    }
                  },
                  err => {
-                
+
                    this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
                  }
                );
              }
          },
- 
+
      );
   }
 
