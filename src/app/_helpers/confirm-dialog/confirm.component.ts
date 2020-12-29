@@ -12,6 +12,9 @@ export class ConfirmComponent {
 
   public title: string;
   public message: string;
+  public confirmButtonText: string = 'Confirm';
+  public modalWidth: string;
+  public disableCloseButton: boolean = false;
 
   constructor(public dialogRef: MatDialogRef<ConfirmComponent>) {}
 

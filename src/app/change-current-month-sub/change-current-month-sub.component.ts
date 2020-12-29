@@ -256,12 +256,15 @@ export class ChangeCurrentMonthSubComponent implements OnInit {
 
      let old_plan = this.arrayToPlan(this.planList,item.controls["plan"].value);
      let new_plan = this.arrayToPlan(this.planList,e.id);
-     let old_plan_number =  old_plan.substring(1, old_plan.Length - 2);
-     let new_plan_number =  new_plan.substring(1, new_plan.Length - 2);
+    //  console.log(old_plan.length);
+    //  console.log(new_plan.length);
+     let old_plan_number =  old_plan.substring(0, old_plan.length - 2);
+     let new_plan_number =  new_plan.substring(0, new_plan.length - 2);
 
      let change_number =  new_plan_number - old_plan_number;
      if(change_number > 0){
       item.controls["plan_changes"].setValue("+"+change_number+"GB");
+      item.controls["payable_amount"].enable();
       item.controls["refund_amount"].disable();
      }else {
       item.controls["plan_changes"].setValue(change_number+"GB");
@@ -269,7 +272,7 @@ export class ChangeCurrentMonthSubComponent implements OnInit {
       item.controls["refund_amount"].enable();
       item.controls["refund_amount"].setValidators([Validators.required]);
       item.controls["refund_amount"].updateValueAndValidity();
-
+      item.controls["payable_amount"].disable();
       item.controls["refund_amount"].enable();
 
      }

@@ -27,6 +27,7 @@ import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 @Component({
   selector: "app-hold-entire-sub-next-month",
   templateUrl: "./hold-entire-sub-next-month.component.html",
+  styleUrls:['./hold-entire-sub-next-month.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
 export class HoldEntireSubNextMonthComponent implements OnInit {
@@ -120,7 +121,12 @@ export class HoldEntireSubNextMonthComponent implements OnInit {
   }
 
   onSubscriptionChange(e){
+
+    // future_state: "This subscription is going to be HELD/PAUSED entirely from next month."
+    // future_state_type: "Will_Hold"
+
     if(e){
+
       this.subscriptionItemList = e.subscribed_items;
      if (this.subscriptionItemList.length > 0) {
       let itemHistoryControl = <FormArray>(
@@ -129,6 +135,15 @@ export class HoldEntireSubNextMonthComponent implements OnInit {
       while (this.itemHistoryList.length !== 0) {
         itemHistoryControl.removeAt(0);
       }
+
+
+      if(e.future_state_type == 'Will_Hold'){
+        this.toastr.warning(e.future_state, "Can't be selectable!", { closeButton: true, disableTimeOut: false });
+        this.entryForm.controls['subscription'].setValue(null);
+        return;
+      }
+
+
       this.subscriptionItemList.forEach(element => {
         // this.getObjFromArray(this.degreeDropDownList,element.DegreeId);
         itemHistoryControl.push(

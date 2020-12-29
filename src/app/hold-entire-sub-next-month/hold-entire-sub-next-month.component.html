@@ -71,9 +71,18 @@
                             <div class="col-sm-6">
                               <span *ngIf="item.status == 1" class=" card-subtitle"> Status : <strong class="label label-success">{{ SubscriptionStatus[item.status] }}</strong></span>
                               <span *ngIf="item.status == 2" class=" card-subtitle"> Status : <strong class="label label-warning">{{ SubscriptionStatus[item.status] }}</strong></span>
+                              <span *ngIf="item.status == 3" class=" card-subtitle"> Status : <strong class="label label-warning">{{ SubscriptionStatus[item.status] }}</strong></span>
                             </div>
                           </div>
-                           <p class="card-text">  Id : {{item.alias}}</p>
+                          <div class="row">
+                            <div class="col-sm-12">
+                            <p class="card-text">  Id : {{item.alias}}</p>
+                            <p class="card-text" *ngIf="item.future_state_type == 'Will_Hold'"> <em class="text-warning" style="white-space: pre-wrap;"> {{item.future_state}} </em></p>
+                          </div>
+                          </div>
+
+
+
                         </div>
                     </div>
                   </ng-template>
