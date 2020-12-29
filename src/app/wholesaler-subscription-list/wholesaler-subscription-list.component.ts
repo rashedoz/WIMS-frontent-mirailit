@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
 import { SubscriptionStatus,SubsItemsStaus } from '../_models/enums';
+import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 
 
 @Component({
@@ -35,6 +36,7 @@ export class WholesalerSubscriptionListComponent implements OnInit {
   SubsItemsStaus = SubsItemsStaus;
 
   constructor(
+    private confirmService: ConfirmService,
     public formBuilder: FormBuilder,
     private _service: CommonService,
     private toastr: ToastrService,
@@ -127,6 +129,40 @@ export class WholesalerSubscriptionListComponent implements OnInit {
     row.details = items;
     this.table.rowDetail.toggleExpandRow(row);
 
+  }
+
+  undoSubscription(row){
+    const obj = {
+      customer:row.customer_id,
+      subscription:row.id
+     };
+ console.log(obj)
+     this.confirmService.confirm('Are you sure?', 'You are undo the subscription for held state.')
+     .subscribe(
+         result => {
+             if (result) {
+               const request = this._service.post('subscription/undo-future-held-subscription', obj);
+               request.subscribe(
+                 data => {
+              
+                   if (data.IsReport == "Success") {
+                     this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+                     this.getList();
+                   } else if (data.IsReport == "Warning") {
+                     this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+                   } else {
+                     this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+                   }
+                 },
+                 err => {
+                
+                   this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+                 }
+               );
+             }
+         },
+ 
+     );
   }
 
   updateFilter(event) {

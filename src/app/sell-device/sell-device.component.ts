@@ -24,17 +24,18 @@ import { Page } from "./../_models/page";
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 
 @Component({
-  selector: "app-create-subscription",
-  templateUrl: "./create-subscription.component.html",
+  selector: "app-sell-device",
+  templateUrl: "./sell-device.component.html",
   encapsulation: ViewEncapsulation.None,
 })
-export class CreateSubscriptionComponent implements OnInit {
+export class SellDeviceComponent implements OnInit {
   entryForm: FormGroup;
   itemHistoryList: FormArray;
   itemFormArray: any;
 
   fromRowData:any;
 
+  oneTimeCharge:number = 0;
   subTotal:number =0;
   discount:number=0;
   paidAmount:number=0;
@@ -42,7 +43,7 @@ export class CreateSubscriptionComponent implements OnInit {
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
   modalTitle = "Add ";
-  btnSaveText = "Create Subscription";
+  btnSaveText = "Sell Device";
 
   modalConfig: any = { class: "gray modal-lg", backdrop: "static" };
   modalRef: BsModalRef;
@@ -55,8 +56,8 @@ export class CreateSubscriptionComponent implements OnInit {
   bsConfig: Partial<BsDatepickerConfig>;
 
   customerList: Array<any> = [];
-  simList: Array<any> = [];
-  planList: Array<any> = [];
+  deviceList: Array<any> = [];
+  // planList: Array<any> = [];
 
   constructor(
     private confirmService: ConfirmService,
@@ -82,16 +83,14 @@ export class CreateSubscriptionComponent implements OnInit {
   ngOnInit() {
     this.entryForm = this.formBuilder.group({
       id: [null],
-      customer: [null, [Validators.required]],
-      session: [null, [Validators.required]],
+      customer: [null, [Validators.required]],  
       itemHistory: this.formBuilder.array([this.initItemHistory()]),
     });
     this.itemHistoryList = this.entryForm.get("itemHistory") as FormArray;
     this.itemFormArray = this.entryForm.get("itemHistory")["controls"];
 
     this.getCustomerList();
-    this.getSIMList();
-    this.getPlanList();
+    this.getDeviceList();   
   }
 
   get f() {
@@ -104,10 +103,8 @@ export class CreateSubscriptionComponent implements OnInit {
 
   initItemHistory() {
     return this.formBuilder.group({
-      sim: [null, [Validators.required]],
-      sim_iccid: [null, [Validators.required]],
-      plan: [null, [Validators.required]],
-      actual_amount: [null, [Validators.required]],
+      device: [null, [Validators.required]],
+      device_serial_no: [null, [Validators.required]],     
       amount: [null, [Validators.required]],
     });
   }
@@ -131,40 +128,38 @@ export class CreateSubscriptionComponent implements OnInit {
     );
   }
 
-  getSIMList() {
-    this._service.get("stock/get-subscriptable-sim-list").subscribe(
+  getDeviceList() {
+    this._service.get("stock/get-available-device-list").subscribe(
       (res) => {
-        this.simList = res;
+        this.deviceList = res;
       },
       (err) => {}
     );
   }
 
-  getPlanList() {
-    this._service.get("subscription/get-data-plan-list").subscribe(
-      (res) => {
-        this.planList = res;
-      },
-      (err) => {}
-    );
-  }
+  // getPlanList() {
+  //   this._service.get("subscription/get-data-plan-list").subscribe(
+  //     (res) => {
+  //       this.planList = res;
+  //     },
+  //     (err) => {}
+  //   );
+  // }
 
-  onSIMChange(e, item) {
-    if (e.ICCID_no){
-       item.controls["sim_iccid"].setValue(e.ICCID_no);
-       item.controls["sim_iccid"].disable();
+  onDeviceChange(e, item) {
+    if (e.device_serial_no){
+       item.controls["device_serial_no"].setValue(e.device_serial_no);
+       item.controls["device_serial_no"].disable();
       }else {
-        item.controls["sim_iccid"].setValue(null);
-        item.controls["sim_iccid"].enable();
+        item.controls["device_serial_no"].setValue(null);
+        item.controls["device_serial_no"].enable();
       }
   }
 
-  onPlanChange(e, item) {
-    if (e){
-       item.controls["actual_amount"].setValue(e.plan_unit_price);
-       item.controls["amount"].setValue(e.plan_unit_price);
-      // item.controls["amount"].disable();
-      }
+
+  onChangeOneTimeCharge(value) {   
+     this.oneTimeCharge = Number(value);
+   
   }
 
   onChangeDiscount(value) {
@@ -173,71 +168,48 @@ export class CreateSubscriptionComponent implements OnInit {
     }
   }
 
-  onChangePaid(value) {
-    if (parseFloat(value) > this.subTotal - this.discount) {
-      this.paidAmount = this.subTotal - this.discount;
-    }
-  }
+  // onChangePaid(value) {
+  //   if (parseFloat(value) > this.subTotal - this.discount) {
+  //     this.paidAmount = this.subTotal - this.discount;
+  //   }
+  // }
 
   onFormSubmit() {
     this.submitted = true;
     if (this.entryForm.invalid) {
       return;
     }
-    let subscribed_items = [];
-    let subscribed_relocation_items = [];
+    let device_sales_details = [];
     this.blockUI.start('Saving...');
 
-    this.fromRowData.itemHistory.filter(x=> x.sim && x.sim_iccid && x.plan && x.amount).forEach(element => {
-      subscribed_items.push({
-        session:this.entryForm.value.session,
-        sim: element.sim.id,
-        ICCID_no:element.sim_iccid,
-        plan: element.plan,
-        amount: Number(element.amount),
-        customer:this.entryForm.value.customer
+    this.fromRowData.itemHistory.filter(x=> x.device && x.device_serial_no && x.amount).forEach(element => {
+      device_sales_details.push({   
+        device: element.device.id,
+        device_serial_no:element.device_serial_no,
+        device_cost: Number(element.amount)
       });
-
-      subscribed_relocation_items.push({
-        sim: element.sim.id,
-        plan: element.plan,
-        actual_price: Number(element.actual_amount),
-        discount:0,
-        payable_amount: Number(element.amount),
-        changes_price:0,
-        refund_amount:0,
-        customer:this.entryForm.value.customer
-      });
-
-
     });
 
-    const bill ={
-        total_amount:Number(this.subTotal),
-        discount:Number(this.discount),
-        payable_amount: Number(this.subTotal) - Number(this.discount),
-        session: this.entryForm.value.session,
-        customer:this.entryForm.value.customer,
-        so_far_paid:0,
-        parent_refund_amount:0
-    }
 
 
     const obj = {
       customer:this.entryForm.value.customer,
-      bill:bill,
-      subscribed_items:subscribed_items,
-      subscribed_relocation_items:subscribed_relocation_items
-
+      one_time_charge : Number(this.oneTimeCharge),
+      total_amount: Number(this.subTotal) + Number(this.oneTimeCharge),
+      discount:Number(this.discount),
+      payable_amount:(Number(this.subTotal) + Number(this.oneTimeCharge)) - Number(this.discount),
+      so_far_paid:0,
+      device_sales_details:device_sales_details
     };
 
-    this.confirmService.confirm('Are you sure?', 'You are creating a new subscription.')
+
+    this.confirmService.confirm('Are you sure?', 'You are selling device.')
     .subscribe(
         result => {
             if (result) {
 
 
-                this._service.post('subscription/create-new-subscription', obj).subscribe(
+                this._service.post('subscription/save-device-sales', obj).subscribe(
                   data => {
                     this.blockUI.stop();
                     if (data.IsReport == "Success") {
@@ -278,6 +250,7 @@ export class CreateSubscriptionComponent implements OnInit {
     this.fromRowData = this.entryForm.getRawValue();
     if(this.fromRowData.itemHistory.length > 0){
       this.subTotal = this.fromRowData.itemHistory.map(x => Number(x.amount)).reduce((a, b) => a + b);
+     // this.subTotal = this.subTotal + this.oneTimeCharge;
     }
   }
 
@@ -294,12 +267,12 @@ export class CreateSubscriptionComponent implements OnInit {
       itemHistoryControl.removeAt(0);
     }
     this.subTotal=0;
+    this.oneTimeCharge=0;
     this.discount=0;
     this.paidAmount=0;
 
     this.getCustomerList();
-    this.getSIMList();
-    this.getPlanList();
+    this.getDeviceList();
   }
 
 

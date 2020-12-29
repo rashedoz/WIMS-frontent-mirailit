@@ -92,7 +92,7 @@ export const AppRoutes: Routes = [
         // canActivate: [AuthGuard]
       },
       {
-        path: 'subscription',
+        path: 'actions',
         loadChildren: () => import('./subscription/subscription.module').then(m => m.SubscriptionModule),
         // canActivate: [AuthGuard]
       },
@@ -124,6 +124,11 @@ export const AppRoutes: Routes = [
       {
         path: 'cancel-entrie-subscription-from-next-month',
         loadChildren: () => import('./cancel-entire-sub-next-month/cancel-entire-sub-next-month.module').then(m => m.CancelEntireSubNextMonthModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'hold-entrie-subscription-from-next-month',
+        loadChildren: () => import('./hold-entire-sub-next-month/hold-entire-sub-next-month.module').then(m => m.HoldEntireSubNextMonthModule),
         // canActivate: [AuthGuard]
       },
       {
@@ -184,6 +189,16 @@ export const AppRoutes: Routes = [
       {
         path: 'device-stock-history',
         loadChildren: () => import('./device-stock-history/device-stock-history.module').then(m => m.DeviceStockHistoryModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'sell-sim',
+        loadChildren: () => import('./sell-sim/sell-sim.module').then(m => m.SellSIMModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'sell-device',
+        loadChildren: () => import('./sell-device/sell-device.module').then(m => m.SellDeviceModule),
         // canActivate: [AuthGuard]
       },
 

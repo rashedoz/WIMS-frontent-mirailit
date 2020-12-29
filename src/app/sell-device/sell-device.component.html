@@ -1,0 +1,165 @@
+<block-ui>
+  <form [formGroup]="entryForm">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card card-border-default">
+          <div class="card-header">
+            <!-- <h5>Create Subscription </h5> -->
+
+          </div>
+          <div class="card-block ">
+            <!-- <div class="row">
+              <div class="col-md-12">
+                <div class="btn-group float-right" dropdown placement="bottom right">
+                  <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
+                          aria-controls="dropdown-basic">
+                    Subscription <span class="caret"></span>
+                  </button>
+
+                  <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu dropdown-menu-right"
+                      role="menu" aria-labelledby="button-animated">
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/create-subscription']" routerLinkActive="router-link-active" > Create Subscription</a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/add-product-to-subscription']" routerLinkActive="router-link-active" >Add Product To Subscription </a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/subscription-list']" routerLinkActive="router-link-active" >All Subscription List</a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/wholesaler-subscription-list']" routerLinkActive="router-link-active" > Wholesaler Subscription List</a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/retailer-subscription-list']" routerLinkActive="router-link-active" > Retailer Subscription List</a></li>
+                    <hr>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-current-month-subscription']" routerLinkActive="router-link-active" >Change Current Month Subscription </a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-current-month']" routerLinkActive="router-link-active" >Remove Product From Current Month </a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/cancel-entrie-subscription-from-current-month']" routerLinkActive="router-link-active" >Cancel Entrie Subscription From Current Month </a></li>
+                    <hr>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-next-month-subscription']" routerLinkActive="router-link-active" >Change Next Month Subscription </a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-next-month']" routerLinkActive="router-link-active" >Remove Product From Next Month </a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/cancel-entrie-subscription-from-next-month']" routerLinkActive="router-link-active" >Cancel Entrie Subscription From Next Month </a></li>
+
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <hr> -->
+            <div class="row ">
+              <div class="col-lg-6">
+
+                <div class="form-group row">
+                  <label class="col-sm-4 col-form-label">Customer </label>
+                  <div class="col-sm-8">
+                    <ng-select [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false" formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
+                      bindLabel="first_name" bindValue="id" placeholder="Select a customer">
+                    </ng-select>
+                    <div *ngIf="submitted && f.customer.errors" class="error-text">
+                      <span *ngIf="f.customer.errors.required" class="text-danger"> Customer is required</span>
+
+                  </div>
+                  </div>
+                </div>
+              </div>   
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card card-border-default">
+          <div class="card-header">
+            <h5></h5>
+            <!-- <span class="code-header ">use class <code>table</code> inside table element</span> -->
+          </div>
+          <div class="card-block ">
+            <div class="row ">
+              <div class="col-lg-12">
+                <div class="table-responsive">
+                  <table class="table table-xs table-hover table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th width="20%" scope="col">Device</th>
+                        <th width="20%" scope="col">Serial No</th>
+                        <th width="20%" scope="col">Amount</th>
+                        <th width="20%" scope="col">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody formArrayName="itemHistory" *ngFor="let item of itemFormArray; let i = index;">
+                        <tr  [formGroupName]="i">
+                            <th>
+                              <ng-select [clearable]="false" appendTo="body" (change)="onDeviceChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('device').errors}" formControlName="device" [clearOnBackspace]="false" [items]="deviceList"
+                              bindLabel="id" placeholder="Select a device"></ng-select>
+                              <div *ngIf="submitted && item_his.controls[i].get('device').errors" class="error-text">
+                                <small *ngIf="item_his.controls[i].get('device').errors.required" class="text-danger"> Device
+                                  is required</small>
+
+                              </div>
+                            </th>
+                            <th>
+                              <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('device_serial_no').errors}" formControlName="device_serial_no"  />
+                              <div *ngIf="submitted && item_his.controls[i].get('device_serial_no').errors" class="error-text">
+                                <small *ngIf="item_his.controls[i].get('device_serial_no').errors.required" class="text-danger"> Device serial is required</small>
+
+                              </div>
+                            </th>             
+                            <th>
+                              <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('amount').errors}" formControlName="amount"  />
+                            <div *ngIf="submitted && item_his.controls[i].get('amount').errors" class="error-text">
+                              <small *ngIf="item_his.controls[i].get('amount').errors.required" class="text-danger"> Amount is required</small>
+                            </div>
+                            </th>
+                            <th>
+                              <button class="btn btn-success btn-mini pull-right mr-3" title="Add new item"
+                                (click)="addItemHistory()"><i class="icofont-plus "></i> Add More</button>
+                              <button *ngIf="itemFormArray.length > 1" class="btn btn-danger mr-1 btn-mini pull-right"
+                                title="Delete this item" (click)="removeItemHistory(i)"> <i class="icofont-ui-delete"></i>
+                              </button>
+
+                            </th>
+
+                        </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="col-lg-4 offset-lg-8">
+                <table class="table table-xs table-hover table-striped">
+                    <tbody>
+                        <tr>
+                            <th>One Time Charge {{itemTotal()}}</th>
+                            <!-- <th class="text-right pr-4">{{oneTimeCharge}}</th> -->
+                            <td class="pr-1">
+                              <input  type="text" class="form-control form-control-sm text-right pr-3"
+                                  numeric numericType="decimal" [(ngModel)]="oneTimeCharge" (change)="onChangeOneTimeCharge(oneTimeCharge)" [ngModelOptions]="{standalone: true}">
+                          </td>
+                        </tr>
+                        <tr>
+                            <th>Sub-Total </th>
+                            <th class="text-right pr-4">{{subTotal + oneTimeCharge}}</th>
+                        </tr>
+                        <tr>
+                            <th>Discount</th>
+                            <td class="pr-1">
+                                <input  type="text" class="form-control form-control-sm text-right pr-3"
+                                    numeric numericType="decimal"  [(ngModel)]="discount" [ngModelOptions]="{standalone: true}">
+                            </td>
+                        </tr>
+                      <tr>
+                            <th>Net-Total</th>
+                            <th class="text-right pr-4">{{(subTotal + oneTimeCharge) - discount}}</th>
+                        </tr>                         
+
+                    </tbody>
+                </table>
+
+                <button class="btn btn-success btn-sm btn-outline-success w-50 float-right" (click)="onFormSubmit()">
+                    <i class="icofont-save"></i> {{btnSaveText}}
+                </button>
+            </div>
+
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+</block-ui>

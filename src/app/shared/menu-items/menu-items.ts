@@ -193,8 +193,8 @@ const MENUITEMS = [
   permission: '',
   main: [
     {
-      state: 'subscription',
-      name: 'Subscription',
+      state: 'actions',
+      name: 'Actions',
       type: 'link',
       icon: 'ti-control-forward',
       permission: ''

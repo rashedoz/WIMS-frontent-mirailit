@@ -219,7 +219,7 @@ export class BillListComponent implements OnInit {
    }
    this.blockUI.start('Saving...');
     const obj = {
-      customer:this.customer,
+      customer:this.billItem.customer_id,
       bill:this.billItem.id,
       transaction_type:"Payment In",
       payment_method:1,
