@@ -138,7 +138,7 @@ export class HoldEntireSubNextMonthComponent implements OnInit {
 
 
       if(e.future_state_type == 'Will_Hold'){
-        this.toastr.warning(e.future_state, "Can't be selectable!", { closeButton: true, disableTimeOut: false });
+        this.toastr.warning(e.future_state, "Can't be selected!", { closeButton: true, disableTimeOut: false });
         this.entryForm.controls['subscription'].setValue(null);
         return;
       }

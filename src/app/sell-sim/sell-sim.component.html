@@ -98,7 +98,7 @@
                               </div>
                             </th>
                             <th>
-                              <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('amount').errors}" formControlName="amount"  />
+                              <input type="text" numeric numericType="decimal" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('amount').errors}" formControlName="amount"  />
                             <div *ngIf="submitted && item_his.controls[i].get('amount').errors" class="error-text">
                               <small *ngIf="item_his.controls[i].get('amount').errors.required" class="text-danger"> Amount is required</small>
                             </div>

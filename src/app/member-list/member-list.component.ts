@@ -1,13 +1,14 @@
 import { Component, TemplateRef, ViewChild, ElementRef, ViewEncapsulation, OnInit } from '@angular/core';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ColumnMode,DatatableComponent } from '@swimlane/ngx-datatable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { CommonService } from '../_services/common.service';
+import { CommonService } from './../_services/common.service';
+import { AuthenticationService } from './../_services/authentication.service';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { Page } from '../_models/page';
-
+import { Page } from './../_models/page';
+import { MustMatch } from './../_helpers/must-match.validator';
 
 
 @Component({
@@ -18,41 +19,32 @@ import { Page } from '../_models/page';
 
 export class MemberListComponent implements OnInit {
 
-  entryForm: FormGroup;
+  RegistrerForm: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
 
+  modalTitle = 'Add Member';
+  btnSaveText = 'Save';
+
+  modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
+  modalRef: BsModalRef;
+
   page = new Page();
-  emptyGuid = '00000000-0000-0000-0000-000000000000';
 
-  // modalTitle = 'Member';
-  // btnSaveText = 'Save';
-  // modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
-  // modalRef: BsModalRef;
-
-
-  @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
   rows = [];
   tempRows = [];
   memberList = [];
   loadingIndicator = false;
   ColumnMode = ColumnMode;
+  @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
   scrollBarHorizontal = (window.innerWidth < 1200);
 
-  customer;
-  customerList: Array<any> = [];
-  itemList: Array<any> = [];
-
-  subTotal:number =0;
-  discount:number=0;
-  paidAmount:number=0;
-  billItem;
-
   constructor(
-    // private modalService: BsModalService,
+    private modalService: BsModalService,
     public formBuilder: FormBuilder,
     private _service: CommonService,
     private toastr: ToastrService,
+    private authService: AuthenticationService,
     private router: Router
   ) {
     // this.page.pageNumber = 0;
@@ -66,49 +58,144 @@ export class MemberListComponent implements OnInit {
 
 
   ngOnInit() {
-   this.getList();
+    this.RegistrerForm = this.formBuilder.group({
+      email: [null, [Validators.required, Validators.email, Validators.maxLength(50)]],
+      mobile: [null, [Validators.required]],
+      firstName: [null, [Validators.required]],
+      lastName: [null, [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required]
+    }, {
+      validator: MustMatch('password', 'confirmPassword')
+  });
+    this.getList();
   }
 
 
 
-  getList() {
-    this._service.get("user-list?is_staff=true").subscribe(
-      (res) => {
-       // this.rows = res;
-        this.tempRows = res;
-        this.memberList = res;
-        // this.page.totalElements = res.Total;
-        // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-        setTimeout(() => {
-          this.loadingIndicator = false;
-        }, 1000);
-        // const key = 'subscription';
-        // this.subscriptionList = [...new Map(this.itemList.map(item =>
-        //   [item[key], item])).values()];
-      },
-      (err) => {
-        this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
-      setTimeout(() => {
-        this.loadingIndicator = false;
-      }, 1000);
+get f() {
+  return this.RegistrerForm.controls;
+}
+
+// setPage(pageInfo) {
+//  // this.page.pageNumber = pageInfo.offset;
+//   this.getList();
+// }
+
+getList() {
+  this.loadingIndicator = true;
+  this._service.get('user-list?is_staff=true').subscribe(res => {
+    if (!res) {
+      this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
+      return;
+    }
+    this.tempRows = res;
+    this.memberList = res;
+    // this.page.totalElements = res.Total;
+    // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+    setTimeout(() => {
+      this.loadingIndicator = false;
+    }, 1000);
+  }, err => {
+    this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+    setTimeout(() => {
+      this.loadingIndicator = false;
+    }, 1000);
+  }
+  );
+}
+
+// getItem(id, template: TemplateRef<any>) {
+//   this.blockUI.start('Getting data...');
+//   this._service.get('Member/GetMemberById/' + id).subscribe(res => {
+//     this.blockUI.stop();
+//     if (!res.Success) {
+//       this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
+//       return;
+//     }
+//     this.modalTitle = 'Update Set';
+//     this.btnSaveText = 'Update';
+//     this.RegistrerForm.controls['id'].setValue(res.Record.Id);
+//     this.RegistrerForm.controls['name'].setValue(res.Record.Name);
+//     this.RegistrerForm.controls['isActive'].setValue(res.Record.IsActive);
+//     this.modalRef = this.modalService.show(template, this.modalConfig);
+//   }, err => {
+//     this.blockUI.stop();
+//     this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+//   });
+// }
+
+onFormSubmit() {
+  this.submitted = true;
+  if (this.RegistrerForm.invalid) {
+    return;
+  }
+
+  this.blockUI.start('Saving...');
+
+  const obj = {
+    email: this.RegistrerForm.value.email.trim(),
+    password: this.RegistrerForm.value.password.trim(),
+    first_name: this.RegistrerForm.value.firstName.trim(),
+    last_name: this.RegistrerForm.value.lastName.trim(),
+    mobile: this.RegistrerForm.value.mobile.trim(),
+    is_customer: 0,
+    is_wholesaler: 0 ,
+    is_retailer: 0,
+    is_staff: 1,
+    is_superuser:0
+  };
+
+  this.authService.registerSystemAdmin('auth/users/', obj).subscribe(
+    data => {
+      this.blockUI.stop();
+      if (data.IsReport == "Success") {
+        this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+        this.modalHide();
+        this.getList();
+
+      } else if (data.IsReport == "Warning") {
+        this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+      } else {
+        this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
       }
-    );
-  }
+    },
+    err => {
+      this.blockUI.stop();
+      this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+    }
+  );
+
+}
+
+modalHide() {
+  this.RegistrerForm.reset();
+  this.modalRef.hide();
+  this.submitted = false;
+  this.modalTitle = 'Add Member';
+  this.btnSaveText = 'Save';
+}
+
+openModal(template: TemplateRef<any>) {
+
+  this.modalRef = this.modalService.show(template, this.modalConfig);
+}
 
 
-  updateFilter(event) {
-    const val = event.target.value.toLowerCase();
+updateFilter(event) {
+  const val = event.target.value.toLowerCase();
 
-    // filter our data
-    const temp = this.tempRows.filter(function (d) {
-      return d.first_name.toLowerCase().indexOf(val) !== -1 ||
-        !val;
-    });
+  // filter our data
+  const temp = this.tempRows.filter(function (d) {
+    return d.first_name.toLowerCase().indexOf(val) !== -1 ||
+           d.last_name.toLowerCase().indexOf(val) !== -1 ||
+      !val;
+  });
 
-    // update the rows
-    this.memberList = temp;
-    // Whenever the filter changes, always go back to the first page
-    this.table.offset = 0;
-  }
+  // update the rows
+  this.memberList = temp;
+  // Whenever the filter changes, always go back to the first page
+  this.table.offset = 0;
+}
 
 }
