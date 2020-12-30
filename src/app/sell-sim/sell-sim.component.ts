@@ -182,69 +182,73 @@ export class SellSIMComponent implements OnInit {
       .subscribe(
           result => {
             if (result) {
-
-              let sim_sales_details = [];
-              this.blockUI.start('Saving...');
-          
-              this.fromRowData.itemHistory.filter(x=> x.sim && x.sim_iccid && x.amount).forEach(element => {
-                sim_sales_details.push({
-                  sim: element.sim.id,
-                  ICCID_no:element.sim_iccid,
-                  sim_cost: Number(element.amount)
-                });
-              });
-          
-          
-          
-              const obj = {
-                customer:this.entryForm.value.customer,
-                one_time_charge : Number(this.oneTimeCharge),
-                total_amount: Number(this.subTotal) + Number(this.oneTimeCharge),
-                discount:Number(this.discount),
-                payable_amount:(Number(this.subTotal) + Number(this.oneTimeCharge)) - Number(this.discount),
-                so_far_paid:0,
-                sim_sales_details:sim_sales_details
-              };
-          
-              this.confirmService.confirm('Are you sure?', 'You are selling sim.')
-              .subscribe(
-                  result => {
-                      if (result) {
-          
-          
-                          this._service.post('subscription/save-sim-sales', obj).subscribe(
-                            data => {
-                              this.blockUI.stop();
-                              if (data.IsReport == "Success") {
-                                this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
-                                this.formReset();
-          
-                              } else if (data.IsReport == "Warning") {
-                                this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-                              } else {
-                                this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
-                              }
-                            },
-                            err => {
-                              this.blockUI.stop();
-                              this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
-                            }
-                          );
-          
-                      }
-                      else{
-                          this.blockUI.stop();
-                      }
-                  },
-          
-              );
-          
-
-            }           
+              this.sellSIM();
+            }    
+                
         });
+     }else {
+      this.sellSIM();
      }
+    
+
+  }
+
+  sellSIM(){
+    let sim_sales_details = [];
+    this.blockUI.start('Saving...');
+
+    this.fromRowData.itemHistory.filter(x=> x.sim && x.sim_iccid && x.amount).forEach(element => {
+      sim_sales_details.push({
+        sim: element.sim.id,
+        ICCID_no:element.sim_iccid,
+        sim_cost: Number(element.amount)
+      });
+    });
 
 
+
+    const obj = {
+      customer:this.entryForm.value.customer,
+      one_time_charge : Number(this.oneTimeCharge),
+      total_amount: Number(this.subTotal) + Number(this.oneTimeCharge),
+      discount:Number(this.discount),
+      payable_amount:(Number(this.subTotal) + Number(this.oneTimeCharge)) - Number(this.discount),
+      so_far_paid:0,
+      sim_sales_details:sim_sales_details
+    };
+
+    this.confirmService.confirm('Are you sure?', 'You are selling sim.')
+    .subscribe(
+        result => {
+            if (result) {
+
+
+                this._service.post('subscription/save-sim-sales', obj).subscribe(
+                  data => {
+                    this.blockUI.stop();
+                    if (data.IsReport == "Success") {
+                      this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
+                      this.formReset();
+
+                    } else if (data.IsReport == "Warning") {
+                      this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+                    } else {
+                      this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+                    }
+                  },
+                  err => {
+                    this.blockUI.stop();
+                    this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+                  }
+                );
+
+            }
+            else{
+                this.blockUI.stop();
+            }
+        },
+
+    );
   }
 
 

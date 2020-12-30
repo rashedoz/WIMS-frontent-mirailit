@@ -211,6 +211,11 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./profile-edit/profile-edit.module').then(m => m.ProfileEditModule),
         // canActivate: [AuthGuard]
       },
+      {
+        path: 'all-sim-list-for-reissue',
+        loadChildren: () => import('./all-sim-list-for-reissue/all-sim-list-for-reissue.module').then(m => m.AllSIMListForReissueModule),
+        // canActivate: [AuthGuard]
+      },
 
     ]
   }, {

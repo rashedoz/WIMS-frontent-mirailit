@@ -41,3 +41,8 @@ export enum StatusTypes {
     CLOSE_FROM_NEXT_MONTH  = 2,
     HELD_FROM_NEXT_MONTH = 3
   }
+
+  export enum ReissuanceStatus{
+    OK = 1,
+    REISSUED = 2
+  }

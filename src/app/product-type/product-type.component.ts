@@ -151,7 +151,7 @@ export class ProductTypeComponent implements OnInit {
     this.entryForm.reset();
     this.submitted = false;
     this.formTitle = 'Add Product Type';
-    this.btnSaveText = 'Save';
+    this.btnSaveText = 'Add Product Type';
     // this.entryForm.controls['IsActive'].setValue(true);
   }
 }

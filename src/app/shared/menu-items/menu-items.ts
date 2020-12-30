@@ -244,6 +244,35 @@ const MENUITEMS = [
   label: 'none',
   permission: '',
   main: [
+      {
+          name: 'SIM Re-issuance',
+          type: 'sub',
+          permission: '',
+          icon: 'icofont-brand-microsoft',
+          children: [
+              {
+                state: 'all-sim-list-for-reissue',
+                name: 'Reissue',
+                type: 'link',
+                icon: 'ti-control-forward',
+                permission: '',
+             },
+              {
+                state: 'all-device-list',
+                name: 'Receive',
+                type: 'link',
+                icon: 'ti-control-forward',
+                permission: '',
+            },           
+
+          ]
+      },
+  ]
+},
+{
+  label: 'none',
+  permission: '',
+  main: [
     {
       state: 'bill-list',
       name: 'Bills',

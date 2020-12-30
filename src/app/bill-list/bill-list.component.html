@@ -313,6 +313,21 @@
                                         </ng-template>
                                     </ngx-datatable-column>
 
+                                    <ngx-datatable-column [width]="100" name="So Far Paid" prop="so_far_paid" [draggable]="false" [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span > {{ value }} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="150" name="Status" prop="status" [draggable]="false" [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span *ngIf="value == 1" > <strong class="label label-danger">{{ billStatus[value] }}</strong> </span>
+                                            <span *ngIf="value == 2" ><strong class="label label-warning">{{ billStatus[value] }}</strong> </span>
+                                            <span *ngIf="value == 3" > <strong class="label label-success">{{ billStatus[value] }}</strong> </span>
+                                            <span *ngIf="value == 4" > <strong class="label label-info">{{ billStatus[value] }}</strong> </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
                                       <!-- <ngx-datatable-column [width]="100" name="So Far Paid" prop="so_far_paid" [draggable]="false" [sortable]="false">
                                           <ng-template let-value="value" ngx-datatable-cell-template>
                                               <span > {{ value }} </span>
@@ -408,7 +423,20 @@
                                           </ng-template>
                                       </ngx-datatable-column>
 
+                                      <ngx-datatable-column [width]="100" name="So Far Paid" prop="so_far_paid" [draggable]="false" [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span > {{ value }} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
 
+                                    <ngx-datatable-column [width]="150" name="Status" prop="status" [draggable]="false" [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span *ngIf="value == 1" > <strong class="label label-danger">{{ billStatus[value] }}</strong> </span>
+                                            <span *ngIf="value == 2" ><strong class="label label-warning">{{ billStatus[value] }}</strong> </span>
+                                            <span *ngIf="value == 3" > <strong class="label label-success">{{ billStatus[value] }}</strong> </span>
+                                            <span *ngIf="value == 4" > <strong class="label label-info">{{ billStatus[value] }}</strong> </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
 
                                       <!-- <ngx-datatable-column [width]="150" name="Status" prop="status" [draggable]="false" [sortable]="false">
                                           <ng-template let-value="value" ngx-datatable-cell-template>
