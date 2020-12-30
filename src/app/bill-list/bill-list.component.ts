@@ -13,6 +13,7 @@ import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 @Component({
   selector: 'app-bill-list',
   templateUrl: './bill-list.component.html',
+  styleUrls:['./bill-list.component.css'],
   encapsulation: ViewEncapsulation.None
 })
 
@@ -38,13 +39,12 @@ export class BillListComponent implements OnInit {
   @ViewChild(DatatableComponent, { static: false }) tableDevice: DatatableComponent;
 
   rows = [];
-
   tempRows = [];
   bilList = [];
   subscriptionBilList = [];
   simBilList = [];
   deviceBilList = [];
-
+  isbuttonActive = true;
 
   loadingIndicator = false;
   ColumnMode = ColumnMode;
@@ -58,6 +58,7 @@ export class BillListComponent implements OnInit {
   subTotal:number =0;
   discount:number=0;
   paidAmount:number=0;
+  remarks =  null;
   billItem;
 
   constructor(
@@ -84,8 +85,6 @@ export class BillListComponent implements OnInit {
    this.entryFormBill = this.formBuilder.group({
     invoice_month: [null, [Validators.required]],
   });
-
-
   this.getBillList();
 
   }
@@ -110,6 +109,7 @@ export class BillListComponent implements OnInit {
   // }
 
   showBillTable(id){
+    this.isbuttonActive = false;
     switch (id) {
       case 0:
         this.getBillList();
@@ -259,7 +259,8 @@ export class BillListComponent implements OnInit {
       paid_amount:Number(this.paidAmount),
       refund_amount:0,
       due:0,
-      balance:0
+      balance:0,
+      remarks: this.remarks
     };
 
 
@@ -296,6 +297,7 @@ export class BillListComponent implements OnInit {
     this.subTotal = 0;
     this.discount = 0;
     this.paidAmount = 0;
+    this.remarks = null;
   }
 
   openModal(row, template: TemplateRef<any>) {
@@ -336,6 +338,7 @@ export class BillListComponent implements OnInit {
                   if (data.IsReport == "Success") {
                     this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
                     this.modalHide();
+                    this.getBillList();
                   } else if (data.IsReport == "Warning") {
                     this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
                   } else {

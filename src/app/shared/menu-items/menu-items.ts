@@ -240,42 +240,41 @@ const MENUITEMS = [
     }
   ]
 },
-
-// {
-//   label: 'none',
-//   permission: '',
-//   main: [
-//     {
-//       state: 'bill-list',
-//       name: 'Bills',
-//       type: 'link',
-//       icon: 'ti-control-forward',
-//       permission: ''
-//     }
-//   ]
-// },
 {
   label: 'none',
   permission: '',
   main: [
-      {
-          name: 'Bill',
-          type: 'sub',
-          permission: '',
-          icon: 'icofont-brand-microsoft',
-          children: [
-                {
-                  state: 'bill-list',
-                  name: 'Bill List',
-                  type: 'link',
-                  icon: 'ti-control-forward',
-                  permission: '',
-              },
-
-          ]
-      },
+    {
+      state: 'bill-list',
+      name: 'Bills',
+      type: 'link',
+      icon: 'ti-control-forward',
+      permission: ''
+    }
   ]
 },
+// {
+//   label: 'none',
+//   permission: '',
+//   main: [
+//       {
+//           name: 'Bill',
+//           type: 'sub',
+//           permission: '',
+//           icon: 'icofont-brand-microsoft',
+//           children: [
+//                 {
+//                   state: 'bill-list',
+//                   name: 'Bill List',
+//                   type: 'link',
+//                   icon: 'ti-control-forward',
+//                   permission: '',
+//               },
+
+//           ]
+//       },
+//   ]
+// },
 {
   label: 'none',
   permission: '',
