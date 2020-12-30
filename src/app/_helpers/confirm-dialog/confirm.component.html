@@ -1,6 +1,6 @@
 <h1 matDialogTitle style="text-align:center">
   {{title}}</h1>
-<div matDialogContent >{{message}}</div>
+<div matDialogContent class="mb-3">{{message}}</div>
 <div matDialogActions fxLayoutAlign="space-around center" style="float:right">
 
   <button matDialogClose mat-button class="btn btn-light" *ngIf="!disableCloseButton" (click)="dialogRef.close(false) ">Cancel</button>

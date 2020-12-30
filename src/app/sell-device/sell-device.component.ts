@@ -180,63 +180,77 @@ export class SellDeviceComponent implements OnInit {
     if (this.entryForm.invalid) {
       return;
     }
-    let device_sales_details = [];
-    this.blockUI.start('Saving...');
 
-    this.fromRowData.itemHistory.filter(x=> x.device && x.device_serial_no && x.amount).forEach(element => {
-      device_sales_details.push({
-        device: element.device.id,
-        device_serial_no:element.device_serial_no,
-        device_cost: Number(element.amount)
-      });
-    });
+    if(Number(this.oneTimeCharge) == 0){
+     
+      this.confirmService.confirm('One Time Charge is empty!', 'Want to procesed with empty value?')
+      .subscribe(
+          result => {
+              if (result) {
 
-
-
-    const obj = {
-      customer:this.entryForm.value.customer,
-      one_time_charge : Number(this.oneTimeCharge),
-      total_amount: Number(this.subTotal) + Number(this.oneTimeCharge),
-      discount:Number(this.discount),
-      payable_amount:(Number(this.subTotal) + Number(this.oneTimeCharge)) - Number(this.discount),
-      so_far_paid:0,
-      device_sales_details:device_sales_details
-    };
-
-    this.confirmService.confirm('Are you sure?', 'You are selling device.')
-    .subscribe(
-        result => {
-            if (result) {
-
-
-                this._service.post('subscription/save-device-sales', obj).subscribe(
-                  data => {
-                    this.blockUI.stop();
-                    if (data.IsReport == "Success") {
-                      this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
-                      this.formReset();
-
-                    } else if (data.IsReport == "Warning") {
-                      this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-                    } else {
-                      this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
-                    }
-                  },
-                  err => {
-                    this.blockUI.stop();
-                    this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
-                  }
+                let device_sales_details = [];
+                this.blockUI.start('Saving...');
+            
+                this.fromRowData.itemHistory.filter(x=> x.device && x.device_serial_no && x.amount).forEach(element => {
+                  device_sales_details.push({
+                    device: element.device.id,
+                    device_serial_no:element.device_serial_no,
+                    device_cost: Number(element.amount)
+                  });
+                });
+            
+            
+            
+                const obj = {
+                  customer:this.entryForm.value.customer,
+                  one_time_charge : Number(this.oneTimeCharge),
+                  total_amount: Number(this.subTotal) + Number(this.oneTimeCharge),
+                  discount:Number(this.discount),
+                  payable_amount:(Number(this.subTotal) + Number(this.oneTimeCharge)) - Number(this.discount),
+                  so_far_paid:0,
+                  device_sales_details:device_sales_details
+                };
+            
+                this.confirmService.confirm('Are you sure?', 'You are selling device.')
+                .subscribe(
+                    result => {
+                        if (result) {
+            
+            
+                            this._service.post('subscription/save-device-sales', obj).subscribe(
+                              data => {
+                                this.blockUI.stop();
+                                if (data.IsReport == "Success") {
+                                  this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
+                                  this.formReset();
+            
+                                } else if (data.IsReport == "Warning") {
+                                  this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+                                } else {
+                                  this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+                                }
+                              },
+                              err => {
+                                this.blockUI.stop();
+                                this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+                              }
+                            );
+            
+            
+            
+                        }
+                        else{
+                            this.blockUI.stop();
+                        }
+                    },            
                 );
 
 
+              }
+        });
+     }
 
-            }
-            else{
-                this.blockUI.stop();
-            }
-        },
 
-    );
 
 
 
