@@ -359,6 +359,9 @@ export class BillListComponent implements OnInit {
   }
 
 
+  printInv(){
+    this.toastr.warning('Work under progress', 'Warning!', { closeButton: true, disableTimeOut: false });
+  }
 
   modalHideBill() {
     this.entryFormBill.reset();

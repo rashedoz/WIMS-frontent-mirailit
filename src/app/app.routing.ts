@@ -206,6 +206,11 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./reactivate-held-subscription/reactivate-held-subscription.module').then(m => m.ReactivateHeldSubscriptionModule),
         // canActivate: [AuthGuard]
       },
+      {
+        path: 'profile-edit/:id',
+        loadChildren: () => import('./profile-edit/profile-edit.module').then(m => m.ProfileEditModule),
+        // canActivate: [AuthGuard]
+      },
 
     ]
   }, {

@@ -2,39 +2,7 @@
     <div class="row">
         <div class="col-md-4">
             <div class="row">
-                <!-- <div class="col-md-12 mb-3">
-                    <div class="card card-hover dark-primary-border counter-card-1" [routerLink]="['/subscription-list']" routerLinkActive="router-link-active" >
-                        <div class="card-block-big">
-                            <div>
-                                <h6>All Customer Subscription List</h6>
 
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12 mb-3">
-                    <div class="card card-hover dark-primary-border counter-card-1" [routerLink]="['/wholesaler-subscription-list']" routerLinkActive="router-link-active" >
-                        <div class="card-block-big">
-                            <div>
-                                <h6>Wholesaler Subscription List</h6>
-
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12 mb-3">
-                    <div class="card card-hover dark-primary-border counter-card-1" [routerLink]="['/retailer-subscription-list']" routerLinkActive="router-link-active" >
-                        <div class="card-block-big">
-                            <div>
-                                <h6>Retailer Subscription List</h6>
-
-                            </div>
-
-                        </div>
-                    </div>
-                </div> -->
                 <div class="col-md-12 mb-3">
                     <div class="card card-hover dark-primary-border counter-card-2" [routerLink]="['/create-subscription']" routerLinkActive="router-link-active">
                         <div class="card-block-big">
@@ -42,7 +10,7 @@
                                 <h6>Create Subscription</h6>
 
                             </div>
-                            <!-- <i class="icofont icofont-check"></i> -->
+                            <i class="icofont icofont-alarm text-primary"></i>
                         </div>
                     </div>
                 </div>
@@ -53,17 +21,17 @@
                                 <h6>Add Product To Subscription</h6>
 
                             </div>
-                            <!-- <i class="icofont icofont-check"></i> -->
+                            <i class="icofont icofont-plus-square text-primary"></i>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-12 mb-3">
-                  <div class="card card-hover dark-primary-border counter-card-5" (click)="openModal(templateGenerateBill)" >
+                  <div class="card card-hover dark-primary-border counter-card-2" (click)="openModal(templateGenerateBill)" >
                       <div class="card-block-big">
                           <div>
                               <h6>Generate Monthly Bill</h6>
                           </div>
-                          <!-- <i class="icofont icofont-ui-edit"></i> -->
+                          <i class="icofont icofont-settings-alt text-primary"></i>
                       </div>
                   </div>
               </div>
@@ -72,9 +40,8 @@
                       <div class="card-block-big">
                           <div>
                               <h6>Sell SIM</h6>
-
                           </div>
-                          <!-- <i class="icofont icofont-check"></i> -->
+                          <i class="icofont icofont-memory-card"></i>
                       </div>
                   </div>
               </div>
@@ -85,7 +52,7 @@
                               <h6>Sell Device</h6>
 
                           </div>
-                          <!-- <i class="icofont icofont-check"></i> -->
+                          <i class="icofont icofont-server"></i>
                       </div>
                   </div>
               </div>
@@ -103,7 +70,7 @@
                             <div>
                                 <h6>Change Current Month Data Plan</h6>
                             </div>
-                            <!-- <i class="icofont icofont-ui-edit"></i> -->
+                            <i class="icofont icofont-exchange text-warning"></i>
                         </div>
                     </div>
                 </div>
@@ -111,10 +78,10 @@
                     <div class="card card-hover warning-border counter-card-2" [routerLink]="['/remove-product-from-current-month']" routerLinkActive="router-link-active">
                         <div class="card-block-big">
                             <div>
-                                <h6>Remove Product From Current Month</h6>
+                                <h6>Remove Subscription From Current Month</h6>
 
                             </div>
-                            <!-- <i class="icofont icofont-check"></i> -->
+                            <i class="icofont icofont-ui-remove text-warning"></i>
                         </div>
                     </div>
                 </div>
@@ -122,10 +89,10 @@
                     <div class="card card-hover warning-border counter-card-2" [routerLink]="['/cancel-entrie-subscription-from-current-month']" routerLinkActive="router-link-active">
                         <div class="card-block-big">
                             <div>
-                                <h6>Cancel Entire Subscription From Current Month</h6>
+                                <h6>Cancel Entire Sub. From Current Month</h6>
 
                             </div>
-                            <!-- <i class="icofont icofont-check"></i> -->
+                            <i class="icofont icofont-close-squared-alt text-warning"></i>
                         </div>
                     </div>
                 </div>
@@ -137,12 +104,12 @@
             <div class="row">
 
                 <div class="col-md-12 mb-3">
-                    <div class="card card-hover danger-border counter-card-4" [routerLink]="['/change-next-month-subscription']" routerLinkActive="router-link-active">
+                    <div class="card card-hover danger-border counter-card-2" [routerLink]="['/change-next-month-subscription']" routerLinkActive="router-link-active">
                         <div class="card-block-big">
                             <div>
                                 <h6>Change Next Month Data Plan</h6>
                             </div>
-                            <!-- <i class="icofont icofont-ui-edit"></i> -->
+                            <i class="icofont icofont-exchange text-danger"></i>
                         </div>
                     </div>
                 </div>
@@ -150,10 +117,10 @@
                     <div class="card card-hover danger-border counter-card-2" [routerLink]="['/remove-product-from-next-month']" routerLinkActive="router-link-active">
                         <div class="card-block-big">
                             <div>
-                                <h6>Remove Product From Next Month</h6>
+                                <h6>Remove Subscription From Next Month</h6>
 
                             </div>
-                            <!-- <i class="icofont icofont-check"></i> -->
+                            <i class="icofont icofont-ui-remove text-danger"></i>
                         </div>
                     </div>
                 </div>
@@ -161,10 +128,10 @@
                     <div class="card card-hover danger-border counter-card-2" [routerLink]="['/cancel-entrie-subscription-from-next-month']" routerLinkActive="router-link-active">
                         <div class="card-block-big">
                             <div>
-                                <h6>Cancel Entire Subscription From Next Month</h6>
+                                <h6>Cancel Entire Sub.From Next Month</h6>
 
                             </div>
-                            <!-- <i class="icofont icofont-check"></i> -->
+                            <i class="icofont icofont-close-squared-alt text-danger"></i>
                         </div>
                     </div>
                 </div>
@@ -176,7 +143,7 @@
                                 <h6>Reactivate The Held Subscriptions</h6>
 
                             </div>
-                            <!-- <i class="icofont icofont-check"></i> -->
+                            <i class="icofont icofont-reply-all text-danger"></i>
                         </div>
                     </div>
                 </div>
