@@ -2,14 +2,14 @@
     <div class="row">
         <div class="col-md-4">
             <div class="row">
-                <div class="col-md-12 mb-3">
+                <!-- <div class="col-md-12 mb-3">
                     <div class="card card-hover dark-primary-border counter-card-1" [routerLink]="['/subscription-list']" routerLinkActive="router-link-active" >
                         <div class="card-block-big">
                             <div>
                                 <h6>All Customer Subscription List</h6>
 
                             </div>
-                            <!-- <i class="icofont icofont-listing-number"></i> -->
+
                         </div>
                     </div>
                 </div>
@@ -20,7 +20,7 @@
                                 <h6>Wholesaler Subscription List</h6>
 
                             </div>
-                            <!-- <i class="icofont icofont-listing-number"></i> -->
+
                         </div>
                     </div>
                 </div>
@@ -31,10 +31,10 @@
                                 <h6>Retailer Subscription List</h6>
 
                             </div>
-                            <!-- <i class="icofont icofont-listing-number"></i> -->
+
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-md-12 mb-3">
                     <div class="card card-hover dark-primary-border counter-card-2" [routerLink]="['/create-subscription']" routerLinkActive="router-link-active">
                         <div class="card-block-big">
@@ -57,18 +57,41 @@
                         </div>
                     </div>
                 </div>
-
-
                 <div class="col-md-12 mb-3">
-                    <div class="card card-hover dark-primary-border counter-card-5" (click)="openModal(templateGenerateBill)" >
-                        <div class="card-block-big">
-                            <div>
-                                <h6>Generate Monthly Bill</h6>
-                            </div>
-                            <!-- <i class="icofont icofont-ui-edit"></i> -->
-                        </div>
-                    </div>
-                </div>
+                  <div class="card card-hover dark-primary-border counter-card-5" (click)="openModal(templateGenerateBill)" >
+                      <div class="card-block-big">
+                          <div>
+                              <h6>Generate Monthly Bill</h6>
+                          </div>
+                          <!-- <i class="icofont icofont-ui-edit"></i> -->
+                      </div>
+                  </div>
+              </div>
+                <div class="col-md-12 mb-3">
+                  <div class="card card-hover primary-border counter-card-2" [routerLink]="['/sell-sim']" routerLinkActive="router-link-active">
+                      <div class="card-block-big">
+                          <div>
+                              <h6>Sell SIM</h6>
+
+                          </div>
+                          <!-- <i class="icofont icofont-check"></i> -->
+                      </div>
+                  </div>
+              </div>
+              <div class="col-md-12 mb-3">
+                  <div class="card card-hover primary-border counter-card-2" [routerLink]="['/sell-device']" routerLinkActive="router-link-active">
+                      <div class="card-block-big">
+                          <div>
+                              <h6>Sell Device</h6>
+
+                          </div>
+                          <!-- <i class="icofont icofont-check"></i> -->
+                      </div>
+                  </div>
+              </div>
+
+
+
             </div>
         </div>
         <div class="col-md-4">
@@ -106,28 +129,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12 mb-3">
-                    <div class="card card-hover primary-border counter-card-2" [routerLink]="['/sell-sim']" routerLinkActive="router-link-active">
-                        <div class="card-block-big">
-                            <div>
-                                <h6>Sell SIM</h6>
 
-                            </div>
-                            <!-- <i class="icofont icofont-check"></i> -->
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12 mb-3">
-                    <div class="card card-hover primary-border counter-card-2" [routerLink]="['/sell-device']" routerLinkActive="router-link-active">
-                        <div class="card-block-big">
-                            <div>
-                                <h6>Sell Device</h6>
-
-                            </div>
-                            <!-- <i class="icofont icofont-check"></i> -->
-                        </div>
-                    </div>
-                </div>
 
             </div>
         </div>
@@ -166,17 +168,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12 mb-3">
-                    <div class="card card-hover danger-border counter-card-2" [routerLink]="['/hold-entrie-subscription-from-next-month']" routerLinkActive="router-link-active">
-                        <div class="card-block-big">
-                            <div>
-                                <h6>Hold Entire Subscription From Next Month</h6>
 
-                            </div>
-                            <!-- <i class="icofont icofont-check"></i> -->
-                        </div>
-                    </div>
-                </div>
                 <div class="col-md-12 mb-3">
                     <div class="card card-hover danger-border counter-card-2" [routerLink]="['/reactivate-held-subscription']" routerLinkActive="router-link-active">
                         <div class="card-block-big">
@@ -191,7 +183,6 @@
 
             </div>
         </div>
-
 
     </div>
 

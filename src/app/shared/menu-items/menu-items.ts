@@ -64,7 +64,7 @@ const MENUITEMS = [
       },
       {
         state: 'member-list',
-        name: 'Member',
+        name: 'Member List',
         type: 'link',
         icon: 'ti-control-forward',
         permission: ''
@@ -201,6 +201,46 @@ const MENUITEMS = [
     }
   ]
 },
+{
+  label: 'none',
+  permission: '',
+  main: [
+    {
+      state: 'subscription-list',
+      name: 'All Customer Sub. List',
+      type: 'link',
+      icon: 'ti-control-forward',
+      permission: ''
+    }
+  ]
+},
+{
+  label: 'none',
+  permission: '',
+  main: [
+    {
+      state: 'wholesaler-subscription-list',
+      name: 'Wholesaler Subscription List',
+      type: 'link',
+      icon: 'ti-control-forward',
+      permission: ''
+    }
+  ]
+},
+{
+  label: 'none',
+  permission: '',
+  main: [
+    {
+      state: 'retailer-subscription-list',
+      name: 'Retailer Subscription List',
+      type: 'link',
+      icon: 'ti-control-forward',
+      permission: ''
+    }
+  ]
+},
+
 // {
 //   label: 'none',
 //   permission: '',

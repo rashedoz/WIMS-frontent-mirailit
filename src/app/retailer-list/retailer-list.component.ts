@@ -31,7 +31,7 @@ export class RetailerListComponent implements OnInit {
 
   page = new Page();
   @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
-  rows = []; 
+  rows = [];
   tempRows = [];
   retailerList = [];
   loadingIndicator = false;
@@ -142,13 +142,14 @@ export class RetailerListComponent implements OnInit {
     this.authService.registerSystemAdmin('auth/users/', obj).subscribe(
       data => {
         this.blockUI.stop();
-        if (data.IsReport == "Success") {
+        if (data) {
           this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
           this.modalHide();
           this.getList();
-        } else if (data.IsReport == "Warning") {
-          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-        } else {
+        }
+        // else if (data.IsReport == "Warning") {
+        //   this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+        else {
           this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
         }
       },
@@ -173,7 +174,7 @@ export class RetailerListComponent implements OnInit {
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 
-  
+
   updateFilter(event) {
     const val = event.target.value.toLowerCase();
 

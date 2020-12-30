@@ -26,7 +26,7 @@ export class BillListComponent implements OnInit {
   billStatus = BillStatus;
   page = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
-  activeTable = 1;
+  activeTable = 0;
   modalTitle = 'Payment';
   modalTitleBill = 'Generate Monthly Bill';
   btnSaveTextBill = 'Generate';
@@ -40,6 +40,7 @@ export class BillListComponent implements OnInit {
   rows = [];
 
   tempRows = [];
+  bilList = [];
   subscriptionBilList = [];
   simBilList = [];
   deviceBilList = [];
@@ -53,6 +54,7 @@ export class BillListComponent implements OnInit {
   customerList: Array<any> = [];
   itemList: Array<any> = [];
 
+  newTotal:number =0;
   subTotal:number =0;
   discount:number=0;
   paidAmount:number=0;
@@ -84,7 +86,7 @@ export class BillListComponent implements OnInit {
   });
 
 
-  this.getSubscriptionBillList();
+  this.getBillList();
 
   }
 
@@ -95,7 +97,7 @@ export class BillListComponent implements OnInit {
   // getCustomerList() {
   //   this._service.get("user-list?is_customer=true").subscribe(
   //     (res) => {
-  //       this.customerList = res; 
+  //       this.customerList = res;
   //     },
   //     (err) => {}
   //   );
@@ -109,6 +111,9 @@ export class BillListComponent implements OnInit {
 
   showBillTable(id){
     switch (id) {
+      case 0:
+        this.getBillList();
+        break;
       case 1:
         this.getSubscriptionBillList();
         break;
@@ -118,8 +123,34 @@ export class BillListComponent implements OnInit {
       case 3:
         this.getDeviceBillList();
         break;
-    
+
     }
+  }
+
+
+  getBillList() {
+    this._service.get("subscription/get-bill-list").subscribe(
+      (res) => {
+        this.activeTable = 0;
+        this.tempRows = res;
+        this.bilList = res;
+
+        // this.page.totalElements = res.Total;
+        // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+        setTimeout(() => {
+          this.loadingIndicator = false;
+        }, 1000);
+        // const key = 'subscription';
+        // this.subscriptionList = [...new Map(this.itemList.map(item =>
+        //   [item[key], item])).values()];
+      },
+      (err) => {
+        this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+      }
+    );
   }
 
 
@@ -127,8 +158,8 @@ export class BillListComponent implements OnInit {
     this._service.get("subscription/get-bill-list").subscribe(
       (res) => {
         this.activeTable = 1;
-        this.tempRows = res;
-        this.subscriptionBilList = res;
+        this.tempRows = res.filter(x=>x.subscription != null);
+        this.subscriptionBilList = res.filter(x=>x.subscription != null);
 
         // this.page.totalElements = res.Total;
         // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
@@ -239,7 +270,7 @@ export class BillListComponent implements OnInit {
         if (data.IsReport == "Success") {
           this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
           this.modalHide();
-        //  this.getSubscriptionBillList(this.customer);
+          this.getBillList();
         } else if (data.IsReport == "Warning") {
           this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
         } else {
@@ -261,6 +292,7 @@ export class BillListComponent implements OnInit {
     this.submitted = false;
     this.btnSaveText = 'Save';
     this.billItem = {};
+    this.newTotal = 0;
     this.subTotal = 0;
     this.discount = 0;
     this.paidAmount = 0;
@@ -270,6 +302,7 @@ export class BillListComponent implements OnInit {
     this.modalRef = this.modalService.show(template, this.modalConfig);
     this.subTotal = row.payable_amount;
     this.billItem = row;
+    this.newTotal =  Number(this.subTotal) - Number(this.billItem.so_far_paid);
   //  this.discount = row.discount;
 
   }
@@ -336,6 +369,21 @@ export class BillListComponent implements OnInit {
   openModalBill(template: TemplateRef<any>) {
       this.modalRef = this.modalService.show(template, this.modalConfig);
 
+  }
+
+  updateFilterBill(event) {
+    const val = event.target.value.toLowerCase();
+
+    // filter our data
+    const temp = this.tempRows.filter(function (d) {
+      return d.customer.toLowerCase().indexOf(val) !== -1 ||
+        !val;
+    });
+
+    // update the rows
+    this.bilList = temp;
+    // Whenever the filter changes, always go back to the first page
+    this.table.offset = 0;
   }
 
   updateFilterSubscription(event) {

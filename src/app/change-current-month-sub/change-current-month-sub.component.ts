@@ -272,6 +272,7 @@ export class ChangeCurrentMonthSubComponent implements OnInit {
       item.controls["refund_amount"].enable();
       item.controls["refund_amount"].setValidators([Validators.required]);
       item.controls["refund_amount"].updateValueAndValidity();
+      item.controls["payable_amount"].setValue(null);
       item.controls["payable_amount"].disable();
       item.controls["refund_amount"].enable();
 

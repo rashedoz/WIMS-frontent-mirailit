@@ -1,5 +1,5 @@
 import { Component, TemplateRef, ViewChild, ElementRef, ViewEncapsulation, OnInit } from '@angular/core';
-import { ColumnMode } from '@swimlane/ngx-datatable';
+import { ColumnMode,DatatableComponent } from '@swimlane/ngx-datatable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
@@ -30,8 +30,10 @@ export class PaymentListComponent implements OnInit {
   btnSaveText = 'Save';
   modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
   modalRef: BsModalRef;
-
+  @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
   rows = [];
+  tempRows = [];
+  paymentList = [];
   loadingIndicator = false;
   ColumnMode = ColumnMode;
   scrollBarHorizontal = (window.innerWidth < 1200);
@@ -64,31 +66,33 @@ export class PaymentListComponent implements OnInit {
 
   ngOnInit() {
 
-   this.getCustomerList();
+   this.getPaymentList();
   }
 
 
 
-  getCustomerList() {
-    this._service.get("user-list?is_customer=true").subscribe(
+  // getCustomerList() {
+  //   this._service.get("user-list?is_customer=true").subscribe(
+  //     (res) => {
+  //       this.customerList = res;
+  //     },
+  //     (err) => {}
+  //   );
+  // }
+
+  // onCustomerChange(e){
+  //   if(e){
+  //     this.getBillListByCustomer(e.id);
+  //   }
+  // }
+
+  getPaymentList() {
+    this.loadingIndicator = true;
+    this._service.get("payment/get-payment-list").subscribe(
       (res) => {
-        this.customerList = res;
-      },
-      (err) => {}
-    );
-  }
+        this.tempRows = res;
+        this.paymentList = res;
 
-  onCustomerChange(e){
-    if(e){
-      this.getBillListByCustomer(e.id);
-    }
-  }
-
-  getBillListByCustomer(customerId) {
-    this._service.get("payment/get-payment-list?customer="+customerId).subscribe(
-      (res) => {
-        this.rows = res;
-        console.log(this.rows);
         // this.page.totalElements = res.Total;
         // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
         setTimeout(() => {
@@ -107,79 +111,20 @@ export class PaymentListComponent implements OnInit {
     );
   }
 
-  // onChangeDiscount(value) {
-  //   if (parseFloat(value) > this.subTotal) {
-  //     this.discount = this.subTotal;
-  //   }
-  // }
+  updateFilter(event) {
+    const val = event.target.value.toLowerCase();
 
-  // onChangePaid(value) {
-  //   if (parseFloat(value) > this.subTotal - this.discount) {
-  //     this.paidAmount = this.subTotal - this.discount;
-  //   }
-  // }
+    // filter our data
+    const temp = this.tempRows.filter(function (d) {
+      return d.customer.toLowerCase().indexOf(val) !== -1 ||
+        !val;
+    });
 
-  // onFormSubmit() {
-  //   this.submitted = true;
+    // update the rows
+    this.paymentList = temp;
+    // Whenever the filter changes, always go back to the first page
+    this.table.offset = 0;
+  }
 
-  //   this.blockUI.start('Saving...');
-
-  //  if(this.paidAmount === 0 ||  this.paidAmount === null){
-  //   this.toastr.warning("Paid amount can't be empty", 'Warning!', { closeButton: true, disableTimeOut: true });
-  //   return;
-  //  }
-
-  //   const obj = {
-  //     customer:this.customer,
-  //     bill:this.billItem.id,
-  //     transaction_type:"Payment In",
-  //     payment_method:1,
-  //     session:this.billItem.session,
-  //     discount:Number(this.discount),
-  //     paid_amount:Number(this.paidAmount),
-  //     refund_amount:0,
-  //     due:0,
-  //     balance:0
-  //   };
-
-
-
-  //   this._service.post('payment/save-payment', obj).subscribe(
-  //     data => {
-  //       this.blockUI.stop();
-  //       if (data.IsReport == "Success") {
-  //         this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
-  //         this.modalHide();
-  //       } else if (data.IsReport == "Warning") {
-  //         this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-  //       } else {
-  //         this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
-  //       }
-  //     },
-  //     err => {
-  //       this.blockUI.stop();
-  //       this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
-  //     }
-  //   );
-
-  // }
-
-
-
-  // modalHide() {
-  //   this.modalRef.hide();
-  //   this.submitted = false;
-  //   this.btnSaveText = 'Save';
-  //   this.billItem = null;
-  //   this.customer = null;
-  //   this.rows = [];
-  // }
-
-  // openModal(row, template: TemplateRef<any>) {
-  //   this.modalRef = this.modalService.show(template, this.modalConfig);
-  //   this.subTotal = row.payable_amount;
-  //   this.billItem = row;
-
-  // }
 
 }
