@@ -1,0 +1,184 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header">
+                            <h5>Customer Balance List </h5>
+                            <button class="btn btn-primary btn-sm float-right" (click)="openModal(template)"><i
+                              class=" icofont icofont-plus "></i> Load Customer Balance </button>
+                        </div>
+                        <div class="card-block ">
+                          <div class="row">
+                            <div class="col-lg-6">
+                              <div class="form-group row">
+                                <div class="col-sm-8">
+                                  <input type="text" class="form-control" placeholder="Search customer" (keyup)="updateFilter($event)" />
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                            <div class="row ">
+                                <div class="col-lg-12 ">
+                                  <ngx-datatable #table class="material table-bordered" [rows]="rows"
+                                  [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                                  [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
+
+                                  <ngx-datatable-column [width]="150" name="First Name" prop="first_name" [draggable]="false" [sortable]="false">
+                                      <ng-template let-value="value" ngx-datatable-cell-template>
+                                          <span > {{ value }} </span>
+                                      </ng-template>
+                                  </ngx-datatable-column>
+
+                                  <ngx-datatable-column [width]="150" name="Last Name" prop="last_name" [draggable]="false" [sortable]="false">
+                                      <ng-template let-value="value" ngx-datatable-cell-template>
+                                        <span > {{ value }} </span>
+                                    </ng-template>
+                                  </ngx-datatable-column>
+
+                                  <ngx-datatable-column [width]="100" name="Mobile" prop="mobile" [draggable]="false" [sortable]="false">
+                                      <ng-template let-value="value" ngx-datatable-cell-template>
+                                        <span > {{ value }} </span>
+                                    </ng-template>
+                                  </ngx-datatable-column>
+
+                                  <ngx-datatable-column [width]="100" name="Current Balance" prop="balance" [draggable]="false"
+                                      [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                          <span >  {{value}} </span>
+                                      </ng-template>
+                                  </ngx-datatable-column>
+
+                                  <ngx-datatable-column [width]="80" name="Action" prop="id" [draggable]="false"
+                                      [sortable]="false">
+                                      <ng-template let-row="row" ngx-datatable-cell-template>
+                                        <button class="btn btn-info btn-mini" (click)="getBalanceDetails(row,templateBalance)">
+                                          Details
+                                        </button>
+                                      </ng-template>
+                                  </ngx-datatable-column>
+
+                              </ngx-datatable>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <ng-template #template>
+      <div class="modal-header ">
+          <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+          <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+              <i class="icofont icofont-close"></i>
+          </button>
+      </div>
+      <div class="modal-body ">
+          <app-card>
+              <form [formGroup]="entryForm" class="col-sm-12">
+                  <div class="form-group row">
+                      <label class="col-sm-4 col-form-label">Customer Name </label>
+                      <div class="col-sm-8">
+                        <ng-select  [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false" formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
+                        bindLabel="first_name" bindValue="id" placeholder="Select a customer">
+                      </ng-select>
+
+                          <div *ngIf="submitted && f.customer.errors" class="error-text">
+                              <span *ngIf="f.customer.errors.required" class="text-danger"> Customer is required</span>
+
+                          </div>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label class="col-sm-4 col-form-label">Amount </label>
+                      <div class="col-sm-8">
+                          <input numeric numericType="decimal" type="text" formControlName="amount"
+                              [ngClass]="{ 'is-invalid': submitted && f.amount.errors }" type="text"
+                              class="form-control" />
+
+                          <div *ngIf="submitted && f.amount.errors" class="error-text">
+                              <span *ngIf="f.amount.errors.required" class="text-danger"> Amount is required</span>
+
+                          </div>
+                      </div>
+                  </div>
+
+              </form>
+          </app-card>
+      </div>
+      <div class="modal-footer">
+          <div class="pr-4">
+
+              <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHide()"> <i
+                      class="icofont icofont-close"></i> Close</button>
+
+              <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmit()"><i
+                      class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+
+          </div>
+
+      </div>
+  </ng-template>
+
+    <ng-template #templateBalance>
+      <div class="modal-header ">
+          <h4 class="modal-title pull-left " *ngIf="balanceDetails"> {{balanceDetails[0].customer}} Balance</h4>
+          <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideBalance()">
+              <i class="icofont icofont-close"></i>
+          </button>
+      </div>
+      <div class="modal-body ">
+          <app-card>
+            <div class="row">
+
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-12">
+                  <div class="table-responsive">
+                      <table class="table table-xs table-hover table-bordered table-striped">
+                          <thead>
+                              <tr>
+                                  <th scope="col">#</th>
+                                  <th scope="col">Load Amount</th>
+                                  <th scope="col">Balance Code</th>
+                                  <th scope="col">Created Date</th>
+                              </tr>
+                          </thead>
+
+                          <tbody>
+                              <tr *ngFor="let item of balanceDetails; let i=index">
+
+                                <th scope="col">{{i + 1}}</th>
+                                <th scope="col">{{item.paid_amount}}</th>
+                                <th scope="col">{{item.balance_code}}</th>
+                                <th scope="col">{{item.created_at | amDateFormat:'DD-MMM-YYYY'}} </th>
+                              </tr>
+                          </tbody>
+                      </table>
+                      </div>
+                  </div>
+
+              </div>
+              </div>
+          </div>
+          </app-card>
+      </div>
+      <div class="modal-footer">
+          <div class="pr-4">
+
+              <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideBalance()"> <i
+                      class="icofont icofont-close"></i> Close</button>
+
+          </div>
+
+      </div>
+  </ng-template>
+
+</block-ui>

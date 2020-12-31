@@ -25,7 +25,7 @@
                                    (select)="onSelect($event,template)"
                                   [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
                                   [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto"> -->
-                                    <ngx-datatable class="material table-bordered" [rows]="rows"
+                                    <ngx-datatable #table class="material table-bordered" [rows]="rows"
                                   [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
                                   [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
 

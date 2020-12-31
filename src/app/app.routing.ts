@@ -221,6 +221,11 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./all-sim-list-for-receive/all-sim-list-for-receive.module').then(m => m.AllSIMListForReceiveModule),
         // canActivate: [AuthGuard]
       },
+      {
+        path: 'customer-balance-list',
+        loadChildren: () => import('./customer-balance-list/customer-balance-list.module').then(m => m.CustomerBalanceListModule),
+        // canActivate: [AuthGuard]
+      },
 
     ]
   }, {

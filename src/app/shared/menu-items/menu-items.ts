@@ -282,28 +282,6 @@ const MENUITEMS = [
     }
   ]
 },
-// {
-//   label: 'none',
-//   permission: '',
-//   main: [
-//       {
-//           name: 'Bill',
-//           type: 'sub',
-//           permission: '',
-//           icon: 'icofont-brand-microsoft',
-//           children: [
-//                 {
-//                   state: 'bill-list',
-//                   name: 'Bill List',
-//                   type: 'link',
-//                   icon: 'ti-control-forward',
-//                   permission: '',
-//               },
-
-//           ]
-//       },
-//   ]
-// },
 {
   label: 'none',
   permission: '',
@@ -311,6 +289,19 @@ const MENUITEMS = [
     {
       state: 'payment-list',
       name: 'Payments',
+      type: 'link',
+      icon: 'ti-control-forward',
+      permission: ''
+    }
+  ]
+},
+{
+  label: 'none',
+  permission: '',
+  main: [
+    {
+      state: 'customer-balance-list',
+      name: 'Customer Balance',
       type: 'link',
       icon: 'ti-control-forward',
       permission: ''
