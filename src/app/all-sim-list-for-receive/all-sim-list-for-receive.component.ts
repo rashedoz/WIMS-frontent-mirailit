@@ -10,12 +10,12 @@ import { StockStatus,ReissuanceStatus } from '../_models/enums';
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 
 @Component({
-  selector: 'app-all-sim-list-for-reissue',
-  templateUrl: './all-sim-list-for-reissue.component.html',
+  selector: 'app-all-sim-list-for-receive',
+  templateUrl: './all-sim-list-for-receive.component.html',
   encapsulation: ViewEncapsulation.None
 })
 
-export class AllSIMListForReissueComponent implements OnInit {
+export class AllSIMListForReceiveComponent implements OnInit {
 
   entryForm: FormGroup;
   submitted = false;
@@ -64,7 +64,7 @@ export class AllSIMListForReissueComponent implements OnInit {
     //   size: this.page.size,
     //   pageNumber: this.page.pageNumber
     // };
-    this._service.get('stock/get-sim-list').subscribe(res => {
+    this._service.get('stock/get-reissued-sim-list').subscribe(res => {
 
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
@@ -89,30 +89,30 @@ export class AllSIMListForReissueComponent implements OnInit {
   onFormSubmit() {
     this.submitted = true;
 
-    let reissuable_sims = [];
+    let received_sims = [];
 
-    this.rows.filter(x=> x.secondary_status === 1 && x.isReissueChecked).forEach(element => {
-      reissuable_sims.push({
+    this.rows.filter(x=> x.secondary_status === 2 && x.isReceiveChecked).forEach(element => {
+      received_sims.push({
         sim: element.id
       });
 
     });
 
-    if(reissuable_sims.length === 0){
-      this.toastr.warning('No item selected for reissue', 'Warning!', { closeButton: true, disableTimeOut: true });
+    if(received_sims.length === 0){
+      this.toastr.warning('No item selected for receive', 'Warning!', { closeButton: true, disableTimeOut: true });
       return;
     }
 
     this.blockUI.start('Saving...');
     const obj = {
-      reissuable_sims:reissuable_sims
+      received_sims:received_sims
   };
 
-    this.confirmService.confirm('Are you sure?', 'You are reissuing those sims.')
+    this.confirmService.confirm('Are you sure?', 'You are receiving those sims.')
     .subscribe(
         result => {
             if (result) {
-              this._service.post('stock/reissue-sims', obj).subscribe(
+              this._service.post('stock/receive-reissued-sims-from-mother-company', obj).subscribe(
                 data => {
                   this.blockUI.stop();
                   if (data.IsReport == "Success") {

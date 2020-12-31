@@ -129,6 +129,7 @@ export class BillListComponent implements OnInit {
 
 
   getBillList() {
+    this.loadingIndicator = true;
     this._service.get("subscription/get-bill-list").subscribe(
       (res) => {
         this.activeTable = 0;
@@ -155,6 +156,7 @@ export class BillListComponent implements OnInit {
 
 
   getSubscriptionBillList() {
+    this.loadingIndicator = true;
     this._service.get("subscription/get-bill-list").subscribe(
       (res) => {
         this.activeTable = 1;
@@ -180,6 +182,7 @@ export class BillListComponent implements OnInit {
   }
 
   getSIMBillList() {
+    this.loadingIndicator = true;
     this._service.get("subscription/get-sim-sales-list").subscribe(
       (res) => {
         this.activeTable = 2;
@@ -204,6 +207,7 @@ export class BillListComponent implements OnInit {
   }
 
   getDeviceBillList() {
+    this.loadingIndicator = true;
     this._service.get("subscription/get-device-sales-list").subscribe(
       (res) => {
         this.activeTable = 3;

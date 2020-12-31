@@ -258,12 +258,12 @@ const MENUITEMS = [
                 permission: '',
              },
               {
-                state: 'all-device-list',
+                state: 'all-sim-list-for-receive',
                 name: 'Receive',
                 type: 'link',
                 icon: 'ti-control-forward',
                 permission: '',
-            },           
+            },
 
           ]
       },

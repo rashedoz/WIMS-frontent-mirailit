@@ -216,6 +216,11 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./all-sim-list-for-reissue/all-sim-list-for-reissue.module').then(m => m.AllSIMListForReissueModule),
         // canActivate: [AuthGuard]
       },
+      {
+        path: 'all-sim-list-for-receive',
+        loadChildren: () => import('./all-sim-list-for-receive/all-sim-list-for-receive.module').then(m => m.AllSIMListForReceiveModule),
+        // canActivate: [AuthGuard]
+      },
 
     ]
   }, {
