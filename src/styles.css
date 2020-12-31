@@ -24294,3 +24294,10 @@ bs-datepicker-container { z-index: 3000; }
 .danger-border {
     border-top-color: #e74c3c;
 }
+
+.ngx-datatable.material.single-selection .datatable-body-row.active .datatable-row-group{
+  background-color: #f1f1f1 !important;
+}
+.label-purple {
+    background-color: #9b59b6;
+}

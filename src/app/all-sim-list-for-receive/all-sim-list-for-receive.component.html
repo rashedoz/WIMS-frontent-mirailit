@@ -9,11 +9,21 @@
                             <h5>Reissued SIM List </h5>
                         </div>
                         <div class="card-block ">
+                          <div class="row">
+                            <div class="col-lg-6">
+                              <div class="form-group row">
+                                <div class="col-sm-8">
+                                  <input type="text" class="form-control" placeholder="Search sim" (keyup)="updateFilter($event)" />
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                             <div class="row ">
                                 <div class="col-lg-12 ">
                                   <ngx-datatable class="material table-bordered" [rows]="rows"
                                   [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                  [headerHeight]="40" [limit]="20" [footerHeight]="50" rowHeight="auto">
+                                  [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
 
                                   <ngx-datatable-column [width]="8" name="SIM ID No" prop="id" [draggable]="false" [sortable]="false">
                                       <ng-template let-row="row" ngx-datatable-cell-template>
@@ -70,6 +80,15 @@
                                       </ng-template>
                                   </ngx-datatable-column>
 
+                                 <ngx-datatable-column [width]="80" name="Details" prop="id" [draggable]="false"
+                                  [sortable]="false">
+                                  <ng-template let-row="row" ngx-datatable-cell-template>
+                                    <button class="btn btn-info btn-mini" (click)="openModal(row, template)">
+                                      Details
+                                    </button>
+                                  </ng-template>
+                              </ngx-datatable-column>
+
                               </ngx-datatable>
 
                                 </div>
@@ -86,5 +105,55 @@
         </div>
 
     </div>
+
+    <ng-template #template>
+      <div class="modal-header ">
+          <h4 class="modal-title pull-left " id="modalTitle" *ngIf="simObj"> SIM ICCID : {{simObj.ICCID_no}}</h4>
+          <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+              <i class="icofont icofont-close"></i>
+          </button>
+      </div>
+      <div class="modal-body pb-0">
+          <app-card>
+            <div class="row">
+
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-12">
+                  <div class="table-responsive">
+                      <table class="table table-xs table-hover table-bordered table-striped">
+                          <thead>
+                              <tr>
+                                  <th width="40%" scope="col">Reissued Date</th>
+                                  <th width="60%" scope="col">Received From Company</th>
+                              </tr>
+                          </thead>
+
+                          <tbody>
+                              <tr *ngFor="let item of simDetails; let i=index">
+                                  <th *ngIf="item.reissued_at">{{item.reissued_at | amDateFormat:'DD-MMM-YYYY'}}</th>
+                                  <th *ngIf="!item.reissued_at">---</th>
+                                  <th *ngIf="item.received_from_mcompany_at" >{{ item.received_from_mcompany_at | amDateFormat:'DD-MMM-YYYY'}}</th>
+                                  <th *ngIf="!item.received_from_mcompany_at" >---</th>
+                              </tr>
+                          </tbody>
+                      </table>
+                      </div>
+                  </div>
+
+              </div>
+              </div>
+          </div>
+
+          </app-card>
+      </div>
+      <div class="modal-footer">
+          <div class="pr-4">
+              <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHide()"> <i
+                      class="icofont icofont-close"></i> Close</button>
+          </div>
+
+      </div>
+  </ng-template>
 
 </block-ui>
