@@ -188,6 +188,8 @@ export class AllSIMListForReceiveComponent implements OnInit {
       if(res.length){
         this.simDetails = res;
         this.modalRef = this.modalService.show(template, this.modalConfig);
+      } else {
+        this.toastr.warning('No Details Found.', 'Warning!', { closeButton: true, disableTimeOut: false });
       }
     }, err => { }
     );
