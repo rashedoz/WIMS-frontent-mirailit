@@ -8,7 +8,7 @@ export enum StatusTypes {
 
   export enum PaymentType {
     CASH = 1,
-    MOBILE_BANKING = 2,
+    FROM_BALANCE = 2,
     CARD_PAYMENT = 3,
     ONLINE_BANKING = 4
   }

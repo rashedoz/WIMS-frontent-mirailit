@@ -484,19 +484,32 @@
       <div class="modal-body pb-0" *ngIf="billItem">
           <app-card>
             <div class="table-responsive">
-              <table class="table table-styling">
+                <table class="table table-styling">
+                    <thead>
+                        <tr class="table-primary" *ngIf="billItem.bill_type == 'Subscription'">
+                            <th>Subscription:</th>
+                            <th *ngIf="billItem.subscription">{{billItem.subscription.id}}</th>
+                            <th>Session:</th>
+                            <th >{{billItem.session}}</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <div class="table-responsive" *ngIf="balanceObj">
+              <table class="table">
                   <thead>
-                      <tr class="table-primary" *ngIf="billItem.bill_type == 'Subscription'">
-                          <th>Subscription:</th>
-                          <th *ngIf="billItem.subscription">{{billItem.subscription.id}}</th>
-                          <th>Session:</th>
-                          <th >{{billItem.session}}</th>
+                      <tr>
+                          <th width="60%">{{balanceObj.first_name}} {{balanceObj.last_name}}</th>                         
+                          <th >Balance:</th>
+                          <th >{{balanceObj.balance}}</th>
                       </tr>
                   </thead>
               </table>
           </div>
+      
 
-            <table class="table table-xs table-hover table-striped">
+            <table class="table table-xs ">
               <tbody>
                   <tr>
                       <th>Sub-Total </th>
@@ -513,7 +526,7 @@
                   <tr>
                       <th>Discount</th>
                       <td class="pr-1">
-                          <input  type="text" class="form-control form-control-sm text-right pr-3"
+                          <input [disabled]="isPayBalanceEnable" type="text" class="form-control form-control-sm text-right pr-3"
                               numeric numericType="number" (change)="onChangeDiscount(discount)" [(ngModel)]="discount" [ngModelOptions]="{standalone: true}">
                       </td>
                   </tr>
@@ -524,10 +537,25 @@
                    <tr>
                       <th>Paid Amount</th>
                       <td class="pr-1">
-                          <input type="text" class="form-control form-control-sm text-right pr-3"
+                          <input [disabled]="isPayBalanceEnable" type="text" class="form-control form-control-sm text-right pr-3"
                               numeric numericType="number" (change)="onChangePaid(paidAmount)"
                               [(ngModel)]="paidAmount" [ngModelOptions]="{standalone: true}">
                       </td>
+                  </tr>                  
+                   <tr *ngIf="isPayBalanceEnableShow">
+                        <th colspan="2"> 
+                            <div class="form-group text-left">
+                            <div class="checkbox-fade fade-in-primary">
+                                <label>
+                                    <input type="checkbox" (change)="onChangePayBalance($event.target.checked)">
+                                    <span class="cr">
+                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                    </span> Pay From Balance ?
+                                </label>
+                            </div>
+                        </div>
+                    </th>
+                      
                   </tr>                  
               </tbody>
           </table>

@@ -83,7 +83,12 @@
                         <tr  [formGroupName]="i">
                             <th>
                               <ng-select [clearable]="false" appendTo="body" (change)="onDeviceChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('device').errors}" formControlName="device" [clearOnBackspace]="false" [items]="deviceList"
-                              bindLabel="id" placeholder="Select a device"></ng-select>
+                              bindLabel="id" placeholder="Select a device">                            
+                            <ng-template ng-option-tmp let-item="item" let-index="index">
+                              <p class="card-text font-weight-bold" *ngIf="!item.device_serial_no">  {{item.id}} </p>                                
+                              <p class="card-text font-weight-bold" *ngIf="item.device_serial_no">  {{item.id}} ({{item.device_serial_no}})</p>                                
+                          </ng-template>
+                            </ng-select>
                               <div *ngIf="submitted && item_his.controls[i].get('device').errors" class="error-text">
                                 <small *ngIf="item_his.controls[i].get('device').errors.required" class="text-danger"> Device
                                   is required</small>

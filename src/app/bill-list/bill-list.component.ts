@@ -60,7 +60,9 @@ export class BillListComponent implements OnInit {
   paidAmount:number=0;
   remarks =  null;
   billItem;
-
+  balanceObj;
+  isPayBalanceEnableShow = false;
+  isPayBalanceEnable = false;
   constructor(
     private confirmService: ConfirmService,
     private modalService: BsModalService,
@@ -232,14 +234,14 @@ export class BillListComponent implements OnInit {
   }
 
   onChangeDiscount(value) {
-    if (parseFloat(value) > this.subTotal) {
-      this.discount = this.subTotal;
-    }
+    // if (parseFloat(value) > this.subTotal) {
+    //   this.discount = this.subTotal;
+    // }
   }
 
   onChangePaid(value) {
-    if (parseFloat(value) > this.subTotal - this.discount) {
-      this.paidAmount = this.subTotal - this.discount;
+    if (parseFloat(value) > this.newTotal - this.discount) {
+      this.paidAmount = this.newTotal - this.discount;
     }
   }
 
@@ -252,12 +254,12 @@ export class BillListComponent implements OnInit {
     this.toastr.warning("Paid amount can't be empty", 'Warning!', { closeButton: true, disableTimeOut: true });
     return;
    }
-   this.blockUI.start('Saving...');
+ //  this.blockUI.start('Saving...');
     const obj = {
       customer:this.billItem.customer_id,
       bill:this.billItem.id,
       transaction_type:"Payment In",
-      payment_method:1,
+      payment_method: this.isPayBalanceEnable ? 2:1,
       session:this.billItem.session,
       discount:Number(this.discount),
       paid_amount:Number(this.paidAmount),
@@ -267,8 +269,7 @@ export class BillListComponent implements OnInit {
       remarks: this.remarks
     };
 
-
-
+console.log(obj);
     this._service.post('payment/save-payment', obj).subscribe(
       data => {
         this.blockUI.stop();
@@ -302,15 +303,44 @@ export class BillListComponent implements OnInit {
     this.discount = 0;
     this.paidAmount = 0;
     this.remarks = null;
+    this.isPayBalanceEnableShow = false;
+    this.isPayBalanceEnable = false;
   }
 
   openModal(row, template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template, this.modalConfig);
+  
     this.subTotal = row.payable_amount;
     this.billItem = row;
     this.newTotal =  Number(this.subTotal) - Number(this.billItem.so_far_paid);
   //  this.discount = row.discount;
+  this._service.get('get-customer-current-balance/'+ row.customer_id).subscribe(
+    res => {
+     this.balanceObj = res;
+     if(Number(this.balanceObj.balance) == 0){
+      this.isPayBalanceEnableShow = false;
+     } else {
+      this.isPayBalanceEnableShow = true;
+     }
+    },
+    err => {}
+  );
 
+  this.modalRef = this.modalService.show(template, this.modalConfig);
+
+  }
+
+  onChangePayBalance(e){
+    this.isPayBalanceEnable = e;
+    let net = Number(this.newTotal) - Number(this.discount);
+    if(e){
+      if(Number(this.balanceObj.balance) > net){
+        this.paidAmount = net;
+        } else if(Number(this.balanceObj.balance) <= net){
+          this.paidAmount = Number(this.balanceObj.balance);
+        }     
+    } else {
+      this.paidAmount = 0;
+    }
   }
 
 

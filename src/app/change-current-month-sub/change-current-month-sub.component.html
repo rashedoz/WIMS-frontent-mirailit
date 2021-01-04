@@ -114,7 +114,7 @@
                         <th width="20%" scope="col">New Plan</th>
                         <th width="15%" scope="col">Changes Plan</th>
                         <th width="20%" scope="col">Changes Price</th>
-                        <th width="20%" scope="col">Actual Price</th>
+                        <th width="20%" scope="col">Unit Price</th>
                         <th width="20%" scope="col">Payable Amount</th>
                         <th width="20%" scope="col">Refund Amount</th>
                       </tr>
@@ -167,7 +167,7 @@
                             <th>
                               <input type="text" numeric numericType="decimal" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('actual_price').errors}" formControlName="actual_price"  />
                             <div *ngIf="submitted && item_his.controls[i].get('actual_price').errors" class="error-text">
-                              <small *ngIf="item_his.controls[i].get('actual_price').errors.required" class="text-danger"> Actual Price is required</small>
+                              <small *ngIf="item_his.controls[i].get('actual_price').errors.required" class="text-danger"> Unit price is required</small>
                             </div>
                             </th>
                             <th>
