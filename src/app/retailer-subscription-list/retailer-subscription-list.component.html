@@ -53,7 +53,7 @@
                                 <div class="col-lg-12 ">
                                   <ngx-datatable #table class="material table-bordered" [rows]="customerList" [loadingIndicator]="loadingIndicator"
                                   [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                                  [rowHeight]="'auto'" [limit]="10">
+                                  [rowHeight]="'auto'" [limit]="100">
 
                                          <!-- Row Detail Template -->
                                          <ngx-datatable-row-detail  [rowHeight]="'100%'">
@@ -124,7 +124,7 @@
                                       <span *ngIf="!value" >  --- </span>
                                     </ng-template>
                                 </ngx-datatable-column>
-                                <ngx-datatable-column [width]="100" name="Subscripton Status" prop="status" [draggable]="false" [sortable]="false">
+                                <ngx-datatable-column [width]="100" name="Subscription Status" prop="status" [draggable]="false" [sortable]="false">
                                     <ng-template let-value="value" ngx-datatable-cell-template>
                                       <span *ngIf="value == 1" > <strong class="label label-success">{{ SubscriptionStatus[value] }}</strong> </span>
                                         <span *ngIf="value == 2" ><strong class="label label-danger">{{ SubscriptionStatus[value] }}</strong> </span>

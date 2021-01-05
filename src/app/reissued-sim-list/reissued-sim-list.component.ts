@@ -11,12 +11,12 @@ import { StockStatus,ReissuanceStatus } from '../_models/enums';
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 
 @Component({
-  selector: 'app-all-sim-list-for-receive',
-  templateUrl: './all-sim-list-for-receive.component.html',
+  selector: 'app-reissued-sim-list',
+  templateUrl: './reissued-sim-list.component.html',
   encapsulation: ViewEncapsulation.None
 })
 
-export class AllSIMListForReceiveComponent implements OnInit {
+export class ReissuedSIMListComponent implements OnInit {
 
   entryForm: FormGroup;
   submitted = false;

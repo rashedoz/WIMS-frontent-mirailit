@@ -26,7 +26,7 @@
                                 <div class="col-lg-12 ">
                                  <ngx-datatable #table class="material table-bordered" [rows]="paymentList" [loadingIndicator]="loadingIndicator"
                                   [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                                  [rowHeight]="'auto'" [limit]="10">
+                                  [rowHeight]="'auto'" [limit]="100">
 
                                   <ngx-datatable-column [width]="100" name="Payment No" prop="id" [draggable]="false" [sortable]="false">
                                     <ng-template let-value="value" ngx-datatable-cell-template>
@@ -64,7 +64,8 @@
 
                                   <ngx-datatable-column [width]="150" name="Payment Method" prop="payment_method" [draggable]="false" [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span > <strong class="label label-info">{{ PaymentType[value] }} </strong></span>
+                                          <span *ngIf="value === 1" > <strong class="label label-info">{{ PaymentType[value] }} </strong></span>
+                                          <span *ngIf="value === 2"> <strong class="label label-primary">{{ PaymentType[value] }} </strong></span>
                                       </ng-template>
                                   </ngx-datatable-column>
 

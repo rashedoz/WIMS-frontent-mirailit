@@ -16,7 +16,7 @@
 
                                     <ngx-datatable class="material table-bordered" [rows]="rows"
                                         [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                        [headerHeight]="30" [footerHeight]="50" [limit]="10" rowHeight="auto"
+                                        [headerHeight]="30" [footerHeight]="50" [limit]="100" rowHeight="auto"
                                         [externalPaging]="true" [count]="page.totalElements" [offset]="page.pageNumber"
                                         [limit]="page.size" (page)="setPage($event)">
 

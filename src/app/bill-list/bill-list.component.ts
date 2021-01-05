@@ -9,6 +9,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
 import { BillStatus } from '../_models/enums';
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
+// import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({
   selector: 'app-bill-list',
@@ -34,17 +35,20 @@ export class BillListComponent implements OnInit {
   btnSaveText = 'Save';
   modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
   modalRef: BsModalRef;
+  modalRefInv: BsModalRef;
   @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
   @ViewChild(DatatableComponent, { static: false }) tableSIM: DatatableComponent;
   @ViewChild(DatatableComponent, { static: false }) tableDevice: DatatableComponent;
-
+  @ViewChild('pdfViewerOnDemand', { static: false }) pdfViewerOnDemand: any;
+  // @ViewChild(TemplateRef, { static: false }) tpl: TemplateRef<any>;
+  // invModal: NgxSmartModalComponent;
   rows = [];
   tempRows = [];
   bilList = [];
   subscriptionBilList = [];
   simBilList = [];
   deviceBilList = [];
-  isbuttonActive = true;
+  isbuttonActive = true; 
 
   loadingIndicator = false;
   ColumnMode = ColumnMode;
@@ -64,6 +68,7 @@ export class BillListComponent implements OnInit {
   isPayBalanceEnableShow = false;
   isPayBalanceEnable = false;
   constructor(
+    // private ngxSmartModalService : NgxSmartModalService,
     private confirmService: ConfirmService,
     private modalService: BsModalService,
     public formBuilder: FormBuilder,
@@ -269,7 +274,6 @@ export class BillListComponent implements OnInit {
       remarks: this.remarks
     };
 
-console.log(obj);
     this._service.post('payment/save-payment', obj).subscribe(
       data => {
         this.blockUI.stop();
@@ -311,7 +315,8 @@ console.log(obj);
   
     this.subTotal = row.payable_amount;
     this.billItem = row;
-    this.newTotal =  Number(this.subTotal) - Number(this.billItem.so_far_paid);
+    let so_far_paid = Number(this.billItem.so_far_paid) - Number(this.billItem.parent_refund_amount);
+    this.newTotal =  Number(this.subTotal) - so_far_paid;
   //  this.discount = row.discount;
   this._service.get('get-customer-current-balance/'+ row.customer_id).subscribe(
     res => {
@@ -396,8 +401,31 @@ console.log(obj);
   }
 
 
-  printInv(){
-    this.toastr.warning('Work under progress', 'Warning!', { closeButton: true, disableTimeOut: false });
+  printInv(row){
+  
+
+    this.blockUI.start('Generating invoice...');
+    this._service.downloadFile("subscription/generate-customer-invoice/"+row.id).subscribe(res => {
+      // this.invModal = this.ngxSmartModalService.create('invModal', this.tpl);
+      // this.invModal.open();
+      
+      // this.pdfViewerOnDemand.pdfSrc = res; 
+      // this.pdfViewerOnDemand.refresh();
+
+      const url = window.URL.createObjectURL(res);
+      var link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+    //  link.download = "invoice.pdf";
+      link.click();
+ 
+      this.blockUI.stop(); 
+    },
+      error => {
+
+        this.blockUI.stop();
+        this.toastr.error(error.message || error, 'Error!', { closeButton: true, disableTimeOut: true });
+      });
   }
 
   modalHideBill() {
@@ -410,6 +438,9 @@ console.log(obj);
       this.modalRef = this.modalService.show(template, this.modalConfig);
 
   }
+
+
+
 
   updateFilterBill(event) {
     const val = event.target.value.toLowerCase();

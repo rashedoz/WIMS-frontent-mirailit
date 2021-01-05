@@ -54,7 +54,7 @@
 
                                       <ngx-datatable  #table class="material table-bordered" [rows]="bilList" [loadingIndicator]="loadingIndicator"
                                         [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                                        [rowHeight]="'auto'" [limit]="10">
+                                        [rowHeight]="'auto'" [limit]="100">
 
 
                                       <ngx-datatable-column [width]="200" name="Customer" prop="customer" [draggable]="false" [sortable]="false">
@@ -116,6 +116,12 @@
                                           </ng-template>
                                       </ngx-datatable-column>
 
+                                      <ngx-datatable-column [width]="150" name="Total Refunded" prop="parent_refund_amount" [draggable]="false" [sortable]="false">
+                                          <ng-template let-value="value" ngx-datatable-cell-template>
+                                              <span > {{ value }} </span>
+                                          </ng-template>
+                                      </ngx-datatable-column>
+
                                       <ngx-datatable-column [width]="150" name="Status" prop="status" [draggable]="false" [sortable]="false">
                                           <ng-template let-value="value" ngx-datatable-cell-template>
                                               <span *ngIf="value == 1" > <strong class="label label-danger">{{ billStatus[value] }}</strong> </span>
@@ -136,7 +142,7 @@
                                           [sortable]="false">
                                           <ng-template let-row="row" ngx-datatable-cell-template>
                                               <button  *ngIf="row.status != 3 && row.status != 4" (click)="openModal(row ,template)" class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive Payment</button>
-                                              <button (click)="printInv()" class="btn btn-primary btn-mini"><i class="icofont icofont-doc"></i>Print Invoice</button>
+                                              <button (click)="printInv(row)" class="btn btn-primary btn-mini"><i class="icofont icofont-doc"></i>Show Invoice</button>
                                           </ng-template>
                                       </ngx-datatable-column>
 
@@ -160,7 +166,7 @@
 
                                       <ngx-datatable  #table class="material table-bordered" [rows]="subscriptionBilList" [loadingIndicator]="loadingIndicator"
                                         [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                                        [rowHeight]="'auto'" [limit]="10">
+                                        [rowHeight]="'auto'" [limit]="100">
 
 
                                       <ngx-datatable-column [width]="200" name="Customer" prop="customer" [draggable]="false" [sortable]="false">
@@ -181,7 +187,7 @@
                                       </ng-template>
                                   </ngx-datatable-column>
 
-                                      <ngx-datatable-column [width]="120" name="Subscription" prop="subscription" [draggable]="false" [sortable]="false">
+                                      <ngx-datatable-column [width]="120" name="Subscription No" prop="subscription" [draggable]="false" [sortable]="false">
                                           <ng-template let-value="value" ngx-datatable-cell-template>
                                               <span > {{ value.id }} </span>
                                           </ng-template>
@@ -222,6 +228,12 @@
                                           </ng-template>
                                       </ngx-datatable-column>
 
+                                      <ngx-datatable-column [width]="150" name="Total Refunded" prop="parent_refund_amount" [draggable]="false" [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span > {{ value }} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
                                       <ngx-datatable-column [width]="150" name="Status" prop="status" [draggable]="false" [sortable]="false">
                                           <ng-template let-value="value" ngx-datatable-cell-template>
                                               <span *ngIf="value == 1" > <strong class="label label-danger">{{ billStatus[value] }}</strong> </span>
@@ -242,7 +254,7 @@
                                           [sortable]="false">
                                           <ng-template let-row="row" ngx-datatable-cell-template>
                                               <button  *ngIf="row.status != 3 && row.status != 4" (click)="openModal(row ,template)" class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive Payment</button>
-                                              <button (click)="printInv()" class="btn btn-primary btn-mini"><i class="icofont icofont-doc"></i>Print Invoice</button>
+                                              <button (click)="printInv(row)" class="btn btn-primary btn-mini"><i class="icofont icofont-doc"></i>Show Invoice</button>
                                             </ng-template>
                                       </ngx-datatable-column>
 
@@ -266,7 +278,7 @@
 
                                       <ngx-datatable  #tableSIM class="material table-bordered" [rows]="simBilList" [loadingIndicator]="loadingIndicator"
                                         [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                                        [rowHeight]="'auto'" [limit]="10">
+                                        [rowHeight]="'auto'" [limit]="100">
 
 
                                       <ngx-datatable-column [width]="200" name="Customer" prop="customer" [draggable]="false" [sortable]="false">
@@ -354,7 +366,7 @@
                                           [sortable]="false">
                                           <ng-template let-row="row" ngx-datatable-cell-template>
                                             <button  *ngIf="row.status != 3 && row.status != 4" (click)="openModal(row ,template)" class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive Payment</button>
-                                            <button (click)="printInv()" class="btn btn-primary btn-mini"><i class="icofont icofont-doc"></i>Print Invoice</button>                                          </ng-template>
+                                            <button (click)="printInv(row)" class="btn btn-primary btn-mini"><i class="icofont icofont-doc"></i>Show Invoice</button>                                          </ng-template>
                                       </ngx-datatable-column>
 
                                   </ngx-datatable>
@@ -377,7 +389,7 @@
 
                                       <ngx-datatable  #tableDevice class="material table-bordered" [rows]="deviceBilList" [loadingIndicator]="loadingIndicator"
                                         [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                                        [rowHeight]="'auto'" [limit]="10">
+                                        [rowHeight]="'auto'" [limit]="100">
 
 
                                       <ngx-datatable-column [width]="200" name="Customer" prop="customer" [draggable]="false" [sortable]="false">
@@ -458,7 +470,7 @@
                                           [sortable]="false">
                                           <ng-template let-row="row" ngx-datatable-cell-template>
                                             <button  *ngIf="row.status != 3 && row.status != 4" (click)="openModal(row ,template)" class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive Payment</button>
-                                            <button (click)="printInv()" class="btn btn-primary btn-mini"><i class="icofont icofont-doc"></i>Print Invoice</button>                                          </ng-template>
+                                            <button (click)="printInv(row)" class="btn btn-primary btn-mini"><i class="icofont icofont-doc"></i>Show Invoice</button>                                          </ng-template>
                                       </ngx-datatable-column>
 
                                   </ngx-datatable>
@@ -519,6 +531,10 @@
                       <th>So Far Paid </th>
                       <th width="40%" class="text-right pr-4">{{billItem.so_far_paid}}</th>
                   </tr>
+                  <tr>
+                      <th>Total Refunded </th>
+                      <th width="40%" class="text-right pr-4">{{billItem.parent_refund_amount}}</th>
+                  </tr>
                   <tr class="table-info" style="font-size: 20px;">
                       <th> Payable Amount </th>
                       <th width="40%" class="text-right pr-4">{{newTotal}}</th>
@@ -532,7 +548,7 @@
                   </tr>
                 <tr>
                       <th>Net-Total</th>
-                      <th class="text-right pr-4">{{subTotal - discount - billItem.so_far_paid}}</th>
+                      <th class="text-right pr-4">{{subTotal - discount - (billItem.so_far_paid - billItem.parent_refund_amount)}}</th>
                   </tr>
                    <tr>
                       <th>Paid Amount</th>
@@ -616,5 +632,24 @@
 
     </div>
 </ng-template>
+
+<!-- <ngx-smart-modal #invModal identifier="invModal" customClass="nsm-dialog-animation-btt modal-md">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Invoice</h3>
+        </div>
+        <div class="card-body">
+
+            <div style=" height: 400px">
+              <ng2-pdfjs-viewer #pdfViewerOnDemand [downloadFileName]="'dowload.pdf'" [openFile]="false" zoom="page-width"
+                [viewBookmark]="false" [download]="true"></ng2-pdfjs-viewer>
+            </div>
+
+        </div>
+        <div class="card-footer text-center">
+            <button type="button" (click)="invModal.close()" class="btn btn-info btn-sm mb-1"> Close</button>
+        </div>
+    </div>
+</ngx-smart-modal> -->
 
 </block-ui>

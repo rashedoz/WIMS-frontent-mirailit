@@ -25,7 +25,7 @@
                                 <div class="col-lg-12 ">
                                   <ngx-datatable #table class="material table-bordered" [rows]="rows"
                                   [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                  [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
+                                  [headerHeight]="40" [limit]="100" [footerHeight]="50" rowHeight="auto">
 
                                   <ngx-datatable-column [width]="150" name="First Name" prop="first_name" [draggable]="false" [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
@@ -52,11 +52,13 @@
                                       </ng-template>
                                   </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="80" name="Action" prop="id" [draggable]="false"
+                                  <ngx-datatable-column [width]="180" name="Action" prop="id" [draggable]="false"
                                       [sortable]="false">
                                       <ng-template let-row="row" ngx-datatable-cell-template>
-                                        <button class="btn btn-info btn-mini" (click)="getBalanceDetails(row,templateBalance)">
-                                          Details
+                                        <button class="btn btn-primary btn-mini mr-2" (click)="openModalRow(row,template)"><i
+                                            class=" icofont icofont-plus "></i> Load Balance </button>
+                                        <button *ngIf="row.has_loaded_balance" class="btn btn-info btn-mini" (click)="getBalanceDetails(row,templateBalance)">
+                                            Balance Load History
                                         </button>
                                       </ng-template>
                                   </ngx-datatable-column>
@@ -129,7 +131,7 @@
 
     <ng-template #templateBalance>
       <div class="modal-header ">
-          <h4 class="modal-title pull-left " *ngIf="balanceDetails"> {{balanceDetails[0].customer}} Balance</h4>
+          <h4 class="modal-title pull-left " *ngIf="item"> {{item.customer}}'s Balance Loading History</h4>
           <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideBalance()">
               <i class="icofont icofont-close"></i>
           </button>
@@ -148,7 +150,7 @@
                                   <th scope="col">#</th>
                                   <th scope="col">Load Amount</th>
                                   <th scope="col">Balance Code</th>
-                                  <th scope="col">Created Date</th>
+                                  <th scope="col">Date</th>
                               </tr>
                           </thead>
 

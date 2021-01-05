@@ -42,14 +42,23 @@
 
                 <div class="form-group row">
                   <label class="col-sm-4 col-form-label">Customer </label>
-                  <div class="col-sm-8">
+                  <div class="col-sm-8">                  
+        
+
+                  <div class="d-flex flex-row">
                     <ng-select [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false" formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
                       bindLabel="first_name" bindValue="id" placeholder="Select a customer">
                     </ng-select>
-                    <div *ngIf="submitted && f.customer.errors" class="error-text">
-                      <span *ngIf="f.customer.errors.required" class="text-danger"> Customer is required</span>
+                    <button type="button" class="btn btn-success btn-mini"
+                        title="Add new customer" (click)="openModalCustomer(templateCustomer)">
+                        <i class="icofont-plus"></i>
+                    </button>
+                </div>
+                <div *ngIf="submitted && f.customer.errors" class="error-text">
+                    <span *ngIf="f.customer.errors.required" class="text-danger"> Customer is required</span>
 
-                  </div>
+                </div>
+                  
                   </div>
                 </div>
 
@@ -190,5 +199,111 @@
       </div>
     </div>
   </form>
+
+
+
+  <ng-template #templateCustomer>
+    <div class="modal-header ">
+        <h4 class="modal-title pull-left "> Add Customer</h4>
+        <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideCustomer()">
+            <i class="icofont icofont-close"></i>
+        </button>
+    </div>
+    <div class="modal-body ">
+        <app-card>
+            <form [formGroup]="RegistrerForm" class="col-sm-12">
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">First Name </label>
+                    <div class="col-sm-8">
+                        <input type="text" formControlName="firstName"
+                            [ngClass]="{ 'is-invalid': submittedCustomer && c.firstName.errors }" type="text"
+                            class="form-control" />
+
+                        <div *ngIf="submittedCustomer && c.firstName.errors" class="error-text">
+                            <span *ngIf="c.firstName.errors.required" class="text-danger"> Customer first name is required</span>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Last Name </label>
+                    <div class="col-sm-8">
+                        <input type="text" formControlName="lastName"
+                            [ngClass]="{ 'is-invalid': submittedCustomer && c.lastName.errors }" type="text"
+                            class="form-control" />
+
+                        <div *ngIf="submittedCustomer && c.lastName.errors" class="error-text">
+                            <span *ngIf="c.lastName.errors.required" class="text-danger"> Customer last name is required</span>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Email </label>
+                    <div class="col-sm-8">
+                        <input type="text" formControlName="email"
+                            [ngClass]="{ 'is-invalid': submittedCustomer && c.email.errors }" type="text"
+                            class="form-control" />
+
+                        <div *ngIf="submittedCustomer && c.email.errors" class="error-text">
+                            <span *ngIf="c.email.errors.required" class="text-danger"> Email is required</span>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Mobile </label>
+                    <div class="col-sm-8">
+                        <input type="text" formControlName="mobile"
+                            [ngClass]="{ 'is-invalid': submittedCustomer && c.mobile.errors }" type="text"
+                            class="form-control" />
+
+                        <div *ngIf="submittedCustomer && c.mobile.errors" class="error-text">
+                            <span *ngIf="c.mobile.errors.required" class="text-danger"> Mobile number is required</span>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Customer Type </label>
+                    <div class="col-sm-8">
+                   
+                      <div class="form-radio pt-1">
+                        <div class="radio radio-inverse radio-inline" >
+                            <label class="pt-1">
+                                <input formControlName="customerType" type="radio" name="customerType"
+                                     value="Wholesaler">
+                                <i class="helper"></i>Wholesaler
+                            </label>
+                        </div>
+                        <div class="radio radio-inverse radio-inline" >
+                            <label class="pt-1">
+                                <input formControlName="customerType" type="radio" name="customerType"
+                                     value="Retailer">
+                                <i class="helper"></i>Retailer
+                            </label>
+                        </div>
+                      
+                    </div> 
+                      
+                    </div>
+                </div>
+   
+            </form>
+        </app-card>
+    </div>
+    <div class="modal-footer">
+        <div class="pr-4">
+
+            <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideCustomer()"> <i
+                    class="icofont icofont-close"></i> Close</button>
+
+            <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmitCustomer()"><i
+                    class="icofont icofont-check-circled"></i> Add Customer</button>
+
+        </div>
+
+    </div>
+</ng-template>
 
 </block-ui>

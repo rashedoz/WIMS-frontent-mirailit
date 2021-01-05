@@ -24,10 +24,10 @@
                                   <!-- <ngx-datatable class="material table-bordered" [rows]="rows" [selectionType]="SelectionType.single"
                                    (select)="onSelect($event,template)"
                                   [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                  [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto"> -->
+                                  [headerHeight]="40" [limit]="100" [footerHeight]="50" rowHeight="auto"> -->
                                     <ngx-datatable #table class="material table-bordered" [rows]="rows"
                                   [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                  [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
+                                  [headerHeight]="40" [limit]="100" [footerHeight]="50" rowHeight="auto">
 
                                   <ngx-datatable-column [width]="8" name="SIM ID No" prop="id" [draggable]="false" [sortable]="false">
                                       <ng-template let-row="row" ngx-datatable-cell-template>
@@ -61,10 +61,11 @@
                                       </ng-template>
                                   </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="80" name="Stock Entry Date" prop="created_at" [draggable]="false"
+                                  <ngx-datatable-column [width]="120" name="Last Reissue Date" prop="last_reissued_at" [draggable]="false"
                                       [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span >  {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
+                                          <span *ngIf="value">  {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
+                                          <span *ngIf="!value">  --- </span>
                                       </ng-template>
                                   </ngx-datatable-column>
 
@@ -83,11 +84,11 @@
 
                                       </ng-template>
                                   </ngx-datatable-column>
-                                  <ngx-datatable-column [width]="80" name="Details" prop="id" [draggable]="false"
+                                  <ngx-datatable-column [width]="120" name="Action" prop="id" [draggable]="false"
                                       [sortable]="false">
                                       <ng-template let-row="row" ngx-datatable-cell-template>
-                                        <button class="btn btn-info btn-mini" (click)="openModal(row, template)">
-                                          Details
+                                        <button class="btn btn-info btn-mini" *ngIf="row.has_reissue_history" (click)="openModal(row, template)">
+                                            See Reissue History
                                         </button>
                                       </ng-template>
                                   </ngx-datatable-column>

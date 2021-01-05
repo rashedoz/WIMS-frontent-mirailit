@@ -39,7 +39,7 @@ export class CustomerBalanceListComponent implements OnInit {
   modalConfigxl: any = { class: 'gray modal-xl', backdrop: 'static' };
   modalRef: BsModalRef;
   balanceDetails : Array<any> = [];
-
+  item;
   constructor(
     private modalService: BsModalService,
     private confirmService: ConfirmService,
@@ -95,7 +95,7 @@ export class CustomerBalanceListComponent implements OnInit {
   }
 
   getBalanceDetails(row,template: TemplateRef<any>){
-
+    this.item = row;
     this._service.get('get-customer-balance-loading-history?customer=' + row.id).subscribe(res => {
       this.balanceDetails = res;
       this.modalRef = this.modalService.show(template, this.modalConfigxl);
@@ -114,7 +114,7 @@ export class CustomerBalanceListComponent implements OnInit {
 
     this.blockUI.start('Saving...');
     const obj = {
-      customer: this.entryForm.value.customer,
+      customer: this.entryForm.controls['customer'].value,
       paid_amount: Number(this.entryForm.value.amount),
     };
 
@@ -161,6 +161,7 @@ export class CustomerBalanceListComponent implements OnInit {
 
   modalHide() {
     this.entryForm.reset();
+    this.entryForm.controls['customer'].enable();
     this.modalRef.hide();
     this.submitted = false;
   }
@@ -169,8 +170,15 @@ export class CustomerBalanceListComponent implements OnInit {
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 
+  openModalRow(item,template: TemplateRef<any>) {
+    this.entryForm.controls['customer'].setValue(item.id);
+    this.entryForm.controls['customer'].disable();
+    this.modalRef = this.modalService.show(template, this.modalConfig);
+  }
+
   modalHideBalance() {
     this.modalRef.hide();
+    this.item = null;
   }
 
 

@@ -206,8 +206,21 @@ const MENUITEMS = [
   permission: '',
   main: [
     {
+      state: 'create-subscription',
+      name: 'Create subscription',
+      type: 'link',
+      icon: 'icofont-brand-microsoft',
+      permission: ''
+    }
+  ]
+},
+{
+  label: 'none',
+  permission: '',
+  main: [
+    {
       state: 'subscription-list',
-      name: 'All Customer Sub. List',
+      name: 'All Customer Subs. List',
       type: 'link',
       icon: 'ti-control-forward',
       permission: ''
@@ -249,7 +262,7 @@ const MENUITEMS = [
           type: 'sub',
           permission: '',
           icon: 'icofont-brand-microsoft',
-          children: [
+          children: [        
               {
                 state: 'all-sim-list-for-reissue',
                 name: 'Reissue',
@@ -257,6 +270,13 @@ const MENUITEMS = [
                 icon: 'ti-control-forward',
                 permission: '',
              },
+             {
+              state: 'reissued-sim-list',
+              name: 'Reissued SIM List',
+              type: 'link',
+              icon: 'ti-control-forward',
+              permission: '',
+           },
               {
                 state: 'all-sim-list-for-receive',
                 name: 'Receive',

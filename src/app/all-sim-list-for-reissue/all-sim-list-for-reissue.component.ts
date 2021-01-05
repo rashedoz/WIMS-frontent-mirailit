@@ -72,7 +72,7 @@ export class AllSIMListForReissueComponent implements OnInit {
     //   size: this.page.size,
     //   pageNumber: this.page.pageNumber
     // };
-    this._service.get('stock/get-sim-list').subscribe(res => {
+    this._service.get('stock/get-reissueable-sim-list').subscribe(res => {
 
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });

@@ -6,7 +6,7 @@ export const AllSIMListForReceiveRoutes: Routes = [{
   path: '',
   component: AllSIMListForReceiveComponent,
   data: {
-    breadcrumb: 'Reissued SIM List',
+    breadcrumb: 'Reissued SIM list for receive',
     icon: 'icofont-home bg-c-blue',
     status: false
   }

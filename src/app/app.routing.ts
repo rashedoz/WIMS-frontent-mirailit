@@ -4,6 +4,7 @@ import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 import { AuthGuard } from './_helpers/auth.guard';
 
+
 export const AppRoutes: Routes = [
 
   { path: '', component: AdminLayoutComponent, loadChildren: () => import('./home/home.module').then(m => m.HomeModule), canActivate: [AuthGuard] },
@@ -219,6 +220,11 @@ export const AppRoutes: Routes = [
       {
         path: 'all-sim-list-for-receive',
         loadChildren: () => import('./all-sim-list-for-receive/all-sim-list-for-receive.module').then(m => m.AllSIMListForReceiveModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'reissued-sim-list',
+        loadChildren: () => import('./reissued-sim-list/reissued-sim-list.module').then(m => m.ReissuedSIMListModule),
         // canActivate: [AuthGuard]
       },
       {

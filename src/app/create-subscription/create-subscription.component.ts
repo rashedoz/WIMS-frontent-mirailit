@@ -22,6 +22,7 @@ import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { BsDatepickerConfig } from "ngx-bootstrap/datepicker";
 import { Page } from "./../_models/page";
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
+import { AuthenticationService } from './../_services/authentication.service';
 
 @Component({
   selector: "app-create-subscription",
@@ -29,6 +30,7 @@ import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
   encapsulation: ViewEncapsulation.None,
 })
 export class CreateSubscriptionComponent implements OnInit {
+  RegistrerForm: FormGroup;
   entryForm: FormGroup;
   itemHistoryList: FormArray;
   itemFormArray: any;
@@ -40,11 +42,12 @@ export class CreateSubscriptionComponent implements OnInit {
   paidAmount:number=0;
 
   submitted = false;
+  submittedCustomer = false;
   @BlockUI() blockUI: NgBlockUI;
   modalTitle = "Add ";
   btnSaveText = "Create Subscription";
 
-  modalConfig: any = { class: "gray modal-lg", backdrop: "static" };
+  modalConfig: any = { class: "gray modal-md", backdrop: "static" };
   modalRef: BsModalRef;
 
   page = new Page();
@@ -59,6 +62,7 @@ export class CreateSubscriptionComponent implements OnInit {
   planList: Array<any> = [];
 
   constructor(
+    private authService: AuthenticationService,
     private confirmService: ConfirmService,
     private modalService: BsModalService,
     public formBuilder: FormBuilder,
@@ -86,6 +90,15 @@ export class CreateSubscriptionComponent implements OnInit {
       session: [null, [Validators.required]],
       itemHistory: this.formBuilder.array([this.initItemHistory()]),
     });
+
+    this.RegistrerForm = this.formBuilder.group({
+      email: [null, [Validators.required, Validators.email, Validators.maxLength(50)]],
+      mobile: [null, [Validators.required]],
+      firstName: [null, [Validators.required]],
+      lastName: [null, [Validators.required]],
+      customerType: ['Wholesaler']
+    });
+
     this.itemHistoryList = this.entryForm.get("itemHistory") as FormArray;
     this.itemFormArray = this.entryForm.get("itemHistory")["controls"];
 
@@ -101,6 +114,11 @@ export class CreateSubscriptionComponent implements OnInit {
   get item_his(): FormArray {
     return this.entryForm.get("itemHistory") as FormArray;
   }
+
+  get c() {
+    return this.RegistrerForm.controls;
+  }
+
 
   initItemHistory() {
     return this.formBuilder.group({
@@ -311,6 +329,63 @@ export class CreateSubscriptionComponent implements OnInit {
     this.getCustomerList();
     this.getSIMList();
     this.getPlanList();
+  }
+
+  onFormSubmitCustomer() {
+    this.submittedCustomer = true;
+    if (this.RegistrerForm.invalid) {
+      return;
+    }
+
+    this.blockUI.start('Saving...');
+
+    const obj = {
+      email: this.RegistrerForm.value.email.trim(),
+      password: "123456",
+      first_name: this.RegistrerForm.value.firstName.trim(),
+      last_name: this.RegistrerForm.value.lastName.trim(),
+      mobile: this.RegistrerForm.value.mobile.trim(),
+      is_customer: 1,
+      is_wholesaler: this.RegistrerForm.value.customerType === 'Wholesaler' ? 1 : 0 ,
+      is_retailer: this.RegistrerForm.value.customerType === 'Retailer' ? 1 : 0 ,
+      is_staff: 0,
+      is_superuser:0
+    };
+
+    this.authService.registerSystemAdmin('auth/users/', obj).subscribe(
+      data => {
+        this.blockUI.stop();
+        if (data) {
+          console.log(data);
+          this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+          this.modalHideCustomer();  
+          this.getCustomerList();  
+          this.entryForm.controls['customer'].setValue(data.id);
+        }
+        // else if (data.IsReport == "Warning") {
+        //   this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+        else {
+          this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+        }
+      },
+      err => {
+        this.blockUI.stop();
+        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+      }
+    );
+
+  }
+
+
+  modalHideCustomer() {
+    this.RegistrerForm.reset();
+    this.modalRef.hide();
+    this.submittedCustomer = false;
+  }
+
+  openModalCustomer(template: TemplateRef<any>) {
+    this.RegistrerForm.controls['customerType'].setValue('Wholesaler');
+    this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 
 
