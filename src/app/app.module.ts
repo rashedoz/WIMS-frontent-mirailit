@@ -18,7 +18,7 @@ import { ErrorInterceptor } from './_helpers/error.interceptor';
 import { ToastrModule } from 'ngx-toastr';
 import { ConfirmService } from './_helpers/confirm-dialog/confirm.service';
 import { ConfirmComponent } from './_helpers/confirm-dialog/confirm.component';
-
+import { DatePipe } from '@angular/common';
 import { AuthorizationService } from './_services/authorization.service';
 import { AuthorizeDirective } from './_services/authorize.directive';
 
@@ -48,7 +48,8 @@ import { AuthorizeDirective } from './_services/authorize.directive';
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: LocationStrategy, useClass: PathLocationStrategy },
     ConfirmService,
-    AuthorizationService
+    AuthorizationService,
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })

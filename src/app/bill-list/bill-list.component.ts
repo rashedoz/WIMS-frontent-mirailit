@@ -1,5 +1,6 @@
 import { Component, TemplateRef, ViewChild, ElementRef, ViewEncapsulation, OnInit } from '@angular/core';
 import { ColumnMode,DatatableComponent } from '@swimlane/ngx-datatable';
+import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
@@ -10,6 +11,8 @@ import { Page } from '../_models/page';
 import { BillStatus } from '../_models/enums';
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 // import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
+import { jsPDF } from "jspdf";
+import 'jspdf-autotable';
 
 @Component({
   selector: 'app-bill-list',
@@ -42,6 +45,8 @@ export class BillListComponent implements OnInit {
   @ViewChild('pdfViewerOnDemand', { static: false }) pdfViewerOnDemand: any;
   // @ViewChild(TemplateRef, { static: false }) tpl: TemplateRef<any>;
   // invModal: NgxSmartModalComponent;
+  @ViewChild('htmlData', {static: false}) htmlData:ElementRef;
+
   rows = [];
   tempRows = [];
   bilList = [];
@@ -67,6 +72,22 @@ export class BillListComponent implements OnInit {
   balanceObj;
   isPayBalanceEnableShow = false;
   isPayBalanceEnable = false;
+
+
+  fontSizes: any = {
+    HeadTitleFontSize: 18,
+    Head2TitleFontSize: 16,
+    TitleFontSize: 14,
+    SubTitleFontSize: 12,
+    NormalFontSize: 10,
+    SmallFontSize: 8
+  };
+
+  lineSpacing: any = {
+    NormalSpacing: 12
+  };
+
+
   constructor(
     // private ngxSmartModalService : NgxSmartModalService,
     private confirmService: ConfirmService,
@@ -74,6 +95,7 @@ export class BillListComponent implements OnInit {
     public formBuilder: FormBuilder,
     private _service: CommonService,
     private toastr: ToastrService,
+    public datepipe: DatePipe,
     private router: Router
   ) {
     // this.page.pageNumber = 0;
@@ -95,6 +117,8 @@ export class BillListComponent implements OnInit {
   this.getBillList();
 
   }
+
+
 
   getBillStatus(id){
     return  this.billStatus[id];
@@ -405,20 +429,183 @@ export class BillListComponent implements OnInit {
   
 
     this.blockUI.start('Generating invoice...');
-    this._service.downloadFile("subscription/generate-customer-invoice/"+row.id).subscribe(res => {
+    this._service.get("reports/generate-customer-invoice/"+row.id).subscribe(res => {
       // this.invModal = this.ngxSmartModalService.create('invModal', this.tpl);
       // this.invModal.open();
       
       // this.pdfViewerOnDemand.pdfSrc = res; 
       // this.pdfViewerOnDemand.refresh();
 
-      const url = window.URL.createObjectURL(res);
-      var link = document.createElement('a');
-      link.href = url;
-      link.target = '_blank';
-    //  link.download = "invoice.pdf";
-      link.click();
+      // const url = window.URL.createObjectURL(res);
+      // var link = document.createElement('a');
+      // link.href = url;
+      // link.target = '_blank';
+      // //  link.download = "invoice.pdf";
+      // link.click();
+
+      console.log(res);
+      const doc = new jsPDF("p", "mm", "a4");
+      doc.setProperties({
+        title: "Invoice"
+      });
+      let addressObj = {
+        company: 'Gold Lavender Co. Ltd',
+        postCode: '169-0073',
+        address: 'Tokyo to shinjuku ku hyakunincho 2-9-2',        
+        address2: 'Okayama Business Build 201',
+        tel: '03-6869-6171',
+        email: 'goldlavender15@gmail.com'
+      };
+
+            
+      const columns = [      
+        { title: 'SIM No', dataKey: 'sim' },
+        { title: 'SIM Alias', dataKey: 'alias' },
+        { title: 'Plan', dataKey: 'plan' },
+        { title: 'Session', dataKey: 'session' },
+        { title: 'Amount', dataKey: 'amount',halign: 'right' }
+      ];
+  
+      let invoiceDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
+  
+      let rightStartCol1 = 140;
+      let rightStartCol2 = 155;
+  
+      let InitialstartX = 40;
+      let startX = 12;
+      let InitialstartY = 10;
+      let startY = 10;
+
+
+      doc.setFontSize(this.fontSizes.SmallFontSize);
+      doc.setFont("times", "bold");
+      doc.text("Date: " + invoiceDate, 200, 10, null, "right");
+      doc.line(10, 18, 200, 18);
+      doc.setFontSize(this.fontSizes.HeadTitleFontSize);
+      doc.setFont("times", "bold");
+      doc.text("INVOICE", InitialstartX + 65,  (InitialstartY += this.lineSpacing.NormalSpacing + 2),null,"center");
+      doc.line(10, 26, 200, 26);
+      doc.setFontSize(this.fontSizes.SubTitleFontSize);
+      doc.setFont("times", "normal");
+      doc.text("WiFi Rental Service Agreement Form", InitialstartX + 65,  (startY += this.lineSpacing.NormalSpacing + 9),null,"center");
+
+
+      /** Left part */
+      doc.setFontSize(this.fontSizes.SubTitleFontSize);
+      doc.setFont("times", "normal");
+      doc.text("Consignee-",startX,(startY += this.lineSpacing.NormalSpacing + 7),null,"left" );
+
+      doc.setFontSize(this.fontSizes.TitleFontSize);
+      doc.setFont("times", "bold");
+      doc.text(res.customer.first_name +" "+res.customer.last_name,startX,(startY += 6),null,"left" );
+
+      doc.setFontSize(this.fontSizes.NormalFontSize);
+      doc.setFont("times", "normal");
+      doc.text("Phone: "+ res.customer.mobile,startX,(startY += 5),null,"left" );
+
+      doc.setFontSize(this.fontSizes.NormalFontSize);
+      doc.setFont("times", "normal");
+      doc.text("Email: "+ res.customer.email,startX,(startY += 5),null,"left" );
+
+
+
+      /** Right part */
+      let tempY = InitialstartY + 26;
+      doc.setFontSize(this.fontSizes.TitleFontSize);
+      doc.setFont("times", "bold");
+      doc.text(addressObj.company, rightStartCol1, (tempY),null,'left');
+
+      doc.setFontSize(this.fontSizes.NormalFontSize);
+      doc.setFont("times", "normal");
+      doc.text(addressObj.postCode, rightStartCol1, (tempY += 5),null,'left');
+
+      doc.setFontSize(this.fontSizes.NormalFontSize);
+      doc.setFont("times", "normal");
+      doc.text(addressObj.address, rightStartCol1, (tempY += 5),null,'left');
+
+      doc.setFontSize(this.fontSizes.NormalFontSize);
+      doc.setFont("times", "normal");
+      doc.text(addressObj.address2, rightStartCol1, (tempY += 5),null,'left');
+
+      doc.setFontSize(this.fontSizes.NormalFontSize);
+      doc.setFont("times", "normal");
+      doc.text("Tel: " +addressObj.tel, rightStartCol1, (tempY += 5),null,'left');
+
+      doc.setFontSize(this.fontSizes.NormalFontSize);
+      doc.setFont("times", "normal");
+      doc.text("Email: " +addressObj.email, rightStartCol1, (tempY += 5),null,'left');
+
+
+      /** Table */
+      // @ts-ignore
+      doc.autoTable(columns, res.subscribed_items, {
+
+      //   didParseCell: function (data) {    
+      //     var rows = data.table.body;
+      //     console.log(data);       
+      //     if (data.row.index === rows.length - 1) {
+      //         data.cell.styles.fillColor = [239, 154, 154];
+      //     }
+      // },
+        theme: 'plain',
+        startY: startY += 25,
+        headStyles:{amount: {cellWidth: 30,halign: 'right'}},
+        columnStyles: {sim: {cellWidth: 20}, alias: {cellWidth: 85}, plan: {cellWidth: 20},session: {cellWidth: 28}, amount: {cellWidth: 30,halign: 'right'}},
+        styles: {
+          font: 'times',
+          lineWidth: 0.4,
+          overflow: 'linebreak',
+          fontSize: 10
+        },
+        cellPadding: 5
+      });
+
+      // @ts-ignore
+      startY = doc.previousAutoTable.finalY + 8;
  
+
+      doc.setFontSize(this.fontSizes.TitleFontSize);
+      doc.setFont("times", "bold");
+      doc.text('Total', rightStartCol2,startY,null, 'left' );
+
+      doc.setFontSize(this.fontSizes.TitleFontSize);
+      doc.setFont("times", "bold");
+      doc.text( res.total_amount,rightStartCol2 + 42, startY,null, 'right' );
+
+
+
+      /** Terms and conditions */
+      doc.setFontSize(this.fontSizes.SubTitleFontSize);
+      doc.setFont("times", "bolditalic");
+      doc.text( "Terms and Conditions",startX, (startY += this.lineSpacing.NormalSpacing + 15),null, 'left' );
+
+      doc.setFontSize(this.fontSizes.NormalFontSize);
+      doc.setFont("times", "normal");
+      doc.text( "* Minimum 2 year contract, if you cancel before 2 year extra pay 2500 yen.",startX, (startY += 6),null, 'left' );
+
+      doc.setFontSize(this.fontSizes.NormalFontSize);
+      doc.setFont("times", "normal");
+      doc.text( "* For Wifi machine damage, lost penalty up to 10000 yen.",startX, (startY += 5),null, 'left' );
+
+      doc.setFontSize(this.fontSizes.NormalFontSize);
+      doc.setFont("times", "normal");
+      doc.text( "* 2 year contract, after 2 year if you cancel must be return (Box, Charger and main device) is in good condition.",startX, (startY += 5),null, 'left' );
+
+      doc.setFontSize(this.fontSizes.NormalFontSize);
+      doc.setFont("times", "normal");
+      doc.text( "* Wifi Reconnect Line open tie minimum 48 Hours.",startX, (startY += 5),null, 'left' );
+
+      doc.setFontSize(this.fontSizes.NormalFontSize);
+      doc.setFont("times", "normal");
+      doc.text( "* Payment Date - Every month before 25th of the month.",startX, (startY += 5),null, 'left' );
+
+      doc.setFontSize(this.fontSizes.NormalFontSize);
+      doc.setFont("times", "normal");
+      doc.text( "* Pak code change 3500 yen.",startX, (startY += 5),null, 'left' );
+
+
+      
+      window.open(URL.createObjectURL(doc.output("blob"))); 
       this.blockUI.stop(); 
     },
       error => {
@@ -427,6 +614,7 @@ export class BillListComponent implements OnInit {
         this.toastr.error(error.message || error, 'Error!', { closeButton: true, disableTimeOut: true });
       });
   }
+
 
   modalHideBill() {
     this.entryFormBill.reset();
@@ -438,8 +626,6 @@ export class BillListComponent implements OnInit {
       this.modalRef = this.modalService.show(template, this.modalConfig);
 
   }
-
-
 
 
   updateFilterBill(event) {
