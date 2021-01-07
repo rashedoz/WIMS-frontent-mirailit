@@ -477,6 +477,7 @@ export class BillListComponent implements OnInit {
       doc.setFont("times", "bold");
       doc.text("INVOICE", InitialstartX + 65,  (InitialstartY += this.lineSpacing.NormalSpacing + 2),null,"center");
       doc.line(10, 26, 200, 26);
+
       doc.setFontSize(this.fontSizes.SubTitleFontSize);
       doc.setFont("times", "normal");
       doc.text("WiFi Rental Service Agreement Form", InitialstartX + 65,  (startY += this.lineSpacing.NormalSpacing + 9),null,"center");

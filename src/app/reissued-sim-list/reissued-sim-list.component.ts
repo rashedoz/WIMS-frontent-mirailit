@@ -152,7 +152,7 @@ export class ReissuedSIMListComponent implements OnInit {
 
     // filter our data
     const temp = this.tempRows.filter(function (d) {
-      return d.ICCID_no.toLowerCase().indexOf(val) !== -1 ||
+      return d.ICCID_no != null ? d.ICCID_no.toLowerCase().indexOf(val) !== -1 : '' ||
              d.sim_auto_serial_no.toLowerCase().indexOf(val) !== -1 ||
         !val;
     });
