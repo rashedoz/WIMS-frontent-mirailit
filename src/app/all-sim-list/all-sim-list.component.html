@@ -54,6 +54,15 @@
                                       </ng-template>
                                   </ngx-datatable-column>
 
+                                  <ngx-datatable-column [width]="80" name="SIM Lifecycle" prop="id" [draggable]="false"
+                                      [sortable]="false">
+                                      <ng-template let-row="row" ngx-datatable-cell-template>
+                                          <button class="btn btn-info btn-mini" (click)="openModal(row, template)">
+                                            Show
+                                          </button>
+                                      </ng-template>
+                                  </ngx-datatable-column>
+
                               </ngx-datatable>
                                 </div>
                             </div>
@@ -64,5 +73,54 @@
         </div>
 
     </div>
+
+    <ng-template #template>
+      <div class="modal-header ">
+          <h4 class="modal-title pull-left " id="modalTitle"> SIM Lifecycle</h4>
+          <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+              <i class="icofont icofont-close"></i>
+          </button>
+      </div>
+      <div class="modal-body pb-0">
+          <app-card>
+            <div class="row">
+
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-12">
+                  <div class="table-responsive">
+                      <table class="table table-xs table-hover table-bordered table-striped">
+                          <thead>
+                              <tr>
+                                  <th width="60%" scope="col">Customer</th>
+                                  <th width="40%" scope="col">Issue Date</th>
+                              </tr>
+                          </thead>
+
+                          <tbody>
+                              <tr *ngFor="let item of simLifecycleDetails; let i=index">
+                                  <th>{{item.customer}}</th>
+                                  <th>{{ item.issue_date | amDateFormat:'DD-MMM-YYYY'}}</th>
+
+                              </tr>
+                          </tbody>
+                      </table>
+                      </div>
+                  </div>
+
+              </div>
+              </div>
+          </div>
+
+          </app-card>
+      </div>
+      <div class="modal-footer">
+          <div class="pr-4">
+              <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHide()"> <i
+                      class="icofont icofont-close"></i> Close</button>
+          </div>
+
+      </div>
+  </ng-template>
 
 </block-ui>

@@ -7,7 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
 import { StockStatus } from '../_models/enums';
-
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-all-sim-list',
@@ -29,10 +29,15 @@ export class AllSIMListComponent implements OnInit {
   ColumnMode = ColumnMode;
   scrollBarHorizontal = (window.innerWidth < 1200);
 
+  modalConfig: any = { class: 'gray modal-lg', backdrop: 'static' };
+  modalRef: BsModalRef;
+  simLifecycleDetails : Array<any> = [];
+
   constructor(
     public formBuilder: FormBuilder,
     private _service: CommonService,
     private toastr: ToastrService,
+    private modalService: BsModalService,
     private router: Router
   ) {
     this.page.pageNumber = 0;
@@ -81,5 +86,27 @@ export class AllSIMListComponent implements OnInit {
     }
     );
   }
+
+
+  modalHide() {
+    this.modalRef.hide();
+    this.simLifecycleDetails = [];
+  }
+
+  openModal(item, template: TemplateRef<any>) {
+
+    this._service.get('stock/get-sim-lifecycle/'+item.id).subscribe(res => {
+      if(res.length){
+        this.simLifecycleDetails = res;
+        console.log(this.simLifecycleDetails);
+        this.modalRef = this.modalService.show(template, this.modalConfig);
+      } else {
+        this.toastr.warning('No Details Found.', 'Warning!', { closeButton: true, disableTimeOut: false });
+      }
+    }, err => { }
+    );
+  }
+
+
 
 }
