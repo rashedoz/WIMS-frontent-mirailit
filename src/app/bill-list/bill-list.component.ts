@@ -53,7 +53,7 @@ export class BillListComponent implements OnInit {
   subscriptionBilList = [];
   simBilList = [];
   deviceBilList = [];
-  isbuttonActive = true; 
+  isbuttonActive = true;
 
   loadingIndicator = false;
   ColumnMode = ColumnMode;
@@ -336,7 +336,7 @@ export class BillListComponent implements OnInit {
   }
 
   openModal(row, template: TemplateRef<any>) {
-  
+
     this.subTotal = row.payable_amount;
     this.billItem = row;
     let so_far_paid = Number(this.billItem.so_far_paid) - Number(this.billItem.parent_refund_amount);
@@ -366,7 +366,7 @@ export class BillListComponent implements OnInit {
         this.paidAmount = net;
         } else if(Number(this.balanceObj.balance) <= net){
           this.paidAmount = Number(this.balanceObj.balance);
-        }     
+        }
     } else {
       this.paidAmount = 0;
     }
@@ -426,14 +426,14 @@ export class BillListComponent implements OnInit {
 
 
   printInv(row){
-  
+
 
     this.blockUI.start('Generating invoice...');
     this._service.get("reports/generate-customer-invoice/"+row.id).subscribe(res => {
       // this.invModal = this.ngxSmartModalService.create('invModal', this.tpl);
       // this.invModal.open();
-      
-      // this.pdfViewerOnDemand.pdfSrc = res; 
+
+      // this.pdfViewerOnDemand.pdfSrc = res;
       // this.pdfViewerOnDemand.refresh();
 
       // const url = window.URL.createObjectURL(res);
@@ -451,26 +451,18 @@ export class BillListComponent implements OnInit {
       let addressObj = {
         company: 'Gold Lavender Co. Ltd',
         postCode: '169-0073',
-        address: 'Tokyo to shinjuku ku hyakunincho 2-9-2',        
+        address: 'Tokyo to shinjuku ku hyakunincho 2-9-2',
         address2: 'Okayama Business Build 201',
         tel: '03-6869-6171',
         email: 'goldlavender15@gmail.com'
       };
 
-            
-      const columns = [      
-        { title: 'SIM No', dataKey: 'sim' },
-        { title: 'SIM Alias', dataKey: 'alias' },
-        { title: 'Plan', dataKey: 'plan' },
-        { title: 'Session', dataKey: 'session' },
-        { title: 'Amount', dataKey: 'amount',halign: 'right' }
-      ];
-  
+
       let invoiceDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
-  
+
       let rightStartCol1 = 140;
-      let rightStartCol2 = 155;
-  
+      let rightStartCol2 = 150;
+
       let InitialstartX = 40;
       let startX = 12;
       let InitialstartY = 10;
@@ -536,21 +528,23 @@ export class BillListComponent implements OnInit {
       doc.text("Email: " +addressObj.email, rightStartCol1, (tempY += 5),null,'left');
 
 
+      let columns = [];
+
+       if(row.bill_type == "Device Sales"){
+
+        columns = [
+          { title: 'Device No', dataKey: 'device' },
+          { title: 'Device Serial', dataKey: 'alias' },
+          { title: 'Amount', dataKey: 'device_cost',halign: 'right' }
+        ];
+
       /** Table */
       // @ts-ignore
-      doc.autoTable(columns, res.subscribed_items, {
-
-      //   didParseCell: function (data) {    
-      //     var rows = data.table.body;
-      //     console.log(data);       
-      //     if (data.row.index === rows.length - 1) {
-      //         data.cell.styles.fillColor = [239, 154, 154];
-      //     }
-      // },
+      doc.autoTable(columns, res.sold_device_items, {
         theme: 'plain',
-        startY: startY += 25,
+        startY: startY + 25,
         headStyles:{amount: {cellWidth: 30,halign: 'right'}},
-        columnStyles: {sim: {cellWidth: 20}, alias: {cellWidth: 85}, plan: {cellWidth: 20},session: {cellWidth: 28}, amount: {cellWidth: 30,halign: 'right'}},
+        columnStyles: {device: {cellWidth: 30}, alias: {cellWidth: 110},device_cost: {cellWidth: 40,halign: 'right'}},
         styles: {
           font: 'times',
           lineWidth: 0.4,
@@ -560,17 +554,100 @@ export class BillListComponent implements OnInit {
         cellPadding: 5
       });
 
+      }else if(row.bill_type == "SIM Sales"){
+
+        columns = [
+          { title: 'SIM No', dataKey: 'sim' },
+          { title: 'SIM Alias', dataKey: 'alias' },
+          { title: 'Amount', dataKey: 'sim_cost',halign: 'right' }
+        ];
+
+        /** Table */
+      // @ts-ignore
+      doc.autoTable(columns, res.sold_sim_items, {
+        theme: 'plain',
+        startY: startY + 25,
+        headStyles:{amount: {cellWidth: 30,halign: 'right'}},
+        columnStyles: {sim: {cellWidth: 30}, alias: {cellWidth: 110},sim_cost: {cellWidth: 40,halign: 'right'}},
+        styles: {
+          font: 'times',
+          lineWidth: 0.4,
+          overflow: 'linebreak',
+          fontSize: 10
+        },
+        cellPadding: 5
+      });
+
+      } else {
+        doc.setFontSize(this.fontSizes.NormalFontSize);
+        doc.setFont("times", "bold");
+        doc.text( "Bill Session: " + res.session,startX + 2, (startY += this.lineSpacing.NormalSpacing + 15),null, 'left' );
+
+        columns = [
+          { title: 'SIM No', dataKey: 'sim' },
+          { title: 'SIM Alias', dataKey: 'alias' },
+          { title: 'Plan', dataKey: 'plan' },
+          { title: 'Amount', dataKey: 'amount',halign: 'right' }
+        ];
+
+      /** Table */
+      // @ts-ignore
+      doc.autoTable(columns, res.subscribed_items, {
+        theme: 'plain',
+        startY: startY + 5,
+        headStyles:{amount: {cellWidth: 30,halign: 'right'}},
+        columnStyles: {sim: {cellWidth: 25}, alias: {cellWidth: 100}, plan: {cellWidth: 25},amount: {cellWidth: 30,halign: 'right'}},
+        styles: {
+          font: 'times',
+          lineWidth: 0.4,
+          overflow: 'linebreak',
+          fontSize: 10
+        },
+        cellPadding: 5
+      });
+
+      }
+
+
+
+
+
+
       // @ts-ignore
       startY = doc.previousAutoTable.finalY + 8;
- 
+
+
+      if(row.bill_type != "Subscription"){
+        doc.setFontSize(this.fontSizes.SubTitleFontSize);
+        doc.setFont("times", "bold");
+        doc.text('One Time Charge', rightStartCol2 - 20,startY,null, 'left' );
+
+        doc.setFontSize(this.fontSizes.SubTitleFontSize);
+        doc.setFont("times", "bold");
+        doc.text( res.one_time_charge,rightStartCol2 + 42, startY ,null, 'right' );
+
+
+        doc.setFontSize(this.fontSizes.TitleFontSize);
+        doc.setFont("times", "bold");
+        doc.text('Total', rightStartCol2,(startY += 8),null, 'left' );
+
+
+        doc.setFontSize(this.fontSizes.TitleFontSize);
+        doc.setFont("times", "bold");
+        doc.text( res.total_amount,rightStartCol2 + 42, startY,null, 'right' );
+
+      } else {
 
       doc.setFontSize(this.fontSizes.TitleFontSize);
       doc.setFont("times", "bold");
       doc.text('Total', rightStartCol2,startY,null, 'left' );
 
+
       doc.setFontSize(this.fontSizes.TitleFontSize);
       doc.setFont("times", "bold");
       doc.text( res.total_amount,rightStartCol2 + 42, startY,null, 'right' );
+      }
+
 
 
 
@@ -604,9 +681,9 @@ export class BillListComponent implements OnInit {
       doc.text( "* Pak code change 3500 yen.",startX, (startY += 5),null, 'left' );
 
 
-      
-      window.open(URL.createObjectURL(doc.output("blob"))); 
-      this.blockUI.stop(); 
+
+      window.open(URL.createObjectURL(doc.output("blob")));
+      this.blockUI.stop();
     },
       error => {
 
