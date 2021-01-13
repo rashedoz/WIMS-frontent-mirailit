@@ -57,7 +57,7 @@
                                   <ngx-datatable-column [width]="80" name="SIM Lifecycle" prop="id" [draggable]="false"
                                       [sortable]="false">
                                       <ng-template let-row="row" ngx-datatable-cell-template>
-                                          <button class="btn btn-info btn-mini" (click)="openModal(row, template)">
+                                          <button *ngIf="row.has_lifecycle_history" class="btn btn-info btn-mini" (click)="openModal(row, template)">
                                             Show
                                           </button>
                                       </ng-template>
