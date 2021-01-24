@@ -11,6 +11,7 @@ import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 @Component({
   selector: 'app-subscription-list',
   templateUrl: './subscription-list.component.html',
+  styleUrls:['./subscription-list.component.css'],
   encapsulation: ViewEncapsulation.None
 })
 
@@ -19,8 +20,12 @@ export class SubscriptionListComponent implements OnInit {
   entryForm: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
+  isbuttonActive = true;
+  activeTable = 0;
+  @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
+  @ViewChild(DatatableComponent, { static: false }) tableWholesaler: DatatableComponent;
+  @ViewChild(DatatableComponent, { static: false }) tableRetailer: DatatableComponent;
 
-  @ViewChild('dataTable', { static: false }) table: any;
   page = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
   rows = [];
@@ -71,6 +76,65 @@ export class SubscriptionListComponent implements OnInit {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
         return;
       }
+      this.activeTable = 0;
+      this.tempRows = res;
+      this.customerList = res;
+      // this.page.totalElements = res.Total;
+      // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }, err => {
+      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }
+    );
+  }
+
+  getListWholesaler() {
+    this.loadingIndicator = true;
+    // const obj = {
+    //   size: this.page.size,
+    //   pageNumber: this.page.pageNumber
+    // };
+    this._service.get('subscription/get-wholesaler-all-subscription-list').subscribe(res => {
+
+      if (!res) {
+        this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+        return;
+      }
+      this.activeTable = 1;
+      this.tempRows = res;
+      this.customerList = res;
+      // this.page.totalElements = res.Total;
+      // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }, err => {
+      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }
+    );
+  }
+
+  getListRetailer() {
+    this.loadingIndicator = true;
+    // const obj = {
+    //   size: this.page.size,
+    //   pageNumber: this.page.pageNumber
+    // };
+    this._service.get('subscription/get-retailer-all-subscription-list').subscribe(res => {
+
+      if (!res) {
+        this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+        return;
+      }
+      this.activeTable = 2;
       this.tempRows = res;
       this.customerList = res;
       // this.page.totalElements = res.Total;
@@ -111,6 +175,7 @@ export class SubscriptionListComponent implements OnInit {
 
   }
 
+
   updateFilter(event) {
     const val = event.target.value.toLowerCase();
 
@@ -119,10 +184,7 @@ export class SubscriptionListComponent implements OnInit {
       return d.customer.toLowerCase().indexOf(val) !== -1 ||
         !val;
     });
-
-    // update the rows
     this.customerList = temp;
-    // Whenever the filter changes, always go back to the first page
     this.table.offset = 0;
   }
 
@@ -157,6 +219,21 @@ export class SubscriptionListComponent implements OnInit {
          },
 
      );
+  }
+
+  showSubTable(id){
+    this.isbuttonActive = false;
+    switch (id) {
+      case 0:
+        this.getList();
+        break;
+      case 1:
+       this.getListWholesaler();
+        break;
+      case 2:
+       this.getListRetailer();
+        break;
+    }
   }
 
 }

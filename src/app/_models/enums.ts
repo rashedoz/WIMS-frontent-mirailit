@@ -20,7 +20,8 @@ export enum StatusTypes {
     CANCELLED = 4,
     DAMAMGED = 5,
     SOLD = 6,
-    HELD = 7
+    HELD = 7,
+    PERMANENTLY_CANCELLED = 8
   }
 
   export enum SubscriptionStatus {
