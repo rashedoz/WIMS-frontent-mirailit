@@ -31,7 +31,7 @@ export interface Menu {
 
 const MENUITEMS = [
   {
-    label: 'Dashboard',
+    label: 'Home',
     main: [
 
       {
@@ -45,66 +45,37 @@ const MENUITEMS = [
     ]
   },
   {
-    label: 'Configurations',
-    permission: '',
+    label: 'Quick Actions',
     main: [
+
       {
-        state: 'product-type',
-        name: 'Product Type',
+        state: 'create-subscription',
+        name: 'Create Subscription',
         type: 'link',
         icon: 'ti-control-forward',
         permission: ''
       },
       {
-        state: 'data-plan-list',
-        name: 'Data Plan',
-        type: 'link',
-        icon: 'ti-control-forward',
-        permission: ''
-      },
-      {
-        state: 'member-list',
-        name: 'Member List',
-        type: 'link',
-        icon: 'ti-control-forward',
-        permission: ''
-      },
-      // {
-      //   state: 'customer',
-      //   name: 'Customer',
-      //   type: 'link',
-      //   icon: 'ti-control-forward',
-      //   permission: ''
-      // },
-      {
-        state: 'wholesaler-list',
-        name: 'Wholesaler List',
-        type: 'link',
-        icon: 'ti-control-forward',
-        permission: ''
-      },
-      {
-        state: 'retailer-list',
-        name: 'Retailer List',
-        type: 'link',
-        icon: 'ti-control-forward',
-        permission: ''
-      },
-      {
-        state: 'supplier',
-        name: 'Supplier',
-        type: 'link',
-        icon: 'ti-control-forward',
-        permission: ''
-      },
-      {
-        state: 'purchase-entry',
-        name: 'Purchase Entry',
+        state: 'actions',
+        name: 'Actions',
         type: 'link',
         icon: 'ti-control-forward',
         permission: ''
       }
 
+    ]
+  },
+  {
+    label: 'Operations',
+    main: [
+
+      {
+        state: 'purchase-entry',
+        name: 'Purchase',
+        type: 'link',
+        icon: 'ti-control-forward',
+        permission: ''
+      },
     ]
   },
   {
@@ -151,102 +122,13 @@ const MENUITEMS = [
         },
     ]
 },
-  {
-    label: 'none',
-    permission: '',
-    main: [
-        {
-            name: 'Device Stock',
-            type: 'sub',
-            permission: '',
-            icon: 'icofont-brand-microsoft',
-            children: [
-                {
-                  state: 'device-stock-history',
-                  name: 'Device Stock History',
-                  type: 'link',
-                  icon: 'ti-control-forward',
-                  permission: '',
-              },
-                {
-                  state: 'all-device-list',
-                  name: 'All Device List',
-                  type: 'link',
-                  icon: 'ti-control-forward',
-                  permission: '',
-              },
-              {
-                  state: 'updatable-device-list',
-                  name: 'Updatable Device List',
-                  type: 'link',
-                  icon: 'ti-control-forward',
-                  permission: '',
-              },
-
-
-            ]
-        },
-    ]
-},
 {
   label: 'none',
   permission: '',
   main: [
     {
-      state: 'actions',
-      name: 'Actions',
-      type: 'link',
-      icon: 'ti-control-forward',
-      permission: ''
-    }
-  ]
-},
-{
-  label: 'none',
-  permission: '',
-  main: [
-    {
-      state: 'create-subscription',
-      name: 'Create subscription',
-      type: 'link',
-      icon: 'icofont-brand-microsoft',
-      permission: ''
-    }
-  ]
-},
-{
-  label: 'none',
-  permission: '',
-  main: [
-    {
-      state: 'subscription-list',
-      name: 'All Customer Subs. List',
-      type: 'link',
-      icon: 'ti-control-forward',
-      permission: ''
-    }
-  ]
-},
-{
-  label: 'none',
-  permission: '',
-  main: [
-    {
-      state: 'wholesaler-subscription-list',
-      name: 'Wholesaler Subscription List',
-      type: 'link',
-      icon: 'ti-control-forward',
-      permission: ''
-    }
-  ]
-},
-{
-  label: 'none',
-  permission: '',
-  main: [
-    {
-      state: 'retailer-subscription-list',
-      name: 'Retailer Subscription List',
+      state: 'sell-sim',
+      name: 'Sell SIM',
       type: 'link',
       icon: 'ti-control-forward',
       permission: ''
@@ -293,6 +175,86 @@ const MENUITEMS = [
   label: 'none',
   permission: '',
   main: [
+      {
+          name: 'Device Stock',
+          type: 'sub',
+          permission: '',
+          icon: 'icofont-brand-microsoft',
+          children: [
+              {
+                state: 'device-stock-history',
+                name: 'Device Stock History',
+                type: 'link',
+                icon: 'ti-control-forward',
+                permission: '',
+            },
+              {
+                state: 'all-device-list',
+                name: 'All Device List',
+                type: 'link',
+                icon: 'ti-control-forward',
+                permission: '',
+            },
+            {
+                state: 'updatable-device-list',
+                name: 'Updatable Device List',
+                type: 'link',
+                icon: 'ti-control-forward',
+                permission: '',
+            },
+
+
+          ]
+      },
+  ]
+},
+{
+  label: 'none',
+  permission: '',
+  main: [
+    {
+      state: 'sell-device',
+      name: 'Sell Device',
+      type: 'link',
+      icon: 'ti-control-forward',
+      permission: ''
+    }
+  ]
+},
+{
+  label: 'none',
+  permission: '',
+  main: [
+      {
+          name: 'Subscription',
+          type: 'sub',
+          permission: '',
+          icon: 'icofont-brand-microsoft',
+          children: [
+            {
+              state: 'create-subscription',
+              name: 'Create Subscription',
+              type: 'link',
+              icon: 'ti-control-forward',
+              permission: '',
+          },
+          {
+              state: 'subscription-list',
+              name: 'All Subscription List',
+              type: 'link',
+              icon: 'ti-control-forward',
+              permission: '',
+          }          
+
+
+          ]
+      },
+  ]
+},
+{
+  label: 'none',
+  permission: '',
+  main: [
     {
       state: 'bill-list',
       name: 'Bills',
@@ -315,19 +277,361 @@ const MENUITEMS = [
     }
   ]
 },
-{
-  label: 'none',
-  permission: '',
-  main: [
-    {
-      state: 'customer-balance-list',
-      name: 'Customer Balance',
-      type: 'link',
-      icon: 'ti-control-forward',
-      permission: ''
-    }
-  ]
-},
+  {
+    label: 'Stack Holders',
+    main: [
+
+      {
+        state: 'member-list',
+        name: 'Members',
+        type: 'link',
+        icon: 'ti-control-forward',
+        permission: ''
+      },
+      {
+        state: 'supplier',
+        name: 'Suppliers',
+        type: 'link',
+        icon: 'ti-control-forward',
+        permission: ''
+      },
+      {
+        name: 'Customers',
+        type: 'sub',
+        permission: '',
+        icon: 'icofont-brand-microsoft',
+        children: [
+          {
+            state: '',
+            name: 'Customer List ',
+            type: 'link',
+            icon: 'ti-control-forward',
+            permission: '',
+        },
+        {
+            state: 'customer-balance-list',
+            name: 'Customer Balance',
+            type: 'link',
+            icon: 'ti-control-forward',
+            permission: '',
+        }          
+
+
+        ]
+    },
+
+    ]
+  },
+  {
+    label: 'Configurations',
+    permission: '',
+    main: [
+      {
+        state: 'product-type',
+        name: 'Product Type',
+        type: 'link',
+        icon: 'ti-control-forward',
+        permission: ''
+      },
+      {
+        state: 'data-plan-list',
+        name: 'Data Plan',
+        type: 'link',
+        icon: 'ti-control-forward',
+        permission: ''
+      },
+    ]
+  },
+
+
+//   {
+//     label: 'Configurations',
+//     permission: '',
+//     main: [
+//       {
+//         state: 'product-type',
+//         name: 'Product Type',
+//         type: 'link',
+//         icon: 'ti-control-forward',
+//         permission: ''
+//       },
+//       {
+//         state: 'data-plan-list',
+//         name: 'Data Plan',
+//         type: 'link',
+//         icon: 'ti-control-forward',
+//         permission: ''
+//       },
+//       {
+//         state: 'member-list',
+//         name: 'Member List',
+//         type: 'link',
+//         icon: 'ti-control-forward',
+//         permission: ''
+//       },
+//       {
+//         state: 'wholesaler-list',
+//         name: 'Wholesaler List',
+//         type: 'link',
+//         icon: 'ti-control-forward',
+//         permission: ''
+//       },
+//       {
+//         state: 'retailer-list',
+//         name: 'Retailer List',
+//         type: 'link',
+//         icon: 'ti-control-forward',
+//         permission: ''
+//       },
+//       {
+//         state: 'supplier',
+//         name: 'Supplier',
+//         type: 'link',
+//         icon: 'ti-control-forward',
+//         permission: ''
+//       },
+//       {
+//         state: 'purchase-entry',
+//         name: 'Purchase Entry',
+//         type: 'link',
+//         icon: 'ti-control-forward',
+//         permission: ''
+//       }
+
+//     ]
+//   },
+//   {
+//     label: 'none',
+//     permission: '',
+//     main: [
+//         {
+//             name: 'SIM Stock',
+//             type: 'sub',
+//             permission: '',
+//             icon: 'icofont-brand-microsoft',
+//             children: [
+//                   {
+//                     state: 'sim-stock-history',
+//                     name: 'SIM Stock History',
+//                     type: 'link',
+//                     icon: 'ti-control-forward',
+//                     permission: '',
+//                 },
+//                 {
+//                     state: 'all-sim-list',
+//                     name: 'All SIM List',
+//                     type: 'link',
+//                     icon: 'ti-control-forward',
+//                     permission: '',
+//                 },
+//                 {
+//                     state: 'updatable-sim-list',
+//                     name: 'Updatable SIM List',
+//                     type: 'link',
+//                     icon: 'ti-control-forward',
+//                     permission: '',
+//                 },
+//                 {
+//                     state: 'cancelled-sim-list',
+//                     name: 'Cancelled SIM List',
+//                     type: 'link',
+//                     icon: 'ti-control-forward',
+//                     permission: '',
+//                 }
+
+
+//             ]
+//         },
+//     ]
+// },
+//   {
+//     label: 'none',
+//     permission: '',
+//     main: [
+//         {
+//             name: 'Device Stock',
+//             type: 'sub',
+//             permission: '',
+//             icon: 'icofont-brand-microsoft',
+//             children: [
+//                 {
+//                   state: 'device-stock-history',
+//                   name: 'Device Stock History',
+//                   type: 'link',
+//                   icon: 'ti-control-forward',
+//                   permission: '',
+//               },
+//                 {
+//                   state: 'all-device-list',
+//                   name: 'All Device List',
+//                   type: 'link',
+//                   icon: 'ti-control-forward',
+//                   permission: '',
+//               },
+//               {
+//                   state: 'updatable-device-list',
+//                   name: 'Updatable Device List',
+//                   type: 'link',
+//                   icon: 'ti-control-forward',
+//                   permission: '',
+//               },
+
+
+//             ]
+//         },
+//     ]
+// },
+// {
+//   label: 'none',
+//   permission: '',
+//   main: [
+//     {
+//       state: 'actions',
+//       name: 'Actions',
+//       type: 'link',
+//       icon: 'ti-control-forward',
+//       permission: ''
+//     }
+//   ]
+// },
+// {
+//   label: 'none',
+//   permission: '',
+//   main: [
+//     {
+//       state: 'create-subscription',
+//       name: 'Create subscription',
+//       type: 'link',
+//       icon: 'icofont-brand-microsoft',
+//       permission: ''
+//     }
+//   ]
+// },
+// {
+//   label: 'none',
+//   permission: '',
+//   main: [
+//     {
+//       state: 'subscription-list',
+//       name: 'All Customer Subs. List',
+//       type: 'link',
+//       icon: 'ti-control-forward',
+//       permission: ''
+//     }
+//   ]
+// },
+// {
+//   label: 'none',
+//   permission: '',
+//   main: [
+//     {
+//       state: 'wholesaler-subscription-list',
+//       name: 'Wholesaler Subscription List',
+//       type: 'link',
+//       icon: 'ti-control-forward',
+//       permission: ''
+//     }
+//   ]
+// },
+// {
+//   label: 'none',
+//   permission: '',
+//   main: [
+//     {
+//       state: 'retailer-subscription-list',
+//       name: 'Retailer Subscription List',
+//       type: 'link',
+//       icon: 'ti-control-forward',
+//       permission: ''
+//     }
+//   ]
+// },
+// {
+//   label: 'none',
+//   permission: '',
+//   main: [
+//       {
+//           name: 'SIM Re-issuance',
+//           type: 'sub',
+//           permission: '',
+//           icon: 'icofont-brand-microsoft',
+//           children: [        
+//               {
+//                 state: 'all-sim-list-for-reissue',
+//                 name: 'Reissue',
+//                 type: 'link',
+//                 icon: 'ti-control-forward',
+//                 permission: '',
+//              },
+//              {
+//               state: 'reissued-sim-list',
+//               name: 'Reissued SIM List',
+//               type: 'link',
+//               icon: 'ti-control-forward',
+//               permission: '',
+//            },
+//               {
+//                 state: 'all-sim-list-for-receive',
+//                 name: 'Receive',
+//                 type: 'link',
+//                 icon: 'ti-control-forward',
+//                 permission: '',
+//             },
+
+//           ]
+//       },
+//   ]
+// },
+// {
+//   label: 'none',
+//   permission: '',
+//   main: [
+//     {
+//       state: 'bill-list',
+//       name: 'Bills',
+//       type: 'link',
+//       icon: 'ti-control-forward',
+//       permission: ''
+//     }
+//   ]
+// },
+// {
+//   label: 'none',
+//   permission: '',
+//   main: [
+//     {
+//       state: 'payment-list',
+//       name: 'Payments',
+//       type: 'link',
+//       icon: 'ti-control-forward',
+//       permission: ''
+//     }
+//   ]
+// },
+// {
+//   label: 'none',
+//   permission: '',
+//   main: [
+//     {
+//       state: 'customer-balance-list',
+//       name: 'Customer Balance',
+//       type: 'link',
+//       icon: 'ti-control-forward',
+//       permission: ''
+//     }
+//   ]
+// },
+
+
+
+
+
+
+
+
+
+
+
 //   {
 //     label: 'none',
 //     permission: '',
