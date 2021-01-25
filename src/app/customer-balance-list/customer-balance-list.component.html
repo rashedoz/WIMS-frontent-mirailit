@@ -6,67 +6,200 @@
                 <div class="col-lg-12">
                     <div class="card card-border-primary">
                         <div class="card-header">
-                            <h5>Customer Balance List </h5>
+                            <h5 *ngIf="activeTable == 0"> All Customer Balance List </h5>
+                            <h5 *ngIf="activeTable == 1"> Wholesaler Balance List </h5>
+                            <h5 *ngIf="activeTable == 2"> Retailer Balance List </h5>
+
+                            <button class="btn btn-primary btn-sm mr-2" [ngClass]="{'b-active': isbuttonActive}" (click)="showCustomerTable(0)">
+                                All </button>
+                            <button class="btn btn-primary btn-sm mr-2" (click)="showCustomerTable(1)">
+                                Wholesaler</button>
+                                <button class="btn btn-primary btn-sm mr-2" (click)="showCustomerTable(2)">
+                                    Retailer</button>
+
+
                             <button class="btn btn-primary btn-sm float-right" (click)="openModal(template)"><i
                               class=" icofont icofont-plus "></i> Load Customer Balance </button>
                         </div>
                         <div class="card-block ">
-                          <div class="row">
-                            <div class="col-lg-6">
-                              <div class="form-group row">
-                                <div class="col-sm-8">
-                                  <input type="text" class="form-control" placeholder="Search customer" (keyup)="updateFilter($event)" />
 
+                            <div *ngIf="activeTable == 0">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                    <div class="form-group row">
+                                        <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="Search customer" (keyup)="updateFilter($event)" />
+
+                                        </div>
+                                    </div>
+                                    </div>
                                 </div>
-                              </div>
-                            </div>
-                          </div>
-                            <div class="row ">
-                                <div class="col-lg-12 ">
-                                  <ngx-datatable #table class="material table-bordered" [rows]="rows"
-                                  [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                  [headerHeight]="40" [limit]="100" [footerHeight]="50" rowHeight="auto">
+                                <div class="row ">
+                                    <div class="col-lg-12 ">
+                                    <ngx-datatable #table class="material table-bordered" [rows]="rows"
+                                    [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                                    [headerHeight]="40" [limit]="100" [footerHeight]="50" rowHeight="auto">
 
-                                  <ngx-datatable-column [width]="150" name="First Name" prop="first_name" [draggable]="false" [sortable]="false">
-                                      <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span > {{ value }} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
-
-                                  <ngx-datatable-column [width]="150" name="Last Name" prop="last_name" [draggable]="false" [sortable]="false">
-                                      <ng-template let-value="value" ngx-datatable-cell-template>
-                                        <span > {{ value }} </span>
-                                    </ng-template>
-                                  </ngx-datatable-column>
-
-                                  <ngx-datatable-column [width]="100" name="Mobile" prop="mobile" [draggable]="false" [sortable]="false">
-                                      <ng-template let-value="value" ngx-datatable-cell-template>
-                                        <span > {{ value }} </span>
-                                    </ng-template>
-                                  </ngx-datatable-column>
-
-                                  <ngx-datatable-column [width]="100" name="Current Balance" prop="balance" [draggable]="false"
-                                      [sortable]="false">
+                                    <ngx-datatable-column [width]="150" name="First Name" prop="first_name" [draggable]="false" [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span >  {{value}} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
+                                            <span > {{ value }} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="180" name="Action" prop="id" [draggable]="false"
-                                      [sortable]="false">
-                                      <ng-template let-row="row" ngx-datatable-cell-template>
-                                        <button class="btn btn-primary btn-mini mr-2" (click)="openModalRow(row,template)"><i
-                                            class=" icofont icofont-plus "></i> Load Balance </button>
-                                        <button *ngIf="row.has_loaded_balance" class="btn btn-info btn-mini" (click)="getBalanceDetails(row,templateBalance)">
-                                            Balance Load History
-                                        </button>
-                                      </ng-template>
-                                  </ngx-datatable-column>
+                                    <ngx-datatable-column [width]="150" name="Last Name" prop="last_name" [draggable]="false" [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span > {{ value }} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
 
-                              </ngx-datatable>
+                                    <ngx-datatable-column [width]="100" name="Mobile" prop="mobile" [draggable]="false" [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span > {{ value }} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
 
+                                    <ngx-datatable-column [width]="100" name="Current Balance" prop="balance" [draggable]="false"
+                                        [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span >  {{value}} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="180" name="Action" prop="id" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                            <button class="btn btn-primary btn-mini mr-2" (click)="openModalRow(row,template)"><i
+                                                class=" icofont icofont-plus "></i> Load Balance </button>
+                                            <button *ngIf="row.has_loaded_balance" class="btn btn-info btn-mini" (click)="getBalanceDetails(row,templateBalance)">
+                                                Balance Load History
+                                            </button>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                </ngx-datatable>
+
+                                    </div>
                                 </div>
                             </div>
+
+                            <div *ngIf="activeTable == 1">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                    <div class="form-group row">
+                                        <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="Search wholesaler" (keyup)="updateFilterwholesaler($event)" />
+
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-lg-12 ">
+                                    <ngx-datatable #tableWholesaler class="material table-bordered" [rows]="wholesalerList"
+                                    [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                                    [headerHeight]="40" [limit]="100" [footerHeight]="50" rowHeight="auto">
+
+                                    <ngx-datatable-column [width]="150" name="First Name" prop="first_name" [draggable]="false" [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span > {{ value }} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="150" name="Last Name" prop="last_name" [draggable]="false" [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span > {{ value }} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="100" name="Mobile" prop="mobile" [draggable]="false" [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span > {{ value }} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="100" name="Current Balance" prop="balance" [draggable]="false"
+                                        [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span >  {{value}} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="180" name="Action" prop="id" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                            <button class="btn btn-primary btn-mini mr-2" (click)="openModalRow(row,template)"><i
+                                                class=" icofont icofont-plus "></i> Load Balance </button>
+                                            <button *ngIf="row.has_loaded_balance" class="btn btn-info btn-mini" (click)="getBalanceDetails(row,templateBalance)">
+                                                Balance Load History
+                                            </button>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                </ngx-datatable>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div *ngIf="activeTable == 2">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                    <div class="form-group row">
+                                        <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="Search retailer" (keyup)="updateFilterwholesaler($event)" />
+
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-lg-12 ">
+                                    <ngx-datatable #tableRetailer class="material table-bordered" [rows]="retailerList"
+                                    [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                                    [headerHeight]="40" [limit]="100" [footerHeight]="50" rowHeight="auto">
+
+                                    <ngx-datatable-column [width]="150" name="First Name" prop="first_name" [draggable]="false" [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span > {{ value }} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="150" name="Last Name" prop="last_name" [draggable]="false" [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span > {{ value }} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="100" name="Mobile" prop="mobile" [draggable]="false" [sortable]="false">
+                                        <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span > {{ value }} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="100" name="Current Balance" prop="balance" [draggable]="false"
+                                        [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                            <span >  {{value}} </span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column [width]="180" name="Action" prop="id" [draggable]="false"
+                                        [sortable]="false">
+                                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                            <button class="btn btn-primary btn-mini mr-2" (click)="openModalRow(row,template)"><i
+                                                class=" icofont icofont-plus "></i> Load Balance </button>
+                                            <button *ngIf="row.has_loaded_balance" class="btn btn-info btn-mini" (click)="getBalanceDetails(row,templateBalance)">
+                                                Balance Load History
+                                            </button>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                </ngx-datatable>
+
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>

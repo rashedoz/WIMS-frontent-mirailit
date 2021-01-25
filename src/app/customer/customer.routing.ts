@@ -6,7 +6,7 @@ export const CustomerRoutes: Routes = [{
   path: '',
   component: CustomerComponent,
   data: {
-    breadcrumb: 'Customer',
+    breadcrumb: 'Customer List',
     icon: 'icofont-home bg-c-blue',
     status: false
   }

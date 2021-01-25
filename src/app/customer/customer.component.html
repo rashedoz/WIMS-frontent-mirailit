@@ -5,66 +5,202 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card card-border-default">
-                        <div class="card-header">
-                            <h5>Customer List </h5>
-                            <button class="btn btn-primary float-right" (click)="openModal(template)"><i
-                                    class=" icofont icofont-plus "></i> Add Customer</button>
+                        <div class="card-header">                          
+                            <h5 *ngIf="activeTable == 0"> All Customer List </h5>
+                            <h5 *ngIf="activeTable == 1"> Wholesaler List </h5>
+                            <h5 *ngIf="activeTable == 2"> Retailer List </h5>
+
+                            <button class="btn btn-primary btn-sm mr-2" [ngClass]="{'b-active': isbuttonActive}" (click)="showCustomerTable(0)">
+                                All </button>
+                            <button class="btn btn-primary btn-sm mr-2" (click)="showCustomerTable(1)">
+                                Wholesaler</button>
+                                <button class="btn btn-primary btn-sm mr-2" (click)="showCustomerTable(2)">
+                                    Retailer</button>
+
+
+
+                            
+                            <button class="btn btn-primary btn-sm float-right " (click)="openModalRetailer(templateRetailer)"><i
+                                class=" icofont icofont-plus "></i> Add Retailer</button>
+                            <button class="btn btn-primary btn-sm float-right mr-2" (click)="openModal(template)"><i
+                                class=" icofont icofont-plus "></i> Add Wholesaler</button>
+                           
                             <!-- <span class="code-header ">use class <code>table</code> inside table element</span> -->
                         </div>
                         <div class="card-block ">
-                            <div class="row ">
-                                <div class="col-lg-12 ">
-                                    <ngx-datatable class="material table-bordered" [rows]="rows"
-                                        [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                        [headerHeight]="40" [footerHeight]="50" rowHeight="auto"  [limit]="100"
-                                      >
-
-                                        <ngx-datatable-column [width]="150" name="Customer Name" prop="name"
-                                            [draggable]="false" [sortable]="false">
-                                            <ng-template let-row="row" ngx-datatable-cell-template>
-                                                <span > {{ row.first_name }} {{row.last_name}} </span>
-                                            </ng-template>
-                                        </ngx-datatable-column>
-                                        <ngx-datatable-column [width]="80" name="Mobile Number" prop="mobile"
-                                            [draggable]="false" [sortable]="false">
-                                            <ng-template let-value="value" ngx-datatable-cell-template>
-                                                <span title="{{ value }}"> {{ value }} </span>
-                                            </ng-template>
-                                        </ngx-datatable-column>
-                                        <ngx-datatable-column [width]="100" name="Email" prop="email"
-                                            [draggable]="false" [sortable]="false">
-                                            <ng-template let-value="value" ngx-datatable-cell-template>
-                                                <span title="{{ value }}"> {{ value }} </span>
-                                            </ng-template>
-                                        </ngx-datatable-column>
-
-                                        <ngx-datatable-column [width]="100" name="Customer Type" prop="is_customer"
-                                            [draggable]="false" [sortable]="false">
-                                            <ng-template let-row="row" ngx-datatable-cell-template>
-                                                <span *ngIf="row.is_wholesaler"> Wholesaler </span>
-                                                <span *ngIf="row.is_retailer"> Retailer </span>
-                                            </ng-template>
-                                        </ngx-datatable-column>
-
-                                        <!-- <ngx-datatable-column name="Is Active?" prop="IsActive" [draggable]="false"
-                                            [sortable]="false">
-                                            <ng-template let-value="value" ngx-datatable-cell-template>
-                                                <span title="{{value === true? 'Yes':'No'}}">
-                                                    {{value === true? 'Yes':'No'}} </span>
-                                            </ng-template>
-                                        </ngx-datatable-column> -->
-
-                                        <ngx-datatable-column name="Action" prop="Id" [draggable]="false"
-                                            [sortable]="false">
-                                            <ng-template let-row="row" ngx-datatable-cell-template>
-                                                <button class="btn btn-info btn-mini"
-                                                    ><i
-                                                        class="icofont icofont-edit"></i>Edit</button>
-                                            </ng-template>
-                                        </ngx-datatable-column>
-                                    </ngx-datatable>
+                       
+                            <div *ngIf="activeTable == 0">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                      <div class="form-group row">                                
+                                        <div class="col-sm-8">
+                                          <input type="text" class="form-control" placeholder="Search wholesaler/retailer" (keyup)="updateFilter($event)" />
+                                         
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                <div class="row ">
+                                    <div class="col-lg-12 ">
+                                        <ngx-datatable #table class="material table-bordered" [rows]="customerList"
+                                            [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                                            [headerHeight]="40" [footerHeight]="50" rowHeight="auto"  [limit]="100"
+                                          >
+    
+                                            <ngx-datatable-column [width]="150" name="Wholesaler/Retailer Name" prop="name"
+                                                [draggable]="false" [sortable]="false">
+                                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                                    <span > {{ row.first_name }} {{row.last_name}} </span>
+                                                </ng-template>
+                                            </ngx-datatable-column>
+                                            <ngx-datatable-column [width]="80" name="Mobile Number" prop="mobile"
+                                                [draggable]="false" [sortable]="false">
+                                                <ng-template let-value="value" ngx-datatable-cell-template>
+                                                    <span title="{{ value }}"> {{ value }} </span>
+                                                </ng-template>
+                                            </ngx-datatable-column>
+                                            <ngx-datatable-column [width]="100" name="Email" prop="email"
+                                                [draggable]="false" [sortable]="false">
+                                                <ng-template let-value="value" ngx-datatable-cell-template>
+                                                    <span title="{{ value }}"> {{ value }} </span>
+                                                </ng-template>
+                                            </ngx-datatable-column>
+    
+                                            <!-- <ngx-datatable-column name="Is Active?" prop="IsActive" [draggable]="false"
+                                                [sortable]="false">
+                                                <ng-template let-value="value" ngx-datatable-cell-template>
+                                                    <span title="{{value === true? 'Yes':'No'}}">
+                                                        {{value === true? 'Yes':'No'}} </span>
+                                                </ng-template>
+                                            </ngx-datatable-column> -->
+    
+                                            <ngx-datatable-column name="Action" prop="Id" [draggable]="false"
+                                                [sortable]="false">
+                                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                                    <button class="btn btn-info btn-mini"
+                                                        ><i
+                                                            class="icofont icofont-edit"></i>Edit</button>
+                                                </ng-template>
+                                            </ngx-datatable-column>
+                                        </ngx-datatable>
+                                    </div>
                                 </div>
                             </div>
+                            <div *ngIf="activeTable == 1">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                      <div class="form-group row">                                
+                                        <div class="col-sm-8">
+                                          <input type="text" class="form-control" placeholder="Search wholesaler" (keyup)="updateFilterWholesaler($event)" />
+                                         
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                <div class="row ">
+                                    <div class="col-lg-12 ">
+                                        <ngx-datatable #tableWholesaler class="material table-bordered" [rows]="wholesalerList"
+                                            [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                                            [headerHeight]="40" [footerHeight]="50" rowHeight="auto"  [limit]="100"
+                                          >
+    
+                                            <ngx-datatable-column [width]="150" name="Wholesaler Name" prop="name"
+                                                [draggable]="false" [sortable]="false">
+                                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                                    <span > {{ row.first_name }} {{row.last_name}} </span>
+                                                </ng-template>
+                                            </ngx-datatable-column>
+                                            <ngx-datatable-column [width]="80" name="Mobile Number" prop="mobile"
+                                                [draggable]="false" [sortable]="false">
+                                                <ng-template let-value="value" ngx-datatable-cell-template>
+                                                    <span title="{{ value }}"> {{ value }} </span>
+                                                </ng-template>
+                                            </ngx-datatable-column>
+                                            <ngx-datatable-column [width]="100" name="Email" prop="email"
+                                                [draggable]="false" [sortable]="false">
+                                                <ng-template let-value="value" ngx-datatable-cell-template>
+                                                    <span title="{{ value }}"> {{ value }} </span>
+                                                </ng-template>
+                                            </ngx-datatable-column>
+    
+                                            <!-- <ngx-datatable-column name="Is Active?" prop="IsActive" [draggable]="false"
+                                                [sortable]="false">
+                                                <ng-template let-value="value" ngx-datatable-cell-template>
+                                                    <span title="{{value === true? 'Yes':'No'}}">
+                                                        {{value === true? 'Yes':'No'}} </span>
+                                                </ng-template>
+                                            </ngx-datatable-column> -->
+    
+                                            <ngx-datatable-column name="Action" prop="Id" [draggable]="false"
+                                                [sortable]="false">
+                                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                                    <button class="btn btn-info btn-mini"
+                                                        ><i
+                                                            class="icofont icofont-edit"></i>Edit</button>
+                                                </ng-template>
+                                            </ngx-datatable-column>
+                                        </ngx-datatable>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="activeTable == 2">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                      <div class="form-group row">                                
+                                        <div class="col-sm-8">
+                                          <input type="text" class="form-control" placeholder="Search retailer" (keyup)="updateFilterRetailer($event)" />
+                                         
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                <div class="row ">
+                                    <div class="col-lg-12 ">
+                                        <ngx-datatable #tableRetailer class="material table-bordered" [rows]="retailerList"
+                                            [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                                            [headerHeight]="40" [footerHeight]="50" rowHeight="auto"  [limit]="100"
+                                          >
+    
+                                            <ngx-datatable-column [width]="150" name="Retailer Name" prop="name"
+                                                [draggable]="false" [sortable]="false">
+                                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                                    <span > {{ row.first_name }} {{row.last_name}} </span>
+                                                </ng-template>
+                                            </ngx-datatable-column>
+                                            <ngx-datatable-column [width]="80" name="Mobile Number" prop="mobile"
+                                                [draggable]="false" [sortable]="false">
+                                                <ng-template let-value="value" ngx-datatable-cell-template>
+                                                    <span title="{{ value }}"> {{ value }} </span>
+                                                </ng-template>
+                                            </ngx-datatable-column>
+                                            <ngx-datatable-column [width]="100" name="Email" prop="email"
+                                                [draggable]="false" [sortable]="false">
+                                                <ng-template let-value="value" ngx-datatable-cell-template>
+                                                    <span title="{{ value }}"> {{ value }} </span>
+                                                </ng-template>
+                                            </ngx-datatable-column>
+    
+                                            <!-- <ngx-datatable-column name="Is Active?" prop="IsActive" [draggable]="false"
+                                                [sortable]="false">
+                                                <ng-template let-value="value" ngx-datatable-cell-template>
+                                                    <span title="{{value === true? 'Yes':'No'}}">
+                                                        {{value === true? 'Yes':'No'}} </span>
+                                                </ng-template>
+                                            </ngx-datatable-column> -->
+    
+                                            <ngx-datatable-column name="Action" prop="Id" [draggable]="false"
+                                                [sortable]="false">
+                                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                                    <button class="btn btn-info btn-mini"
+                                                        ><i
+                                                            class="icofont icofont-edit"></i>Edit</button>
+                                                </ng-template>
+                                            </ngx-datatable-column>
+                                        </ngx-datatable>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -91,7 +227,7 @@
                                 class="form-control" />
 
                             <div *ngIf="submitted && f.firstName.errors" class="error-text">
-                                <span *ngIf="f.firstName.errors.required" class="text-danger"> Customer first name is required</span>
+                                <span *ngIf="f.firstName.errors.required" class="text-danger"> Wholesaler first name is required</span>
 
                             </div>
                         </div>
@@ -104,7 +240,7 @@
                                 class="form-control" />
 
                             <div *ngIf="submitted && f.lastName.errors" class="error-text">
-                                <span *ngIf="f.lastName.errors.required" class="text-danger"> Customer last name is required</span>
+                                <span *ngIf="f.lastName.errors.required" class="text-danger"> Wholesaler last name is required</span>
 
                             </div>
                         </div>
@@ -135,7 +271,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <!-- <div class="form-group row">
                         <label class="col-sm-4 col-form-label">Customer Type </label>
                         <div class="col-sm-8">
                           <ng-select placeholder="Select Customer" formControlName="customerType" [items]="customerTypeList" [clearable]='false' [clearOnBackspace]='false'
@@ -146,7 +282,7 @@
 
                           </div>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row text-left">
@@ -169,10 +305,116 @@
         <div class="modal-footer">
             <div class="pr-4">
 
-                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHide()"> <i
                         class="icofont icofont-close"></i> Close</button>
 
-                <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()"><i
+                <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmit()"><i
+                        class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+
+            </div>
+
+        </div>
+    </ng-template>
+    <ng-template #templateRetailer>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideRetailer()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="RegistrerFormRetailer" class="col-sm-12">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">First Name </label>
+                        <div class="col-sm-8">
+                            <input type="text" formControlName="firstName"
+                                [ngClass]="{ 'is-invalid': submitted && r.firstName.errors }" type="text"
+                                class="form-control" />
+
+                            <div *ngIf="submitted && r.firstName.errors" class="error-text">
+                                <span *ngIf="r.firstName.errors.required" class="text-danger"> Retailer first name is required</span>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Last Name </label>
+                        <div class="col-sm-8">
+                            <input type="text" formControlName="lastName"
+                                [ngClass]="{ 'is-invalid': submitted && r.lastName.errors }" type="text"
+                                class="form-control" />
+
+                            <div *ngIf="submitted && r.lastName.errors" class="error-text">
+                                <span *ngIf="r.lastName.errors.required" class="text-danger"> Retailer last name is required</span>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Email </label>
+                        <div class="col-sm-8">
+                            <input type="text" formControlName="email"
+                                [ngClass]="{ 'is-invalid': submitted && r.email.errors }" type="text"
+                                class="form-control" />
+
+                            <div *ngIf="submitted && r.email.errors" class="error-text">
+                                <span *ngIf="r.email.errors.required" class="text-danger"> Email is required</span>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Mobile </label>
+                        <div class="col-sm-8">
+                            <input type="text" formControlName="mobile"
+                                [ngClass]="{ 'is-invalid': submitted && r.mobile.errors }" type="text"
+                                class="form-control" />
+
+                            <div *ngIf="submitted && r.mobile.errors" class="error-text">
+                                <span *ngIf="r.mobile.errors.required" class="text-danger"> Mobile number is required</span>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Customer Type </label>
+                        <div class="col-sm-8">
+                          <ng-select placeholder="Select Customer" formControlName="customerType" [items]="customerTypeList" [clearable]='false' [clearOnBackspace]='false'
+                                    bindLabel="name"  bindValue="id"  [ngClass]="{ 'is-invalid': submitted && f.customerType.errors }" >
+                            </ng-select>
+                            <div *ngIf="submitted && f.customerType.errors" class="error-text">
+                              <span *ngIf="f.customerType.errors.required" class="text-danger">Customer type is required</span>
+
+                          </div>
+                        </div>
+                    </div> -->
+                    <!-- <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row text-left">
+                                <label class="col-sm-6 col-form-label">Is Active? </label>
+                                <div class="col-sm-4 mt-2">
+                                    <div class="checkbox-fade fade-in-default">
+                                        <label>
+                                            <input type="checkbox" formControlName="isActive">
+                                            <span class="cr"><i
+                                                    class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideRetailer()"> <i
+                        class="icofont icofont-close"></i> Close</button>
+
+                <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmitRetailer()"><i
                         class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
 
             </div>

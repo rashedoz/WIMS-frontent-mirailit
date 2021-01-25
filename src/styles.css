@@ -24301,3 +24301,6 @@ bs-datepicker-container { z-index: 3000; }
 .label-purple {
     background-color: #9b59b6;
 }
+.b-active {
+    background-color: #007bff;
+}

@@ -115,6 +115,13 @@ const MENUITEMS = [
                     type: 'link',
                     icon: 'ti-control-forward',
                     permission: '',
+                },
+                {
+                    state: 'permanently-cancelled-sim-list',
+                    name: 'Permanently Cancelled SIM List',
+                    type: 'link',
+                    icon: 'ti-control-forward',
+                    permission: '',
                 }
 
 
@@ -302,7 +309,7 @@ const MENUITEMS = [
         icon: 'icofont-brand-microsoft',
         children: [
           {
-            state: '',
+            state: 'customer',
             name: 'Customer List ',
             type: 'link',
             icon: 'ti-control-forward',

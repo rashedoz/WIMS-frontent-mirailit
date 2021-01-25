@@ -30,11 +30,17 @@ export class CustomerBalanceListComponent implements OnInit {
   rows = [];
   tempRows = [];
   customerList = [];
+  wholesalerList = [];
+  retailerList = [];
   loadingIndicator = false;
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;
   scrollBarHorizontal = (window.innerWidth < 1200);
   @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
+  @ViewChild(DatatableComponent, { static: false }) tableWholesaler: DatatableComponent;
+  @ViewChild(DatatableComponent, { static: false }) tableRetailer: DatatableComponent;
+  isbuttonActive = true;
+  activeTable = 0;
   modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
   modalConfigxl: any = { class: 'gray modal-xl', backdrop: 'static' };
   modalRef: BsModalRef;
@@ -73,10 +79,25 @@ export class CustomerBalanceListComponent implements OnInit {
   //   this.getList();
   // }
 
+  showCustomerTable(id){
+    this.isbuttonActive = false;
+    switch (id) {
+      case 0:
+        this.getList();
+        break;
+      case 1:
+        this.getWholesalerList();
+        break;
+      case 2:
+        this.getRetailerList();
+        break;
 
+    }
+  }
   getList() {
     this.loadingIndicator = true;
     this._service.get('user-list?is_customer=true').subscribe(res => {
+      this.activeTable = 0;
       this.customerList = res;
       this.rows = res;
       this.tempRows = res;
@@ -87,6 +108,54 @@ export class CustomerBalanceListComponent implements OnInit {
       }, 1000);
     }, err => {
       this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }
+    );
+  }
+
+  getWholesalerList() {
+    this.loadingIndicator = true;
+    this._service.get('user-list?is_customer=true&is_wholesaler=true').subscribe(res => {
+      if (!res) {
+        this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
+        return;
+      }
+      this.activeTable = 1;
+      this.tempRows = res;
+      this.wholesalerList = res;
+      // this.page.totalElements = res.Total;
+      // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }, err => {
+      this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }
+    );
+  }
+
+  getRetailerList() {
+    this.loadingIndicator = true;
+    this._service.get('user-list?is_customer=true&is_retailer=true').subscribe(res => {
+      if (!res) {
+        this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
+        return;
+      }
+      this.activeTable = 2;
+      this.tempRows = res;
+      this.retailerList = res;
+      // this.page.totalElements = res.Total;
+      // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }, err => {
+      this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -147,7 +216,7 @@ export class CustomerBalanceListComponent implements OnInit {
     const temp = this.tempRows.filter(function (d) {
       return d.first_name.toLowerCase().indexOf(val) !== -1 ||
              d.last_name.toLowerCase().indexOf(val) !== -1 ||
-             d.mobile.toLowerCase().indexOf(val) !== -1 ||
+             d.mobile.indexOf(val) !== -1 ||
         !val;
     });
 
@@ -155,6 +224,40 @@ export class CustomerBalanceListComponent implements OnInit {
     this.rows = temp;
     // Whenever the filter changes, always go back to the first page
     this.table.offset = 0;
+  }
+
+  updateFilterWholesaler(event) {
+    const val = event.target.value.toLowerCase();
+
+    // filter our data
+    const temp = this.tempRows.filter(function (d) {
+      return d.first_name.toLowerCase().indexOf(val) !== -1 ||
+             d.last_name.toLowerCase().indexOf(val) !== -1 ||
+             d.mobile.indexOf(val) !== -1 ||
+        !val;
+    });
+
+    // update the rows
+    this.wholesalerList = temp;
+    // Whenever the filter changes, always go back to the first page
+    this.tableWholesaler.offset = 0;
+  }
+
+  updateFilterRetailer(event) {
+    const val = event.target.value.toLowerCase();
+
+    // filter our data
+    const temp = this.tempRows.filter(function (d) {
+      return d.first_name.toLowerCase().indexOf(val) !== -1 ||
+             d.last_name.toLowerCase().indexOf(val) !== -1 ||
+             d.mobile.indexOf(val) !== -1 ||
+        !val;
+    });
+
+    // update the rows
+    this.retailerList = temp;
+    // Whenever the filter changes, always go back to the first page
+    this.tableRetailer.offset = 0;
   }
 
 

@@ -88,6 +88,11 @@ export const AppRoutes: Routes = [
         // canActivate: [AuthGuard]
       },
       {
+        path: 'permanently-cancelled-sim-list',
+        loadChildren: () => import('./permanently-cancelled-sim-list/permanently-cancelled-sim-list.module').then(m => m.PermanentlyCancelledSIMListModule),
+        // canActivate: [AuthGuard]
+      },
+      {
         path: 'data-plan-list',
         loadChildren: () => import('./data-plan/data-plan.module').then(m => m.DataPlanModule),
         // canActivate: [AuthGuard]
