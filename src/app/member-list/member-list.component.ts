@@ -209,7 +209,7 @@ onFormSubmit() {
       data => {
         this.blockUI.stop();
         if (data.IsReport == "Success") {
-          this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+          this.toastr.success(data.Msg, 'Success!', { timeOut: 4000 });
           this.modalHide();
           this.getList();
         }
@@ -291,14 +291,16 @@ onFormSubmitChangePassword() {
     this._service.post('update-user-password', obj).subscribe(
       data => {
         this.blockUI.stop();
-        if (data) {
+        if (data.IsReport == "Success") {
           this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
           this.modalHideChangePassword();
           this.getList();
         }
-        // else if (data.IsReport == "Warning") {
-        //   this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-        else {
+        else if (data.IsReport == "Warning") {
+          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+          this.modalHideChangePassword();
+          this.getList();
+        }else {
           this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
         }
       },
