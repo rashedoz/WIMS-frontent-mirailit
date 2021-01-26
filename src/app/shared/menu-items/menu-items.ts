@@ -56,6 +56,20 @@ const MENUITEMS = [
         permission: ''
       },
       {
+        state: 'sell-sim',
+        name: 'Sell SIM',
+        type: 'link',
+        icon: 'ti-control-forward',
+        permission: ''
+      },
+      {
+        state: 'sell-device',
+        name: 'Sell Device',
+        type: 'link',
+        icon: 'ti-control-forward',
+        permission: ''
+      },
+      {
         state: 'actions',
         name: 'Actions',
         type: 'link',
@@ -65,6 +79,7 @@ const MENUITEMS = [
 
     ]
   },
+
   {
     label: 'Operations',
     main: [
@@ -129,19 +144,7 @@ const MENUITEMS = [
         },
     ]
 },
-{
-  label: 'none',
-  permission: '',
-  main: [
-    {
-      state: 'sell-sim',
-      name: 'Sell SIM',
-      type: 'link',
-      icon: 'ti-control-forward',
-      permission: ''
-    }
-  ]
-},
+
 {
   label: 'none',
   permission: '',
@@ -215,19 +218,7 @@ const MENUITEMS = [
       },
   ]
 },
-{
-  label: 'none',
-  permission: '',
-  main: [
-    {
-      state: 'sell-device',
-      name: 'Sell Device',
-      type: 'link',
-      icon: 'ti-control-forward',
-      permission: ''
-    }
-  ]
-},
+
 {
   label: 'none',
   permission: '',

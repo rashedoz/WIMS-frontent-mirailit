@@ -9,7 +9,8 @@ import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from './../_models/page';
 import { MustMatch } from './../_helpers/must-match.validator';
-
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-member-list',
@@ -20,21 +21,23 @@ import { MustMatch } from './../_helpers/must-match.validator';
 export class MemberListComponent implements OnInit {
 
   RegistrerForm: FormGroup;
+  RegistrerFormChangePassword: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
-
+  isEdit = false;
   modalTitle = 'Add Member';
   btnSaveText = 'Save';
 
-  modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
+  modalConfig: any = { class: 'gray modal-xl', backdrop: 'static' };
+  modalConfigmd: any = { class: 'gray modal-md', backdrop: 'static' };
   modalRef: BsModalRef;
 
   page = new Page();
-
   rows = [];
   tempRows = [];
   memberList = [];
   loadingIndicator = false;
+  bsConfig: Partial<BsDatepickerConfig>;
   ColumnMode = ColumnMode;
   @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
   scrollBarHorizontal = (window.innerWidth < 1200);
@@ -45,8 +48,13 @@ export class MemberListComponent implements OnInit {
     private _service: CommonService,
     private toastr: ToastrService,
     private authService: AuthenticationService,
-    private router: Router
+    private router: Router,
+    private datePipe: DatePipe
   ) {
+    this.bsConfig = Object.assign({}, {
+      dateInputFormat: 'DD-MMM-YYYY',
+      adaptivePosition: true
+    });
     // this.page.pageNumber = 0;
     // this.page.size = 10;
     window.onresize = () => {
@@ -59,8 +67,20 @@ export class MemberListComponent implements OnInit {
 
   ngOnInit() {
     this.RegistrerForm = this.formBuilder.group({
+      id:[null,],
+      member_code: [{value: null, disabled: true}],
+      nid: [null],
+      occupation: [null],
+      fax: [null],
+      telephone: [null],
+      acc_number: [null],
       email: [null, [Validators.required, Validators.email, Validators.maxLength(50)]],
       mobile: [null, [Validators.required]],
+      alternative_mobile: [null],
+      address_one: [null],
+      address_two: [null],
+      dob: [null],
+      gender: [1],
       firstName: [null, [Validators.required]],
       lastName: [null, [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -68,6 +88,16 @@ export class MemberListComponent implements OnInit {
     }, {
       validator: MustMatch('password', 'confirmPassword')
   });
+
+
+    this.RegistrerFormChangePassword = this.formBuilder.group({
+      id:[null],    
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required]
+    }, {
+      validator: MustMatch('password', 'confirmPassword')
+  });
+
     this.getList();
   }
 
@@ -75,6 +105,9 @@ export class MemberListComponent implements OnInit {
 
 get f() {
   return this.RegistrerForm.controls;
+}
+get p() {
+  return this.RegistrerFormChangePassword.controls;
 }
 
 // setPage(pageInfo) {
@@ -103,68 +136,180 @@ getList() {
     }, 1000);
   }
   );
+} 
+
+getItem(row, template: TemplateRef<any>) {
+    this.isEdit = true;
+    this.RegistrerForm.controls["password"].setValidators(null);
+    this.RegistrerForm.controls["password"].updateValueAndValidity();
+    this.RegistrerForm.controls["confirmPassword"].setValidators(null);
+    this.RegistrerForm.controls["confirmPassword"].updateValueAndValidity();
+
+    this.modalTitle = 'Update Member';
+    this.btnSaveText = 'Update';
+    this.RegistrerForm.controls['id'].setValue(row.id);
+    this.RegistrerForm.controls['member_code'].setValue(row.member_code);
+    this.RegistrerForm.controls['nid'].setValue(row.nid);
+    this.RegistrerForm.controls['fax'].setValue(row.fax);
+    this.RegistrerForm.controls['telephone'].setValue(row.telephone);
+    this.RegistrerForm.controls['acc_number'].setValue(row.acc_number);
+    this.RegistrerForm.controls['email'].setValue(row.email);
+    this.RegistrerForm.controls['mobile'].setValue(row.mobile);
+    this.RegistrerForm.controls['alternative_mobile'].setValue(row.alternative_mobile);
+    this.RegistrerForm.controls['dob'].setValue(row.dob ? new Date(row.dob) : null);
+    this.RegistrerForm.controls['gender'].setValue(row.gender);
+    this.RegistrerForm.controls['address_one'].setValue(row.address_one);
+    this.RegistrerForm.controls['address_two'].setValue(row.address_two);
+    this.RegistrerForm.controls['occupation'].setValue(row.occupation);
+    this.RegistrerForm.controls['firstName'].setValue(row.first_name);
+    this.RegistrerForm.controls['lastName'].setValue(row.last_name);
+    this.RegistrerForm.controls['confirmPassword'].setValue(null);
+    this.RegistrerForm.controls['password'].setValue(null);
+    this.modalRef = this.modalService.show(template, this.modalConfig);
+  
 }
 
-// getItem(id, template: TemplateRef<any>) {
-//   this.blockUI.start('Getting data...');
-//   this._service.get('Member/GetMemberById/' + id).subscribe(res => {
-//     this.blockUI.stop();
-//     if (!res.Success) {
-//       this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
-//       return;
-//     }
-//     this.modalTitle = 'Update Set';
-//     this.btnSaveText = 'Update';
-//     this.RegistrerForm.controls['id'].setValue(res.Record.Id);
-//     this.RegistrerForm.controls['name'].setValue(res.Record.Name);
-//     this.RegistrerForm.controls['isActive'].setValue(res.Record.IsActive);
-//     this.modalRef = this.modalService.show(template, this.modalConfig);
-//   }, err => {
-//     this.blockUI.stop();
-//     this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
-//   });
-// }
+changePassword(row, template: TemplateRef<any>) {
+
+    this.modalTitle = 'Change Password';
+    this.btnSaveText = 'Change';
+    this.RegistrerFormChangePassword.controls['id'].setValue(row.id);    
+    this.modalRef = this.modalService.show(template, this.modalConfigmd);
+  
+}
 
 onFormSubmit() {
   this.submitted = true;
   if (this.RegistrerForm.invalid) {
     return;
   }
+  let id = this.RegistrerForm.value.id;
 
-  this.blockUI.start('Saving...');
+  if(id){
+    this.blockUI.start('Updating...');
 
-  const obj = {
-    email: this.RegistrerForm.value.email.trim(),
-    password: this.RegistrerForm.value.password.trim(),
-    first_name: this.RegistrerForm.value.firstName.trim(),
-    last_name: this.RegistrerForm.value.lastName.trim(),
-    mobile: this.RegistrerForm.value.mobile.trim(),
-    is_customer: 0,
-    is_wholesaler: 0 ,
-    is_retailer: 0,
-    is_staff: 1,
-    is_superuser:0
-  };
-
-  this.authService.registerSystemAdmin('auth/users/', obj).subscribe(
-    data => {
-      this.blockUI.stop();
-      if (data) {
-        this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
-        this.modalHide();
-        this.getList();
+    const obj = {
+      email: this.RegistrerForm.value.email.trim(),     
+      first_name: this.RegistrerForm.value.firstName.trim(),
+      last_name: this.RegistrerForm.value.lastName.trim(),
+      mobile: this.RegistrerForm.value.mobile.trim(),  
+      alternative_mobile:this.RegistrerForm.value.alternative_mobile,
+      occupation:this.RegistrerForm.value.occupation,
+      nid:this.RegistrerForm.value.nid,
+      address_one:this.RegistrerForm.value.address_one,
+      address_two:this.RegistrerForm.value.address_two,
+      dob: this.RegistrerForm.value.dob ? this.datePipe.transform(this.RegistrerForm.value.dob, "yyyy-MM-dd") : null,
+      gender:this.RegistrerForm.value.gender,
+      fax:this.RegistrerForm.value.fax,
+      acc_number:this.RegistrerForm.value.acc_number,
+      telephone:this.RegistrerForm.value.telephone,
+    };
+  
+    this._service.put('update-user-profile/'+id, obj).subscribe(
+      data => {
+        this.blockUI.stop();
+        if (data.IsReport == "Success") {
+          this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+          this.modalHide();
+          this.getList();
+        }
+        
+        else {
+          this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+        }
+      },
+      err => {
+        this.blockUI.stop();
+        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
       }
-      // else if (data.IsReport == "Warning") {
-      //   this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-      else {
-        this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+    );
+
+  }else{
+    this.blockUI.start('Saving...');
+
+    const obj = {     
+      password: this.RegistrerForm.value.password.trim(),
+      email: this.RegistrerForm.value.email.trim(),     
+      first_name: this.RegistrerForm.value.firstName.trim(),
+      last_name: this.RegistrerForm.value.lastName.trim(),
+      mobile: this.RegistrerForm.value.mobile.trim(),  
+      alternative_mobile:this.RegistrerForm.value.alternative_mobile,
+      occupation:this.RegistrerForm.value.occupation,
+      nid:this.RegistrerForm.value.nid,
+      address_one:this.RegistrerForm.value.address_one,
+      address_two:this.RegistrerForm.value.address_two,
+      dob: this.RegistrerForm.value.dob ? this.datePipe.transform(this.RegistrerForm.value.dob, "yyyy-MM-dd") : null,
+      gender:this.RegistrerForm.value.gender,
+      fax:this.RegistrerForm.value.fax,
+      acc_number:this.RegistrerForm.value.acc_number,
+      telephone:this.RegistrerForm.value.telephone,
+      is_customer: 0,
+      is_wholesaler: 0 ,
+      is_retailer: 0,
+      is_staff: 1,
+      is_superuser:0
+    };
+  
+    this.authService.registerSystemAdmin('auth/users/', obj).subscribe(
+      data => {
+        this.blockUI.stop();
+        if (data) {
+          this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+          this.modalHide();
+          this.getList();
+        }
+        // else if (data.IsReport == "Warning") {
+        //   this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+        else {
+          this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+        }
+      },
+      err => {
+        this.blockUI.stop();
+        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
       }
-    },
-    err => {
-      this.blockUI.stop();
-      this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
-    }
-  );
+    );
+  }
+
+ 
+
+}
+
+onFormSubmitChangePassword() {
+  this.submitted = true;
+  if (this.RegistrerFormChangePassword.invalid) {
+    return;
+  }
+
+    this.blockUI.start('Changing...');
+
+    const obj = {
+      user_id: this.RegistrerFormChangePassword.value.id,
+      password: this.RegistrerFormChangePassword.value.password.trim(),     
+    };
+  
+    this._service.post('update-user-password', obj).subscribe(
+      data => {
+        this.blockUI.stop();
+        if (data) {
+          this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+          this.modalHideChangePassword();
+          this.getList();
+        }
+        // else if (data.IsReport == "Warning") {
+        //   this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+        else {
+          this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+        }
+      },
+      err => {
+        this.blockUI.stop();
+        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+      }
+    );
+
+
+ 
 
 }
 
@@ -172,14 +317,31 @@ modalHide() {
   this.RegistrerForm.reset();
   this.modalRef.hide();
   this.submitted = false;
+  this.isEdit = false;
   this.modalTitle = 'Add Member';
   this.btnSaveText = 'Save';
+
+  this.RegistrerForm.controls["password"].setValidators(Validators.required);
+  this.RegistrerForm.controls["password"].updateValueAndValidity();
+  this.RegistrerForm.controls["confirmPassword"].setValidators(Validators.required);
+  this.RegistrerForm.controls["confirmPassword"].updateValueAndValidity();
+
 }
 
 openModal(template: TemplateRef<any>) {
 
+  this.RegistrerForm.controls['gender'].setValue(1);
   this.modalRef = this.modalService.show(template, this.modalConfig);
 }
+
+modalHideChangePassword() {
+  this.RegistrerFormChangePassword.reset();
+  this.modalRef.hide();
+  this.submitted = false;
+  this.modalTitle = 'Add Member';
+  this.btnSaveText = 'Save';
+}
+
 
 
 updateFilter(event) {
@@ -196,6 +358,11 @@ updateFilter(event) {
   this.memberList = temp;
   // Whenever the filter changes, always go back to the first page
   this.table.offset = 0;
+}
+
+fixDate(d: Date): Date {
+  d.setHours(d.getHours() - d.getTimezoneOffset() / 60);
+  return d;
 }
 
 }
