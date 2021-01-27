@@ -154,6 +154,7 @@ getItem(row, template: TemplateRef<any>) {
     this.RegistrerForm.controls['telephone'].setValue(row.telephone);
     this.RegistrerForm.controls['acc_number'].setValue(row.acc_number);
     this.RegistrerForm.controls['email'].setValue(row.email);
+    this.RegistrerForm.controls['email'].disable();
     this.RegistrerForm.controls['mobile'].setValue(row.mobile);
     this.RegistrerForm.controls['alternative_mobile'].setValue(row.alternative_mobile);
     this.RegistrerForm.controls['dob'].setValue(row.dob ? new Date(row.dob) : null);
@@ -189,7 +190,7 @@ onFormSubmit() {
     this.blockUI.start('Updating...');
 
     const obj = {
-      email: this.RegistrerForm.value.email.trim(),     
+      // email: this.RegistrerForm.value.email.trim(),     
       first_name: this.RegistrerForm.value.firstName.trim(),
       last_name: this.RegistrerForm.value.lastName.trim(),
       mobile: this.RegistrerForm.value.mobile.trim(),  
@@ -327,7 +328,7 @@ modalHide() {
   this.RegistrerForm.controls["password"].updateValueAndValidity();
   this.RegistrerForm.controls["confirmPassword"].setValidators(Validators.required);
   this.RegistrerForm.controls["confirmPassword"].updateValueAndValidity();
-
+  this.RegistrerForm.controls['email'].enable();
 }
 
 openModal(template: TemplateRef<any>) {
@@ -352,8 +353,11 @@ updateFilter(event) {
   // filter our data
   const temp = this.tempRows.filter(function (d) {
     return d.first_name.toLowerCase().indexOf(val) !== -1 ||
-           d.last_name.toLowerCase().indexOf(val) !== -1 ||
-      !val;
+           d.last_name.toLowerCase().indexOf(val) !== -1 ||         
+           d.email.toLowerCase().indexOf(val) !== -1  ||        
+           d.member_code.toLowerCase().indexOf(val) !== -1  ||  
+           d.mobile.indexOf(val) !== -1  ||       
+          !val;
   });
 
   // update the rows

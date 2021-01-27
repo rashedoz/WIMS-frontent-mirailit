@@ -47,7 +47,6 @@ const MENUITEMS = [
   {
     label: 'Quick Actions',
     main: [
-
       {
         state: 'create-subscription',
         name: 'Create Subscription',
@@ -79,18 +78,16 @@ const MENUITEMS = [
 
     ]
   },
-
   {
     label: 'Operations',
     main: [
-
       {
         state: 'purchase-entry',
         name: 'Purchase',
         type: 'link',
         icon: 'ti-control-forward',
         permission: ''
-      },
+      }
     ]
   },
   {
@@ -168,14 +165,14 @@ const MENUITEMS = [
               type: 'link',
               icon: 'ti-control-forward',
               permission: '',
-           },
+             },
               {
                 state: 'all-sim-list-for-receive',
                 name: 'Receive',
                 type: 'link',
                 icon: 'ti-control-forward',
                 permission: '',
-            },
+            }
 
           ]
       },
@@ -211,7 +208,7 @@ const MENUITEMS = [
                 type: 'link',
                 icon: 'ti-control-forward',
                 permission: '',
-            },
+            }
 
 
           ]
@@ -242,7 +239,7 @@ const MENUITEMS = [
               type: 'link',
               icon: 'ti-control-forward',
               permission: '',
-          }          
+          }         
 
 
           ]

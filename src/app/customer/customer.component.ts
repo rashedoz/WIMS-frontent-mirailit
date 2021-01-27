@@ -63,6 +63,28 @@ export class CustomerComponent implements OnInit {
 
 
   ngOnInit() {
+
+  //   this.RegistrerForm = this.formBuilder.group({
+  //     id:[null,],
+  //     customer_code: [{value: null, disabled: true}],
+  //     nid: [null],     
+  //     fax: [null],
+  //     telephone: [null],
+  //     acc_number: [null],
+  //     email: [null, [Validators.required, Validators.email, Validators.maxLength(50)]],
+  //     mobile: [null, [Validators.required]],
+  //     alternative_mobile: [null],
+  //     address_one: [null],
+  //     address_two: [null],     
+  //     firstName: [null, [Validators.required]],
+  //     lastName: [null, [Validators.required]],
+  //     password: ['', [Validators.required, Validators.minLength(6)]],
+  //     confirmPassword: ['', Validators.required]
+  //   }, {
+  //     validator: MustMatch('password', 'confirmPassword')
+  // });
+
+
     this.RegistrerForm = this.formBuilder.group({
       email: [null, [Validators.required, Validators.email, Validators.maxLength(50)]],
       mobile: [null, [Validators.required]],
@@ -131,6 +153,32 @@ export class CustomerComponent implements OnInit {
     }
     );
   }
+
+
+//   getItem(row, template: TemplateRef<any>) {
+
+//     this.modalTitle = 'Update Customer';
+//     this.btnSaveText = 'Update';
+//     this.RegistrerForm.controls['id'].setValue(row.id);
+//     this.RegistrerForm.controls['customer_code'].setValue(row.customer_code);
+//     this.RegistrerForm.controls['nid'].setValue(row.nid);
+//     this.RegistrerForm.controls['fax'].setValue(row.fax);
+//     this.RegistrerForm.controls['telephone'].setValue(row.telephone);
+//     this.RegistrerForm.controls['acc_number'].setValue(row.acc_number);
+//     this.RegistrerForm.controls['email'].setValue(row.email);
+//     this.RegistrerForm.controls['email'].disable();
+//     this.RegistrerForm.controls['mobile'].setValue(row.mobile);
+//     this.RegistrerForm.controls['alternative_mobile'].setValue(row.alternative_mobile);
+//     this.RegistrerForm.controls['address_one'].setValue(row.address_one);
+//     this.RegistrerForm.controls['address_two'].setValue(row.address_two);
+//     this.RegistrerForm.controls['firstName'].setValue(row.first_name);
+//     this.RegistrerForm.controls['lastName'].setValue(row.last_name);
+//     this.RegistrerForm.controls['preferred_payment_method'].setValue(row.preferred_payment_method);
+//     this.modalRef = this.modalService.show(template, this.modalConfig);
+  
+// }
+
+
 
   getWholesalerList() {
     this.loadingIndicator = true;

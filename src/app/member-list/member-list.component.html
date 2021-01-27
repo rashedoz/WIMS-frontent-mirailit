@@ -12,10 +12,10 @@
                         </div>
                         <div class="card-block ">
                           <div class="row">
-                            <div class="col-lg-6">
+                            <div class="col-lg-7">
                               <div class="form-group row">
-                                <div class="col-sm-8">
-                                  <input type="text" class="form-control" placeholder="Search member" (keyup)="updateFilter($event)" />
+                                <div class="col-sm-12">
+                                  <input type="text" class="form-control" placeholder="Search member by code, first name, last name, mobile, email" (keyup)="updateFilter($event)" />
                                   <!-- <div *ngIf="submitted && f.customer.errors" class="error-text">
                                     <span *ngIf="f.customer.errors.required" class="text-danger"> Member is required</span>
 
@@ -30,6 +30,11 @@
                                   [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
                                   [headerHeight]="40" [limit]="100" [footerHeight]="50" rowHeight="auto">
 
+                                  <ngx-datatable-column [width]="100" name="Member Code" prop="member_code" [draggable]="false" [sortable]="false">
+                                    <ng-template let-value="value" ngx-datatable-cell-template>
+                                        <span > {{ value }} </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
                                   <ngx-datatable-column [width]="100" name="First Name" prop="first_name" [draggable]="false" [sortable]="false">
                                     <ng-template let-value="value" ngx-datatable-cell-template>
                                         <span > {{ value }} </span>
@@ -49,10 +54,10 @@
                                       <ng-template let-value="value" ngx-datatable-cell-template>
                                           <span > {{ value }} </span>
                                       </ng-template>
-                                  </ngx-datatable-column>
+                                  </ngx-datatable-column>                              
 
 
-                                  <ngx-datatable-column [width]="80" name="Created Date" prop="created_at" [draggable]="false"
+                                  <ngx-datatable-column [width]="90" name="Created Date" prop="created_at" [draggable]="false"
                                       [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
                                           <span >  {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
@@ -60,7 +65,7 @@
                                   </ngx-datatable-column>
 
 
-                                  <ngx-datatable-column [width]="190" name="Action" prop="id" [draggable]="false"
+                                  <ngx-datatable-column [width]="200" name="Action" prop="id" [draggable]="false"
                                       [sortable]="false">
                                       <ng-template let-row="row" ngx-datatable-cell-template>
                                         <button (click)="getItem(row,template)" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-edit"></i>Edit Profile</button>
@@ -303,12 +308,12 @@
                         </div>
                         <div *ngIf="!isEdit">
                         <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">New Password </label>
+                            <label class="col-sm-4 col-form-label"> Password </label>
                             <div class="col-sm-8">
                                 <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" placeholder="Enter password" required>
     
                                 <div *ngIf="submitted && f.password.errors" class="error-text">
-                                    <span *ngIf="f.password.errors.required" class="text-danger">New password is required</span>
+                                    <span *ngIf="f.password.errors.required" class="text-danger">Password is required</span>
                                 </div>
                             </div>
                         </div>
