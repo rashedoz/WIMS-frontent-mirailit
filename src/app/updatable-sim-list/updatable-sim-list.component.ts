@@ -22,7 +22,7 @@ export class UpdatableSIMListComponent implements OnInit {
   @BlockUI() blockUI: NgBlockUI;
   modalTitleSIM = 'Add SIM Details';
   btnSaveText = 'Save';
-  modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
+  modalConfig: any = { class: 'gray modal-lg', backdrop: 'static' };
   modalRef: BsModalRef;
   StockStatus = StockStatus;
   page = new Page();
@@ -94,10 +94,11 @@ export class UpdatableSIMListComponent implements OnInit {
 
     let sim_details = [];
     this.blockUI.start('Updating...');
-    this.SIMItemList.filter(x=>x.iccid).forEach(element => {
+    this.SIMItemList.filter(x=>x.iccid && x.phone_number).forEach(element => {
       sim_details.push({
         id:element.id,
         ICCID_no: element.iccid,
+        phone_number: element.phone_number,
       });
     });
     const obj = {
@@ -140,8 +141,9 @@ export class UpdatableSIMListComponent implements OnInit {
     this.rows.forEach(element => {
       this.SIMItemList.push({
         "id":element.id,
-        "sim_auto_serial_no":element.sim_auto_serial_no,
+        "CID_no":element.CID_no,
         "iccid":"",
+        "phone_number":"",
       });
     });
     this.modalRef = this.modalService.show(template, this.modalConfig);

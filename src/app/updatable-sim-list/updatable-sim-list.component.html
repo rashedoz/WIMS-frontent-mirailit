@@ -17,19 +17,26 @@
                                   [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
                                   [headerHeight]="40" [limit]="100" [footerHeight]="50" rowHeight="auto">
 
-                                  <ngx-datatable-column [width]="8" name="SIM ID No" prop="id" [draggable]="false" [sortable]="false">
+                                  <ngx-datatable-column [width]="80" name="SIM CID No" prop="CID_no" [draggable]="false" [sortable]="false">
                                     <ng-template let-row="row" ngx-datatable-cell-template>
                                         <span > {{ row.id }} </span>
                                     </ng-template>
                                 </ngx-datatable-column>
 
-                                <ngx-datatable-column [width]="200" name="SIM Alias" prop="sim_auto_serial_no" [draggable]="false" [sortable]="false">
+                                <!-- <ngx-datatable-column [width]="200" name="SIM Alias" prop="sim_auto_serial_no" [draggable]="false" [sortable]="false">
                                     <ng-template let-row="row" ngx-datatable-cell-template>
                                         <span > {{ row.sim_auto_serial_no }} </span>
                                     </ng-template>
-                                </ngx-datatable-column>
+                                </ngx-datatable-column> -->
 
                                 <ngx-datatable-column [width]="100" name="ICCID No" prop="ICCID_no" [draggable]="false"
+                                    [sortable]="false">
+                                    <ng-template let-value="value" ngx-datatable-cell-template>
+                                        <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                                <ngx-datatable-column [width]="100" name="Phone Number" prop="phone_number" [draggable]="false"
                                     [sortable]="false">
                                     <ng-template let-value="value" ngx-datatable-cell-template>
                                         <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>
@@ -87,15 +94,17 @@
                       <table class="table table-xs table-hover table-bordered table-striped">
                           <thead>
                               <tr>
-                                  <th scope="col">SIM Serial</th>
+                                  <th scope="col">SIM CID No</th>
                                   <th scope="col">ICCID No</th>
+                                  <th scope="col">PhoneNo</th>
                               </tr>
                           </thead>
 
                           <tbody>
                               <tr *ngFor="let item of SIMItemList; let i=index">
-                                  <th>{{item.id}}</th>
+                                  <th>{{item.CID_no}}</th>
                                   <th><input type="text"class="form-control" [(ngModel)]="item.iccid"  required /></th>
+                                  <th><input type="text"class="form-control" [(ngModel)]="item.phone_number"  required /></th>
 
 
                               </tr>

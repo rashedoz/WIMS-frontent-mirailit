@@ -222,8 +222,15 @@
                       <label class="col-sm-4 col-form-label">Customer Name </label>
                       <div class="col-sm-8">
                         <ng-select  [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false" formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
-                        bindLabel="first_name" bindValue="id" placeholder="Select a customer">
-                      </ng-select>
+                        bindLabel="first_name" bindValue="id" placeholder="Search a customer by name">
+                        <ng-template ng-label-tmp let-item="item">                          
+                            {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
+                        </ng-template>
+                        <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                            <h6 class="card-title">{{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}</h6>  
+                        </ng-template>
+                  
+                    </ng-select>
 
                           <div *ngIf="submitted && f.customer.errors" class="error-text">
                               <span *ngIf="f.customer.errors.required" class="text-danger"> Customer is required</span>
@@ -262,16 +269,30 @@
       </div>
   </ng-template>
 
-    <ng-template #templateBalance>
-      <div class="modal-header ">
-          <h4 class="modal-title pull-left " *ngIf="item"> {{item.customer}}'s Balance Loading History</h4>
+    <ng-template #templateBalance >
+      <div class="modal-header " *ngIf="balanceDetails">
+          <h4 class="modal-title pull-left " *ngIf="balanceDetails.customer"> Balance History </h4>
           <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideBalance()">
               <i class="icofont icofont-close"></i>
           </button>
       </div>
-      <div class="modal-body ">
+      <div class="modal-body " *ngIf="balanceDetails">
           <app-card>
             <div class="row">
+
+                <table class="table" *ngIf="balanceDetails.customer">                  
+                    <tbody>
+                      <tr>
+                        <th> Name  :  {{balanceDetails.customer.first_name}} {{balanceDetails.customer.Name_name}}</th>
+                        <th> Code  :  {{balanceDetails.customer.customer_code}}</th>
+                      </tr>                      
+                      <tr>
+                        <th>  Email  :  {{balanceDetails.customer.email}} </th>
+                        <th> Mobile :  {{balanceDetails.customer.mobile}}</th>
+                       
+                      </tr>                      
+                    </tbody>
+                  </table>
 
               <div class="col-md-12">
                 <div class="row">
@@ -282,17 +303,15 @@
                               <tr>
                                   <th scope="col">#</th>
                                   <th scope="col">Load Amount</th>
-                                  <th scope="col">Balance Code</th>
                                   <th scope="col">Date</th>
                               </tr>
                           </thead>
 
                           <tbody>
-                              <tr *ngFor="let item of balanceDetails; let i=index">
+                              <tr *ngFor="let item of balanceDetails.balance_history; let i=index">
 
                                 <th scope="col">{{i + 1}}</th>
                                 <th scope="col">{{item.paid_amount}}</th>
-                                <th scope="col">{{item.balance_code}}</th>
                                 <th scope="col">{{item.created_at | amDateFormat:'DD-MMM-YYYY'}} </th>
                               </tr>
                           </tbody>

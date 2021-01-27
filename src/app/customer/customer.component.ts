@@ -8,7 +8,7 @@ import { AuthenticationService } from './../_services/authentication.service';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from './../_models/page';
-
+import { MustMatch } from './../_helpers/must-match.validator';
 
 @Component({
   selector: 'app-customer',
@@ -20,17 +20,24 @@ import { Page } from './../_models/page';
 export class CustomerComponent implements OnInit {
 
   RegistrerForm: FormGroup;
-  RegistrerFormRetailer: FormGroup;
+  RegistrerFormChangePassword: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
+  isEdit = false;
   customerTypeList = [{id:1,name:"Wholesaler"},{id:2,name:"Retailer"}]
-
+  type;
   modalTitle = 'Add Customer';
   btnSaveText = 'Save';
 
-  modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
+  modalConfig: any = { class: 'gray modal-xl', backdrop: 'static' };
+  modalConfigmd: any = { class: 'gray modal-md', backdrop: 'static' };
   modalRef: BsModalRef;
-  modalRefRetailer: BsModalRef;
+
+  // modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
+  // modalRef: BsModalRef;
+  // modalRefRetailer: BsModalRef;
+
+
   @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
   @ViewChild(DatatableComponent, { static: false }) tableWholesaler: DatatableComponent;
   @ViewChild(DatatableComponent, { static: false }) tableRetailer: DatatableComponent;
@@ -64,50 +71,60 @@ export class CustomerComponent implements OnInit {
 
   ngOnInit() {
 
-  //   this.RegistrerForm = this.formBuilder.group({
-  //     id:[null,],
-  //     customer_code: [{value: null, disabled: true}],
-  //     nid: [null],     
-  //     fax: [null],
-  //     telephone: [null],
-  //     acc_number: [null],
-  //     email: [null, [Validators.required, Validators.email, Validators.maxLength(50)]],
-  //     mobile: [null, [Validators.required]],
-  //     alternative_mobile: [null],
-  //     address_one: [null],
-  //     address_two: [null],     
-  //     firstName: [null, [Validators.required]],
-  //     lastName: [null, [Validators.required]],
-  //     password: ['', [Validators.required, Validators.minLength(6)]],
-  //     confirmPassword: ['', Validators.required]
-  //   }, {
-  //     validator: MustMatch('password', 'confirmPassword')
-  // });
-
-
     this.RegistrerForm = this.formBuilder.group({
+      id:[null,],
+      customer_code: [{value: null, disabled: true}],
+      nid: [null],
+      fax: [null],
+      telephone: [null],
+      acc_number: [null],
       email: [null, [Validators.required, Validators.email, Validators.maxLength(50)]],
       mobile: [null, [Validators.required]],
+      alternative_mobile: [null],
+      address_one: [null],
+      address_two: [null],
+      preferred_payment_method: [null],
       firstName: [null, [Validators.required]],
       lastName: [null, [Validators.required]],
-      // customerType: [null, [Validators.required]]
-    });
-    this.RegistrerFormRetailer = this.formBuilder.group({
-      email: [null, [Validators.required, Validators.email, Validators.maxLength(50)]],
-      mobile: [null, [Validators.required]],
-      firstName: [null, [Validators.required]],
-      lastName: [null, [Validators.required]],
-      // customerType: [null, [Validators.required]]
-    });
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required]
+    }, {
+      validator: MustMatch('password', 'confirmPassword')
+  });
+
+
+    // this.RegistrerForm = this.formBuilder.group({
+    //   email: [null, [Validators.required, Validators.email, Validators.maxLength(50)]],
+    //   mobile: [null, [Validators.required]],
+    //   firstName: [null, [Validators.required]],
+    //   lastName: [null, [Validators.required]],
+    //   // customerType: [null, [Validators.required]]
+    // });
+    // this.RegistrerFormRetailer = this.formBuilder.group({
+    //   email: [null, [Validators.required, Validators.email, Validators.maxLength(50)]],
+    //   mobile: [null, [Validators.required]],
+    //   firstName: [null, [Validators.required]],
+    //   lastName: [null, [Validators.required]],
+    //   // customerType: [null, [Validators.required]]
+    // });
+    this.RegistrerFormChangePassword = this.formBuilder.group({
+      id:[null],    
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required]
+    }, {
+      validator: MustMatch('password', 'confirmPassword')
+  });
+
     this.getList();
   }
 
-  get f() {
-    return this.RegistrerForm.controls;
-  }
-  get r() {
-    return this.RegistrerFormRetailer.controls;
-  }
+
+get f() {
+  return this.RegistrerForm.controls;
+}
+get p() {
+  return this.RegistrerFormChangePassword.controls;
+}
 
   setPage(pageInfo) {
    // this.page.pageNumber = pageInfo.offset;
@@ -155,29 +172,42 @@ export class CustomerComponent implements OnInit {
   }
 
 
-//   getItem(row, template: TemplateRef<any>) {
-
-//     this.modalTitle = 'Update Customer';
-//     this.btnSaveText = 'Update';
-//     this.RegistrerForm.controls['id'].setValue(row.id);
-//     this.RegistrerForm.controls['customer_code'].setValue(row.customer_code);
-//     this.RegistrerForm.controls['nid'].setValue(row.nid);
-//     this.RegistrerForm.controls['fax'].setValue(row.fax);
-//     this.RegistrerForm.controls['telephone'].setValue(row.telephone);
-//     this.RegistrerForm.controls['acc_number'].setValue(row.acc_number);
-//     this.RegistrerForm.controls['email'].setValue(row.email);
-//     this.RegistrerForm.controls['email'].disable();
-//     this.RegistrerForm.controls['mobile'].setValue(row.mobile);
-//     this.RegistrerForm.controls['alternative_mobile'].setValue(row.alternative_mobile);
-//     this.RegistrerForm.controls['address_one'].setValue(row.address_one);
-//     this.RegistrerForm.controls['address_two'].setValue(row.address_two);
-//     this.RegistrerForm.controls['firstName'].setValue(row.first_name);
-//     this.RegistrerForm.controls['lastName'].setValue(row.last_name);
-//     this.RegistrerForm.controls['preferred_payment_method'].setValue(row.preferred_payment_method);
-//     this.modalRef = this.modalService.show(template, this.modalConfig);
+  getItem(row, template: TemplateRef<any>) {
+    this.isEdit = true;
+    this.RegistrerForm.controls["password"].setValidators(null);
+    this.RegistrerForm.controls["password"].updateValueAndValidity();
+    this.RegistrerForm.controls["confirmPassword"].setValidators(null);
+    this.RegistrerForm.controls["confirmPassword"].updateValueAndValidity();
+    this.modalTitle = 'Update Customer';
+    this.btnSaveText = 'Update';
+    this.RegistrerForm.controls['id'].setValue(row.id);
+    this.RegistrerForm.controls['customer_code'].setValue(row.customer_code);
+    this.RegistrerForm.controls['nid'].setValue(row.nid);
+    this.RegistrerForm.controls['fax'].setValue(row.fax);
+    this.RegistrerForm.controls['telephone'].setValue(row.telephone);
+    this.RegistrerForm.controls['acc_number'].setValue(row.acc_number);
+    this.RegistrerForm.controls['email'].setValue(row.email);
+    this.RegistrerForm.controls['email'].disable();
+    this.RegistrerForm.controls['mobile'].setValue(row.mobile);
+    this.RegistrerForm.controls['alternative_mobile'].setValue(row.alternative_mobile);
+    this.RegistrerForm.controls['address_one'].setValue(row.address_one);
+    this.RegistrerForm.controls['address_two'].setValue(row.address_two);
+    this.RegistrerForm.controls['firstName'].setValue(row.first_name);
+    this.RegistrerForm.controls['lastName'].setValue(row.last_name);
+    this.RegistrerForm.controls['preferred_payment_method'].setValue(row.preferred_payment_method);
+    this.RegistrerForm.controls['confirmPassword'].setValue(null);
+    this.RegistrerForm.controls['password'].setValue(null);
+    this.modalRef = this.modalService.show(template, this.modalConfig);
   
-// }
+}
+changePassword(row, template: TemplateRef<any>) {
 
+  this.modalTitle = 'Change Password';
+  this.btnSaveText = 'Change';
+  this.RegistrerFormChangePassword.controls['id'].setValue(row.id);    
+  this.modalRef = this.modalService.show(template, this.modalConfigmd);
+
+}
 
 
   getWholesalerList() {
@@ -228,111 +258,158 @@ export class CustomerComponent implements OnInit {
     );
   }
 
-  getItem(id, template: TemplateRef<any>) {
-    this.blockUI.start('Getting data...');
-    this._service.get('Customer/GetCustomerById/' + id).subscribe(res => {
-      this.blockUI.stop();
-      if (!res.Success) {
-        this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
-        return;
-      }
-      this.modalTitle = 'Update Set';
-      this.btnSaveText = 'Update';
-      this.RegistrerForm.controls['id'].setValue(res.Record.Id);
-      this.RegistrerForm.controls['name'].setValue(res.Record.Name);
-      this.RegistrerForm.controls['isActive'].setValue(res.Record.IsActive);
-      this.modalRef = this.modalService.show(template, this.modalConfig);
-    }, err => {
-      this.blockUI.stop();
-      this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
-    });
-  }
+
+
 
   onFormSubmit() {
     this.submitted = true;
     if (this.RegistrerForm.invalid) {
       return;
     }
-
-    this.blockUI.start('Saving...');
-
-    const obj = {
-      email: this.RegistrerForm.value.email.trim(),
-      password: "123456",
-      first_name: this.RegistrerForm.value.firstName.trim(),
-      last_name: this.RegistrerForm.value.lastName.trim(),
-      mobile: this.RegistrerForm.value.mobile.trim(),
-      is_customer: 1,
-      is_wholesaler: 1 ,
-      is_retailer: 0,
-      is_staff: 0,
-      is_superuser:0
-    };
-
-    this.authService.registerSystemAdmin('auth/users/', obj).subscribe(
-      data => {
-        this.blockUI.stop();
-        if (data) {
-          this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
-          this.modalHide();
-          this.getWholesalerList();
+    let id = this.RegistrerForm.value.id;
+  
+    if(id){
+      this.blockUI.start('Updating...');
+  
+      const obj = {
+        // email: this.RegistrerForm.value.email.trim(),     
+        first_name: this.RegistrerForm.value.firstName.trim(),
+        last_name: this.RegistrerForm.value.lastName.trim(),
+        mobile: this.RegistrerForm.value.mobile.trim(),  
+        alternative_mobile:this.RegistrerForm.value.alternative_mobile,
+        occupation:this.RegistrerForm.value.occupation,
+        nid:this.RegistrerForm.value.nid,
+        address_one:this.RegistrerForm.value.address_one,
+        address_two:this.RegistrerForm.value.address_two,
+        fax:this.RegistrerForm.value.fax,
+        acc_number:this.RegistrerForm.value.acc_number,
+        telephone:this.RegistrerForm.value.telephone,
+        preferred_payment_method:this.RegistrerForm.value.preferred_payment_method,
+      };
+    
+      this._service.put('update-user-profile/'+id, obj).subscribe(
+        data => {
+          this.blockUI.stop();
+          if (data.IsReport == "Success") {
+            this.toastr.success(data.Msg, 'Success!', { timeOut: 4000 });
+            this.modalHide();
+            this.getList();
+          }
+          
+          else {
+            this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+          }
+        },
+        err => {
+          this.blockUI.stop();
+          this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
         }
-        // else if (data.IsReport == "Warning") {
-        //   this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-        else {
-          this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+      );
+  
+    }else{
+      this.blockUI.start('Saving...');
+  
+      const obj = {     
+        password: this.RegistrerForm.value.password.trim(),
+        email: this.RegistrerForm.value.email.trim(),     
+        first_name: this.RegistrerForm.value.firstName.trim(),
+        last_name: this.RegistrerForm.value.lastName.trim(),
+        mobile: this.RegistrerForm.value.mobile.trim(),  
+        alternative_mobile:this.RegistrerForm.value.alternative_mobile,
+        occupation:this.RegistrerForm.value.occupation,
+        nid:this.RegistrerForm.value.nid,
+        address_one:this.RegistrerForm.value.address_one,
+        address_two:this.RegistrerForm.value.address_two,       
+        fax:this.RegistrerForm.value.fax,
+        acc_number:this.RegistrerForm.value.acc_number,
+        preferred_payment_method:this.RegistrerForm.value.preferred_payment_method,
+        telephone:this.RegistrerForm.value.telephone,
+        is_customer: 1,
+        is_wholesaler: this.type == 'Wholesaler' ? 1 : 0 ,
+        is_retailer: this.type != 'Wholesaler' ? 1 : 0,
+        is_staff: 0,
+        is_superuser:0
+      };
+    
+      this.authService.registerSystemAdmin('auth/users/', obj).subscribe(
+        data => {
+          this.blockUI.stop();
+          if (data) {
+            this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+            this.modalHide();
+            this.getList();
+          }
+          // else if (data.IsReport == "Warning") {
+          //   this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+          else {
+            this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+          }
+        },
+        err => {
+          this.blockUI.stop();
+          this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
         }
-      },
-      err => {
-        this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
-      }
-    );
-
+      );
+    }
+  
+   
+  
   }
+  
 
-  onFormSubmitRetailer() {
+
+  onFormSubmitChangePassword() {
     this.submitted = true;
-    if (this.RegistrerFormRetailer.invalid) {
+    if (this.RegistrerFormChangePassword.invalid) {
       return;
     }
-
-    this.blockUI.start('Saving...');
-
-    const obj = {
-      email: this.RegistrerFormRetailer.value.email.trim(),
-      password: "123456",
-      first_name: this.RegistrerFormRetailer.value.firstName.trim(),
-      last_name: this.RegistrerFormRetailer.value.lastName.trim(),
-      mobile: this.RegistrerFormRetailer.value.mobile.trim(),
-      is_customer: 1,
-      is_retailer: 1 ,
-      is_wholesaler: 0,
-      is_staff: 0,
-      is_superuser:0
-    }; 
-
-    this.authService.registerSystemAdmin('auth/users/', obj).subscribe(
-      data => {
-        this.blockUI.stop();
-        if (data) {
-          this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
-          this.modalHideRetailer();
-          this.getRetailerList();
+  
+      this.blockUI.start('Changing...');
+  
+      const obj = {
+        user_id: this.RegistrerFormChangePassword.value.id,
+        password: this.RegistrerFormChangePassword.value.password.trim(),     
+      };
+    
+      this._service.post('update-user-password', obj).subscribe(
+        data => {
+          this.blockUI.stop();
+          if (data.IsReport == "Success") {
+            this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+            this.modalHideChangePassword();
+            this.getList();
+          }
+          else if (data.IsReport == "Warning") {
+            this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+            this.modalHideChangePassword();
+            this.getList();
+          }else {
+            this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+          }
+        },
+        err => {
+          this.blockUI.stop();
+          this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
         }
-        // else if (data.IsReport == "Warning") {
-        //   this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-        else {
-          this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
-        }
-      },
-      err => {
-        this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
-      }
-    );
-
+      );
+  
+  
+   
+  
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   updateFilter(event) {
     const val = event.target.value.toLowerCase();
@@ -341,6 +418,8 @@ export class CustomerComponent implements OnInit {
     const temp = this.tempRows.filter(function (d) {
       return d.first_name.toLowerCase().indexOf(val) !== -1 ||
              d.last_name.toLowerCase().indexOf(val) !== -1 ||
+             d.email.toLowerCase().indexOf(val) !== -1 ||
+             d.customer_code.toLowerCase().indexOf(val) !== -1 ||
              d.mobile.indexOf(val) !== -1 ||
         !val;
     });
@@ -358,6 +437,8 @@ export class CustomerComponent implements OnInit {
     const temp = this.tempRows.filter(function (d) {
       return d.first_name.toLowerCase().indexOf(val) !== -1 ||
              d.last_name.toLowerCase().indexOf(val) !== -1 ||
+             d.email.toLowerCase().indexOf(val) !== -1 ||
+             d.customer_code.toLowerCase().indexOf(val) !== -1 ||
              d.mobile.indexOf(val) !== -1 ||
         !val;
     });
@@ -374,6 +455,8 @@ export class CustomerComponent implements OnInit {
     const temp = this.tempRows.filter(function (d) {
       return d.first_name.toLowerCase().indexOf(val) !== -1 ||
              d.last_name.toLowerCase().indexOf(val) !== -1 ||
+             d.email.toLowerCase().indexOf(val) !== -1 ||
+             d.customer_code.toLowerCase().indexOf(val) !== -1 ||
              d.mobile.indexOf(val) !== -1 ||
         !val;
     });
@@ -388,25 +471,30 @@ export class CustomerComponent implements OnInit {
     this.RegistrerForm.reset();
     this.modalRef.hide();
     this.submitted = false;
-    this.modalTitle = 'Add Wholesaler';
+    this.isEdit = false;
+    this.modalTitle = 'Add Customer';
     this.btnSaveText = 'Save';
+  
+    this.RegistrerForm.controls["password"].setValidators(Validators.required);
+    this.RegistrerForm.controls["password"].updateValueAndValidity();
+    this.RegistrerForm.controls["confirmPassword"].setValidators(Validators.required);
+    this.RegistrerForm.controls["confirmPassword"].updateValueAndValidity();
+    this.RegistrerForm.controls['email'].enable();
   }
-
-  openModal(template: TemplateRef<any>) {
-    this.modalTitle = 'Add Wholesaler';
+  
+  openModal(template: TemplateRef<any>,type) {  
+    this.type = type;
+    this.modalTitle = 'Add ' +type;
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
-
-  modalHideRetailer() {
-    this.RegistrerFormRetailer.reset();
-    this.modalRefRetailer.hide();
+  
+  modalHideChangePassword() {
+    this.RegistrerFormChangePassword.reset();
+    this.modalRef.hide();
     this.submitted = false;
-    this.modalTitle = 'Add Retailer';
     this.btnSaveText = 'Save';
   }
+  
 
-  openModalRetailer(template: TemplateRef<any>) {
-    this.modalTitle = 'Add Retailer';
-    this.modalRefRetailer = this.modalService.show(template, this.modalConfig);
-  }
+
 }

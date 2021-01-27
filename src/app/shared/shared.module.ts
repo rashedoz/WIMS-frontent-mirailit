@@ -20,6 +20,7 @@ import {TagInputModule} from 'ngx-chips';
 import {ClickOutsideModule} from 'ng-click-outside';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgSelectModule } from '@ng-select/ng-select';
+
 import { NumericDirective } from '../_helpers/numbers-only';
 import { BlockUIModule } from 'ng-block-ui';
 import { MomentModule } from 'ngx-moment';
@@ -34,11 +35,11 @@ import { UiSwitchModule } from 'ngx-toggle-switch';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 
 
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatInputModule } from '@angular/material/input';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatSelectModule } from '@angular/material/select';
+// import { MatCheckboxModule } from '@angular/material/checkbox';
+// import { MatDatepickerModule } from '@angular/material/datepicker';
+// import { MatInputModule } from '@angular/material/input';
+// import { MatRadioModule } from '@angular/material/radio';
+// import { MatSelectModule } from '@angular/material/select';
 
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 // import { NgxMatDatetimePickerModule } from '@angular-material-components/datetime-picker';
@@ -70,11 +71,11 @@ import { NgxMatMomentModule } from '@angular-material-components/moment-adapter'
       BsDropdownModule.forRoot(),
       // NgxMatDatetimePickerModule,
       // NgxMatTimepickerModule,
-      MatCheckboxModule,
-      MatDatepickerModule,
-      MatInputModule,
-      MatRadioModule,
-      MatSelectModule,
+    //   MatCheckboxModule,
+    //   MatDatepickerModule,
+    //   MatInputModule,
+    //   MatRadioModule,
+    //   MatSelectModule,
       NgxMatMomentModule,
       MatButtonModule, MatDialogModule, MatListModule, MatProgressBarModule
   ],
@@ -123,11 +124,11 @@ import { NgxMatMomentModule } from '@angular-material-components/moment-adapter'
       // NgxMatDatetimePickerModule,
       // NgxMatTimepickerModule,
       BsDropdownModule,
-      MatCheckboxModule,
-      MatDatepickerModule,
-      MatInputModule,
-      MatRadioModule,
-      MatSelectModule,
+    //   MatCheckboxModule,
+    //   MatDatepickerModule,
+    //   MatInputModule,
+    //   MatRadioModule,
+    //   MatSelectModule,
       NgxMatMomentModule,
 
       MatButtonModule, MatDialogModule, MatListModule, MatProgressBarModule

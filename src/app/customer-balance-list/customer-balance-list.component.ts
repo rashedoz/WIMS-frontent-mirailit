@@ -41,10 +41,10 @@ export class CustomerBalanceListComponent implements OnInit {
   @ViewChild(DatatableComponent, { static: false }) tableRetailer: DatatableComponent;
   isbuttonActive = true;
   activeTable = 0;
-  modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
-  modalConfigxl: any = { class: 'gray modal-xl', backdrop: 'static' };
+  modalConfig: any = { class: 'gray modal-lg', backdrop: 'static' };
+  modalConfigLg: any = { class: 'gray modal-lg', backdrop: 'static' };
   modalRef: BsModalRef;
-  balanceDetails : Array<any> = [];
+  balanceDetails : any = {};
   item;
   constructor(
     private modalService: BsModalService,
@@ -165,9 +165,9 @@ export class CustomerBalanceListComponent implements OnInit {
 
   getBalanceDetails(row,template: TemplateRef<any>){
     this.item = row;
-    this._service.get('get-customer-balance-loading-history?customer=' + row.id).subscribe(res => {
+    this._service.get('get-customer-balance-loading-history/'+row.id).subscribe(res => {
       this.balanceDetails = res;
-      this.modalRef = this.modalService.show(template, this.modalConfigxl);
+      this.modalRef = this.modalService.show(template, this.modalConfigLg);
     }, err => {}
     );
   }
