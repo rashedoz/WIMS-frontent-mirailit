@@ -45,6 +45,8 @@
                   <div class="col-sm-8">
                     <ng-select (change)="onCustomerChange($event)" [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false" formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
                       bindLabel="first_name" bindValue="id" placeholder="Select a customer">
+                      <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                        {{item.customer_code}} - {{item.first_name}} {{item.last_name}}    </ng-template>
                     </ng-select>
                     <div *ngIf="submitted && f.customer.errors" class="error-text">
                       <span *ngIf="f.customer.errors.required" class="text-danger"> Customer is required</span>

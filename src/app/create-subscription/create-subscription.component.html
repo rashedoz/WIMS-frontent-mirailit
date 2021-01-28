@@ -38,7 +38,7 @@
             </div>
             <hr>
             <div class="row ">
-              <div class="col-lg-6">
+              <div class="col-lg-7">
 
                 <div class="form-group row">
                   <label class="col-sm-4 col-form-label">Customer </label>
@@ -48,6 +48,9 @@
                   <div class="d-flex flex-row">
                     <ng-select [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false" formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
                       bindLabel="first_name" bindValue="id" placeholder="Select a customer">
+                      <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                        {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}} 
+                    </ng-template>
                     </ng-select>
                     <button type="button" class="btn btn-success btn-mini"
                         title="Add new customer" (click)="openModalCustomer(templateCustomer)">
@@ -64,7 +67,7 @@
 
 
               </div>
-              <div class="col-lg-6">
+              <div class="col-lg-5">
                 <div class="form-group row">
                   <label class="col-sm-4 col-form-label">Session </label>
                   <div class="col-sm-8">

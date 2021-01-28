@@ -100,9 +100,10 @@ export class AllSIMListForReceiveComponent implements OnInit {
 
     let received_sims = [];
 
-    this.rows.filter(x=> x.secondary_status === 2 && x.isReceiveChecked).forEach(element => {
+    this.rows.filter(x=> x.secondary_status === 2 && x.isReceiveChecked && x.ICCID).forEach(element => {
       received_sims.push({
-        sim: element.id
+        sim: element.id,
+        ICCID_no: element.ICCID
       });
 
     });
@@ -153,7 +154,7 @@ export class AllSIMListForReceiveComponent implements OnInit {
     // filter our data
     const temp = this.tempRows.filter(function (d) {
       return d.ICCID_no != null ? d.ICCID_no.toLowerCase().indexOf(val) !== -1 : '' ||
-             d.sim_auto_serial_no.toLowerCase().indexOf(val) !== -1 ||
+             d.CID_no.toLowerCase().indexOf(val) !== -1 ||
         !val;
     });
 

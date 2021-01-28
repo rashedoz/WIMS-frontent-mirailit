@@ -25,17 +25,17 @@
                                   [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
                                   [headerHeight]="40" [limit]="100" [footerHeight]="50" rowHeight="auto">
 
-                                  <ngx-datatable-column [width]="8" name="SIM ID No" prop="id" [draggable]="false" [sortable]="false">
-                                      <ng-template let-row="row" ngx-datatable-cell-template>
-                                          <span > {{ row.id }} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
+                                  <ngx-datatable-column [width]="80" name="SIM CID No" prop="CID_no" [draggable]="false" [sortable]="false">
+                                    <ng-template let-value="value" ngx-datatable-cell-template>
+                                        <span > {{ value }} </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="200" name="SIM Alias" prop="sim_auto_serial_no" [draggable]="false" [sortable]="false">
+                                  <!-- <ngx-datatable-column [width]="200" name="SIM Alias" prop="sim_auto_serial_no" [draggable]="false" [sortable]="false">
                                       <ng-template let-row="row" ngx-datatable-cell-template>
                                           <span > {{ row.sim_auto_serial_no }} </span>
                                       </ng-template>
-                                  </ngx-datatable-column>
+                                  </ngx-datatable-column> -->
 
                                   <ngx-datatable-column [width]="100" name="ICCID No" prop="ICCID_no" [draggable]="false"
                                       [sortable]="false">
