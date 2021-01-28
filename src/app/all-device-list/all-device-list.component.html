@@ -21,13 +21,13 @@
                                       </ng-template>
                                   </ngx-datatable-column> -->
 
-                                  <ngx-datatable-column [width]="200" name="Device Id" prop="device_auto_serial_no" [draggable]="false" [sortable]="false">
-                                      <ng-template let-row="row" ngx-datatable-cell-template>
-                                          <span > {{ row.device_auto_serial_no }} </span>
+                                  <ngx-datatable-column [width]="100" name="DID No" prop="DID_no" [draggable]="false" [sortable]="false">
+                                      <ng-template let-value="value" ngx-datatable-cell-template>
+                                          <span > {{ value }} </span>
                                       </ng-template>
                                   </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="200" name="Serial No" prop="device_serial_no" [draggable]="false"
+                                  <ngx-datatable-column [width]="200" name="IMEI" prop="IMEI" [draggable]="false"
                                   [sortable]="false">
                                   <ng-template let-value="value" ngx-datatable-cell-template>
                                       <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>

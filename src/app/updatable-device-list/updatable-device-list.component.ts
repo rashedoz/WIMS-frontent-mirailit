@@ -22,7 +22,7 @@ export class UpdatableDeviceListComponent implements OnInit {
   @BlockUI() blockUI: NgBlockUI;
   modalTitleDevice = 'Add Device Details';
   btnSaveText = 'Save';
-  modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
+  modalConfig: any = { class: 'modal-dialog-scrollable gray modal-md', backdrop: 'static' };
   modalRef: BsModalRef;
 
   page = new Page();
@@ -94,10 +94,10 @@ export class UpdatableDeviceListComponent implements OnInit {
 
     let device_details = [];
     this.blockUI.start('Updating...');
-    this.deviceItemList.filter(x=>x.device_serial_no).forEach(element => {
+    this.deviceItemList.filter(x=>x.IMEI).forEach(element => {
       device_details.push({
         id:element.id,
-        device_serial_no: element.device_serial_no,
+        IMEI: element.IMEI,
       });
     });
     const obj = {
@@ -140,8 +140,8 @@ export class UpdatableDeviceListComponent implements OnInit {
     this.rows.forEach(element => {
       this.deviceItemList.push({
         "id":element.id,
-        "device_auto_serial_no":element.device_auto_serial_no,
-        "device_serial_no":"",
+        "DID_no":element.DID_no,
+        "IMEI":"",
       });
     });
     this.modalRef = this.modalService.show(template, this.modalConfig);

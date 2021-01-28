@@ -22,7 +22,7 @@ export class UpdatableSIMListComponent implements OnInit {
   @BlockUI() blockUI: NgBlockUI;
   modalTitleSIM = 'Add SIM Details';
   btnSaveText = 'Save';
-  modalConfig: any = { class: 'gray modal-lg', backdrop: 'static' };
+  modalConfig: any = { class: 'modal-dialog-scrollable gray modal-lg', backdrop: 'static' };
   modalRef: BsModalRef;
   StockStatus = StockStatus;
   page = new Page();

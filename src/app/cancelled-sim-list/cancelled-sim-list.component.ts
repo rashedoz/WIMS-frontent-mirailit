@@ -23,7 +23,7 @@ export class CancelledSIMListComponent implements OnInit {
   StockStatus = StockStatus;
   modalTitleSIM = 'Add Items For Return to Stock';
   btnSaveText = 'Return to Stock';
-  modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
+  modalConfig: any = { class: 'modal-dialog-scrollable gray modal-md', backdrop: 'static' };
   modalRef: BsModalRef;
 
   simList = [];
@@ -129,6 +129,46 @@ export class CancelledSIMListComponent implements OnInit {
 
   }
 
+  onFormSubmitSIMCancel() {
+
+    let sim_list = [];
+  //
+    this.simList.filter(x=>x.selected).forEach(element => {
+      sim_list.push({
+        id:element.id
+      });
+    });
+    const obj = {
+      sim_list : sim_list
+    };
+
+    if(sim_list.length == 0){
+      this.toastr.warning('No item selected', 'Warning!', { closeButton: true, disableTimeOut: true });
+      return;
+    }
+    this.blockUI.start('Canceling...');
+    this._service.post('stock/mark-sims-as-permanently-cancelled', obj).subscribe(
+      data => {
+        this.blockUI.stop();
+        if (data.IsReport == "Success") {
+          this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+          this.modalHideSIMCancel();
+          this.getList();
+
+        } else if (data.IsReport == "Warning") {
+          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+        } else {
+          this.toastr.error(data.Msg, 'Error!', { timeOut: 2000 });
+        }
+      },
+      err => {
+        this.blockUI.stop();
+        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+      }
+    );
+
+  }
+
 
   modalHideSIM() {
     this.modalRef.hide();
@@ -138,10 +178,33 @@ export class CancelledSIMListComponent implements OnInit {
 
 
   openModalSIM(template: TemplateRef<any>) {
+    this.modalTitleSIM = 'Add Items For Return to Stock';
+    this.btnSaveText = 'Return to Stock';
     this.rows.forEach(element => {
       this.simList.push({
         id: element.id,
-        sim_id: element.id,
+        CID_no: element.CID_no,
+        sim: element.ICCID_no,
+        selected: false
+      })
+    });
+    this.modalRef = this.modalService.show(template, this.modalConfig);
+  }
+
+  modalHideSIMCancel() {
+    this.modalRef.hide();
+    this.submitted = false;
+    this.simList = [];
+  }
+
+
+  openModalSIMCancel(template: TemplateRef<any>) {
+    this.modalTitleSIM = 'Add Items For Permanently Cancelled';
+    this.btnSaveText = 'Permanently Cancelled';
+    this.rows.forEach(element => {
+      this.simList.push({
+        id: element.id,
+        CID_no: element.CID_no,
         sim: element.ICCID_no,
         selected: false
       })

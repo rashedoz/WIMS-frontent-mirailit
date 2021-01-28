@@ -17,19 +17,19 @@
                                   [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
                                   [headerHeight]="40" [limit]="100" [footerHeight]="50" rowHeight="auto">
 
-                                  <ngx-datatable-column [width]="10" name="SL" prop="id" [draggable]="false" [sortable]="false">
+                                  <!-- <ngx-datatable-column [width]="10" name="SL" prop="id" [draggable]="false" [sortable]="false">
                                     <ng-template let-row="row" ngx-datatable-cell-template>
                                         <span > {{ row.id }} </span>
                                     </ng-template>
-                                </ngx-datatable-column>
+                                </ngx-datatable-column> -->
 
-                                  <ngx-datatable-column [width]="100" name="Device Id" prop="device_auto_serial_no" [draggable]="false" [sortable]="false">
-                                      <ng-template let-row="row" ngx-datatable-cell-template>
-                                          <span > {{ row.device_auto_serial_no }} </span>
+                                  <ngx-datatable-column [width]="100" name="DID No" prop="DID_no" [draggable]="false" [sortable]="false">
+                                      <ng-template let-value="value" ngx-datatable-cell-template>
+                                          <span > {{ value }} </span>
                                       </ng-template>
                                   </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="30" name="Serial No" prop="device_serial_no" [draggable]="false"
+                                  <ngx-datatable-column [width]="200" name="IMEI" prop="IMEI" [draggable]="false"
                                       [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
                                           <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>
@@ -72,15 +72,15 @@
                       <table class="table table-xs table-hover table-bordered table-striped">
                           <thead>
                               <tr>
-                                  <th scope="col">Device Id</th>
-                                  <th scope="col">Serial No</th>
+                                  <th scope="col">DID No</th>
+                                  <th scope="col">IMEI</th>
                               </tr>
                           </thead>
 
                           <tbody>
                               <tr *ngFor="let item of deviceItemList; let i=index">
-                                  <th>{{item.id}}</th>
-                                  <th><input type="text"class="form-control" [(ngModel)]="item.device_serial_no"  required /></th>
+                                  <th>{{item.DID_no}}</th>
+                                  <th><input type="text"class="form-control" [(ngModel)]="item.IMEI"  required /></th>
 
 
                               </tr>
