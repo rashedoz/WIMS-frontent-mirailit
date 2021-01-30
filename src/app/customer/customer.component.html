@@ -5,58 +5,66 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card card-border-default">
-                        <div class="card-header">                          
+                        <div class="card-header">
                             <h5 *ngIf="activeTable == 0"> All Customer List </h5>
                             <h5 *ngIf="activeTable == 1"> Wholesaler List </h5>
                             <h5 *ngIf="activeTable == 2"> Retailer List </h5>
 
-                            <button class="btn btn-primary btn-sm mr-2" [ngClass]="{'b-active': isbuttonActive}" (click)="showCustomerTable(0)">
+                            <button class="btn btn-primary btn-sm mr-2" [ngClass]="{'b-active': isbuttonActive}"
+                                (click)="showCustomerTable(0)">
                                 All </button>
                             <button class="btn btn-primary btn-sm mr-2" (click)="showCustomerTable(1)">
                                 Wholesaler</button>
-                                <button class="btn btn-primary btn-sm mr-2" (click)="showCustomerTable(2)">
-                                    Retailer</button>
+                            <button class="btn btn-primary btn-sm mr-2" (click)="showCustomerTable(2)">
+                                Retailer</button>
 
 
 
-                            
-                            <button class="btn btn-primary btn-sm float-right " (click)="openModal(template,'Retailer')"><i
-                                class=" icofont icofont-plus "></i> Add Retailer</button>
-                            <button class="btn btn-primary btn-sm float-right mr-2" (click)="openModal(template,'Wholesaler')"><i
-                                class=" icofont icofont-plus "></i> Add Wholesaler</button>
-                           
+
+                            <button class="btn btn-primary btn-sm float-right "
+                                (click)="openModal(template,'Retailer')"><i class=" icofont icofont-plus "></i> Add
+                                Retailer</button>
+                            <button class="btn btn-primary btn-sm float-right mr-2"
+                                (click)="openModal(template,'Wholesaler')"><i class=" icofont icofont-plus "></i> Add
+                                Wholesaler</button>
+
                             <!-- <span class="code-header ">use class <code>table</code> inside table element</span> -->
                         </div>
                         <div class="card-block ">
-                       
+
                             <div *ngIf="activeTable == 0">
                                 <div class="row">
                                     <div class="col-lg-7">
-                                      <div class="form-group row">                                
-                                        <div class="col-sm-12">
-                                          <input type="text" class="form-control" placeholder="Search wholesaler/retailer by code, name, mobile, email" (keyup)="updateFilter($event)" />
-                                         
+                                        <div class="form-group row">
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control"
+                                                    placeholder="Search wholesaler/retailer by code, name, mobile, email"
+                                                    (keyup)="updateFilter($event)" />
+
+                                            </div>
                                         </div>
-                                      </div>
                                     </div>
-                                  </div>
+                                </div>
                                 <div class="row ">
                                     <div class="col-lg-12 ">
                                         <ngx-datatable #table class="material table-bordered" [rows]="customerList"
                                             [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                            [headerHeight]="40" [footerHeight]="50" rowHeight="auto"  [limit]="100"
-                                          >
-    
-                                            <ngx-datatable-column [width]="100" name="Customer Code" prop="customer_code"
-                                                [draggable]="false" [sortable]="false">
+                                            [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
+                                            rowHeight="'auto'" [limit]="10">
+                                            <!-- <ngx-datatable  #table class="material table-bordered" [rows]="bilList" [loadingIndicator]="loadingIndicator"
+                                          [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
+                                          [rowHeight]="'auto'" [limit]="10"> -->
+
+                                            <ngx-datatable-column [width]="100" name="Customer Code"
+                                                prop="customer_code" [draggable]="false" [sortable]="false">
                                                 <ng-template let-value="value" ngx-datatable-cell-template>
-                                                    <span > {{ value }} </span>
+                                                    <span> {{ value }} </span>
                                                 </ng-template>
                                             </ngx-datatable-column>
-                                            <ngx-datatable-column [width]="150" name="Wholesaler/Retailer Name" prop="name"
-                                                [draggable]="false" [sortable]="false">
+                                            <ngx-datatable-column [width]="150" name="Wholesaler/Retailer Name"
+                                                prop="name" [draggable]="false" [sortable]="false">
                                                 <ng-template let-row="row" ngx-datatable-cell-template>
-                                                    <span > {{ row.first_name }} {{row.last_name}} </span>
+                                                    <span> {{ row.first_name }} {{row.last_name}} </span>
                                                 </ng-template>
                                             </ngx-datatable-column>
                                             <ngx-datatable-column [width]="80" name="Mobile Number" prop="mobile"
@@ -71,7 +79,7 @@
                                                     <span title="{{ value }}"> {{ value }} </span>
                                                 </ng-template>
                                             </ngx-datatable-column>
-    
+
                                             <!-- <ngx-datatable-column name="Is Active?" prop="IsActive" [draggable]="false"
                                                 [sortable]="false">
                                                 <ng-template let-value="value" ngx-datatable-cell-template>
@@ -79,12 +87,22 @@
                                                         {{value === true? 'Yes':'No'}} </span>
                                                 </ng-template>
                                             </ngx-datatable-column> -->
-    
-                                            <ngx-datatable-column name="Action" prop="Id" [draggable]="false"
-                                                [sortable]="false">
+
+                                            <ngx-datatable-column [width]="280" name="Action" prop="Id"
+                                                [draggable]="false" [sortable]="false">
                                                 <ng-template let-row="row" ngx-datatable-cell-template>
-                                                    <button (click)="getItem(row,template)" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-edit"></i>Edit Profile</button>
-                                                    <button (click)="changePassword(row,templateChangePassword)" class="btn btn-info btn-mini"><i class="icofont icofont-retweet"></i>Change Password</button>
+                                                    <button (click)="getItem(row,template)"
+                                                        class="btn btn-primary btn-mini mr-1"><i
+                                                            class="icofont icofont-edit"></i>Edit Profile</button>
+                                                    <button (click)="changePassword(row,templateChangePassword)"
+                                                        class="btn btn-info btn-mini mr-1"><i
+                                                            class="icofont icofont-retweet"></i>Change Password</button>
+                                                    <button *ngIf="row.has_subscription_history"
+                                                        (click)="showHistory(row,templateHistory)"
+                                                        class="btn btn-primary btn-mini"><i
+                                                            class="icofont icofont-listing-box"></i>subscription
+                                                        History</button>
+
                                                 </ng-template>
                                             </ngx-datatable-column>
                                         </ngx-datatable>
@@ -94,30 +112,32 @@
                             <div *ngIf="activeTable == 1">
                                 <div class="row">
                                     <div class="col-lg-7">
-                                      <div class="form-group row">                                
-                                        <div class="col-sm-12">
-                                          <input type="text" class="form-control" placeholder="Search wholesaler by code, name, mobile, email" (keyup)="updateFilterWholesaler($event)" />
-                                         
+                                        <div class="form-group row">
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control"
+                                                    placeholder="Search wholesaler by code, name, mobile, email"
+                                                    (keyup)="updateFilterWholesaler($event)" />
+
+                                            </div>
                                         </div>
-                                      </div>
                                     </div>
-                                  </div>
+                                </div>
                                 <div class="row ">
                                     <div class="col-lg-12 ">
-                                        <ngx-datatable #tableWholesaler class="material table-bordered" [rows]="wholesalerList"
+                                        <ngx-datatable #tableWholesaler class="material table-bordered"
+                                            [rows]="wholesalerList" [scrollbarH]="true"
                                             [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                            [headerHeight]="40" [footerHeight]="50" rowHeight="auto"  [limit]="100"
-                                          >
-                                          <ngx-datatable-column [width]="100" name="Customer Code" prop="customer_code"
-                                          [draggable]="false" [sortable]="false">
-                                          <ng-template let-value="value" ngx-datatable-cell-template>
-                                              <span > {{ value }} </span>
-                                          </ng-template>
-                                      </ngx-datatable-column>
+                                            [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [limit]="10">
+                                            <ngx-datatable-column [width]="100" name="Customer Code"
+                                                prop="customer_code" [draggable]="false" [sortable]="false">
+                                                <ng-template let-value="value" ngx-datatable-cell-template>
+                                                    <span> {{ value }} </span>
+                                                </ng-template>
+                                            </ngx-datatable-column>
                                             <ngx-datatable-column [width]="150" name="Wholesaler Name" prop="name"
                                                 [draggable]="false" [sortable]="false">
                                                 <ng-template let-row="row" ngx-datatable-cell-template>
-                                                    <span > {{ row.first_name }} {{row.last_name}} </span>
+                                                    <span> {{ row.first_name }} {{row.last_name}} </span>
                                                 </ng-template>
                                             </ngx-datatable-column>
                                             <ngx-datatable-column [width]="80" name="Mobile Number" prop="mobile"
@@ -132,7 +152,7 @@
                                                     <span title="{{ value }}"> {{ value }} </span>
                                                 </ng-template>
                                             </ngx-datatable-column>
-    
+
                                             <!-- <ngx-datatable-column name="Is Active?" prop="IsActive" [draggable]="false"
                                                 [sortable]="false">
                                                 <ng-template let-value="value" ngx-datatable-cell-template>
@@ -140,12 +160,21 @@
                                                         {{value === true? 'Yes':'No'}} </span>
                                                 </ng-template>
                                             </ngx-datatable-column> -->
-    
-                                            <ngx-datatable-column name="Action" prop="Id" [draggable]="false"
-                                                [sortable]="false">
+
+                                            <ngx-datatable-column [width]="280" name="Action" prop="Id"
+                                                [draggable]="false" [sortable]="false">
                                                 <ng-template let-row="row" ngx-datatable-cell-template>
-                                                    <button (click)="getItem(row,template)" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-edit"></i>Edit Profile</button>
-                                                    <button (click)="changePassword(row,templateChangePassword)" class="btn btn-info btn-mini"><i class="icofont icofont-retweet"></i>Change Password</button>
+                                                    <button (click)="getItem(row,template)"
+                                                        class="btn btn-primary btn-mini mr-1"><i
+                                                            class="icofont icofont-edit"></i>Edit Profile</button>
+                                                    <button (click)="changePassword(row,templateChangePassword)"
+                                                        class="btn btn-info btn-mini mr-1"><i
+                                                            class="icofont icofont-retweet"></i>Change Password</button>
+                                                    <button *ngIf="row.has_subscription_history"
+                                                        (click)="showHistory(row,templateHistory)"
+                                                        class="btn btn-primary btn-mini"><i
+                                                            class="icofont icofont-listing-box"></i>Subscription
+                                                        History</button>
                                                 </ng-template>
                                             </ngx-datatable-column>
                                         </ngx-datatable>
@@ -155,30 +184,32 @@
                             <div *ngIf="activeTable == 2">
                                 <div class="row">
                                     <div class="col-lg-7">
-                                      <div class="form-group row">                                
-                                        <div class="col-sm-12">
-                                          <input type="text" class="form-control" placeholder="Search retailer by code, name, mobile, email" (keyup)="updateFilterRetailer($event)" />
-                                         
+                                        <div class="form-group row">
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control"
+                                                    placeholder="Search retailer by code, name, mobile, email"
+                                                    (keyup)="updateFilterRetailer($event)" />
+
+                                            </div>
                                         </div>
-                                      </div>
                                     </div>
-                                  </div>
+                                </div>
                                 <div class="row ">
                                     <div class="col-lg-12 ">
-                                        <ngx-datatable #tableRetailer class="material table-bordered" [rows]="retailerList"
+                                        <ngx-datatable #tableRetailer class="material table-bordered"
+                                            [rows]="retailerList" [scrollbarH]="true"
                                             [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                            [headerHeight]="40" [footerHeight]="50" rowHeight="auto"  [limit]="100"
-                                          >
-                                          <ngx-datatable-column [width]="100" name="Customer Code" prop="customer_code"
-                                          [draggable]="false" [sortable]="false">
-                                          <ng-template let-value="value" ngx-datatable-cell-template>
-                                              <span > {{ value }} </span>
-                                          </ng-template>
-                                      </ngx-datatable-column>
+                                            [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [limit]="10">
+                                            <ngx-datatable-column [width]="100" name="Customer Code"
+                                                prop="customer_code" [draggable]="false" [sortable]="false">
+                                                <ng-template let-value="value" ngx-datatable-cell-template>
+                                                    <span> {{ value }} </span>
+                                                </ng-template>
+                                            </ngx-datatable-column>
                                             <ngx-datatable-column [width]="150" name="Retailer Name" prop="name"
                                                 [draggable]="false" [sortable]="false">
                                                 <ng-template let-row="row" ngx-datatable-cell-template>
-                                                    <span > {{ row.first_name }} {{row.last_name}} </span>
+                                                    <span> {{ row.first_name }} {{row.last_name}} </span>
                                                 </ng-template>
                                             </ngx-datatable-column>
                                             <ngx-datatable-column [width]="80" name="Mobile Number" prop="mobile"
@@ -193,7 +224,7 @@
                                                     <span title="{{ value }}"> {{ value }} </span>
                                                 </ng-template>
                                             </ngx-datatable-column>
-    
+
                                             <!-- <ngx-datatable-column name="Is Active?" prop="IsActive" [draggable]="false"
                                                 [sortable]="false">
                                                 <ng-template let-value="value" ngx-datatable-cell-template>
@@ -201,12 +232,22 @@
                                                         {{value === true? 'Yes':'No'}} </span>
                                                 </ng-template>
                                             </ngx-datatable-column> -->
-    
-                                            <ngx-datatable-column name="Action" prop="Id" [draggable]="false"
-                                                [sortable]="false">
+
+                                            <ngx-datatable-column [width]="280" name="Action" prop="Id"
+                                                [draggable]="false" [sortable]="false">
                                                 <ng-template let-row="row" ngx-datatable-cell-template>
-                                                    <button (click)="getItem(row,template)" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-edit"></i>Edit Profile</button>
-                                                    <button (click)="changePassword(row,templateChangePassword)" class="btn btn-info btn-mini"><i class="icofont icofont-retweet"></i>Change Password</button>
+                                                    <button (click)="getItem(row,template)"
+                                                        class="btn btn-primary btn-mini mr-1"><i
+                                                            class="icofont icofont-edit"></i>Edit Profile</button>
+                                                    <button (click)="changePassword(row,templateChangePassword)"
+                                                        class="btn btn-info btn-mini mr-1"><i
+                                                            class="icofont icofont-retweet"></i>Change Password</button>
+                                                    <button *ngIf="row.has_subscription_history"
+                                                        (click)="showHistory(row,templateHistory)"
+                                                        class="btn btn-primary btn-mini"><i
+                                                            class="icofont icofont-listing-box"></i>subscription
+                                                        History</button>
+
                                                 </ng-template>
                                             </ngx-datatable-column>
                                         </ngx-datatable>
@@ -222,7 +263,10 @@
 
     </div>
 
-    <!-- <ng-template #template>
+
+
+
+    <ng-template #template>
         <div class="modal-header ">
             <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
             <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
@@ -232,357 +276,175 @@
         <div class="modal-body ">
             <app-card>
                 <form [formGroup]="RegistrerForm" class="col-sm-12">
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">First Name </label>
-                        <div class="col-sm-8">
-                            <input type="text" formControlName="firstName"
-                                [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" type="text"
-                                class="form-control" />
-
-                            <div *ngIf="submitted && f.firstName.errors" class="error-text">
-                                <span *ngIf="f.firstName.errors.required" class="text-danger"> Wholesaler first name is required</span>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Last Name </label>
-                        <div class="col-sm-8">
-                            <input type="text" formControlName="lastName"
-                                [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" type="text"
-                                class="form-control" />
-
-                            <div *ngIf="submitted && f.lastName.errors" class="error-text">
-                                <span *ngIf="f.lastName.errors.required" class="text-danger"> Wholesaler last name is required</span>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Email </label>
-                        <div class="col-sm-8">
-                            <input type="text" formControlName="email"
-                                [ngClass]="{ 'is-invalid': submitted && f.email.errors }" type="text"
-                                class="form-control" />
-
-                            <div *ngIf="submitted && f.email.errors" class="error-text">
-                                <span *ngIf="f.email.errors.required" class="text-danger"> Email is required</span>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Mobile </label>
-                        <div class="col-sm-8">
-                            <input type="text" formControlName="mobile"
-                                [ngClass]="{ 'is-invalid': submitted && f.mobile.errors }" type="text"
-                                class="form-control" />
-
-                            <div *ngIf="submitted && f.mobile.errors" class="error-text">
-                                <span *ngIf="f.mobile.errors.required" class="text-danger"> Mobile number is required</span>
-
-                            </div>
-                        </div>
-                    </div>
-                    <!-- <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Customer Type </label>
-                        <div class="col-sm-8">
-                          <ng-select placeholder="Select Customer" formControlName="customerType" [items]="customerTypeList" [clearable]='false' [clearOnBackspace]='false'
-                                    bindLabel="name"  bindValue="id"  [ngClass]="{ 'is-invalid': submitted && f.customerType.errors }" >
-                            </ng-select>
-                            <div *ngIf="submitted && f.customerType.errors" class="error-text">
-                              <span *ngIf="f.customerType.errors.required" class="text-danger">Customer type is required</span>
-
-                          </div>
-                        </div>
-                    </div> -->
-                    <!-- <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group row text-left">
-                                <label class="col-sm-6 col-form-label">Is Active? </label>
-                                <div class="col-sm-4 mt-2">
-                                    <div class="checkbox-fade fade-in-default">
-                                        <label>
-                                            <input type="checkbox" formControlName="isActive">
-                                            <span class="cr"><i
-                                                    class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> 
-                </form>
-            </app-card>
-        </div>
-        <div class="modal-footer">
-            <div class="pr-4">
-
-                <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHide()"> <i
-                        class="icofont icofont-close"></i> Close</button>
-
-                <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmit()"><i
-                        class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
-
-            </div>
-
-        </div>
-    </ng-template>
-    <ng-template #templateRetailer>
-        <div class="modal-header ">
-            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
-            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideRetailer()">
-                <i class="icofont icofont-close"></i>
-            </button>
-        </div>
-        <div class="modal-body ">
-            <app-card>
-                <form [formGroup]="RegistrerFormRetailer" class="col-sm-12">
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">First Name </label>
-                        <div class="col-sm-8">
-                            <input type="text" formControlName="firstName"
-                                [ngClass]="{ 'is-invalid': submitted && r.firstName.errors }" type="text"
-                                class="form-control" />
-
-                            <div *ngIf="submitted && r.firstName.errors" class="error-text">
-                                <span *ngIf="r.firstName.errors.required" class="text-danger"> Retailer first name is required</span>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Last Name </label>
-                        <div class="col-sm-8">
-                            <input type="text" formControlName="lastName"
-                                [ngClass]="{ 'is-invalid': submitted && r.lastName.errors }" type="text"
-                                class="form-control" />
-
-                            <div *ngIf="submitted && r.lastName.errors" class="error-text">
-                                <span *ngIf="r.lastName.errors.required" class="text-danger"> Retailer last name is required</span>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Email </label>
-                        <div class="col-sm-8">
-                            <input type="text" formControlName="email"
-                                [ngClass]="{ 'is-invalid': submitted && r.email.errors }" type="text"
-                                class="form-control" />
-
-                            <div *ngIf="submitted && r.email.errors" class="error-text">
-                                <span *ngIf="r.email.errors.required" class="text-danger"> Email is required</span>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Mobile </label>
-                        <div class="col-sm-8">
-                            <input type="text" formControlName="mobile"
-                                [ngClass]="{ 'is-invalid': submitted && r.mobile.errors }" type="text"
-                                class="form-control" />
-
-                            <div *ngIf="submitted && r.mobile.errors" class="error-text">
-                                <span *ngIf="r.mobile.errors.required" class="text-danger"> Mobile number is required</span>
-
-                            </div>
-                        </div>
-                    </div>         
-   
-                </form>
-            </app-card>
-        </div>
-        <div class="modal-footer">
-            <div class="pr-4">
-
-                <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideRetailer()"> <i
-                        class="icofont icofont-close"></i> Close</button>
-
-                <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmitRetailer()"><i
-                        class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
-
-            </div>
-
-        </div>
-    </ng-template> -->
-
-
-    <ng-template #template> 
-        <div class="modal-header ">
-            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
-            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
-                <i class="icofont icofont-close"></i>
-            </button>
-        </div>
-        <div class="modal-body ">
-            <app-card> 
-                 <form [formGroup]="RegistrerForm" class="col-sm-12">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Customer Code </label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="customer_code" type="text"
-                                    class="form-control" />   
-                               
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">First Name </label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="firstName"
-                                    [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" type="text"
-                                    class="form-control" />
-    
-                                <div *ngIf="submitted && f.firstName.errors" class="error-text">
-                                    <span *ngIf="f.firstName.errors.required" class="text-danger"> Member first name is required</span>
-    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Last Name </label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="lastName"
-                                    [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" type="text"
-                                    class="form-control" />
-    
-                                <div *ngIf="submitted && f.lastName.errors" class="error-text">
-                                    <span *ngIf="f.lastName.errors.required" class="text-danger"> Member last name is required</span>
-    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Email </label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="email"
-                                    [ngClass]="{ 'is-invalid': submitted && f.email.errors }" type="text"
-                                    class="form-control" />
-    
-                                <div *ngIf="submitted && f.email.errors" class="error-text">
-                                    <span *ngIf="f.email.errors.required" class="text-danger"> Email is required</span>
-    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Mobile </label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="mobile"
-                                    [ngClass]="{ 'is-invalid': submitted && f.mobile.errors }" type="text"
-                                    class="form-control" />
-    
-                                <div *ngIf="submitted && f.mobile.errors" class="error-text">
-                                    <span *ngIf="f.mobile.errors.required" class="text-danger"> Mobile number is required</span>
-    
-                                </div>
-                            </div>
-                        </div>     
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Alternative Mobile </label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="alternative_mobile" type="text"
-                                    class="form-control" />    
-                               
-                            </div>
-                        </div> 
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Telephone </label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="telephone" type="text"
-                                    class="form-control" />    
-                               
-                            </div>
-                        </div>
-                       
-                        
-                    
-                     
-                    </div>
-                    <div class="col-sm-6">
-                     
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Fax </label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="fax" type="text"
-                                    class="form-control" />    
-                               
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">NID </label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="nid" type="text"
-                                    class="form-control" />    
-                               
-                            </div>
-                        </div>
-                   
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Account Number </label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="acc_number" type="text"
-                                    class="form-control" />    
-                               
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Address 1</label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="address_one" type="text"
-                                    class="form-control" />    
-                               
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Address 2</label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="address_two" type="text"
-                                    class="form-control" />    
-                               
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Preferred Payment Method</label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="preferred_payment_method" type="text"
-                                    class="form-control" />    
-                               
-                            </div>
-                        </div>
-
-                        <div *ngIf="!isEdit">
+                    <div class="row">
+                        <div class="col-sm-6">
                             <div class="form-group row">
-                                <label class="col-sm-4 col-form-label"> Password </label>
+                                <label class="col-sm-4 col-form-label">Customer Code </label>
                                 <div class="col-sm-8">
-                                    <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" placeholder="Enter password" required>
-        
-                                    <div *ngIf="submitted && f.password.errors" class="error-text">
-                                        <span *ngIf="f.password.errors.required" class="text-danger">Password is required</span>
+                                    <input type="text" formControlName="customer_code" type="text"
+                                        class="form-control" />
+
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">First Name </label>
+                                <div class="col-sm-8">
+                                    <input type="text" formControlName="firstName"
+                                        [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" type="text"
+                                        class="form-control" />
+
+                                    <div *ngIf="submitted && f.firstName.errors" class="error-text">
+                                        <span *ngIf="f.firstName.errors.required" class="text-danger"> Member first name
+                                            is required</span>
+
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-4 col-form-label">Confirm Password </label>
+                                <label class="col-sm-4 col-form-label">Last Name </label>
                                 <div class="col-sm-8">
-                                    <input type="password" formControlName="confirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" placeholder="Confirm Password" required>
-        
-                                    <div *ngIf="submitted && f.confirmPassword.errors" class="error-text">
-                                        <span *ngIf="f.confirmPassword.errors.required" class="text-danger">Confirm Password is required</span>
-                                        <span *ngIf="f.confirmPassword.errors.mustMatch" class="text-danger">Passwords must match</span>
+                                    <input type="text" formControlName="lastName"
+                                        [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" type="text"
+                                        class="form-control" />
+
+                                    <div *ngIf="submitted && f.lastName.errors" class="error-text">
+                                        <span *ngIf="f.lastName.errors.required" class="text-danger"> Member last name
+                                            is required</span>
+
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Email </label>
+                                <div class="col-sm-8">
+                                    <input type="text" formControlName="email"
+                                        [ngClass]="{ 'is-invalid': submitted && f.email.errors }" type="text"
+                                        class="form-control" />
+
+                                    <div *ngIf="submitted && f.email.errors" class="error-text">
+                                        <span *ngIf="f.email.errors.required" class="text-danger"> Email is
+                                            required</span>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Mobile </label>
+                                <div class="col-sm-8">
+                                    <input type="text" formControlName="mobile"
+                                        [ngClass]="{ 'is-invalid': submitted && f.mobile.errors }" type="text"
+                                        class="form-control" />
+
+                                    <div *ngIf="submitted && f.mobile.errors" class="error-text">
+                                        <span *ngIf="f.mobile.errors.required" class="text-danger"> Mobile number is
+                                            required</span>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Alternative Mobile </label>
+                                <div class="col-sm-8">
+                                    <input type="text" formControlName="alternative_mobile" type="text"
+                                        class="form-control" />
+
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Telephone </label>
+                                <div class="col-sm-8">
+                                    <input type="text" formControlName="telephone" type="text" class="form-control" />
+
+                                </div>
+                            </div>
+
+
+
+
                         </div>
-                 
+                        <div class="col-sm-6">
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Fax </label>
+                                <div class="col-sm-8">
+                                    <input type="text" formControlName="fax" type="text" class="form-control" />
+
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">NID </label>
+                                <div class="col-sm-8">
+                                    <input type="text" formControlName="nid" type="text" class="form-control" />
+
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Account Number </label>
+                                <div class="col-sm-8">
+                                    <input type="text" formControlName="acc_number" type="text" class="form-control" />
+
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Address 1</label>
+                                <div class="col-sm-8">
+                                    <input type="text" formControlName="address_one" type="text" class="form-control" />
+
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Address 2</label>
+                                <div class="col-sm-8">
+                                    <input type="text" formControlName="address_two" type="text" class="form-control" />
+
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Preferred Payment Method</label>
+                                <div class="col-sm-8">
+                                    <input type="text" formControlName="preferred_payment_method" type="text"
+                                        class="form-control" />
+
+                                </div>
+                            </div>
+
+                            <div *ngIf="!isEdit">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label"> Password </label>
+                                    <div class="col-sm-8">
+                                        <input type="password" formControlName="password" class="form-control"
+                                            [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+                                            placeholder="Enter password" required>
+
+                                        <div *ngIf="submitted && f.password.errors" class="error-text">
+                                            <span *ngIf="f.password.errors.required" class="text-danger">Password is
+                                                required</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label">Confirm Password </label>
+                                    <div class="col-sm-8">
+                                        <input type="password" formControlName="confirmPassword" class="form-control"
+                                            [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }"
+                                            placeholder="Confirm Password" required>
+
+                                        <div *ngIf="submitted && f.confirmPassword.errors" class="error-text">
+                                            <span *ngIf="f.confirmPassword.errors.required" class="text-danger">Confirm
+                                                Password is required</span>
+                                            <span *ngIf="f.confirmPassword.errors.mustMatch"
+                                                class="text-danger">Passwords must match</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
-                </div>
-            </form>
-                         
-                                
+                </form>
+
+
             </app-card>
         </div>
         <div class="modal-footer">
@@ -601,40 +463,47 @@
 
     <ng-template #templateChangePassword>
         <div class="modal-header ">
-            <h4 class="modal-title pull-left " > Change Password</h4>
+            <h4 class="modal-title pull-left "> Change Password</h4>
             <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideChangePassword()">
                 <i class="icofont icofont-close"></i>
             </button>
         </div>
         <div class="modal-body ">
-            <app-card> 
-                 <form [formGroup]="RegistrerFormChangePassword" class="col-sm-12">
-                                                         
-                   
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">New Password </label>
-                            <div class="col-sm-8">
-                                <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && p.password.errors }" placeholder="Enter password" required>
-    
-                                <div *ngIf="submitted && p.password.errors" class="error-text">
-                                    <span *ngIf="p.password.errors.required" class="text-danger">New password is required</span>
-                                </div>
+            <app-card>
+                <form [formGroup]="RegistrerFormChangePassword" class="col-sm-12">
+
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">New Password </label>
+                        <div class="col-sm-8">
+                            <input type="password" formControlName="password" class="form-control"
+                                [ngClass]="{ 'is-invalid': submitted && p.password.errors }"
+                                placeholder="Enter password" required>
+
+                            <div *ngIf="submitted && p.password.errors" class="error-text">
+                                <span *ngIf="p.password.errors.required" class="text-danger">New password is
+                                    required</span>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Confirm Password </label>
-                            <div class="col-sm-8">
-                                <input type="password" formControlName="confirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && p.confirmPassword.errors }" placeholder="Confirm Password" required>
-    
-                                <div *ngIf="submitted && p.confirmPassword.errors" class="error-text">
-                                    <span *ngIf="p.confirmPassword.errors.required" class="text-danger">Confirm Password is required</span>
-                                    <span *ngIf="p.confirmPassword.errors.mustMatch" class="text-danger">Passwords must match</span>
-                                </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Confirm Password </label>
+                        <div class="col-sm-8">
+                            <input type="password" formControlName="confirmPassword" class="form-control"
+                                [ngClass]="{ 'is-invalid': submitted && p.confirmPassword.errors }"
+                                placeholder="Confirm Password" required>
+
+                            <div *ngIf="submitted && p.confirmPassword.errors" class="error-text">
+                                <span *ngIf="p.confirmPassword.errors.required" class="text-danger">Confirm Password is
+                                    required</span>
+                                <span *ngIf="p.confirmPassword.errors.mustMatch" class="text-danger">Passwords must
+                                    match</span>
                             </div>
                         </div>
-                
-            </form>  
-            
+                    </div>
+
+                </form>
+
             </app-card>
         </div>
         <div class="modal-footer">
@@ -645,6 +514,127 @@
 
                 <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmitChangePassword()"><i
                         class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+
+            </div>
+
+        </div>
+    </ng-template>
+
+    <ng-template #templateHistory>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " id="modalTitle"> Subscription History </h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideHistory()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body pb-0">
+            <app-card>
+                <div class="row ">
+                    <div class="col-lg-12 ">
+
+                      <ngx-datatable #tableHistory class="material table-bordered" [rows]="historyList" [loadingIndicator]="loadingIndicator"
+                      [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
+                      [rowHeight]="'auto'" [limit]="10">
+
+
+
+                             <!-- Row Detail Template -->
+                             <ngx-datatable-row-detail  [rowHeight]="'100%'">
+                              <ng-template let-row="row" let-expanded="expanded"
+                                  ngx-datatable-row-detail-template>
+                                  <div class="w-50">
+                                      <table
+                                          class="table table-xs table-hover table-bordered table-striped">
+                                          <thead>
+                                              <tr>
+                                                  <th width="40%" scope="col">SIM</th>
+                                                  <th width="30%" scope="col">Plan</th>
+                                              </tr>
+                                          </thead>
+                                          <tbody> 
+                                              <tr *ngFor="let item of row.details">
+                                                  <th> {{item.sim.ICCID_no}} </th>
+                                                  <th> {{item.plan.plan}} </th>
+                                               
+                                              </tr>
+                                          </tbody>
+                                      </table>
+                                  </div>
+                              </ng-template>
+                          </ngx-datatable-row-detail>
+
+                          <ngx-datatable-column [width]="30" name="#" [resizeable]="false"
+                              [sortable]="false" [draggable]="false" [canAutoResize]="false">
+                              <ng-template let-row="row" let-expanded="expanded"
+                                  ngx-datatable-cell-template>
+                                  <a href="javascript:void(0)" [class.datatable-icon-right]="!expanded"
+                                      [class.datatable-icon-down]="expanded" title="Expand/Collapse Row"
+                                      (click)="toggleExpandRow(row)">
+                                  </a>
+                              </ng-template>
+                          </ngx-datatable-column>
+
+                          <ngx-datatable-column [width]="150" name="Subscription No" prop="id" [draggable]="false" [sortable]="false">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <p > {{ row.id }}  <i *ngIf="row.future_state_type == 'Will_Hold' " title="Undo Held Subscription"  class=" mt-1 ml-2 icofont-ui-reply icofont-flip-horizontal text-warning icofont-2x"></i></p>
+                                <p><em *ngIf="row.future_state && row.status === 1"> <small>--{{row.future_state}}</small></em></p>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                      <!-- <ngx-datatable-column [width]="200" name="Subscription A" prop="alias" [draggable]="false" [sortable]="false">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                              <span > {{ row.alias }} </span>
+                          </ng-template>
+                      </ngx-datatable-column> -->
+
+                      <!-- <ngx-datatable-column [width]="220" name="Wholesaler/Retailer Name" prop="customer" [draggable]="false" [sortable]="false">
+                          <ng-template let-value="value" ngx-datatable-cell-template>
+                              <span > {{ value }} </span>
+                          </ng-template>
+                      </ngx-datatable-column> -->
+
+                      <ngx-datatable-column [width]="150" name="Activation Date" prop="activation_date" [draggable]="false" [sortable]="false">
+                          <ng-template let-value="value" ngx-datatable-cell-template>
+                            <span >  {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
+                          </ng-template>
+                      </ngx-datatable-column>
+
+                      <ngx-datatable-column [width]="150" name="Cancellation Date" prop="cancellation_date" [draggable]="false" [sortable]="false">
+                          <ng-template let-value="value" ngx-datatable-cell-template>
+                            <span *ngIf="value" >  {{ value | amDateFormat:'DD-MMM-YYYY'}} </span>
+                            <span *ngIf="!value" >  --- </span>
+                          </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column [width]="150" name="Held Date" prop="held_date" [draggable]="false" [sortable]="false">
+                        <ng-template let-value="value" ngx-datatable-cell-template>
+                          <span *ngIf="value" >  {{ value | amDateFormat:'DD-MMM-YYYY'}} </span>
+                          <span *ngIf="!value" >  --- </span>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="200" name="Subscription Status" prop="status" [draggable]="false" [sortable]="false">
+                        <ng-template let-value="value" ngx-datatable-cell-template>
+                          <span *ngIf="value == 1" > <strong class="label label-success">{{ SubscriptionStatus[value] }}</strong> </span>
+                            <span *ngIf="value == 2" ><strong class="label label-danger">{{ SubscriptionStatus[value] }}</strong> </span>
+                            <span *ngIf="value == 3" ><strong class="label label-warning">{{ SubscriptionStatus[value] }}</strong> </span>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                      <!-- <ngx-datatable-column [width]="80" name="Created Date" prop="created_at" [draggable]="false"
+                          [sortable]="false">
+                          <ng-template let-value="value" ngx-datatable-cell-template>
+                              <span >  {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
+                          </ng-template>
+                      </ngx-datatable-column> -->
+
+                  </ngx-datatable>
+                    </div>
+                </div>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+                <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideHistory()"> <i
+                        class="icofont icofont-close"></i> Close</button>
 
             </div>
 

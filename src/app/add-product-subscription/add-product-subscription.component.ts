@@ -59,8 +59,10 @@ export class AddProductSubscriptionComponent implements OnInit {
   itemList: Array<any> = [];
   subscriptionList: Array<any> = [];
   subscriptionItemList: Array<any> = [];
+  simListOld: Array<any> = [];
   simList: Array<any> = [];
   planList: Array<any> = [];
+  subItemList: Array<any> = [];
 
   constructor(
     private confirmService: ConfirmService,
@@ -95,6 +97,7 @@ export class AddProductSubscriptionComponent implements OnInit {
 
     this.getCustomerList();
     this.getSIMList();
+    this.getSIMListOld();
     this.getPlanList();
   }
 
@@ -108,10 +111,28 @@ export class AddProductSubscriptionComponent implements OnInit {
 
   onCustomerChange(e){
     this.entryForm.controls['subscription'].setValue(null);
+    this.subItemList = [];
     if(e){
       this.getItemList(e.id);
     }
   }
+
+  onSubChange(e){
+    if(e && e.subscribed_items.length > 0){
+     let item  = [];
+      e.subscribed_items.forEach(element => {
+        item.push({
+          sim:this.getObj(element.sim,this.simListOld),
+          plan:this.getObj(element.plan,this.planList),
+        })
+      });
+      if(item.length > 0){
+        this.subItemList = item;
+      }      
+     
+    }
+  }
+
   onPlanChange(e, item) {
     if (e){
        item.controls["amount"].setValue(e.plan_unit_price);
@@ -165,6 +186,15 @@ export class AddProductSubscriptionComponent implements OnInit {
     this._service.get("stock/get-subscriptable-sim-list").subscribe(
       (res) => {
         this.simList = res;
+      },
+      (err) => {}
+    );
+  }
+
+  getSIMListOld() {
+    this._service.get("stock/get-sim-list").subscribe(
+      (res) => {
+        this.simListOld = res;
       },
       (err) => {}
     );
@@ -306,8 +336,16 @@ export class AddProductSubscriptionComponent implements OnInit {
 
     this.getCustomerList();
     this.getSIMList();
+    this.getSIMListOld();
     this.getPlanList();
   }
 
+  // getObjSIM(id,array){
+  //   return array.find(x=>x.CID_no == id);
+  // }
+
+  getObj(id,array){
+    return array.find(x=>x.id == id);
+  }
 
 }

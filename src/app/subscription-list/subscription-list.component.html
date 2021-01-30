@@ -68,7 +68,7 @@
 
                                   <ngx-datatable #table class="material table-bordered" [rows]="customerList" [loadingIndicator]="loadingIndicator"
                                   [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                                  [rowHeight]="'auto'" [limit]="100">
+                                  [rowHeight]="'auto'" [limit]="10">
 
 
 
@@ -80,20 +80,24 @@
                                                   <table
                                                       class="table table-xs table-hover table-bordered table-striped">
                                                       <thead>
-                                                          <tr>
-                                                              <th width="40%" scope="col">SIM</th>
-                                                              <th width="30%" scope="col">Plan</th>
-                                                          </tr>
-                                                      </thead>
-                                                      <tbody>
-                                                          <tr *ngFor="let item of row.details">
-                                                              <th> {{item.sim}}  <em *ngIf="item.status === 2 && row.status === 1">  -- {{SubsItemsStaus[item.status]}}</em></th>
-                                                              <th> {{item.plan}} </th>
-                                                              <!-- <th>
-                                                                  {{SubsItemsStaus[item.status]}}
-                                                                </th> -->
-                                                          </tr>
-                                                      </tbody>
+                                                        <tr>
+                                                            <th width="20%" scope="col">SIM CID No</th>
+                                                            <th width="20%" scope="col">SIM ICCID No</th>
+                                                            <th width="20%" scope="col">Phone Number</th>
+                                                            <th width="20%" scope="col">Plan</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let item of row.details">
+                                                          <th> {{item.sim.CID_no}}   <em *ngIf="row.future_state_type != 'Will_Hold' && item.status === 2 && row.status === 1">  -- {{SubsItemsStaus[item.status]}}</em></th>
+                                                          <th> {{item.sim.ICCID_no}} </th>
+                                                          <th> {{item.sim.phone_number}} </th>
+                                                          <th> {{item.plan.plan}} </th>
+                                                            <!-- <th>
+                                                                {{SubsItemsStaus[item.status]}}
+                                                              </th> -->
+                                                        </tr>
+                                                    </tbody>
                                                   </table>
                                               </div>
                                           </ng-template>
@@ -110,7 +114,7 @@
                                           </ng-template>
                                       </ngx-datatable-column>
 
-                                      <ngx-datatable-column [width]="300" name="Subscription No" prop="id" [draggable]="false" [sortable]="false">
+                                      <ngx-datatable-column [width]="150" name="Subscription No" prop="id" [draggable]="false" [sortable]="false">
                                         <ng-template let-row="row" ngx-datatable-cell-template>
                                             <p > {{ row.id }}  <i *ngIf="row.future_state_type == 'Will_Hold' " title="Undo Held Subscription" (click)="undoSubscription(row)" class=" mt-1 ml-2 icofont-ui-reply icofont-flip-horizontal text-warning icofont-2x"></i></p>
                                             <p><em *ngIf="row.future_state && row.status === 1"> <small>--{{row.future_state}}</small></em></p>
@@ -123,19 +127,19 @@
                                       </ng-template>
                                   </ngx-datatable-column> -->
 
-                                  <ngx-datatable-column [width]="200" name="Wholesaler/Retailer Name" prop="customer" [draggable]="false" [sortable]="false">
+                                  <ngx-datatable-column [width]="220" name="Wholesaler/Retailer Name" prop="customer" [draggable]="false" [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
                                           <span > {{ value }} </span>
                                       </ng-template>
                                   </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="100" name="Activation Date" prop="activation_date" [draggable]="false" [sortable]="false">
+                                  <ngx-datatable-column [width]="150" name="Activation Date" prop="activation_date" [draggable]="false" [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
                                         <span >  {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
                                       </ng-template>
                                   </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="100" name="Cancellation Date" prop="cancellation_date" [draggable]="false" [sortable]="false">
+                                  <ngx-datatable-column [width]="150" name="Cancellation Date" prop="cancellation_date" [draggable]="false" [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
                                         <span *ngIf="value" >  {{ value | amDateFormat:'DD-MMM-YYYY'}} </span>
                                         <span *ngIf="!value" >  --- </span>
@@ -147,7 +151,7 @@
                                       <span *ngIf="!value" >  --- </span>
                                     </ng-template>
                                 </ngx-datatable-column>
-                                <ngx-datatable-column [width]="100" name="Subscription Status" prop="status" [draggable]="false" [sortable]="false">
+                                <ngx-datatable-column [width]="200" name="Subscription Status" prop="status" [draggable]="false" [sortable]="false">
                                     <ng-template let-value="value" ngx-datatable-cell-template>
                                       <span *ngIf="value == 1" > <strong class="label label-success">{{ SubscriptionStatus[value] }}</strong> </span>
                                         <span *ngIf="value == 2" ><strong class="label label-danger">{{ SubscriptionStatus[value] }}</strong> </span>
@@ -183,7 +187,7 @@
                                   <div class="col-lg-12 ">
                                   <ngx-datatable #tableWholesaler class="material table-bordered" [rows]="customerList" [loadingIndicator]="loadingIndicator"
                                     [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                                    [rowHeight]="'auto'" [limit]="100">
+                                    [rowHeight]="'auto'" [limit]="10">
   
                                            <!-- Row Detail Template -->
                                            <ngx-datatable-row-detail  [rowHeight]="'100%'">
@@ -194,14 +198,18 @@
                                                       class="table table-xs table-hover table-bordered table-striped">
                                                       <thead>
                                                           <tr>
-                                                              <th width="40%" scope="col">SIM</th>
-                                                              <th width="30%" scope="col">Plan</th>
+                                                              <th width="20%" scope="col">SIM CID No</th>
+                                                              <th width="20%" scope="col">SIM ICCID No</th>
+                                                              <th width="20%" scope="col">Phone Number</th>
+                                                              <th width="20%" scope="col">Plan</th>
                                                           </tr>
                                                       </thead>
                                                       <tbody>
                                                           <tr *ngFor="let item of row.details">
-                                                              <th> {{item.sim}}  <em *ngIf="item.status === 2 && row.status === 1"> -- {{SubsItemsStaus[item.status]}}</em></th>
-                                                              <th> {{item.plan}} </th>
+                                                            <th> {{item.sim.CID_no}}   <em *ngIf="row.future_state_type != 'Will_Hold' && item.status === 2 && row.status === 1">  -- {{SubsItemsStaus[item.status]}}</em></th>
+                                                            <th> {{item.sim.ICCID_no}} </th>
+                                                            <th> {{item.sim.phone_number}} </th>
+                                                            <th> {{item.plan.plan}} </th>
                                                               <!-- <th>
                                                                   {{SubsItemsStaus[item.status]}}
                                                                 </th> -->
@@ -285,7 +293,7 @@
                                   <div class="col-lg-12 ">
                                     <ngx-datatable #table class="material table-bordered" [rows]="customerList" [loadingIndicator]="loadingIndicator"
                                     [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                                    [rowHeight]="'auto'" [limit]="100">
+                                    [rowHeight]="'auto'" [limit]="10">
   
                                            <!-- Row Detail Template -->
                                            <ngx-datatable-row-detail  [rowHeight]="'100%'">
@@ -295,20 +303,24 @@
                                                   <table
                                                       class="table table-xs table-hover table-bordered table-striped">
                                                       <thead>
-                                                          <tr>
-                                                              <th width="40%" scope="col">SIM</th>
-                                                              <th width="30%" scope="col">Plan</th>
-                                                          </tr>
-                                                      </thead>
-                                                      <tbody>
-                                                          <tr *ngFor="let item of row.details">
-                                                              <th> {{item.sim}}  <em *ngIf="item.status === 2 && row.status === 1">  -- {{SubsItemsStaus[item.status]}}</em></th>
-                                                              <th> {{item.plan}} </th>
-                                                              <!-- <th>
-                                                                  {{SubsItemsStaus[item.status]}}
-                                                                </th> -->
-                                                          </tr>
-                                                      </tbody>
+                                                        <tr>
+                                                            <th width="20%" scope="col">SIM CID No</th>
+                                                            <th width="20%" scope="col">SIM ICCID No</th>
+                                                            <th width="20%" scope="col">Phone Number</th>
+                                                            <th width="20%" scope="col">Plan</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let item of row.details">
+                                                          <th> {{item.sim.CID_no}}   <em *ngIf="row.future_state_type != 'Will_Hold' && item.status === 2 && row.status === 1">  -- {{SubsItemsStaus[item.status]}}</em></th>
+                                                          <th> {{item.sim.ICCID_no}} </th>
+                                                          <th> {{item.sim.phone_number}} </th>
+                                                          <th> {{item.plan.plan}} </th>
+                                                            <!-- <th>
+                                                                {{SubsItemsStaus[item.status]}}
+                                                              </th> -->
+                                                        </tr>
+                                                    </tbody>
                                                   </table>
                                               </div>
                                             </ng-template>

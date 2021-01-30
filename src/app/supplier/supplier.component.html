@@ -13,10 +13,10 @@
                         </div>
                         <div class="card-block ">
                             <div class="row">
-                                <div class="col-lg-6">
+                                <div class="col-lg-7">
                                   <div class="form-group row">                                  
-                                    <div class="col-sm-8">
-                                      <input type="text" class="form-control" placeholder="Search supplier" (keyup)="updateFilter($event)" />
+                                    <div class="col-sm-12">
+                                      <input type="text" class="form-control" placeholder="Search supplier by name, mobile, address" (keyup)="updateFilter($event)" />
                                      
                                     </div>
                                   </div>
@@ -26,7 +26,7 @@
                                 <div class="col-lg-12 ">
                                     <ngx-datatable #table class="material table-bordered" [rows]="supplierList"
                                         [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                        [headerHeight]="40" [footerHeight]="50" rowHeight="auto"  [limit]="100"
+                                        [headerHeight]="40" [footerHeight]="50" rowHeight="auto"  [limit]="10"
                                       >
 
                                         <ngx-datatable-column [width]="350" name="Supplier Name" prop="name"
@@ -85,62 +85,88 @@
         <div class="modal-body ">
             <app-card>
                 <form [formGroup]="entryForm" class="col-sm-12">
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Supplier Name </label>
-                        <div class="col-sm-8">
-                            <input type="text" formControlName="name"
-                                [ngClass]="{ 'is-invalid': submitted && f.name.errors }" type="text"
-                                class="form-control" />
-
-                            <div *ngIf="submitted && f.name.errors" class="error-text">
-                                <span *ngIf="f.name.errors.required" class="text-danger"> Supplier name is required</span>
-
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Supplier Name </label>
+                            <div class="col-sm-8">
+                                <input type="text" formControlName="name"
+                                    [ngClass]="{ 'is-invalid': submitted && f.name.errors }" type="text"
+                                    class="form-control" />
+    
+                                <div *ngIf="submitted && f.name.errors" class="error-text">
+                                    <span *ngIf="f.name.errors.required" class="text-danger"> Supplier name is required</span>
+    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Mobile </label>
+                            <div class="col-sm-8">
+                                <input type="text" formControlName="mobile"
+                                    [ngClass]="{ 'is-invalid': submitted && f.mobile.errors }" type="text"
+                                    class="form-control" />
+    
+                                <div *ngIf="submitted && f.mobile.errors" class="error-text">
+                                    <span *ngIf="f.mobile.errors.required" class="text-danger"> Mobile number is required</span>
+    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Alternative Mobile </label>
+                            <div class="col-sm-8">
+                                <input type="text" formControlName="alternative_mobile" type="text"  class="form-control" />
+    
+    
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Address One </label>
+                            <div class="col-sm-8">
+                                <textarea type="text" rows="1" formControlName="address_one"
+                                    [ngClass]="{ 'is-invalid': submitted && f.address_one.errors }" type="text"
+                                    class="form-control" > </textarea>
+    
+                                <div *ngIf="submitted && f.address_one.errors" class="error-text">
+                                    <span *ngIf="f.address_one.errors.required" class="text-danger"> Address one is required</span>
+    
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Mobile </label>
-                        <div class="col-sm-8">
-                            <input type="text" formControlName="mobile"
-                                [ngClass]="{ 'is-invalid': submitted && f.mobile.errors }" type="text"
-                                class="form-control" />
-
-                            <div *ngIf="submitted && f.mobile.errors" class="error-text">
-                                <span *ngIf="f.mobile.errors.required" class="text-danger"> Mobile number is required</span>
-
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Preferred Payment Method </label>
+                            <div class="col-sm-8">
+                                <input type="text" formControlName="preferred_payment_method"  type="text"class="form-control" />
+    
+                   
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Account Number </label>
+                            <div class="col-sm-8">
+                                <input type="text" formControlName="acc_number"   type="text"  class="form-control" />
+    
+                            </div>
+                        </div>
+                       
+                   
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Address Two  </label>
+                            <div class="col-sm-8">
+                                <textarea type="text" rows="1" formControlName="address_two"  type="text"
+                                    class="form-control" ></textarea>
+    
+    
                             </div>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Alternative Mobile </label>
-                        <div class="col-sm-8">
-                            <input type="text" formControlName="alternative_mobile" type="text"  class="form-control" />
-
-
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Address One </label>
-                        <div class="col-sm-8">
-                            <textarea type="text" rows="1" formControlName="address_one"
-                                [ngClass]="{ 'is-invalid': submitted && f.address_one.errors }" type="text"
-                                class="form-control" > </textarea>
-
-                            <div *ngIf="submitted && f.address_one.errors" class="error-text">
-                                <span *ngIf="f.address_one.errors.required" class="text-danger"> Address one is required</span>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Address Two  </label>
-                        <div class="col-sm-8">
-                            <textarea type="text" rows="1" formControlName="address_two"  type="text"
-                                class="form-control" ></textarea>
-
-
-                        </div>
-                    </div>
+                </div>
+            </form>
+                 
+               
 
                     <!-- <div class="row">
                         <div class="col-md-6">
@@ -158,7 +184,7 @@
                             </div>
                         </div>
                     </div> -->
-                </form>
+               
             </app-card>
         </div>
         <div class="modal-footer">

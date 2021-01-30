@@ -25,10 +25,10 @@
 
                             <div *ngIf="activeTable == 0">
                                 <div class="row">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-7">
                                     <div class="form-group row">
-                                        <div class="col-sm-8">
-                                        <input type="text" class="form-control" placeholder="Search customer" (keyup)="updateFilter($event)" />
+                                        <div class="col-sm-12">
+                                        <input type="text" class="form-control" placeholder="Search customer by code, name, mobile" (keyup)="updateFilter($event)" />
 
                                         </div>
                                     </div>
@@ -38,7 +38,14 @@
                                     <div class="col-lg-12 ">
                                     <ngx-datatable #table class="material table-bordered" [rows]="rows"
                                     [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                    [headerHeight]="40" [limit]="100" [footerHeight]="50" rowHeight="auto">
+                                    [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
+
+                                <ngx-datatable-column [width]="100" name="Customer Code" prop="customer_code"
+                                    [draggable]="false" [sortable]="false">
+                                    <ng-template let-value="value" ngx-datatable-cell-template>
+                                        <span > {{ value }} </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
 
                                     <ngx-datatable-column [width]="150" name="First Name" prop="first_name" [draggable]="false" [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
@@ -58,14 +65,14 @@
                                         </ng-template>
                                     </ngx-datatable-column>
 
-                                    <ngx-datatable-column [width]="100" name="Current Balance" prop="balance" [draggable]="false"
+                                    <ngx-datatable-column [width]="120" name="Current Balance" prop="balance" [draggable]="false"
                                         [sortable]="false">
                                             <ng-template let-value="value" ngx-datatable-cell-template>
                                             <span >  {{value}} </span>
                                         </ng-template>
                                     </ngx-datatable-column>
 
-                                    <ngx-datatable-column [width]="190" name="Action" prop="id" [draggable]="false"
+                                    <ngx-datatable-column [width]="200" name="Action" prop="id" [draggable]="false"
                                         [sortable]="false">
                                         <ng-template let-row="row" ngx-datatable-cell-template>
                                             <button class="btn btn-primary btn-mini mr-2" (click)="openModalRow(row,template)"><i
@@ -84,10 +91,10 @@
 
                             <div *ngIf="activeTable == 1">
                                 <div class="row">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-7">
                                     <div class="form-group row">
-                                        <div class="col-sm-8">
-                                        <input type="text" class="form-control" placeholder="Search wholesaler" (keyup)="updateFilterWholesaler($event)" />
+                                        <div class="col-sm-12">
+                                        <input type="text" class="form-control" placeholder="Search wholesaler by code, name, mobile" (keyup)="updateFilterWholesaler($event)" />
 
                                         </div>
                                     </div>
@@ -97,7 +104,14 @@
                                     <div class="col-lg-12 ">
                                     <ngx-datatable #tableWholesaler class="material table-bordered" [rows]="wholesalerList"
                                     [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                    [headerHeight]="40" [limit]="100" [footerHeight]="50" rowHeight="auto">
+                                    [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
+
+                                    <ngx-datatable-column [width]="100" name="Customer Code" prop="customer_code"
+                                    [draggable]="false" [sortable]="false">
+                                    <ng-template let-value="value" ngx-datatable-cell-template>
+                                        <span > {{ value }} </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
 
                                     <ngx-datatable-column [width]="150" name="First Name" prop="first_name" [draggable]="false" [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
@@ -117,14 +131,14 @@
                                         </ng-template>
                                     </ngx-datatable-column>
 
-                                    <ngx-datatable-column [width]="100" name="Current Balance" prop="balance" [draggable]="false"
+                                    <ngx-datatable-column [width]="120" name="Current Balance" prop="balance" [draggable]="false"
                                         [sortable]="false">
                                             <ng-template let-value="value" ngx-datatable-cell-template>
                                             <span >  {{value}} </span>
                                         </ng-template>
                                     </ngx-datatable-column>
 
-                                    <ngx-datatable-column [width]="180" name="Action" prop="id" [draggable]="false"
+                                    <ngx-datatable-column [width]="200" name="Action" prop="id" [draggable]="false"
                                         [sortable]="false">
                                         <ng-template let-row="row" ngx-datatable-cell-template>
                                             <button class="btn btn-primary btn-mini mr-2" (click)="openModalRow(row,template)"><i
@@ -143,10 +157,10 @@
 
                             <div *ngIf="activeTable == 2">
                                 <div class="row">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-7">
                                     <div class="form-group row">
-                                        <div class="col-sm-8">
-                                        <input type="text" class="form-control" placeholder="Search retailer" (keyup)="updateFilterRetailer($event)" />
+                                        <div class="col-sm-12">
+                                        <input type="text" class="form-control" placeholder="Search retailer by code, name, mobile" (keyup)="updateFilterRetailer($event)" />
 
                                         </div>
                                     </div>
@@ -156,7 +170,14 @@
                                     <div class="col-lg-12 ">
                                     <ngx-datatable #tableRetailer class="material table-bordered" [rows]="retailerList"
                                     [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                    [headerHeight]="40" [limit]="100" [footerHeight]="50" rowHeight="auto">
+                                    [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
+
+                                    <ngx-datatable-column [width]="100" name="Customer Code" prop="customer_code"
+                                    [draggable]="false" [sortable]="false">
+                                    <ng-template let-value="value" ngx-datatable-cell-template>
+                                        <span > {{ value }} </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
 
                                     <ngx-datatable-column [width]="150" name="First Name" prop="first_name" [draggable]="false" [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
@@ -176,14 +197,14 @@
                                         </ng-template>
                                     </ngx-datatable-column>
 
-                                    <ngx-datatable-column [width]="100" name="Current Balance" prop="balance" [draggable]="false"
+                                    <ngx-datatable-column [width]="120" name="Current Balance" prop="balance" [draggable]="false"
                                         [sortable]="false">
                                             <ng-template let-value="value" ngx-datatable-cell-template>
                                             <span >  {{value}} </span>
                                         </ng-template>
                                     </ngx-datatable-column>
 
-                                    <ngx-datatable-column [width]="180" name="Action" prop="id" [draggable]="false"
+                                    <ngx-datatable-column [width]="200" name="Action" prop="id" [draggable]="false"
                                         [sortable]="false">
                                         <ng-template let-row="row" ngx-datatable-cell-template>
                                             <button class="btn btn-primary btn-mini mr-2" (click)="openModalRow(row,template)"><i

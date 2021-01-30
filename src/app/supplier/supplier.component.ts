@@ -23,9 +23,9 @@ export class SupplierComponent implements OnInit {
   modalTitle = 'Add Supplier';
   btnSaveText = 'Save';
   @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
-  modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
+  modalConfig: any = { class: 'gray modal-xl', backdrop: 'static' };
   modalRef: BsModalRef;
-
+  columnsWithSearch : string[] = [];
   page = new Page();
 
   rows = [];
@@ -58,7 +58,9 @@ export class SupplierComponent implements OnInit {
       mobile: [null, [Validators.required]],
       alternative_mobile: [null],
       address_one: [null,[Validators.required]],
-      address_two: [null]
+      address_two: [null],
+      preferred_payment_method: [null],
+      acc_number: [null]
 
     });
     this.getList();
@@ -82,6 +84,7 @@ export class SupplierComponent implements OnInit {
       }
       this.tempRows = res;
       this.supplierList = res;
+      if(this.supplierList.length > 0)this.columnsWithSearch = Object.keys(this.supplierList[0]);
       // this.page.totalElements = res.Total;
       // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
@@ -131,6 +134,8 @@ export class SupplierComponent implements OnInit {
       alternative_mobile: this.entryForm.value.alternative_mobile ? this.entryForm.value.alternative_mobile.trim() : null,
       address_one: this.entryForm.value.address_one ? this.entryForm.value.address_one.trim() : null,
       address_two: this.entryForm.value.address_two ? this.entryForm.value.address_two.trim() : null,
+      preferred_payment_method: this.entryForm.value.preferred_payment_method ? this.entryForm.value.preferred_payment_method.trim() : null,
+      acc_number: this.entryForm.value.acc_number ? this.entryForm.value.acc_number.trim() : null,
     };
 
     this._service.post('supplier/save-supplier', obj).subscribe(
@@ -169,12 +174,18 @@ export class SupplierComponent implements OnInit {
   updateFilter(event) {
     const val = event.target.value.toLowerCase();
 
-    // filter our data
-    const temp = this.tempRows.filter(function (d) {
-      return d.name.toLowerCase().indexOf(val) !== -1 ||
-             d.mobile.toLowerCase().indexOf(val) !== -1 ||
-        !val;
-    });
+      // assign filtered matches to the active datatable
+      const temp = this.tempRows.filter(item => {
+        // iterate through each row's column data
+        for (let i = 0; i < this.columnsWithSearch.length; i++){
+          var colValue = item[this.columnsWithSearch[i]] ;  
+          // if no filter OR colvalue is NOT null AND contains the given filter
+          if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
+            // found match, return true to add to result set
+            return true;
+          }
+        }
+      });
 
     // update the rows
     this.supplierList = temp;

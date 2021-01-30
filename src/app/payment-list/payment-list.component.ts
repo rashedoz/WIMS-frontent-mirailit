@@ -24,7 +24,7 @@ export class PaymentListComponent implements OnInit {
 
   page = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
-
+  columnsWithSearch : string[] = [];
   PaymentType = PaymentType;
   modalTitle = 'Payment';
   btnSaveText = 'Save';
@@ -92,7 +92,8 @@ export class PaymentListComponent implements OnInit {
       (res) => {
         this.tempRows = res;
         this.paymentList = res;
-
+        if(this.paymentList.length > 0) this.columnsWithSearch = Object.keys(this.paymentList[0]);
+       
         // this.page.totalElements = res.Total;
         // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
         setTimeout(() => {
@@ -114,11 +115,18 @@ export class PaymentListComponent implements OnInit {
   updateFilter(event) {
     const val = event.target.value.toLowerCase();
 
-    // filter our data
-    const temp = this.tempRows.filter(function (d) {
-      return d.customer.toLowerCase().indexOf(val) !== -1 ||
-        !val;
-    });
+      // assign filtered matches to the active datatable
+      const temp = this.tempRows.filter(item => {
+        // iterate through each row's column data
+        for (let i = 0; i < this.columnsWithSearch.length; i++){
+          var colValue = item[this.columnsWithSearch[i]] ;  
+          // if no filter OR colvalue is NOT null AND contains the given filter
+          if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
+            // found match, return true to add to result set
+            return true;
+          }
+        }
+      });
 
     // update the rows
     this.paymentList = temp;

@@ -61,6 +61,7 @@ export class ReactivateHeldSubscriptionComponent implements OnInit {
   subscriptionItemList: Array<any> = [];
   simList: Array<any> = [];
   planList: Array<any> = [];
+  simListAll: Array<any> = [];
 
   constructor(
     private confirmService: ConfirmService,
@@ -96,7 +97,15 @@ export class ReactivateHeldSubscriptionComponent implements OnInit {
 
     this.getCustomerList();
     this.getSIMList();
+    // this.getSIMListAll();
     this.getPlanList();
+
+    let itemHistoryControl = <FormArray>(
+      this.entryForm.controls.itemHistory
+    );
+    while (this.itemHistoryList.length !== 0) {
+      itemHistoryControl.removeAt(0);
+    }
   }
 
   get f() {
@@ -204,6 +213,16 @@ export class ReactivateHeldSubscriptionComponent implements OnInit {
     );
   }
 
+  getSIMListAll() {
+    this._service.get("stock/get-sim-list").subscribe(
+      (res) => {
+        this.simListAll = res;
+        // console.log(res);
+      },
+      (err) => {}
+    );
+  }
+
   getPlanList() {
     this._service.get("subscription/get-data-plan-list").subscribe(
       (res) => {
@@ -213,15 +232,15 @@ export class ReactivateHeldSubscriptionComponent implements OnInit {
     );
   }
 
-  onSIMChange(e, item) {
-    if (e.ICCID_no){
-       item.controls["sim_iccid"].setValue(e.ICCID_no);
-       item.controls["sim_iccid"].disable();
-      }else {
-        item.controls["sim_iccid"].setValue(null);
-        item.controls["sim_iccid"].enable();
-      }
-  }
+  // onSIMChange(e, item) {
+  //   if (e.ICCID_no){
+  //      item.controls["sim_iccid"].setValue(e.ICCID_no);
+  //      item.controls["sim_iccid"].disable();
+  //     }else {
+  //       item.controls["sim_iccid"].setValue(null);
+  //       item.controls["sim_iccid"].enable();
+  //     }
+  // }
 
   onPlanChange(e, item) {
     if (e){

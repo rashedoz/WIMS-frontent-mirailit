@@ -27,7 +27,7 @@ export class BillListComponent implements OnInit {
   entryFormBill: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
-
+  columnsWithSearch : string[] = [];
   billStatus = BillStatus;
   page = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
@@ -166,7 +166,7 @@ export class BillListComponent implements OnInit {
         this.activeTable = 0;
         this.tempRows = res;
         this.bilList = res;
-
+        this.columnsWithSearch = Object.keys(this.bilList[0]);
         // this.page.totalElements = res.Total;
         // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
         setTimeout(() => {
@@ -193,7 +193,7 @@ export class BillListComponent implements OnInit {
         this.activeTable = 1;
         this.tempRows = res.filter(x=>x.subscription != null);
         this.subscriptionBilList = res.filter(x=>x.subscription != null);
-
+        this.columnsWithSearch = Object.keys(this.subscriptionBilList[0]);
         // this.page.totalElements = res.Total;
         // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
         setTimeout(() => {
@@ -219,6 +219,7 @@ export class BillListComponent implements OnInit {
         this.activeTable = 2;
         this.tempRows = res;
         this.simBilList = res;
+        if(this.simBilList.length > 0)  this.columnsWithSearch = Object.keys(this.simBilList[0]);
         // this.page.totalElements = res.Total;
         // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
         setTimeout(() => {
@@ -244,6 +245,7 @@ export class BillListComponent implements OnInit {
         this.activeTable = 3;
         this.tempRows = res;
         this.deviceBilList = res;
+        this.columnsWithSearch = Object.keys(this.deviceBilList[0]);
         // this.page.totalElements = res.Total;
         // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
         setTimeout(() => {
@@ -534,18 +536,27 @@ export class BillListComponent implements OnInit {
        if(row.bill_type == "Device Sales"){
 
         columns = [
-          { title: 'Device No', dataKey: 'device' },
-          { title: 'Device Serial', dataKey: 'alias' },
+          { title: 'Device No', dataKey: 'DID_no' },
+          { title: 'Device Serial', dataKey: 'IMEI' },
           { title: 'Amount', dataKey: 'device_cost',halign: 'right' }
         ];
 
+        let dataArray = [];
+        res.sold_device_items.forEach(element => {
+          dataArray.push({
+            DID_no:element.device.DID_no,
+            IMEI:element.device.IMEI,
+            device_cost:element.device_cost
+          });
+        });
+
       /** Table */
       // @ts-ignore
-      doc.autoTable(columns, res.sold_device_items, {
+      doc.autoTable(columns, dataArray, {
         theme: 'plain',
         startY: startY + 25,
         headStyles:{amount: {cellWidth: 30,halign: 'right'}},
-        columnStyles: {device: {cellWidth: 30}, alias: {cellWidth: 110},device_cost: {cellWidth: 40,halign: 'right'}},
+        columnStyles: {DID_no: {cellWidth: 60}, IMEI: {cellWidth: 80},device_cost: {cellWidth: 40,halign: 'right'}},
         styles: {
           font: 'times',
           lineWidth: 0.4,
@@ -558,18 +569,29 @@ export class BillListComponent implements OnInit {
       }else if(row.bill_type == "SIM Sales"){
 
         columns = [
-          { title: 'SIM No', dataKey: 'sim' },
-          { title: 'SIM Alias', dataKey: 'alias' },
+          { title: 'SIM CID No', dataKey: 'CID_no' },
+          { title: 'SIM ICCID No', dataKey: 'ICCID_no' },
+          { title: 'Phone Number', dataKey: 'phone_number' },
           { title: 'Amount', dataKey: 'sim_cost',halign: 'right' }
         ];
 
+        let dataArray = [];
+        res.sold_sim_items.forEach(element => {
+          dataArray.push({
+            CID_no:element.sim.CID_no,
+            ICCID_no:element.sim.ICCID_no,
+            phone_number:element.sim.phone_number ? element.sim.phone_number : '--',
+            sim_cost:element.sim_cost
+          });
+        });
+
         /** Table */
       // @ts-ignore
-      doc.autoTable(columns, res.sold_sim_items, {
+      doc.autoTable(columns, dataArray, {
         theme: 'plain',
         startY: startY + 25,
         headStyles:{amount: {cellWidth: 30,halign: 'right'}},
-        columnStyles: {sim: {cellWidth: 30}, alias: {cellWidth: 110},sim_cost: {cellWidth: 40,halign: 'right'}},
+        columnStyles: {CID_no: {cellWidth: 40}, ICCID_no: {cellWidth: 50}, phone_number: {cellWidth: 50},sim_cost: {cellWidth: 40,halign: 'right'}},
         styles: {
           font: 'times',
           lineWidth: 0.4,
@@ -585,19 +607,29 @@ export class BillListComponent implements OnInit {
         doc.text( "Bill Session: " + res.session,startX + 2, (startY += this.lineSpacing.NormalSpacing + 15),null, 'left' );
 
         columns = [
-          { title: 'SIM No', dataKey: 'sim' },
-          { title: 'SIM Alias', dataKey: 'alias' },
-          { title: 'Plan', dataKey: 'plan' },
+          { title: 'SIM CID No', dataKey: 'CID_no' },
+          { title: 'SIM ICCID No', dataKey: 'ICCID_no' },
+          { title: 'Phone Number', dataKey: 'phone_number' },
           { title: 'Amount', dataKey: 'amount',halign: 'right' }
         ];
 
+        let dataArray = [];
+        res.subscribed_items.forEach(element => {
+          dataArray.push({
+            CID_no:element.sim.CID_no, 
+            ICCID_no:element.sim.ICCID_no,
+            phone_number:element.sim.phone_number ? element.sim.phone_number : '--',
+            amount:element.amount
+          });
+        });
+
       /** Table */
       // @ts-ignore
-      doc.autoTable(columns, res.subscribed_items, {
+      doc.autoTable(columns, dataArray, {
         theme: 'plain',
         startY: startY + 5,
         headStyles:{amount: {cellWidth: 30,halign: 'right'}},
-        columnStyles: {sim: {cellWidth: 25}, alias: {cellWidth: 100}, plan: {cellWidth: 25},amount: {cellWidth: 30,halign: 'right'}},
+        columnStyles: {CID_no: {cellWidth: 40}, ICCID_no: {cellWidth: 50}, phone_number: {cellWidth: 50},amount: {cellWidth: 40,halign: 'right'}},
         styles: {
           font: 'times',
           lineWidth: 0.4,
@@ -709,10 +741,23 @@ export class BillListComponent implements OnInit {
   updateFilterBill(event) {
     const val = event.target.value.toLowerCase();
 
-    // filter our data
-    const temp = this.tempRows.filter(function (d) {
-      return d.customer.toLowerCase().indexOf(val) !== -1 ||
-        !val;
+    // // filter our data
+    // const temp = this.tempRows.filter(function (d) {
+    //   return d.customer.toLowerCase().indexOf(val) !== -1 ||
+    //     !val;
+    // });
+
+    // assign filtered matches to the active datatable
+    const temp = this.tempRows.filter(item => {
+      // iterate through each row's column data
+      for (let i = 0; i < this.columnsWithSearch.length; i++){
+        var colValue = item[this.columnsWithSearch[i]] ;  
+        // if no filter OR colvalue is NOT null AND contains the given filter
+        if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
+          // found match, return true to add to result set
+          return true;
+        }
+      }
     });
 
     // update the rows
@@ -724,10 +769,23 @@ export class BillListComponent implements OnInit {
   updateFilterSubscription(event) {
     const val = event.target.value.toLowerCase();
 
-    // filter our data
-    const temp = this.tempRows.filter(function (d) {
-      return d.customer.toLowerCase().indexOf(val) !== -1 ||
-        !val;
+    // // filter our data
+    // const temp = this.tempRows.filter(function (d) {
+    //   return d.customer.toLowerCase().indexOf(val) !== -1 ||
+    //     !val;
+    // });
+
+    // assign filtered matches to the active datatable
+    const temp = this.tempRows.filter(item => {
+      // iterate through each row's column data
+      for (let i = 0; i < this.columnsWithSearch.length; i++){
+        var colValue = item[this.columnsWithSearch[i]] ;  
+        // if no filter OR colvalue is NOT null AND contains the given filter
+        if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
+          // found match, return true to add to result set
+          return true;
+        }
+      }
     });
 
     // update the rows
@@ -739,10 +797,23 @@ export class BillListComponent implements OnInit {
   updateFilterSIM(event) {
     const val = event.target.value.toLowerCase();
 
-    // filter our data
-    const temp = this.tempRows.filter(function (d) {
-      return d.customer.toLowerCase().indexOf(val) !== -1 ||
-        !val;
+    // // filter our data
+    // const temp = this.tempRows.filter(function (d) {
+    //   return d.customer.toLowerCase().indexOf(val) !== -1 ||
+    //     !val;
+    // });
+
+    // assign filtered matches to the active datatable
+    const temp = this.tempRows.filter(item => {
+      // iterate through each row's column data
+      for (let i = 0; i < this.columnsWithSearch.length; i++){
+        var colValue = item[this.columnsWithSearch[i]] ;  
+        // if no filter OR colvalue is NOT null AND contains the given filter
+        if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
+          // found match, return true to add to result set
+          return true;
+        }
+      }
     });
 
     // update the rows
@@ -754,11 +825,26 @@ export class BillListComponent implements OnInit {
   updateFilterDevice(event) {
     const val = event.target.value.toLowerCase();
 
-    // filter our data
-    const temp = this.tempRows.filter(function (d) {
-      return d.customer.toLowerCase().indexOf(val) !== -1 ||
-        !val;
+    // // filter our data
+    // const temp = this.tempRows.filter(function (d) {
+    //   return d.customer.toLowerCase().indexOf(val) !== -1 ||
+    //     !val;
+    // });
+
+    // assign filtered matches to the active datatable
+    const temp = this.tempRows.filter(item => {
+      // iterate through each row's column data
+      for (let i = 0; i < this.columnsWithSearch.length; i++){
+        var colValue = item[this.columnsWithSearch[i]] ;  
+        // if no filter OR colvalue is NOT null AND contains the given filter
+        if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
+          // found match, return true to add to result set
+          return true;
+        }
+      }
     });
+
+    
 
     // update the rows
     this.deviceBilList = temp;

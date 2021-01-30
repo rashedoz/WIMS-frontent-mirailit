@@ -262,13 +262,14 @@ export class CreateSubscriptionComponent implements OnInit {
                     this.blockUI.stop();
                     if (data.IsReport == "Success") {
                       this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
+                      const customer_id = this.entryForm.value.customer;
                       this.formReset();
 
                       this.confirmService.confirm('Do you want to sell device?', '','Yes')
                       .subscribe(
                           result => {
                               if (result) {
-                                this.router.navigate(['sell-device']);
+                                this.router.navigate(['sell-device/'+customer_id]);
                               }
                           },
                       );
@@ -298,7 +299,7 @@ export class CreateSubscriptionComponent implements OnInit {
 
 
 
-
+ 
   }
 
 

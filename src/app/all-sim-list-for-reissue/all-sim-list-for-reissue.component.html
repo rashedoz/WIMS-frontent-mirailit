@@ -24,10 +24,10 @@
                                   <!-- <ngx-datatable class="material table-bordered" [rows]="rows" [selectionType]="SelectionType.single"
                                    (select)="onSelect($event,template)"
                                   [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                  [headerHeight]="40" [limit]="100" [footerHeight]="50" rowHeight="auto"> -->
-                                    <ngx-datatable #table class="material table-bordered" [rows]="rows"
+                                  [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto"> -->
+                                    <ngx-datatable #table class="material table-bordered" [rows]="rows" [scrollbarH]="true"
                                   [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                  [headerHeight]="40" [limit]="100" [footerHeight]="50" rowHeight="auto">
+                                  [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
 
                                   <ngx-datatable-column [width]="80" name="SIM CID No" prop="CID_no" [draggable]="false" [sortable]="false">
                                     <ng-template let-value="value" ngx-datatable-cell-template>

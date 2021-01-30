@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from './../_models/page';
 import { MustMatch } from './../_helpers/must-match.validator';
+import { SubscriptionStatus,SubsItemsStaus } from '../_models/enums';
 
 @Component({
   selector: 'app-customer',
@@ -28,7 +29,8 @@ export class CustomerComponent implements OnInit {
   type;
   modalTitle = 'Add Customer';
   btnSaveText = 'Save';
-
+  SubscriptionStatus = SubscriptionStatus;
+  SubsItemsStaus = SubsItemsStaus;
   modalConfig: any = { class: 'gray modal-xl', backdrop: 'static' };
   modalConfigmd: any = { class: 'gray modal-md', backdrop: 'static' };
   modalRef: BsModalRef;
@@ -41,6 +43,9 @@ export class CustomerComponent implements OnInit {
   @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
   @ViewChild(DatatableComponent, { static: false }) tableWholesaler: DatatableComponent;
   @ViewChild(DatatableComponent, { static: false }) tableRetailer: DatatableComponent;
+  @ViewChild(DatatableComponent, { static: false }) tableHistory: DatatableComponent;
+
+
   page = new Page();
   isbuttonActive = true;
   activeTable = 0;
@@ -48,6 +53,7 @@ export class CustomerComponent implements OnInit {
   customerList = [];
   wholesalerList = [];
   retailerList = [];
+  historyList = [];
   loadingIndicator = false;
   ColumnMode = ColumnMode;
 
@@ -169,6 +175,77 @@ get p() {
       }, 1000);
     }
     );
+  }
+
+
+  showHistory(row,template: TemplateRef<any>) {
+    this.loadingIndicator = true;
+    this._service.get('subscription/get-subscription-list-by-customer-id/'+row.id).subscribe(res => {
+      if (!res) {
+        this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
+        return;
+      }
+    
+      this.historyList = res;
+      this.modalRef = this.modalService.show(template, this.modalConfig);
+      // this.page.totalElements = res.Total;
+      // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }, err => {
+      this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }
+    );
+  }
+
+  // undoSubscription(row){
+  //   const obj = {
+  //     customer:row.customer_id,
+  //     subscription:row.id
+  //    };
+  //    this.confirmService.confirm('Are you sure?', 'You are undo the subscription for held state.')
+  //    .subscribe(
+  //        result => {
+  //            if (result) {
+  //              const request = this._service.post('subscription/undo-future-held-subscription', obj);
+  //              request.subscribe(
+  //                data => {
+
+  //                  if (data.IsReport == "Success") {
+  //                    this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+  //                    this.getList();
+  //                  } else if (data.IsReport == "Warning") {
+  //                    this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+  //                  } else {
+  //                    this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+  //                  }
+  //                },
+  //                err => {
+
+  //                  this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+  //                }
+  //              );
+  //            }
+  //        },
+
+  //    );
+  // }
+
+  toggleExpandRow(row) {
+
+  // console.log(row);
+    this._service.get('subscription/get-subscription-detail/'+row.id).subscribe(res => {
+      row.details = res;     
+    }, err => { });
+
+  this.tableHistory.rowDetail.toggleExpandRow(row);
+
+  
+
   }
 
 
@@ -493,6 +570,10 @@ changePassword(row, template: TemplateRef<any>) {
     this.modalRef.hide();
     this.submitted = false;
     this.btnSaveText = 'Save';
+  }
+
+  modalHideHistory() {  
+    this.modalRef.hide();
   }
   
 

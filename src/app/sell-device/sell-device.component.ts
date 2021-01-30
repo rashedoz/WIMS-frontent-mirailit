@@ -15,7 +15,7 @@ import {
   FormArray,
   FormControl,
 } from "@angular/forms";
-import { Router } from "@angular/router";
+import { Router,ActivatedRoute } from "@angular/router";
 import { CommonService } from "./../_services/common.service";
 import { ToastrService } from "ngx-toastr";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
@@ -59,15 +59,17 @@ export class SellDeviceComponent implements OnInit {
   customerList: Array<any> = [];
   deviceList: Array<any> = [];
   // planList: Array<any> = [];
-
+  customer_id = null;
   constructor(
     private confirmService: ConfirmService,
     private modalService: BsModalService,
     public formBuilder: FormBuilder,
     private _service: CommonService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
+    this.customer_id = this.route.snapshot.params['customer_id'];
     // this.page.pageNumber = 0;
     // this.page.size = 10;
     window.onresize = () => {
@@ -105,7 +107,7 @@ export class SellDeviceComponent implements OnInit {
   initItemHistory() {
     return this.formBuilder.group({
       device: [null, [Validators.required]],
-      device_serial_no: [null, [Validators.required]],
+      IMEI: [null, [Validators.required]],
       amount: [null, [Validators.required]],
     });
   }
@@ -124,6 +126,11 @@ export class SellDeviceComponent implements OnInit {
     this._service.get("user-list?is_customer=true").subscribe(
       (res) => {
         this.customerList = res;
+      
+          if(this.customer_id){
+            this.entryForm.controls['customer'].setValue(Number(this.customer_id));
+          } 
+      
       },
       (err) => {}
     );
@@ -148,12 +155,12 @@ export class SellDeviceComponent implements OnInit {
   // }
 
   onDeviceChange(e, item) {
-    if (e.device_serial_no){
-       item.controls["device_serial_no"].setValue(e.device_serial_no);
-       item.controls["device_serial_no"].disable();
+    if (e.IMEI){
+       item.controls["IMEI"].setValue(e.IMEI);
+       item.controls["IMEI"].disable();
       }else {
-        item.controls["device_serial_no"].setValue(null);
-        item.controls["device_serial_no"].enable();
+        item.controls["IMEI"].setValue(null);
+        item.controls["IMEI"].enable();
       }
   }
 
@@ -201,10 +208,10 @@ export class SellDeviceComponent implements OnInit {
     let device_sales_details = [];
     this.blockUI.start('Saving...');
 
-    this.fromRowData.itemHistory.filter(x=> x.device && x.device_serial_no && x.amount).forEach(element => {
+    this.fromRowData.itemHistory.filter(x=> x.device && x.IMEI && x.amount).forEach(element => {
       device_sales_details.push({
         device: element.device.id,
-        device_serial_no:element.device_serial_no,
+        IMEI:element.IMEI,
         device_cost: Number(element.amount)
       });
     });

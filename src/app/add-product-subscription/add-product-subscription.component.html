@@ -12,25 +12,38 @@
               <div class="col-md-12">
                 <div class="btn-group float-right" dropdown placement="bottom right">
                   <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
-                          aria-controls="dropdown-basic">
+                    aria-controls="dropdown-basic">
                     Subscription <span class="caret"></span>
                   </button>
 
-                  <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu dropdown-menu-right"
-                      role="menu" aria-labelledby="button-animated">
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/create-subscription']" routerLinkActive="router-link-active" > Create Subscription</a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/add-product-to-subscription']" routerLinkActive="router-link-active" >Add Product To Subscription </a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/subscription-list']" routerLinkActive="router-link-active" >All Subscription List</a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/wholesaler-subscription-list']" routerLinkActive="router-link-active" > Wholesaler Subscription List</a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/retailer-subscription-list']" routerLinkActive="router-link-active" > Retailer Subscription List</a></li>
+                  <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu"
+                    aria-labelledby="button-animated">
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/create-subscription']"
+                        routerLinkActive="router-link-active"> Create Subscription</a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/add-product-to-subscription']"
+                        routerLinkActive="router-link-active">Add Product To Subscription </a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/subscription-list']"
+                        routerLinkActive="router-link-active">All Subscription List</a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/wholesaler-subscription-list']"
+                        routerLinkActive="router-link-active"> Wholesaler Subscription List</a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/retailer-subscription-list']"
+                        routerLinkActive="router-link-active"> Retailer Subscription List</a></li>
                     <hr>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-current-month-subscription']" routerLinkActive="router-link-active" >Change Current Month Subscription </a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-current-month']" routerLinkActive="router-link-active" >Remove Product From Current Month </a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/cancel-entrie-subscription-from-current-month']" routerLinkActive="router-link-active" >Cancel Entrie Subscription From Current Month </a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-current-month-subscription']"
+                        routerLinkActive="router-link-active">Change Current Month Subscription </a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-current-month']"
+                        routerLinkActive="router-link-active">Remove Product From Current Month </a></li>
+                    <li role="menuitem"><a class="dropdown-item"
+                        [routerLink]="['/cancel-entrie-subscription-from-current-month']"
+                        routerLinkActive="router-link-active">Cancel Entrie Subscription From Current Month </a></li>
                     <hr>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-next-month-subscription']" routerLinkActive="router-link-active" >Change Next Month Subscription </a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-next-month']" routerLinkActive="router-link-active" >Remove Product From Next Month </a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/cancel-entrie-subscription-from-next-month']" routerLinkActive="router-link-active" >Cancel Entrie Subscription From Next Month </a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-next-month-subscription']"
+                        routerLinkActive="router-link-active">Change Next Month Subscription </a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-next-month']"
+                        routerLinkActive="router-link-active">Remove Product From Next Month </a></li>
+                    <li role="menuitem"><a class="dropdown-item"
+                        [routerLink]="['/cancel-entrie-subscription-from-next-month']"
+                        routerLinkActive="router-link-active">Cancel Entrie Subscription From Next Month </a></li>
 
                   </ul>
                 </div>
@@ -43,16 +56,18 @@
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label">Customer </label>
                   <div class="col-sm-9">
-                    <ng-select (change)="onCustomerChange($event)" [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false" formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
+                    <ng-select (change)="onCustomerChange($event)"
+                      [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false"
+                      formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
                       bindLabel="first_name" bindValue="id" placeholder="Select a customer">
                       <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-                        {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}} 
-                    </ng-template>
+                        {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
+                      </ng-template>
                     </ng-select>
                     <div *ngIf="submitted && f.customer.errors" class="error-text">
                       <span *ngIf="f.customer.errors.required" class="text-danger"> Customer is required</span>
 
-                  </div>
+                    </div>
                   </div>
                 </div>
 
@@ -62,31 +77,37 @@
                 <div class="form-group row">
                   <label class="col-sm-4 col-form-label">Subscription </label>
                   <div class="col-sm-8">
-                    <ng-select   [ngClass]="{ 'is-invalid': submitted && f.subscription.errors }" [clearable]="false" formControlName="subscription" [clearOnBackspace]="false" [items]="subscriptionList"
-                    bindLabel="id" bindValue="id" placeholder="Select subscription">
+                    <ng-select (change)="onSubChange($event)"
+                      [ngClass]="{ 'is-invalid': submitted && f.subscription.errors }" [clearable]="false"
+                      formControlName="subscription" [clearOnBackspace]="false" [items]="subscriptionList"
+                      bindLabel="id" bindValue="id" placeholder="Select subscription">
 
-                    <ng-template ng-option-tmp let-item="item" let-index="index">
+                      <ng-template ng-option-tmp let-item="item" let-index="index">
 
-                      <div>
-                        <div class="card-body">
-                          <div class="row mb-3">
-                            <div class="col-sm-6 pt-2"><h6 class="card-subtitle text-muted">Subscription No: {{item.id}}</h6></div>
-                            <div class="col-sm-6">
-                              <span *ngIf="item.status == 1" class=" card-subtitle"> Status : <strong class="label label-success">{{ SubscriptionStatus[item.status] }}</strong></span>
-                              <span *ngIf="item.status == 2" class=" card-subtitle"> Status : <strong class="label label-warning">{{ SubscriptionStatus[item.status] }}</strong></span>
+                        <div>
+                          <div class="card-body">
+                            <div class="row mb-3">
+                              <div class="col-sm-6 pt-2">
+                                <h6 class="card-subtitle text-muted">Subscription No: {{item.id}}</h6>
+                              </div>
+                              <div class="col-sm-6">
+                                <span *ngIf="item.status == 1" class=" card-subtitle"> Status : <strong
+                                    class="label label-success">{{ SubscriptionStatus[item.status] }}</strong></span>
+                                <span *ngIf="item.status == 2" class=" card-subtitle"> Status : <strong
+                                    class="label label-warning">{{ SubscriptionStatus[item.status] }}</strong></span>
+                              </div>
                             </div>
+                            <p class="card-text"> Id : {{item.alias}}</p>
                           </div>
-                           <p class="card-text">  Id : {{item.alias}}</p>
                         </div>
-                    </div>
-                  </ng-template>
+                      </ng-template>
 
 
-                  </ng-select>
+                    </ng-select>
                     <div *ngIf="submitted && f.subscription.errors" class="error-text">
                       <span *ngIf="f.subscription.errors.required" class="text-danger"> Subscription is required</span>
 
-                  </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -104,9 +125,35 @@
             <!-- <span class="code-header ">use class <code>table</code> inside table element</span> -->
           </div>
           <div class="card-block ">
+            <div class="row " *ngIf="subItemList.length > 0">
+              <div class="col-lg-12">
+                <h6>Existing Product(s)</h6>
+                <div class="table-responsive">
+                  <table class="table table-xs table-hover table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th width="20%" scope="col">SIM</th>
+                        <th width="20%" scope="col">ICCID</th>
+                        <th width="20%" scope="col">Plan</th>
+                        <th width="20%" scope="col">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of subItemList">
+                        <th width="20%" >{{item.sim.CID_no}}</th>
+                        <th width="20%" >{{item.sim.ICCID_no}}</th>
+                        <th width="20%" >{{item.plan.plan}}</th>
+                        <th width="20%" >{{item.plan.plan_unit_price}}</th>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
 
             <div class="row ">
               <div class="col-lg-12">
+                <h6>Add Product(s)</h6>
                 <div class="table-responsive">
                   <table class="table table-xs table-hover table-bordered table-striped">
                     <thead>
@@ -119,52 +166,65 @@
                       </tr>
                     </thead>
                     <tbody formArrayName="itemHistory" *ngFor="let item of itemFormArray; let i = index;">
-                        <tr  [formGroupName]="i">
-                            <th>
-                              <ng-select [clearable]="false" appendTo="body" (change)="onSIMChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}" formControlName="sim" [clearOnBackspace]="false" [items]="simList"
-                              bindLabel="id" placeholder="Select a sim">
-                              <ng-template ng-option-tmp let-item="item" let-index="index">
-                                <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no">  {{item.id}} </p>                                
-                                <p class="card-text font-weight-bold" *ngIf="item.ICCID_no">  {{item.id}} ({{item.ICCID_no}})</p>                                
+                      <tr [formGroupName]="i">
+                        <th>
+                          <ng-select [clearable]="false" appendTo="body" (change)="onSIMChange($event, item)"
+                            [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}"
+                            formControlName="sim" [clearOnBackspace]="false" [items]="simList" bindLabel="id"
+                            placeholder="Select a sim">
+                            <ng-template ng-option-tmp let-item="item" let-index="index">
+                              <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no"> {{item.id}} </p>
+                              <p class="card-text font-weight-bold" *ngIf="item.ICCID_no"> {{item.id}}
+                                ({{item.ICCID_no}})</p>
                             </ng-template>
                           </ng-select>
-                              <div *ngIf="submitted && item_his.controls[i].get('sim').errors" class="error-text">
-                                <small *ngIf="item_his.controls[i].get('sim').errors.required" class="text-danger"> SIM
-                                  is required</small>
+                          <div *ngIf="submitted && item_his.controls[i].get('sim').errors" class="error-text">
+                            <small *ngIf="item_his.controls[i].get('sim').errors.required" class="text-danger"> SIM
+                              is required</small>
 
-                              </div>
-                            </th>
-                            <th>
-                              <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim_iccid').errors}" formControlName="sim_iccid"  />
-                              <div *ngIf="submitted && item_his.controls[i].get('sim_iccid').errors" class="error-text">
-                                <small *ngIf="item_his.controls[i].get('sim_iccid').errors.required" class="text-danger"> SIM ICCID is required</small>
+                          </div>
+                        </th>
+                        <th>
+                          <input type="text" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim_iccid').errors}"
+                            formControlName="sim_iccid" />
+                          <div *ngIf="submitted && item_his.controls[i].get('sim_iccid').errors" class="error-text">
+                            <small *ngIf="item_his.controls[i].get('sim_iccid').errors.required" class="text-danger">
+                              SIM ICCID is required</small>
 
-                              </div>
-                            </th>
-                            <th>
-                              <ng-select (change)="onPlanChange($event, item)" [clearable]="false" appendTo="body" [clearOnBackspace]="false" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('plan').errors}" formControlName="plan"  [items]="planList"
-                            bindLabel="plan" bindValue="id" placeholder="Select a plan"></ng-select>
-                            <div *ngIf="submitted && item_his.controls[i].get('plan').errors" class="error-text">
-                              <small *ngIf="item_his.controls[i].get('plan').errors.required" class="text-danger"> Plan is required</small>
+                          </div>
+                        </th>
+                        <th>
+                          <ng-select (change)="onPlanChange($event, item)" [clearable]="false" appendTo="body"
+                            [clearOnBackspace]="false"
+                            [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('plan').errors}"
+                            formControlName="plan" [items]="planList" bindLabel="plan" bindValue="id"
+                            placeholder="Select a plan"></ng-select>
+                          <div *ngIf="submitted && item_his.controls[i].get('plan').errors" class="error-text">
+                            <small *ngIf="item_his.controls[i].get('plan').errors.required" class="text-danger">
+                              Plan is required</small>
 
-                            </div>
-                            </th>
-                            <th>
-                              <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('amount').errors}" formControlName="amount"  />
-                            <div *ngIf="submitted && item_his.controls[i].get('amount').errors" class="error-text">
-                              <small *ngIf="item_his.controls[i].get('amount').errors.required" class="text-danger"> Amount is required</small>
-                            </div>
-                            </th>
-                            <th>
-                              <button class="btn btn-success btn-mini pull-right mr-3" title="Add new item"
-                                (click)="addItemHistory()"><i class="icofont-plus "></i> Add More</button>
-                              <button *ngIf="itemFormArray.length > 1" class="btn btn-danger mr-1 btn-mini pull-right"
-                                title="Delete this item" (click)="removeItemHistory(i)"> <i class="icofont-ui-delete"></i>
-                              </button>
+                          </div>
+                        </th>
+                        <th>
+                          <input type="text" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('amount').errors}"
+                            formControlName="amount" />
+                          <div *ngIf="submitted && item_his.controls[i].get('amount').errors" class="error-text">
+                            <small *ngIf="item_his.controls[i].get('amount').errors.required" class="text-danger">
+                              Amount is required</small>
+                          </div>
+                        </th>
+                        <th>
+                          <button class="btn btn-success btn-mini pull-right mr-3" title="Add new item"
+                            (click)="addItemHistory()"><i class="icofont-plus "></i> Add More</button>
+                          <button *ngIf="itemFormArray.length > 1" class="btn btn-danger mr-1 btn-mini pull-right"
+                            title="Delete this item" (click)="removeItemHistory(i)"> <i class="icofont-ui-delete"></i>
+                          </button>
 
-                            </th>
+                        </th>
 
-                        </tr>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -201,9 +261,9 @@
                 </table> -->
 
                 <button class="btn btn-success btn-sm btn-outline-success float-right" (click)="onFormSubmit()">
-                    <i class="icofont-save"></i> {{btnSaveText}}
+                  <i class="icofont-save"></i> {{btnSaveText}}
                 </button>
-            </div>
+              </div>
 
 
 

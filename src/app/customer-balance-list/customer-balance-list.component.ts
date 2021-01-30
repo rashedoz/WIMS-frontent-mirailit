@@ -216,6 +216,7 @@ export class CustomerBalanceListComponent implements OnInit {
     const temp = this.tempRows.filter(function (d) {
       return d.first_name.toLowerCase().indexOf(val) !== -1 ||
              d.last_name.toLowerCase().indexOf(val) !== -1 ||
+             d.customer_code.toLowerCase().indexOf(val) !== -1 ||
              d.mobile.indexOf(val) !== -1 ||
         !val;
     });
@@ -233,6 +234,7 @@ export class CustomerBalanceListComponent implements OnInit {
     const temp = this.tempRows.filter(function (d) {
       return d.first_name.toLowerCase().indexOf(val) !== -1 ||
              d.last_name.toLowerCase().indexOf(val) !== -1 ||
+             d.customer_code.toLowerCase().indexOf(val) !== -1 ||
              d.mobile.indexOf(val) !== -1 ||
         !val;
     });
@@ -250,6 +252,7 @@ export class CustomerBalanceListComponent implements OnInit {
     const temp = this.tempRows.filter(function (d) {
       return d.first_name.toLowerCase().indexOf(val) !== -1 ||
              d.last_name.toLowerCase().indexOf(val) !== -1 ||
+             d.customer_code.toLowerCase().indexOf(val) !== -1 ||
              d.mobile.indexOf(val) !== -1 ||
         !val;
     });

@@ -1,5 +1,5 @@
 import { Component, TemplateRef, ViewChild, ElementRef, ViewEncapsulation, OnInit } from '@angular/core';
-import { ColumnMode } from '@swimlane/ngx-datatable';
+import { ColumnMode,DatatableComponent } from '@swimlane/ngx-datatable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonService } from '../_services/common.service';
@@ -25,12 +25,16 @@ export class AllSIMListComponent implements OnInit {
   page = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
   rows = [];
+  tempRows = [];
+  columnsWithSearch : string[] = [];
   loadingIndicator = false;
+  iccidHistory:any = null;
   ColumnMode = ColumnMode;
   scrollBarHorizontal = (window.innerWidth < 1200);
-
+  @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
   modalConfig: any = { class: 'gray modal-lg', backdrop: 'static' };
   modalRef: BsModalRef;
+  modalRefICCID: BsModalRef;
   simLifecycleDetails : Array<any> = [];
 
   constructor(
@@ -72,7 +76,9 @@ export class AllSIMListComponent implements OnInit {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
         return;
       }
+      this.tempRows = res;
       this.rows = res;
+      if(this.rows.length > 0)this.columnsWithSearch = Object.keys(this.rows[0]);
       // this.page.totalElements = res.Total;
       // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
@@ -87,6 +93,29 @@ export class AllSIMListComponent implements OnInit {
     );
   }
 
+  updateFilterBill(event) {
+
+    const val = event.target.value.toString().toLowerCase().trim();
+
+      // assign filtered matches to the active datatable
+      const temp = this.tempRows.filter(item => {
+        // iterate through each row's column data
+        for (let i = 0; i < this.columnsWithSearch.length; i++){
+          var colValue = item[this.columnsWithSearch[i]] ;  
+          // if no filter OR colvalue is NOT null AND contains the given filter
+          if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
+            // found match, return true to add to result set
+            return true;
+          }
+        }
+      });
+
+    // update the rows
+    this.rows = temp;
+    // // Whenever the filter changes, always go back to the first page
+     this.table.offset = 0;
+  }
+
 
   modalHide() {
     this.modalRef.hide();
@@ -98,11 +127,26 @@ export class AllSIMListComponent implements OnInit {
     this._service.get('stock/get-sim-lifecycle/'+item.id).subscribe(res => {
       if(res.length){
         this.simLifecycleDetails = res;
-        console.log(this.simLifecycleDetails);
         this.modalRef = this.modalService.show(template, this.modalConfig);
       } else {
         this.toastr.warning('No Details Found.', 'Warning!', { closeButton: true, disableTimeOut: false });
       }
+    }, err => { }
+    );
+  }
+
+  modalHideICCID() {
+    this.modalRefICCID.hide();
+    this.iccidHistory = null;
+  }
+
+  openModalICCID(item, template: TemplateRef<any>) {
+
+    this._service.get('stock/get-sim-iccid-history/'+item.id).subscribe(res => {
+      
+       this.iccidHistory = res;
+       this.modalRefICCID = this.modalService.show(template, this.modalConfig);
+
     }, err => { }
     );
   }

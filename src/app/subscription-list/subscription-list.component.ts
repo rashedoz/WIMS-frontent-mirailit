@@ -151,29 +151,44 @@ export class SubscriptionListComponent implements OnInit {
     );
   }
 
-  toggleExpandRow(row) {
-    let items : any = [];
-    if(row.future_state){
-      row.subscribed_items.forEach(element => {
-        items.push({
-          sim:element.sim,
-          plan:element.plan,
-          status:null
-        });
-      });
-    }else {
-      row.subscribed_items.forEach(element => {
-        items.push({
-          sim:element.sim,
-          plan:element.plan,
-          status:element.status
-        });
-      });
-    }
-    row.details = items;
-    this.table.rowDetail.toggleExpandRow(row);
+  // toggleExpandRow(row) {
+  //   let items : any = [];
+  //   if(row.future_state){
+  //     row.subscribed_items.forEach(element => {
+  //       items.push({
+  //         sim:element.sim,
+  //         plan:element.plan,
+  //         status:null
+  //       });
+  //     });
+  //   }else {
+  //     row.subscribed_items.forEach(element => {
+  //       items.push({
+  //         sim:element.sim,
+  //         plan:element.plan,
+  //         status:element.status
+  //       });
+  //     });
+  //   }
+  //   row.details = items;
+  //   this.table.rowDetail.toggleExpandRow(row);
 
-  }
+  // }
+  toggleExpandRow(row) {
+
+    // console.log(row);
+     if(!row.details){
+      this._service.get('subscription/get-subscription-detail/'+row.customer_id).subscribe(res => {
+        row.details = res;  
+        console.log(res);   
+      }, err => { });
+     }
+  
+    this.table.rowDetail.toggleExpandRow(row);
+  
+    
+  
+    }
 
 
   updateFilter(event) {
