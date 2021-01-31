@@ -688,8 +688,9 @@ export class BillListComponent implements OnInit {
       doc.text( res.total_amount,rightStartCol2 + 42, startY,null, 'right' );
       }
 
-
-
+      var img = new Image()
+      img.src = 'assets/images/paid.png'
+      doc.addImage(img, 'png', startX + 100 , startY + 50, 80, 60)
 
       /** Terms and conditions */
       doc.setFontSize(this.fontSizes.SubTitleFontSize);

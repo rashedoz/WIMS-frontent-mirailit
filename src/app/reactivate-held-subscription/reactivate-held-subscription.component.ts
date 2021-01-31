@@ -137,7 +137,7 @@ export class ReactivateHeldSubscriptionComponent implements OnInit {
     if(e){
     //  this.subscriptionItemList = this.itemList.filter(x=>x.subscription == e.subscription);
      this.subscriptionItemList = e.subscribed_items;
-
+      console.log(this.subscriptionItemList);
      if (this.subscriptionItemList.length > 0) {
       let itemHistoryControl = <FormArray>(
         this.entryForm.controls.itemHistory
