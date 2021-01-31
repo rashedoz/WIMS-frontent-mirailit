@@ -176,7 +176,7 @@ export class SubscriptionListComponent implements OnInit {
   // }
   toggleExpandRow(row) {
 
-    // console.log(row);
+     console.log(row);
      if(!row.details){
       this._service.get('subscription/get-subscription-detail/'+row.id).subscribe(res => {
         row.details = res;

@@ -67,9 +67,11 @@ export class BillListComponent implements OnInit {
   subTotal:number =0;
   discount:number=0;
   paidAmount:number=0;
+  tempPaidAmount:number=0;
   remarks =  null;
   billItem;
   balanceObj;
+  balance:number=0;
   isPayBalanceEnableShow = false;
   isPayBalanceEnable = false;
 
@@ -332,6 +334,8 @@ export class BillListComponent implements OnInit {
     this.subTotal = 0;
     this.discount = 0;
     this.paidAmount = 0;
+    this.tempPaidAmount = 0;
+    this.balance = 0;
     this.remarks = null;
     this.isPayBalanceEnableShow = false;
     this.isPayBalanceEnable = false;
@@ -347,6 +351,7 @@ export class BillListComponent implements OnInit {
   this._service.get('get-customer-current-balance/'+ row.customer_id).subscribe(
     res => {
      this.balanceObj = res;
+     this.balance = res.balance;
      if(Number(this.balanceObj.balance) == 0){
       this.isPayBalanceEnableShow = false;
      } else {
@@ -366,11 +371,13 @@ export class BillListComponent implements OnInit {
     if(e){
       if(Number(this.balanceObj.balance) > net){
         this.paidAmount = net;
+        this.tempPaidAmount = net;
         } else if(Number(this.balanceObj.balance) <= net){
           this.paidAmount = Number(this.balanceObj.balance);
         }
     } else {
       this.paidAmount = 0;
+      this.tempPaidAmount =  this.tempPaidAmount - net;
     }
   }
 

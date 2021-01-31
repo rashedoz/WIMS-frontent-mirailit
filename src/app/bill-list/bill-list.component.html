@@ -91,7 +91,7 @@
                                           </ng-template>
                                       </ngx-datatable-column>
 
-                                      
+
                                     <ngx-datatable-column [width]="150" name="One Time Charge" prop="one_time_charge" [draggable]="false" [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
                                             <span > {{ value }} </span>
@@ -143,7 +143,7 @@
                                           <ng-template let-row="row" ngx-datatable-cell-template>
                                               <button  *ngIf="row.status != 3 && row.status != 4" (click)="openModal(row ,template)" class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive Payment</button>
                                               <button (click)="printInv(row)" class="btn btn-primary btn-mini"><i class="icofont icofont-doc"></i>Show Invoice</button>
-                                             
+
                                             </ng-template>
                                       </ngx-datatable-column>
 
@@ -204,7 +204,7 @@
                                           </ng-template>
                                       </ngx-datatable-column>
 
-                                      
+
                                       <ngx-datatable-column [width]="150" name="One Time Charge" prop="one_time_charge" [draggable]="false" [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
                                             <span > {{ value }} </span>
@@ -318,7 +318,7 @@
                                             <span > {{ value }} </span>
                                         </ng-template>
                                     </ngx-datatable-column>
-                                   
+
 
                                     <ngx-datatable-column [width]="150" name="Payable Amount" prop="payable_amount" [draggable]="false" [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
@@ -428,7 +428,7 @@
                                               <span > {{ value }} </span>
                                           </ng-template>
                                       </ngx-datatable-column>
-                              
+
 
                                       <ngx-datatable-column [width]="150" name="Payable Amount" prop="payable_amount" [draggable]="false" [sortable]="false">
                                           <ng-template let-value="value" ngx-datatable-cell-template>
@@ -471,10 +471,10 @@
                                           [sortable]="false">
                                           <ng-template let-row="row" ngx-datatable-cell-template>
                                             <button  *ngIf="row.status != 3 && row.status != 4" (click)="openModal(row ,template)" class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive Payment</button>
-                                            <button (click)="printInv(row)" class="btn btn-primary btn-mini"><i class="icofont icofont-doc"></i>Show Invoice</button>                       
+                                            <button (click)="printInv(row)" class="btn btn-primary btn-mini"><i class="icofont icofont-doc"></i>Show Invoice</button>
                                        </ng-template>
-                                           
-                                            
+
+
                                       </ngx-datatable-column>
 
                                   </ngx-datatable>
@@ -516,14 +516,14 @@
               <table class="table">
                   <thead>
                       <tr>
-                          <th width="60%">{{balanceObj.first_name}} {{balanceObj.last_name}}</th>                         
+                          <th width="60%">{{balanceObj.first_name}} {{balanceObj.last_name}}</th>
                           <th >Balance:</th>
-                          <th >{{balanceObj.balance}}</th>
+                          <th >{{balance - tempPaidAmount}}</th>
                       </tr>
                   </thead>
               </table>
           </div>
-      
+
 
             <table class="table table-xs ">
               <tbody>
@@ -561,9 +561,9 @@
                               numeric numericType="number" (change)="onChangePaid(paidAmount)"
                               [(ngModel)]="paidAmount" [ngModelOptions]="{standalone: true}">
                       </td>
-                  </tr>                  
+                  </tr>
                    <tr *ngIf="isPayBalanceEnableShow">
-                        <th colspan="2"> 
+                        <th colspan="2">
                             <div class="form-group text-left">
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
@@ -575,8 +575,8 @@
                             </div>
                         </div>
                     </th>
-                      
-                  </tr>                  
+
+                  </tr>
               </tbody>
           </table>
           <div class="form-group row">
