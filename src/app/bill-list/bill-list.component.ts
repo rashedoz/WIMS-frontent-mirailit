@@ -536,8 +536,8 @@ export class BillListComponent implements OnInit {
        if(row.bill_type == "Device Sales"){
 
         columns = [
-          { title: 'Device No', dataKey: 'DID_no' },
-          { title: 'Device Serial', dataKey: 'IMEI' },
+          { title: 'DID No', dataKey: 'DID_no' },
+          { title: 'IMEI', dataKey: 'IMEI' },
           { title: 'Amount', dataKey: 'device_cost',halign: 'right' }
         ];
 
@@ -616,7 +616,7 @@ export class BillListComponent implements OnInit {
         let dataArray = [];
         res.subscribed_items.forEach(element => {
           dataArray.push({
-            CID_no:element.sim.CID_no, 
+            CID_no:element.sim.CID_no,
             ICCID_no:element.sim.ICCID_no,
             phone_number:element.sim.phone_number ? element.sim.phone_number : '--',
             amount:element.amount
@@ -751,7 +751,7 @@ export class BillListComponent implements OnInit {
     const temp = this.tempRows.filter(item => {
       // iterate through each row's column data
       for (let i = 0; i < this.columnsWithSearch.length; i++){
-        var colValue = item[this.columnsWithSearch[i]] ;  
+        var colValue = item[this.columnsWithSearch[i]] ;
         // if no filter OR colvalue is NOT null AND contains the given filter
         if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
           // found match, return true to add to result set
@@ -779,7 +779,7 @@ export class BillListComponent implements OnInit {
     const temp = this.tempRows.filter(item => {
       // iterate through each row's column data
       for (let i = 0; i < this.columnsWithSearch.length; i++){
-        var colValue = item[this.columnsWithSearch[i]] ;  
+        var colValue = item[this.columnsWithSearch[i]] ;
         // if no filter OR colvalue is NOT null AND contains the given filter
         if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
           // found match, return true to add to result set
@@ -807,7 +807,7 @@ export class BillListComponent implements OnInit {
     const temp = this.tempRows.filter(item => {
       // iterate through each row's column data
       for (let i = 0; i < this.columnsWithSearch.length; i++){
-        var colValue = item[this.columnsWithSearch[i]] ;  
+        var colValue = item[this.columnsWithSearch[i]] ;
         // if no filter OR colvalue is NOT null AND contains the given filter
         if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
           // found match, return true to add to result set
@@ -835,7 +835,7 @@ export class BillListComponent implements OnInit {
     const temp = this.tempRows.filter(item => {
       // iterate through each row's column data
       for (let i = 0; i < this.columnsWithSearch.length; i++){
-        var colValue = item[this.columnsWithSearch[i]] ;  
+        var colValue = item[this.columnsWithSearch[i]] ;
         // if no filter OR colvalue is NOT null AND contains the given filter
         if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
           // found match, return true to add to result set
@@ -844,7 +844,7 @@ export class BillListComponent implements OnInit {
       }
     });
 
-    
+
 
     // update the rows
     this.deviceBilList = temp;

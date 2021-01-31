@@ -178,16 +178,16 @@ export class SubscriptionListComponent implements OnInit {
 
     // console.log(row);
      if(!row.details){
-      this._service.get('subscription/get-subscription-detail/'+row.customer_id).subscribe(res => {
-        row.details = res;  
-        console.log(res);   
+      this._service.get('subscription/get-subscription-detail/'+row.id).subscribe(res => {
+        row.details = res;
+        console.log(res);
       }, err => { });
      }
-  
+
     this.table.rowDetail.toggleExpandRow(row);
-  
-    
-  
+
+
+
     }
 
 
