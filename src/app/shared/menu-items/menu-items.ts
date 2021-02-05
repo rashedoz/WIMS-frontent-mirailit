@@ -223,7 +223,7 @@ const MENUITEMS = [
       {
           name: 'Subscription',
           type: 'sub',
-          permission: '',
+          permission: 'is_Staff',
           icon: 'icofont-brand-microsoft',
           children: [
             {

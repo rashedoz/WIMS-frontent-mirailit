@@ -14,15 +14,11 @@ export class AuthorizationService {
 
     hasPermission(role: string) {
         if (!role) return true;
-        if (this.authenticationService.currentUserDetails.value && this.authenticationService.currentUserDetails.value.role === role) {
+        const roles = role.split(',');
+        if (this.authenticationService.currentUserDetails.value && this.authenticationService.currentUserDetails.value.Roles.find(permission => {
+            return roles.indexOf(permission) !== -1;
+        })) {
             return true;
-        }
-        return false;
-    }
-
-    hasPermissions(roles: Array<string>) {        
-        if (this.authenticationService.currentUserDetails.value) {
-            return roles.indexOf(this.authenticationService.currentUserDetails.value.role) !== -1;
         }
         return false;
     }

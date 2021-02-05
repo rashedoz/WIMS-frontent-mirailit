@@ -40,10 +40,10 @@ export class AuthGuard implements CanActivate {
 
     protected hasRequiredPermission(permission: string): Promise<boolean> | boolean {
         if (!permission) return true;
-        let permissions = permission? permission.split(',') : null;
+
         // If user’s permissions already retrieved from the API
-        if (this.authenticationService.currentUserDetails.value && this.authenticationService.currentUserDetails.value.role) {
-            return this.authorizationService.hasPermissions(permissions);
+        if (this.authenticationService.currentUserDetails.value && this.authenticationService.currentUserDetails.value.Roles) {
+            return this.authorizationService.hasPermission(permission);
         } else {
             return false;
         }

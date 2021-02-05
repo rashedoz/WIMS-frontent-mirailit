@@ -10,8 +10,7 @@ export class AuthorizeDirective implements OnInit {
     constructor(private el: ElementRef, private authorizationService: AuthorizationService) { }
 
     ngOnInit() {
-        let permissions = this.permission? this.permission.split(',') : null;
-        if (permissions && !this.authorizationService.hasPermissions(permissions)) {
+        if (this.permission && !this.authorizationService.hasPermission(this.permission)) {
             this.el.nativeElement.style.display = 'none';
         }
     }

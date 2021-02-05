@@ -99,9 +99,11 @@
                                                 </ng-template>
                                             </ngx-datatable-column> -->
 
-                                            <ngx-datatable-column [width]="300" name="Action" prop="Id"
+                                            <ngx-datatable-column [width]="380" name="Action" prop="Id"
                                                 [draggable]="false" [sortable]="false">
                                                 <ng-template let-row="row" ngx-datatable-cell-template>
+                                                    <button (click)="showDetails(row,templateDetails)" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-eye"></i>Show Profile</button>
+
                                                     <button (click)="getItem(row,template)"
                                                         class="btn btn-primary btn-mini mr-1"><i
                                                             class="icofont icofont-edit"></i>Edit Profile</button>
@@ -184,9 +186,11 @@
                                                 </ng-template>
                                             </ngx-datatable-column> -->
 
-                                            <ngx-datatable-column [width]="300" name="Action" prop="Id"
+                                            <ngx-datatable-column [width]="380" name="Action" prop="Id"
                                                 [draggable]="false" [sortable]="false">
                                                 <ng-template let-row="row" ngx-datatable-cell-template>
+                                                    <button (click)="showDetails(row,templateDetails)" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-eye"></i>Show Profile</button>
+
                                                     <button (click)="getItem(row,template)"
                                                         class="btn btn-primary btn-mini mr-1"><i
                                                             class="icofont icofont-edit"></i>Edit Profile</button>
@@ -268,9 +272,11 @@
                                                 </ng-template>
                                             </ngx-datatable-column> -->
 
-                                            <ngx-datatable-column [width]="300" name="Action" prop="Id"
+                                            <ngx-datatable-column [width]="380" name="Action" prop="Id"
                                                 [draggable]="false" [sortable]="false">
                                                 <ng-template let-row="row" ngx-datatable-cell-template>
+                                                    <button (click)="showDetails(row,templateDetails)" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-eye"></i>Show Profile</button>
+
                                                     <button (click)="getItem(row,template)"
                                                         class="btn btn-primary btn-mini mr-1"><i
                                                             class="icofont icofont-edit"></i>Edit Profile</button>
@@ -444,7 +450,7 @@
                                 </div>
                             </div>
 
-                            <div *ngIf="!isEdit">
+                            <!-- <div *ngIf="!isEdit">
                                 <div class="form-group row">
                                     <label class="col-sm-4 col-form-label"> Password </label>
                                     <div class="col-sm-8">
@@ -473,7 +479,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
 
                         </div>
                     </div>
@@ -676,5 +682,125 @@
         </div>
     </ng-template>
 
+    <ng-template #templateDetails> 
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body " *ngIf="details">
+            <app-card> 
+               
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label font-weight-bold">Customer Code </label>
+                            <div class="col-sm-8">
+                                <label class="col-form-label">: {{details.customer_code}} </label>                               
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label font-weight-bold">First Name </label>
+                            <div class="col-sm-8">                           
+                                <label class="col-form-label">: {{details.first_name}} </label>   
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label font-weight-bold">Last Name </label>
+                            <div class="col-sm-8">
+                                <label class="col-form-label">: {{details.last_name}} </label>   
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label font-weight-bold">Email </label>
+                            <div class="col-sm-8">
+                                <label class="col-form-label">: {{details.email}} </label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label font-weight-bold">Mobile </label>
+                            <div class="col-sm-8">
+                                <label class="col-form-label">: {{details.mobile}} </label>
+                            </div>
+                        </div>  
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label font-weight-bold">Alternative Mobile </label>
+                            <div class="col-sm-8">
+                                 <label class="col-form-label">: {{details.alternative_mobile}} </label> 
+                               
+                            </div>
+                        </div>    
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label font-weight-bold">Telephone </label>
+                            <div class="col-sm-8">
+                                <label class="col-form-label">: {{details.telephone}} </label> 
+                               
+                            </div>
+                        </div>                       
+                     
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label font-weight-bold">Fax </label>
+                            <div class="col-sm-8">
+                                <label class="col-form-label">: {{details.fax}} </label> 
+                               
+                            </div>
+                        </div>
+                    
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label font-weight-bold">NID </label>
+                            <div class="col-sm-8">
+                                <label class="col-form-label">: {{details.nid}} </label> 
+    
+                               
+                            </div>
+                        </div>
+                      
+                        
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label font-weight-bold">Account Number </label>
+                            <div class="col-sm-8">
+                                <label class="col-form-label">: {{details.acc_number}} </label> 
+                               
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label font-weight-bold">Address 1</label>
+                            <div class="col-sm-8">
+                                <label class="col-form-label">: {{details.address_one}} </label>    
+                               
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label font-weight-bold">Address 2</label>
+                            <div class="col-sm-8">
+                                <label class="col-form-label">: {{details.address_two}} </label>  
+                            </div>
+                        </div>   
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label font-weight-bold">Preferred Payment Method</label>
+                            <div class="col-sm-8">
+                                <label class="col-form-label">: {{details.preferred_payment_method}} </label>  
+                            </div>
+                        </div>        
+                    </div>
+                </div>
+           
+                         
+                                
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i> Close</button>              
+
+            </div>
+
+        </div>
+    </ng-template>
 
 </block-ui>

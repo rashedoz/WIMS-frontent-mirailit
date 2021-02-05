@@ -41,7 +41,7 @@ export class MemberListComponent implements OnInit {
   ColumnMode = ColumnMode;
   @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
   scrollBarHorizontal = (window.innerWidth < 1200);
-
+  details;
   constructor(
     private modalService: BsModalService,
     public formBuilder: FormBuilder,
@@ -170,6 +170,24 @@ getItem(row, template: TemplateRef<any>) {
   
 }
 
+showDetails(row, template: TemplateRef<any>) {
+  this.blockUI.start('Getting data...');
+  this._service.get('get-user-detail/' + row.id).subscribe(res => {
+    this.blockUI.stop();
+    if (!res) {
+      this.toastr.error(res.Msg, 'Error!', { timeOut: 2000 });
+      return;
+    }
+    this.modalTitle = 'Profile Details';
+    this.details = res;
+    console.log(this.details);
+    this.modalRef = this.modalService.show(template, this.modalConfig);
+  }, err => {
+    this.blockUI.stop();
+    this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+  });
+}
+
 changePassword(row, template: TemplateRef<any>) {
 
     this.modalTitle = 'Change Password';
@@ -251,17 +269,17 @@ onFormSubmit() {
       is_superuser:0
     };
   
-    this.authService.registerSystemAdmin('auth/users/', obj).subscribe(
+    this._service.post('register-user', obj).subscribe(
       data => {
         this.blockUI.stop();
-        if (data) {
+        if (data.IsReport == "Ok") {
           this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
           this.modalHide();
           this.getList();
         }
-        // else if (data.IsReport == "Warning") {
-        //   this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-        else {
+        else if (data.IsReport == "NotOk") {
+          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+         } else {
           this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
         }
       },

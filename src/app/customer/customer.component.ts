@@ -58,7 +58,7 @@ export class CustomerComponent implements OnInit {
   ColumnMode = ColumnMode;
 
   scrollBarHorizontal = (window.innerWidth < 1200);
-
+  details;
   constructor(
     private modalService: BsModalService,
     public formBuilder: FormBuilder,
@@ -91,12 +91,10 @@ export class CustomerComponent implements OnInit {
       address_two: [null],
       preferred_payment_method: [null],
       firstName: [null, [Validators.required]],
-      lastName: [null, [Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required]
-    }, {
-      validator: MustMatch('password', 'confirmPassword')
-  });
+      lastName: [null, [Validators.required]]
+      // password: ['', [Validators.required, Validators.minLength(6)]],
+      // confirmPassword: ['', Validators.required]
+    });
 
 
     // this.RegistrerForm = this.formBuilder.group({
@@ -135,6 +133,24 @@ get p() {
   setPage(pageInfo) {
    // this.page.pageNumber = pageInfo.offset;
     this.getList();
+  }
+
+  showDetails(row, template: TemplateRef<any>) {
+    this.blockUI.start('Getting data...');
+    this._service.get('get-user-detail/' + row.id).subscribe(res => {
+      this.blockUI.stop();
+      if (!res) {
+        this.toastr.error(res.Msg, 'Error!', { timeOut: 2000 });
+        return;
+      }
+      this.modalTitle = 'Profile Details';
+      this.details = res;
+      console.log(this.details);
+      this.modalRef = this.modalService.show(template, this.modalConfig);
+    }, err => {
+      this.blockUI.stop();
+      this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+    });
   }
 
   showCustomerTable(id){
@@ -251,10 +267,10 @@ get p() {
 
   getItem(row, template: TemplateRef<any>) {
     this.isEdit = true;
-    this.RegistrerForm.controls["password"].setValidators(null);
-    this.RegistrerForm.controls["password"].updateValueAndValidity();
-    this.RegistrerForm.controls["confirmPassword"].setValidators(null);
-    this.RegistrerForm.controls["confirmPassword"].updateValueAndValidity();
+    // this.RegistrerForm.controls["password"].setValidators(null);
+    // this.RegistrerForm.controls["password"].updateValueAndValidity();
+    // this.RegistrerForm.controls["confirmPassword"].setValidators(null);
+    // this.RegistrerForm.controls["confirmPassword"].updateValueAndValidity();
     this.modalTitle = 'Update Customer';
     this.btnSaveText = 'Update';
     this.RegistrerForm.controls['id'].setValue(row.id);
@@ -272,8 +288,8 @@ get p() {
     this.RegistrerForm.controls['firstName'].setValue(row.first_name);
     this.RegistrerForm.controls['lastName'].setValue(row.last_name);
     this.RegistrerForm.controls['preferred_payment_method'].setValue(row.preferred_payment_method);
-    this.RegistrerForm.controls['confirmPassword'].setValue(null);
-    this.RegistrerForm.controls['password'].setValue(null);
+    // this.RegistrerForm.controls['confirmPassword'].setValue(null);
+    // this.RegistrerForm.controls['password'].setValue(null);
     this.modalRef = this.modalService.show(template, this.modalConfig);
   
 }
@@ -387,7 +403,7 @@ changePassword(row, template: TemplateRef<any>) {
       this.blockUI.start('Saving...');
   
       const obj = {     
-        password: this.RegistrerForm.value.password.trim(),
+        password: 123456,
         email: this.RegistrerForm.value.email.trim(),     
         first_name: this.RegistrerForm.value.firstName.trim(),
         last_name: this.RegistrerForm.value.lastName.trim(),
@@ -408,17 +424,17 @@ changePassword(row, template: TemplateRef<any>) {
         is_superuser:0
       };
     
-      this.authService.registerSystemAdmin('auth/users/', obj).subscribe(
+      this._service.post('register-user', obj).subscribe(
         data => {
           this.blockUI.stop();
-          if (data) {
+          if (data.IsReport == "Ok") {
             this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
             this.modalHide();
             this.getList();
           }
-          // else if (data.IsReport == "Warning") {
-          //   this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-          else {
+          else if (data.IsReport == "NotOk") {
+            this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+          }else {
             this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
           }
         },
@@ -552,10 +568,10 @@ changePassword(row, template: TemplateRef<any>) {
     this.modalTitle = 'Add Customer';
     this.btnSaveText = 'Save';
   
-    this.RegistrerForm.controls["password"].setValidators(Validators.required);
-    this.RegistrerForm.controls["password"].updateValueAndValidity();
-    this.RegistrerForm.controls["confirmPassword"].setValidators(Validators.required);
-    this.RegistrerForm.controls["confirmPassword"].updateValueAndValidity();
+    // this.RegistrerForm.controls["password"].setValidators(Validators.required);
+    // this.RegistrerForm.controls["password"].updateValueAndValidity();
+    // this.RegistrerForm.controls["confirmPassword"].setValidators(Validators.required);
+    // this.RegistrerForm.controls["confirmPassword"].updateValueAndValidity();
     this.RegistrerForm.controls['email'].enable();
   }
   

@@ -50,7 +50,10 @@ export class RegisterSystemAdminComponent implements OnInit {
       email: this.RegistrerForm.value.email.trim(),
       password: this.RegistrerForm.value.password.trim(),
       first_name: this.RegistrerForm.value.firstName.trim(),
-      last_name: this.RegistrerForm.value.lastName.trim(),
+      last_name: this.RegistrerForm.value.lastName.trim(),    
+      gender:1,
+      is_wholesaler: 0,
+      is_retailer: 0,
       is_customer:0,
       is_staff: 1,
       is_superuser:1
