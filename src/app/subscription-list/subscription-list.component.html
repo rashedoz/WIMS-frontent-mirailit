@@ -52,11 +52,11 @@
 
                           <div *ngIf="activeTable == 0">
                             <div class="row">
-                                <div class="col-lg-6">
+                                <div class="col-lg-7">
                                   <div class="form-group row">
                                     <!-- <label class="col-sm-4 col-form-label">Member </label> -->
-                                    <div class="col-sm-8">
-                                      <input type="text" class="form-control" placeholder="Search customer" (keyup)="updateFilter($event)" />
+                                    <div class="col-sm-12">
+                                      <input type="text" class="form-control" placeholder="Search customer by first name, last name, code, mobile, email" (keyup)="updateFilter($event)" />
 
                                     </div>
                                   </div>
@@ -129,7 +129,7 @@
 
                                   <ngx-datatable-column [width]="220" name="Wholesaler/Retailer Name" prop="customer" [draggable]="false" [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span > {{ value }} </span>
+                                          <span > {{ value.first_name }} {{ value.last_name }} </span>
                                       </ng-template>
                                   </ngx-datatable-column>
 
@@ -173,10 +173,10 @@
 
                           <div *ngIf="activeTable == 1">
                             <div class="row">
-                              <div class="col-lg-6">
+                              <div class="col-lg-7">
                                 <div class="form-group row">
-                                  <div class="col-sm-8">
-                                    <input type="text" class="form-control" placeholder="Search wholesaler" (keyup)="updateFilter($event)" />
+                                  <div class="col-sm-12">
+                                    <input type="text" class="form-control" placeholder="Search wholesaler by first name, last name, code, mobile, email" (keyup)="updateFilter($event)" />
   
                                   </div>
                                 </div>
@@ -241,7 +241,7 @@
   
                                     <ngx-datatable-column [width]="200" name="Wholesaler Name" prop="customer" [draggable]="false" [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
-                                            <span > {{ value }} </span>
+                                          <span > {{ value.first_name }} {{ value.last_name }} </span>
                                         </ng-template>
                                     </ngx-datatable-column>
   
@@ -279,10 +279,10 @@
 
                           <div *ngIf="activeTable == 2">
                             <div class="row">
-                              <div class="col-lg-6">
+                              <div class="col-lg-7">
                                 <div class="form-group row">
-                                  <div class="col-sm-8">
-                                    <input type="text" class="form-control" placeholder="Search retailer" (keyup)="updateFilter($event)" />
+                                  <div class="col-sm-12">
+                                    <input type="text" class="form-control" placeholder="Search retailer by first name, last name,code, mobile, email" (keyup)="updateFilter($event)" />
   
                                   </div>
                                 </div>
@@ -346,7 +346,7 @@
   
                                     <ngx-datatable-column [width]="200" name="Retailer Name" prop="customer" [draggable]="false" [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
-                                            <span > {{ value }} </span>
+                                          <span > {{ value.first_name }} {{ value.last_name }} </span>
                                         </ng-template>
                                     </ngx-datatable-column>
   

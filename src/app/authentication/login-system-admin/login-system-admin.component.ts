@@ -64,7 +64,7 @@ export class LoginSystemAdminComponent implements OnInit {
 
     this.authService.login({ UserName: this.LoginForm.value.Email, Password: this.LoginForm.value.Password}).subscribe(
       data => {
-      this.blockUI.stop();
+    ///  this.blockUI.stop();
         if (data.access) {
 
           this.authService.verifyToken(data.access).subscribe(
@@ -88,14 +88,6 @@ export class LoginSystemAdminComponent implements OnInit {
               }
             }
           );
-
-
-
-      
-
-
-
-
           // this.toastr.success('Logged in successfully', 'Success!', { timeOut: 2000 });
           // this.router.navigate([this.returnUrl]);
           // this.menuItems.refreshMenu();

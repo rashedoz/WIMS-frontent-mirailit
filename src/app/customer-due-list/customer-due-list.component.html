@@ -11,14 +11,13 @@
                             <h5 *ngIf="activeTable == 2"> Retailer List </h5>
                             <h5 *ngIf="activeTable == 3"> Customers with Due List </h5>
 
-                            <button class="btn btn-primary btn-sm mr-2" [ngClass]="{'b-active': isbuttonActive}"
-                                (click)="showCustomerTable(0)">
+                            <button class="btn btn-primary btn-sm mr-2" (click)="showCustomerTable(0)">
                                 All </button>
                             <button class="btn btn-primary btn-sm mr-2" (click)="showCustomerTable(1)">
                                 Wholesaler</button>
                             <button class="btn btn-primary btn-sm mr-2" (click)="showCustomerTable(2)">
                                 Retailer</button>
-                            <button class="btn btn-primary btn-sm mr-2" (click)="showCustomerTable(3)">
+                            <button class="btn btn-primary btn-sm mr-2" [ngClass]="{'b-active': isbuttonActive}" (click)="showCustomerTable(3)">
                                 Customers with Due</button>
 
 

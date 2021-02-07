@@ -12,13 +12,13 @@ import { MustMatch } from './../_helpers/must-match.validator';
 import { SubscriptionStatus,SubsItemsStaus } from '../_models/enums';
 
 @Component({
-  selector: 'app-customer',
-  templateUrl: './customer.component.html',
-  styleUrls:['./customer.component.css'],
+  selector: 'app-customer-due-list',
+  templateUrl: './customer-due-list.component.html',
+  styleUrls:['./customer-due-list.component.css'],
   encapsulation: ViewEncapsulation.None
 })
 
-export class CustomerComponent implements OnInit {
+export class CustomerDueListComponent implements OnInit {
 
   RegistrerForm: FormGroup;
   RegistrerFormChangePassword: FormGroup;
@@ -49,7 +49,7 @@ export class CustomerComponent implements OnInit {
 
   page = new Page();
   isbuttonActive = true;
-  activeTable = 0;
+  activeTable = 3;
   tempRows = [];
   customerList = [];
   wholesalerList = [];
@@ -120,7 +120,7 @@ export class CustomerComponent implements OnInit {
       validator: MustMatch('password', 'confirmPassword')
   });
 
-    this.getList();
+  this.getCustomerDueList()
   }
 
 

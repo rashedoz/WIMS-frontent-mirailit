@@ -223,7 +223,7 @@ const MENUITEMS = [
       {
           name: 'Subscription',
           type: 'sub',
-          permission: 'is_Staff',
+          permission: '',
           icon: 'icofont-brand-microsoft',
           children: [
             {
@@ -299,6 +299,13 @@ const MENUITEMS = [
           {
             state: 'customer',
             name: 'Customer List ',
+            type: 'link',
+            icon: 'ti-control-forward',
+            permission: '',
+        },
+          {
+            state: 'customer-due-list',
+            name: 'Customers Due List ',
             type: 'link',
             icon: 'ti-control-forward',
             permission: '',

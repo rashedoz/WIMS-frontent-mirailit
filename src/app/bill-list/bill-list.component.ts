@@ -13,6 +13,7 @@ import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 // import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-bill-list',
@@ -117,6 +118,9 @@ export class BillListComponent implements OnInit {
     invoice_month: [null, [Validators.required]],
   });
   this.getBillList();
+
+  this.entryFormBill.get('invoice_month').disable();
+  this.entryFormBill.get('invoice_month').setValue(moment().format('MMM-YYYY'));
 
   }
 
@@ -396,7 +400,7 @@ export class BillListComponent implements OnInit {
     this.blockUI.start('Saving...');
 
     const obj = {
-     invoice_month: this.entryFormBill.value.invoice_month.trim()
+     invoice_month: this.entryFormBill.get('invoice_month').value
     };
 
     this.confirmService.confirm('Are you sure?', 'You are generating the monthly bill.')
@@ -658,6 +662,7 @@ export class BillListComponent implements OnInit {
 
 
       if(row.bill_type != "Subscription"){
+        
         doc.setFontSize(this.fontSizes.SubTitleFontSize);
         doc.setFont("times", "bold");
         doc.text('One Time Charge', rightStartCol2 - 20,startY,null, 'left' );
@@ -666,6 +671,24 @@ export class BillListComponent implements OnInit {
         doc.setFont("times", "bold");
         doc.text( res.one_time_charge,rightStartCol2 + 42, startY ,null, 'right' );
 
+        if(Number(res.parent_refund_amount) > 0){
+          doc.setFontSize(this.fontSizes.SubTitleFontSize);
+          doc.setFont("times", "bold");
+          doc.text('Refund Amount', rightStartCol2 - 18,startY += 8,null, 'left' );
+  
+          doc.setFontSize(this.fontSizes.SubTitleFontSize);
+          doc.setFont("times", "bold");
+          doc.text( res.parent_refund_amount,rightStartCol2 + 42, startY ,null, 'right' );
+        }
+        if(Number(res.discount) > 0){
+          doc.setFontSize(this.fontSizes.SubTitleFontSize);
+          doc.setFont("times", "bold");
+          doc.text('Discount', rightStartCol2 - 5,startY += 8,null, 'left' );
+  
+          doc.setFontSize(this.fontSizes.SubTitleFontSize);
+          doc.setFont("times", "bold");
+          doc.text( res.discount,rightStartCol2 + 42, startY ,null, 'right' );
+        }
 
         doc.setFontSize(this.fontSizes.TitleFontSize);
         doc.setFont("times", "bold");
@@ -677,20 +700,41 @@ export class BillListComponent implements OnInit {
         doc.text( res.total_amount,rightStartCol2 + 42, startY,null, 'right' );
 
       } else {
+        if(Number(res.parent_refund_amount) > 0){
+          doc.setFontSize(this.fontSizes.SubTitleFontSize);
+          doc.setFont("times", "bold");
+          doc.text('Refund Amount', rightStartCol2 - 18,startY += 8,null, 'left' );
+  
+          doc.setFontSize(this.fontSizes.SubTitleFontSize);
+          doc.setFont("times", "bold");
+          doc.text( res.parent_refund_amount,rightStartCol2 + 42, startY ,null, 'right' );
+        }
 
-      doc.setFontSize(this.fontSizes.TitleFontSize);
-      doc.setFont("times", "bold");
-      doc.text('Total', rightStartCol2,startY,null, 'left' );
+        if(Number(res.discount) > 0){
+          doc.setFontSize(this.fontSizes.SubTitleFontSize);
+          doc.setFont("times", "bold");
+          doc.text('Discount', rightStartCol2 - 5,startY += 8,null, 'left' );
+  
+          doc.setFontSize(this.fontSizes.SubTitleFontSize);
+          doc.setFont("times", "bold");
+          doc.text( res.discount,rightStartCol2 + 42, startY ,null, 'right' );
+        }
+
+        doc.setFontSize(this.fontSizes.TitleFontSize);
+        doc.setFont("times", "bold");
+        doc.text('Total', rightStartCol2,(startY += 8),null, 'left' );
 
 
-      doc.setFontSize(this.fontSizes.TitleFontSize);
-      doc.setFont("times", "bold");
-      doc.text( res.total_amount,rightStartCol2 + 42, startY,null, 'right' );
+        doc.setFontSize(this.fontSizes.TitleFontSize);
+        doc.setFont("times", "bold");
+        doc.text( res.total_amount,rightStartCol2 + 42, startY,null, 'right' );
       }
 
-      var img = new Image()
-      img.src = 'assets/images/paid.png'
-      doc.addImage(img, 'png', startX + 100 , startY + 50, 80, 60)
+      if(res.status == 3){
+        var img = new Image()
+        img.src = 'assets/images/paid.png'
+        doc.addImage(img, 'png', startX + 100 , startY + 50, 80, 60)
+      }
 
       /** Terms and conditions */
       doc.setFontSize(this.fontSizes.SubTitleFontSize);

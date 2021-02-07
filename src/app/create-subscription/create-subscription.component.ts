@@ -23,6 +23,7 @@ import { BsDatepickerConfig } from "ngx-bootstrap/datepicker";
 import { Page } from "./../_models/page";
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 import { AuthenticationService } from './../_services/authentication.service';
+import * as moment from 'moment';
 
 @Component({
   selector: "app-create-subscription",
@@ -99,6 +100,8 @@ export class CreateSubscriptionComponent implements OnInit {
       customerType: ['Wholesaler']
     });
 
+    this.entryForm.get('session').disable();
+    this.entryForm.get('session').setValue(moment().format('MMM-YYYY'));
     this.itemHistoryList = this.entryForm.get("itemHistory") as FormArray;
     this.itemFormArray = this.entryForm.get("itemHistory")["controls"];
 
@@ -208,7 +211,7 @@ export class CreateSubscriptionComponent implements OnInit {
 
     this.fromRowData.itemHistory.filter(x=> x.sim && x.sim_iccid && x.plan && x.amount).forEach(element => {
       subscribed_items.push({
-        session:this.entryForm.value.session,
+        session:this.entryForm.get('session').value,
         sim: element.sim.id,
         ICCID_no:element.sim_iccid,
         plan: element.plan,
@@ -234,7 +237,7 @@ export class CreateSubscriptionComponent implements OnInit {
         total_amount:Number(this.subTotal),
         discount:Number(this.discount),
         payable_amount: Number(this.subTotal) - Number(this.discount),
-        session: this.entryForm.value.session,
+        session:this.entryForm.get('session').value,
         customer:this.entryForm.value.customer,
         so_far_paid:0,
         parent_refund_amount:0

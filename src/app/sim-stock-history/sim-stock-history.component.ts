@@ -59,7 +59,8 @@ export class SIMStockHistoryComponent implements OnInit {
 
   getData() {
     this._service.get('stock/get-current-sim-stock-history').subscribe(res => {    
-      this.stock = res;    
+      this.stock = res;   
+      console.log(this.stock); 
     }, err => {}
     );
   }

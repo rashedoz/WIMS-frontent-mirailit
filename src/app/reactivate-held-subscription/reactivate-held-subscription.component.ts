@@ -23,6 +23,7 @@ import { BsDatepickerConfig } from "ngx-bootstrap/datepicker";
 import { Page } from "./../_models/page";
 import { SubscriptionStatus } from "./../_models/enums";
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
+import * as moment from 'moment';
 
 @Component({
   selector: "app-reactivate-held-subscription",
@@ -99,6 +100,9 @@ export class ReactivateHeldSubscriptionComponent implements OnInit {
     this.getSIMList();
     // this.getSIMListAll();
     this.getPlanList();
+
+    this.entryForm.get('session').disable();
+    this.entryForm.get('session').setValue(moment().format('MMM-YYYY'));
 
     let itemHistoryControl = <FormArray>(
       this.entryForm.controls.itemHistory
@@ -272,7 +276,7 @@ export class ReactivateHeldSubscriptionComponent implements OnInit {
 
     this.fromRowData.itemHistory.filter(x=> x.sim && x.plan && x.amount).forEach(element => {
       subscribed_items.push({
-        session:this.entryForm.value.session,
+        session:this.entryForm.get('session').value,
         sim: element.sim,
         plan: element.plan,
         amount: Number(element.amount),
@@ -299,7 +303,7 @@ export class ReactivateHeldSubscriptionComponent implements OnInit {
         total_amount:Number(this.subTotal),
         discount:Number(this.discount),
         payable_amount: Number(this.subTotal) - Number(this.discount),
-        session: this.entryForm.value.session,
+        session: this.entryForm.get('session').value,
         customer:this.entryForm.value.customer,
         subscription:this.entryForm.value.subscription,
         so_far_paid:0,

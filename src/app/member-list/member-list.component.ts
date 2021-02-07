@@ -272,12 +272,12 @@ onFormSubmit() {
     this._service.post('register-user', obj).subscribe(
       data => {
         this.blockUI.stop();
-        if (data.IsReport == "Ok") {
+        if (data.IsReport == "Success") {
           this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
           this.modalHide();
           this.getList();
         }
-        else if (data.IsReport == "NotOk") {
+        else if (data.IsReport == "Warning") {
           this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
          } else {
           this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });

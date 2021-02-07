@@ -58,6 +58,11 @@ export const AppRoutes: Routes = [
         // canActivate: [AuthGuard]
       },
       {
+        path: 'customer-due-list',
+        loadChildren: () => import('./customer-due-list/customer-due-list.module').then(m => m.CustomerDueListModule),
+        // canActivate: [AuthGuard]
+      },
+      {
         path: 'purchase-entry',
         loadChildren: () => import('./purchase-entry/purchase-entry.module').then(m => m.PurchaseEntryModule),
         // canActivate: [AuthGuard]

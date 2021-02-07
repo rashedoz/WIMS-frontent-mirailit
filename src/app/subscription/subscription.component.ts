@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-subscription',
@@ -57,6 +58,8 @@ export class SubscriptionComponent implements OnInit {
       invoice_month: [null, [Validators.required]],
     });
 
+    this.entryFormBill.get('invoice_month').disable();
+    this.entryFormBill.get('invoice_month').setValue(moment().format('MMM-YYYY'));
   }
 
   get f() {
@@ -72,7 +75,7 @@ export class SubscriptionComponent implements OnInit {
     this.blockUI.start('Saving...');
 
     const obj = {
-     invoice_month: this.entryFormBill.value.invoice_month.trim()
+     invoice_month: this.entryFormBill.get('invoice_month').value
     };
 
     this.confirmService.confirm('Are you sure?', 'You are generating the monthly bill.')

@@ -193,10 +193,14 @@ export class SubscriptionListComponent implements OnInit {
 
   updateFilter(event) {
     const val = event.target.value.toLowerCase();
-
+   
     // filter our data
     const temp = this.tempRows.filter(function (d) {
-      return d.customer.toLowerCase().indexOf(val) !== -1 ||
+      return d.customer.first_name.toLowerCase().indexOf(val) !== -1 ||
+             d.customer.last_name.toLowerCase().indexOf(val) !== -1 ||
+             d.customer.email.toLowerCase().indexOf(val) !== -1 ||
+             d.customer.mobile.toLowerCase().indexOf(val) !== -1 ||
+             d.customer.customer_code.toLowerCase().indexOf(val) !== -1 ||
         !val;
     });
     this.customerList = temp;

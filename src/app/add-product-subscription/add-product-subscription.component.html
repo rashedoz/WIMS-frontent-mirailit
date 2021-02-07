@@ -60,6 +60,9 @@
                       [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false"
                       formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
                       bindLabel="first_name" bindValue="id" placeholder="Select a customer">
+                      <ng-template ng-label-tmp let-item="item">                          
+                        {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
+                    </ng-template>
                       <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
                         {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
                       </ng-template>
