@@ -1,193 +1,185 @@
-<!--
 <block-ui>
- <div class="section">
-    <div class="container-fluid">
-      <div class="row">
-
-        <div class="col-md-3">
-          <div class="widget-title">
-            <h3>Profile Picture</h3>
-            <hr>
+<div class="row">
+  <div class="col-lg-12">
+      <div class="card card-border-primary">
+          <div class="card-header">
+              <h5>Profile Details </h5>
+              <!-- <button class="btn btn-primary btn-sm float-right" (click)="openModal(template)"><i
+                  class=" icofont icofont-plus "></i> Add Member</button> -->
           </div>
-          <div class="defaultform updateprofile">
-
-
-            <div class="space">
-              <div class="fileupload fileupload-new" data-provides="fileupload">
-                <div class="fileupload-preview thumbnail">
-                  <img *ngIf="!currentUser.ImagePath" src="assets/images/profile.jpg" />
-                  <img *ngIf="currentUser.ImagePath" src="{{baseUrl}}{{currentUser.ImagePath}}" />
-                </div>
-                <br>
+          <div class="card-block ">    
+            <div class="row">
+              <form [formGroup]="RegistrerForm" class="col-sm-12">
                 <div class="row">
-                  <div class="col-md-9">
-                    <input style="width: 100%" #pic type="file" formControlName="pic" accept='image/png,image/jpeg'
-                      (change)="preview(pic.files)" />
-
-                  </div>
-                  <div class="col-md-3" style="margin-top: 10px;">
-                    <a href="javascript:;" (click)="onPicRemove()" (click)="onPicRemove()"
-                      class="btn btn-primary btn-sm fileupload-exists" data-dismiss="fileupload">X</a>
-
-                  </div>
+                    <div class="col-sm-6">
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Code </label>
+                            <div class="col-sm-8">
+                                <input type="text" formControlName="code" type="text"
+                                    class="form-control" />   
+                               
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">First Name </label>
+                            <div class="col-sm-8">
+                                <input type="text" formControlName="firstName"
+                                    [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" type="text"
+                                    class="form-control" />
+    
+                                <div *ngIf="submitted && f.firstName.errors" class="error-text">
+                                    <span *ngIf="f.firstName.errors.required" class="text-danger"> Member first name is required</span>
+    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Last Name </label>
+                            <div class="col-sm-8">
+                                <input type="text" formControlName="lastName"
+                                    [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" type="text"
+                                    class="form-control" />
+    
+                                <div *ngIf="submitted && f.lastName.errors" class="error-text">
+                                    <span *ngIf="f.lastName.errors.required" class="text-danger"> Member last name is required</span>
+    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Email </label>
+                            <div class="col-sm-8">
+                                <input type="text" formControlName="email"
+                                    [ngClass]="{ 'is-invalid': submitted && f.email.errors }" type="text"
+                                    class="form-control" />
+    
+                                <div *ngIf="submitted && f.email.errors" class="error-text">
+                                    <span *ngIf="f.email.errors.required" class="text-danger"> Email is required</span>
+    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Mobile </label>
+                            <div class="col-sm-8">
+                                <input type="text" formControlName="mobile"
+                                    [ngClass]="{ 'is-invalid': submitted && f.mobile.errors }" type="text"
+                                    class="form-control" />
+    
+                                <div *ngIf="submitted && f.mobile.errors" class="error-text">
+                                    <span *ngIf="f.mobile.errors.required" class="text-danger"> Mobile number is required</span>
+    
+                                </div>
+                            </div>
+                        </div>      
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Telephone </label>
+                            <div class="col-sm-8">
+                                <input type="text" formControlName="telephone" type="text"
+                                    class="form-control" />    
+                               
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Date of Birth </label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" readonly formControlName="dob" [bsConfig]="bsConfig"
+                              bsDatepicker> 
+                               
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Gender</label>
+                            <div class="col-sm-8">
+                                <div class="form-radio pt-1">
+                                    <div class="radio radio-inverse radio-inline" >
+                                        <label class="pt-1">
+                                            <input formControlName="gender" type="radio" name="gender"
+                                            [value]=1>
+                                            <i class="helper"></i>Male
+                                        </label>
+                                    </div>
+                                    <div class="radio radio-inverse radio-inline" >
+                                        <label class="pt-1">
+                                            <input formControlName="gender" type="radio" name="gender"
+                                            [value]=2>
+                                            <i class="helper"></i>Female
+                                        </label>
+                                    </div>                                  
+                                </div>
+                               
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                     
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Occupation </label>
+                            <div class="col-sm-8">
+                                <input type="text" formControlName="occupation" type="text"
+                                    class="form-control" />    
+                               
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">NID </label>
+                            <div class="col-sm-8">
+                                <input type="text" formControlName="nid" type="text"
+                                    class="form-control" />    
+                               
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Alternative Mobile </label>
+                            <div class="col-sm-8">
+                                <input type="text" formControlName="alternative_mobile" type="text"
+                                    class="form-control" />    
+                               
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Fax </label>
+                            <div class="col-sm-8">
+                                <input type="text" formControlName="fax" type="text"
+                                    class="form-control" />    
+                               
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Account Number </label>
+                            <div class="col-sm-8">
+                                <input type="text" formControlName="acc_number" type="text"
+                                    class="form-control" />    
+                               
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Address 1</label>
+                            <div class="col-sm-8">
+                                <input type="text" formControlName="address_one" type="text"
+                                    class="form-control" />    
+                               
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Address 2</label>
+                            <div class="col-sm-8">
+                                <input type="text" formControlName="address_two" type="text"
+                                    class="form-control" />    
+                               
+                            </div>
+                        </div>
+                
+                    </div>
                 </div>
-
-              </div>
-            </div>
-            <div class="space" style="margin-top: 10px;">
-              <a href="javascript:;" class="btn btn-info btn-block" (click)="onPicSubmit()">Update Image</a>
-            </div>
+            </form>
           </div>
-        </div>
-
-        <div class="col-md-9">
-          <div class="widget-title">
-            <h3>Personal Details</h3>
-            <hr>
           </div>
-          <form [formGroup]="editProfileForm" class="defaultform updateprofile">
-
-            <div class="row">
-              <div class="col-md-6">
-                <div class="space">
-                  <label class="required">Full Name : </label>
-                  <input [disabled]=true type="text" value="{{currentUser.FullName}}" class="form-control"
-                    placeholder="Enter your name">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="space">
-                  <label class="required">Employee Code : </label>
-                  <input [ngClass]="{ 'is-invalid': submitted && f.empCode.errors }" formControlName="empCode"
-                    type="text" class="form-control" placeholder="Enter your employee code">
-
-                  <div *ngIf="submitted && f.empCode.errors" class="error-text">
-                    <span *ngIf="f.empCode.errors.required" class="text-danger"> Employee code is required</span>
-                    <span *ngIf="f.empCode.errors.maxlength" class="text-danger">Employee code must be not then 50
-                      characters</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
-            <div class="row">
-              <div class="col-md-6">
-                <div class="space">
-                  <label class="required">Contact No : </label>
-                  <input [ngClass]="{ 'is-invalid': submitted && f.contactNo.errors }" formControlName="contactNo"
-                    type="text" class="form-control" placeholder="Enter your contact no">
-
-                  <div *ngIf="submitted && f.contactNo.errors" class="error-text">
-                    <span *ngIf="f.contactNo.errors.required" class="text-danger"> Contact no is required</span>
-                  </div>
-
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="space">
-                  <label class="required">Date of Birth : </label>
-                  <input [ngClass]="{ 'is-invalid': submitted && f.dateOfBirth.errors }" formControlName="dateOfBirth"
-                    type="text" class="form-control" bsDatepicker [maxDate]="maxDate" [bsConfig]="bsConfig">
-
-                  <div *ngIf="submitted && f.dateOfBirth.errors" class="error-text">
-                    <span *ngIf="f.dateOfBirth.errors.required" class="text-danger"> Date of birth is required</span>
-                    <span *ngIf="f.dateOfBirth.errors.bsDate" class="text-danger"> Date of birth  is invalid</span>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-            <div class="row">
-              <div class="col-md-6">
-                <div class="space">
-                  <label class="required">Blood Group : </label>
-                  <ng-select [ngClass]="{ 'is-invalid': submitted && f.bloodGroup.errors }" formControlName="bloodGroup"
-                    [clearable]="false" [clearOnBackspace]="false" [items]="bloodGroupList" bindLabel="name"
-                    bindValue="id" placeholder="Select blood group"></ng-select>
-
-                  <div *ngIf="submitted && f.bloodGroup.errors" class="error-text">
-                    <span *ngIf="f.bloodGroup.errors.required" class="text-danger"> Blood group is required</span>
-                  </div>
-
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="space">
-                  <label class="required">Designation : </label>
-                  <input [ngClass]="{ 'is-invalid': submitted && f.designation.errors }" formControlName="designation"
-                    type="text" class="form-control" placeholder="Enter your designation">
-
-                  <div *ngIf="submitted && f.designation.errors" class="error-text">
-                    <span *ngIf="f.designation.errors.required" class="text-danger"> Designation is required</span>
-                    <span *ngIf="f.designation.errors.maxlength" class="text-danger">Designation must be not then 250
-                      characters</span>
-                  </div>
-
-                </div>
-              </div>
-
-            </div>
-
-            <div class="row">
-              <div class="col-md-6">
-                <div class="space">
-                  <label class="required">Department : </label>
-                  <input [ngClass]="{ 'is-invalid': submitted && f.department.errors }" formControlName="department"
-                    type="text" class="form-control" placeholder="Enter your department">
-
-                  <div *ngIf="submitted && f.department.errors" class="error-text">
-                    <span *ngIf="f.department.errors.required" class="text-danger"> Department is required</span>
-                    <span *ngIf="f.department.errors.maxlength" class="text-danger">Department must be not then 250
-                      characters</span>
-                  </div>
-
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="space">
-                  <label class="required">Date of joining in Bank Asia : </label>
-                  <input [ngClass]="{ 'is-invalid': submitted && f.joiningDate.errors }" formControlName="joiningDate"
-                    type="text" class="form-control" bsDatepicker [maxDate]="maxDate" [bsConfig]="bsConfig">
-
-                  <div *ngIf="submitted && f.joiningDate.errors" class="error-text">
-                    <span *ngIf="f.joiningDate.errors.required" class="text-danger"> Joining date is required</span>
-                    <span *ngIf="f.joiningDate.errors.bsDate" class="text-danger"> Joining date is invalid</span>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-12">
-                <div class="space">
-                  <label class="required">Personal Details : </label>
-                  <textarea [ngClass]="{ 'is-invalid': submitted && f.summary.errors }" formControlName="summary"
-                    class="form-control" placeholder="Add your personal details here.."></textarea>
-
-                  <div *ngIf="submitted && f.summary.errors" class="error-text">
-                    <span *ngIf="f.summary.errors.required" class="text-danger"> Personal details is required</span>
-                    <span *ngIf="f.summary.errors.maxlength" class="text-danger">Personal details must be not then 500
-                      characters</span>
-                  </div>
-
-                </div>
-
-              </div>
-            </div>
-
-            <hr class="invis">
-            <div class="space clearfix">
-              <button (click)="onFormSubmit()" class="btn btn-info">Update Profile</button>
-            </div>
-          </form>
-        </div>
-
+          <div class="card-footer ">
+            <button class="btn btn-success col-md-3 float-right btn-sm btn-outline-success" (click)="onFormSubmit()"><i
+              class="icofont icofont-check-circled"></i> Update</button>
+          </div>
       </div>
-    </div>
   </div>
-</block-ui> -->
+</div>
+</block-ui>

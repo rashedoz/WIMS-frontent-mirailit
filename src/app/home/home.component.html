@@ -1,144 +1,314 @@
-<!-- <div class="row">
-  <div class="col-md-12 col-xl-12">
-    <div class="card bg-inverse large-widget-card">
-      <div class="card-block-big">
-        <h1 class="text-center h1">Welcome to {{currentUser.UserType === 'WebUser' ? 'BacBon Education ERP' : currentUser.InstituteName }}</h1>
-        <hr/>
-        <p class="text-center f-26 text-success">{{currentUser.UserType === 'WebUser' ? currentUser.InstituteName : ''}}</p>
-        <h3 *ngIf="currentUser.SystemYear === 0" class="color-danger text-center text-uppercase mt-5 p-3">
-          You didn't start your {{currentUser.IsAcademic? 'Academic' : 'Fiscal'}} Year yet
-          <br/>
-          <a class="text-underline" *ngIf="currentUser.IsAcademic" [routerLink]="['/basic-setting/academic-year']">Click here to start</a>
-          <a class="text-underline text-warning" *ngIf="!currentUser.IsAcademic" [routerLink]="['/basic-setting/fiscal-year']">Click here to start</a>
-        </h3>
-      </div>
-    </div>
-  </div>
-</div> -->
-<block-ui>
-  <div class="row" *ngIf="currentUser.role == 'Admin'">
-    <div class="col-lg-4 mb-4">
-      <div class="card counter-card-1">
-        <div class="card-block-big" routerLink="/employee">
-          <div>
-            <h3>Employee</h3>
-            <p>Total Employee (s) <label class="badge badge-primary" *ngIf="allContent"
-                style="font-size: 12px;">{{allContent.Employee}}</label> </p>
-            <div class="progress ">
-              <div class="progress-bar progress-bar-striped progress-xs progress-bar-pink" role="progressbar"
-                style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-          </div>
-          <i class="icofont icofont-people" style="font-size: 50px;"></i>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-lg-4 mb-4">
-      <div class="card counter-card-1">
-        <div class="card-block-big" routerLink="/course-list">
-          <div>
-            <h3>Course</h3>
-            <p>Total Course (s) <label class="badge badge-primary" *ngIf="allContent"
-                style="font-size: 12px;">{{allContent.Course}}</label> </p>
-            <div class="progress ">
-              <div class="progress-bar progress-bar-striped progress-xs progress-bar-pink" role="progressbar"
-                style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-          </div>
-          <i class="icofont icofont-ebook" style="font-size: 50px;"></i>
-        </div>
-      </div>
-    </div>
-
-
-    <div class="col-lg-4 mb-4">
-      <div class="card counter-card-1">
-        <div class="card-block-big" routerLink="/course-quiz">
-          <div>
-            <h3>Quick Test</h3>
-            <p>Total Quick Test (s) <label class="badge badge-primary" *ngIf="allContent"
-                style="font-size: 12px;">{{allContent.Quiz}}</label> </p>
-            <div class="progress ">
-              <div class="progress-bar progress-bar-striped progress-xs progress-bar-pink" role="progressbar"
-                style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-          </div>
-          <i class="icofont icofont-question" style="font-size: 50px;"></i>
-        </div>
-      </div>
-    </div>
-
-
-    <div class="col-lg-4 mb-4">
-      <div class="card counter-card-1">
-        <div class="card-block-big" routerLink="/certificates">
-          <div>
-            <h3>Certificate</h3>
-            <p>Total Certificate (s) <label class="badge badge-primary" *ngIf="allContent"
-                style="font-size: 12px;">{{allContent.Certificate}}</label> </p>
-            <div class="progress ">
-              <div class="progress-bar progress-bar-striped progress-xs progress-bar-pink" role="progressbar"
-                style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-          </div>
-          <i class="icofont icofont-certificate" style="font-size: 50px;"></i>
-        </div>
-      </div>
-    </div>
-
-
-    <div class="col-lg-4 mb-4">
-      <div class="card counter-card-1">
-        <div class="card-block-big" routerLink="/subject-material">
-          <div>
-            <h3>Script</h3>
-            <p>Total Script (s) <label class="badge badge-primary" *ngIf="allContent"
-                style="font-size: 12px;">{{allContent.Document}}</label> </p>
-            <div class="progress ">
-              <div class="progress-bar progress-bar-striped progress-xs progress-bar-pink" role="progressbar"
-                style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-          </div>
-          <i class="icofont icofont-attachment" style="font-size: 50px;"></i>
-        </div>
-      </div>
-    </div>
-
-
-    <div class="col-lg-4 mb-4">
-      <div class="card counter-card-1">
-        <div class="card-block-big" routerLink="/subject-material">
-          <div>
-            <h3>Video</h3>
-            <p>Total Video (s) <label class="badge badge-primary" *ngIf="allContent"
-                style="font-size: 12px;">{{allContent.Video}}</label> </p>
-            <div class="progress ">
-              <div class="progress-bar progress-bar-striped progress-xs progress-bar-pink" role="progressbar"
-                style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-          </div>
-          <i class="icofont icofont-ui-video-play" style="font-size: 50px;"></i>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="row mt-4" *ngIf="currentUser.role == 'Participant' || currentUser.role == 'Speaker'">
+<div class="row mb-2">
     <div class="col-lg-12">
-      <div class="card table-1-card">
-        <div class="card-header text-center">
-          <h5 > Welcome to Training Module</h5>
+        <div class="card card-border-primary">
+            <div class="card-header">
+                <h5>SIM </h5>
+            </div>
         </div>
-        <div class="card-block mb-2">
-          <div *ngIf="courseOptions">
-            <highcharts-chart [Highcharts]="highcharts" [options]="courseOptions"
-              style="width: 100%; min-height: 400px; display: block;">
-            </highcharts-chart>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
-</block-ui>
+</div>
+<div class="row" *ngIf="simStock">
+    <div class="col-md-4">
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <div class="card client-blocks dark-primary-border">
+                    <div class="card-block">
+                        <h5>Currently Available SIM Qty </h5>
+                        <ul>
+                            <li> <img class="text-danger icon-w-40" src="assets/icon/custom/available.png">
+                            </li>
+                            <li class="text-right text-success f-42">
+                                {{simStock.available_stock_qty}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 mb-3">
+                <div class="card client-blocks dark-primary-border">
+                    <div class="card-block">
+                        <h5>Currently SIM Held Qty</h5>
+                        <ul>
+                            <li> <img class="text-warning icon-w-40" src="assets/icon/custom/held.png">
+                            </li>
+                            <li class="text-right text-warning f-42">
+                                {{simStock.held_qty}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 mb-3">
+                <div class="card client-blocks dark-primary-border">
+                    <div class="card-block">
+                        <h5>Total Sold SIM Qty</h5>
+                        <ul>
+                            <li> <img class="text-success icon-w-40" src="assets/icon/custom/sold2.png">
+                            </li>
+                            <li class="text-right text-success f-42">
+                                {{simStock.sold_qty}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <div class="card client-blocks sucsess-border">
+                    <div class="card-block">
+                        <h5>Currently Cancelled SIM Qty</h5>
+                        <ul>
+                            <li> <img class="text-danger icon-w-40" src="assets/icon/custom/cancel.png">
+                            </li>
+                            <li class="text-right text-warning f-42">
+                                {{simStock.cancelled_qty}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 mb-3">
+                <div class="card client-blocks sucsess-border">
+                    <div class="card-block">
+                        <h5>Currently Reissued SIM Qty</h5>
+                        <ul>
+                            <li> <img class="text-danger icon-w-40" src="assets/icon/custom/return.png">
+                            </li>
+                            <li class="text-right text-primary f-42">
+                                {{simStock.reissued_qty}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 mb-3">
+                <div class="card client-blocks sucsess-border">
+                    <div class="card-block">
+                        <h5>Currently Subscribed SIM Qty</h5>
+                        <ul>
+                            <li> <img class="text-danger icon-w-40" src="assets/icon/custom/subscribe.png">
+                            </li>
+                            <li class="text-right text-primary f-42">
+                                {{simStock.subscribed_qty}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <div class="card client-blocks warning-border">
+                    <div class="card-block">
+                        <h5>This month’s Sold SIM Qty</h5>
+                        <ul>
+                            <li> <img class="text-success icon-w-40" src="assets/icon/custom/sold2.png">
+                            </li>
+                            <li class="text-right text-success f-42">
+                                {{simStock.sim_sold_this_month}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 mb-3">
+                <div class="card client-blocks warning-border">
+                    <div class="card-block">
+                        <h5>This month’s Reissued SIM Qty</h5>
+                        <ul>
+                            <li> <img class="text-danger icon-w-40" src="assets/icon/custom/return.png">
+                            </li>
+                            <li class="text-right text-primary f-42">
+                                {{simStock.sim_reissued_this_month}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 mb-3">
+                <div class="card client-blocks warning-border">
+                    <div class="card-block">
+                        <h5>This month’s Subscribed SIM Qty</h5>
+                        <ul>
+                            <li> <img class="text-danger icon-w-40" src="assets/icon/custom/subscribe.png">
+                            </li>
+                            <li class="text-right text-primary f-42">
+                                {{simStock.sim_subscribed_this_month}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-3 mb-2">
+    <div class="col-lg-12">
+        <div class="card card-border-primary">
+            <div class="card-header">
+                <h5>Device </h5>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" *ngIf="deviceStock">
+    <div class="col-md-6 col-xl-4 mb-3">
+        <div class="card client-blocks success-border">
+            <div class="card-block">
+                <h5>Currently Available Device Qty </h5>
+                <ul>
+                    <li> <img class="text-danger icon-w-40" src="assets/icon/custom/available.png">
+                    </li>
+                    <li class="text-right text-success f-42">
+                        {{deviceStock.available_stock_qty}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-6 col-xl-4 mb-3">
+        <div class="card client-blocks warning-border">
+            <div class="card-block">
+                <h5>Currently Cancelled Device Qty</h5>
+                <ul>
+                    <li> <img class="text-danger icon-w-40" src="assets/icon/custom/cancel.png">
+                    </li>
+                    <li class="text-right text-warning f-42">
+                        {{deviceStock.cancelled_qty}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-6 col-xl-4 mb-3">
+        <div class="card client-blocks">
+            <div class="card-block">
+                <h5>Total Sold Device Qty</h5>
+                <ul>
+                    <li> <img class="text-danger icon-w-40" src="assets/icon/custom/sold.png">
+                    </li>
+                    <li class="text-right text-primary f-42">
+                        {{deviceStock.sold_qty}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card table-1-card">
+            <div class="card-block">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr class="text-capitalize">
+                                <th>Type</th>
+                                <th>Lead Name</th>
+                                <th>Views</th>
+                                <th>Favourites</th>
+                                <th>Last Visit</th>
+                                <th>Last Action</th>
+                                <th>Last Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><a href="#!">Buyer</a>
+                                </td>
+                                <td>Denish Ann</td>
+                                <td>153</td>
+                                <td>100</td>
+                                <td>20</td>
+                                <td>9.23 A.M.</td>
+                                <td>9/27/2015</td>
+                            </tr>
+                            <tr>
+                                <td><a class="text-danger" href="#!">Lanload</a>
+                                </td>
+                                <td>John Doe</td>
+                                <td>121</td>
+                                <td>100</td>
+                                <td>20</td>
+                                <td>6.23 A.M.</td>
+                                <td>8/27/2015</td>
+                            </tr>
+                            <tr>
+                                <td><a href="#!">Buyer</a>
+                                </td>
+                                <td>Henry Joe</td>
+                                <td>154</td>
+                                <td>140</td>
+                                <td>30</td>
+                                <td>7.54 P.M.</td>
+                                <td>4/30/2015</td>
+                            </tr>
+                            <tr>
+                                <td><a class="text-danger" href="#!">Lanload</a>
+                                </td>
+                                <td>Sara Soudein</td>
+                                <td>153</td>
+                                <td>100</td>
+                                <td>20</td>
+                                <td>9.23 A.M.</td>
+                                <td>5/20/2016</td>
+                            </tr>
+                            <tr>
+                                <td><a href="#!">Buyer</a>
+                                </td>
+                                <td>Denish Ann</td>
+                                <td>153</td>
+                                <td>100</td>
+                                <td>20</td>
+                                <td>9.23 A.M.</td>
+                                <td>3/26/2015</td>
+                            </tr>
+                            <tr>
+                                <td><a class="text-info" href="#!">Lanload</a>
+                                </td>
+                                <td>Stefen Joe</td>
+                                <td>153</td>
+                                <td>100</td>
+                                <td>20</td>
+                                <td>11.45 A.M.</td>
+                                <td>5/20/2017</td>
+                            </tr>
+                            <tr>
+                                <td><a href="#!">Buyer</a>
+                                </td>
+                                <td>Mark Backlus</td>
+                                <td>153</td>
+                                <td>100</td>
+                                <td>20</td>
+                                <td>12.40 A.M.</td>
+                                <td>3/27/2017</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- System clock start -->
+    <!-- <div class="col-sm-12">
+        <div class="card borderless-card">
+            <div class="card-block clock-widget">
+                <div id="current-time">7:22:38 AM</div>
+                <h5>Sunday 30th April , 2017</h5>
+                <i class="icofont icofont-ui-alarm basic-alarm"></i>
+                <i class="icofont icofont-ui-alarm bg-alarm"></i>
+            </div>
+        </div>
+    </div> -->
+    <!-- System clock end -->
+</div>

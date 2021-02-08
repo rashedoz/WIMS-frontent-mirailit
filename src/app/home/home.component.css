@@ -1,3 +1,6 @@
 .counter-card-1 .card-block-big{
     cursor: pointer;
 }
+.icon-w-40{
+    width: 40px !important;
+}

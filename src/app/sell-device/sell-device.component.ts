@@ -104,6 +104,17 @@ export class SellDeviceComponent implements OnInit {
     return this.entryForm.get("itemHistory") as FormArray;
   }
 
+  customSearchFn(term: string, item: any) {
+    term = term.toLocaleLowerCase();
+    let name = item.first_name +" "+item.last_name;
+    return item.customer_code.toLocaleLowerCase().indexOf(term) > -1 ||
+           name.toLocaleLowerCase().indexOf(term) > -1 ||
+           item.first_name.toLocaleLowerCase().indexOf(term) > -1 ||
+           item.last_name.toLocaleLowerCase().indexOf(term) > -1 ||
+           item.mobile.toLocaleLowerCase().indexOf(term) > -1;
+    }
+
+    
   initItemHistory() {
     return this.formBuilder.group({
       device: [null, [Validators.required]],

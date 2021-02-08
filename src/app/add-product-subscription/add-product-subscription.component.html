@@ -56,7 +56,7 @@
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label">Customer </label>
                   <div class="col-sm-9">
-                    <ng-select (change)="onCustomerChange($event)"
+                    <ng-select (change)="onCustomerChange($event)" [searchFn]="customSearchFn"
                       [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false"
                       formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
                       bindLabel="first_name" bindValue="id" placeholder="Select a customer">

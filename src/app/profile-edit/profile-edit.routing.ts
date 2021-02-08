@@ -6,7 +6,7 @@ export const ProfileEditRoutes: Routes = [{
   path: '',
   component: ProfileEditComponent,
   data: {
-    breadcrumb: 'Profile Edit',
+    breadcrumb: 'Profile',
     icon: 'icofont-home bg-c-blue',
     status: false
   }

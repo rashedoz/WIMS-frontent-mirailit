@@ -46,7 +46,7 @@
         
 
                   <div class="d-flex flex-row">
-                    <ng-select [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false" formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
+                    <ng-select  [searchFn]="customSearchFn" [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false" formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
                       bindLabel="first_name" bindValue="id" placeholder="Select a customer">
                       <ng-template ng-label-tmp let-item="item">                          
                         {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
