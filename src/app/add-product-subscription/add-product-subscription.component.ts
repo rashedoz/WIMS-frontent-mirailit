@@ -344,7 +344,7 @@ export class AddProductSubscriptionComponent implements OnInit {
     this.subTotal=0;
     this.discount=0;
     this.paidAmount=0;
-
+    this.subItemList = [];
     this.getCustomerList();
     this.getSIMList();
     this.getSIMListOld();

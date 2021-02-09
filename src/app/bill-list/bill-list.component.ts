@@ -119,7 +119,7 @@ export class BillListComponent implements OnInit {
   });
   this.getBillList();
 
-  this.entryFormBill.get('invoice_month').disable();
+  // this.entryFormBill.get('invoice_month').disable();
   this.entryFormBill.get('invoice_month').setValue(moment().format('MMM-YYYY'));
 
   }

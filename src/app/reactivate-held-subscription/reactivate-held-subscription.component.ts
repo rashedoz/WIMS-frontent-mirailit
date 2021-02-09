@@ -147,32 +147,78 @@ export class ReactivateHeldSubscriptionComponent implements OnInit {
   }
 
 
+  // onSubscriptionChange(e){
+  //   if(e){
+   
+  //    this.subscriptionItemList = e.subscribed_items;
+     
+  //    if (this.subscriptionItemList.length > 0) {
+  //     let itemHistoryControl = <FormArray>(
+  //       this.entryForm.controls.itemHistory
+  //     );
+  //     while (this.itemHistoryList.length !== 0) {
+  //       itemHistoryControl.removeAt(0);
+  //     }
+  //     this.subscriptionItemList.forEach(element => {
+  //       itemHistoryControl.push(
+  //         this.formBuilder.group({
+  //           id: new FormControl({value:element.id, disabled: true}, Validators.required),
+  //           sim: new FormControl({value:element.sim, disabled: true}, Validators.required),
+  //           plan: new FormControl({value:element.plan, disabled: true}, Validators.required),
+  //           amount: new FormControl({value:element.amount, disabled: false}, Validators.required),
+  //           actual_amount: new FormControl({value:element.amount, disabled: false}, Validators.required)
+  //         })
+  //       );
+  //     });
+
+  //   }
+  //   }
+  // }
+
   onSubscriptionChange(e){
     if(e){
-    //  this.subscriptionItemList = this.itemList.filter(x=>x.subscription == e.subscription);
-     this.subscriptionItemList = e.subscribed_items;
-      console.log(this.subscriptionItemList);
-     if (this.subscriptionItemList.length > 0) {
-      let itemHistoryControl = <FormArray>(
-        this.entryForm.controls.itemHistory
-      );
-      while (this.itemHistoryList.length !== 0) {
-        itemHistoryControl.removeAt(0);
-      }
-      this.subscriptionItemList.forEach(element => {
-        // this.getObjFromArray(this.degreeDropDownList,element.DegreeId);
-        itemHistoryControl.push(
-          this.formBuilder.group({
-            id: new FormControl({value:element.id, disabled: true}, Validators.required),
-            sim: new FormControl({value:element.sim, disabled: true}, Validators.required),
-            plan: new FormControl({value:element.plan, disabled: true}, Validators.required),
-            amount: new FormControl({value:element.amount, disabled: false}, Validators.required),
-            actual_amount: new FormControl({value:element.amount, disabled: false}, Validators.required)
-          })
-        );
-      });
-
-    }
+   
+      this.simList = [];
+      this.planList = [];
+       this._service.get('subscription/get-subscription-detail/'+e.id).subscribe(res => {
+        
+         res.forEach(element => {
+           this.simList.push({
+             CID_no: element.sim.CID_no,
+             ICCID_no: element.sim.ICCID_no,
+             id: element.sim.id,
+             phone_number: element.sim.phone_number
+           });
+           this.planList.push({           
+             id: element.plan.id,
+             plan: element.plan.plan
+           });
+         });
+ 
+       if(res.length > 0){
+         this.subscriptionItemList = res;
+         if (this.subscriptionItemList.length > 0) {
+          let itemHistoryControl = <FormArray>(
+            this.entryForm.controls.itemHistory
+          );
+          while (this.itemHistoryList.length !== 0) {
+            itemHistoryControl.removeAt(0);
+          }
+          this.subscriptionItemList.forEach(element => {
+            // this.getObjFromArray(this.degreeDropDownList,element.DegreeId);
+            itemHistoryControl.push(
+              this.formBuilder.group({
+                id: new FormControl({value:element.id, disabled: true}, Validators.required),
+                sim: new FormControl({value:{id:element.sim.id,CID_no:element.sim.CID_no,ICCID_no:element.sim.ICCID_no,phone_number:element.sim.phone_number}, disabled: true}, Validators.required),
+                plan: new FormControl({value:{id:element.plan.id,plan:element.plan.plan}, disabled: true}, Validators.required),
+                amount: new FormControl({value:element.plan.plan_unit_price, disabled: true}, Validators.required),
+                actual_amount: new FormControl({value:element.plan.plan_unit_price, disabled: true}, Validators.required)
+              })
+            );
+          });
+        }
+       }
+     }, err => { });
     }
   }
 
@@ -287,16 +333,16 @@ export class ReactivateHeldSubscriptionComponent implements OnInit {
     this.fromRowData.itemHistory.filter(x=> x.sim && x.plan && x.amount).forEach(element => {
       subscribed_items.push({
         session:this.entryForm.get('session').value,
-        sim: element.sim,
-        plan: element.plan,
+        sim: element.sim.id,
+        plan: element.plan.id,
         amount: Number(element.amount),
         customer:this.entryForm.value.customer,
         subscription:this.entryForm.value.subscription
       });
 
       subscribed_relocation_items.push({
-        sim: element.sim,
-        plan: element.plan,
+        sim: element.sim.id,
+        plan: element.plan.id,
         actual_price: Number(element.actual_amount),
         discount:0,
         payable_amount: Number(element.amount),
@@ -330,7 +376,7 @@ export class ReactivateHeldSubscriptionComponent implements OnInit {
 
     };
 
-
+ 
     this.confirmService.confirm('Are you sure?', 'You are reactivating this subscription.')
     .subscribe(
         result => {

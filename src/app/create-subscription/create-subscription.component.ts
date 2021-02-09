@@ -276,7 +276,8 @@ export class CreateSubscriptionComponent implements OnInit {
                       this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
                       const customer_id = this.entryForm.value.customer;
                       this.formReset();
-
+                      this.entryForm.get('session').disable();
+                      this.entryForm.get('session').setValue(moment().format('MMM-YYYY'));
                       this.confirmService.confirm('Do you want to sell device?', '','Yes')
                       .subscribe(
                           result => {

@@ -173,11 +173,11 @@
                         <th>
                           <ng-select [clearable]="false" appendTo="body" (change)="onSIMChange($event, item)"
                             [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}"
-                            formControlName="sim" [clearOnBackspace]="false" [items]="simList" bindLabel="id"
+                            formControlName="sim" [clearOnBackspace]="false" [items]="simList" bindLabel="CID_no"
                             placeholder="Select a sim">
                             <ng-template ng-option-tmp let-item="item" let-index="index">
-                              <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no"> {{item.id}} </p>
-                              <p class="card-text font-weight-bold" *ngIf="item.ICCID_no"> {{item.id}}
+                              <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no"> {{item.CID_no}} </p>
+                              <p class="card-text font-weight-bold" *ngIf="item.ICCID_no"> {{item.CID_no}}
                                 ({{item.ICCID_no}})</p>
                             </ng-template>
                           </ng-select>

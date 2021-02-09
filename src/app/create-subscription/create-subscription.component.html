@@ -114,7 +114,7 @@
                         <tr  [formGroupName]="i">
                             <th>
                               <ng-select [clearable]="false" appendTo="body" (change)="onSIMChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}" formControlName="sim" [clearOnBackspace]="false" [items]="simList"
-                              bindLabel="id" placeholder="Select a sim">
+                              bindLabel="CID_no" placeholder="Select a sim">
                              
                               <ng-template ng-option-tmp let-item="item" let-index="index">
                                 <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no">  {{item.id}} </p>                                
