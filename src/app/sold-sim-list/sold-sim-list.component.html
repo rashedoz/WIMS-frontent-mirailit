@@ -1,0 +1,192 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header">
+                            <h5>Sold SIM List </h5>
+
+                            <button class="btn btn-warning btn-sm float-right" (click)="openModalSIMCancel(templateCancel)"><i
+                              class=" icofont icofont-close-line "></i> Permanently Cancel</button>
+                            <button class="btn btn-primary btn-sm float-right mr-2" (click)="openModalSIM(template)"><i
+                              class=" icofont icofont-plus "></i> Return to Stock</button>
+                        </div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12 ">
+                                  <ngx-datatable class="material table-bordered" [rows]="rows"
+                                  [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                                  [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
+
+                                  <ngx-datatable-column [width]="8" name="SIM Id" prop="id" [draggable]="false" [sortable]="false">
+                                      <ng-template let-value="value" ngx-datatable-cell-template>
+                                          <span > {{ value }} </span>
+                                      </ng-template>
+                                  </ngx-datatable-column>
+                                  <ngx-datatable-column [width]="8" name="SIM ICCID_no" prop="ICCID_no" [draggable]="false" [sortable]="false">
+                                    <ng-template let-value="value" ngx-datatable-cell-template>
+                                        <span > {{ value }} </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                                  <ngx-datatable-column [width]="100" name="SIM SL" prop="sim_auto_serial_no" [draggable]="false" [sortable]="false">
+                                      <ng-template let-value="value" ngx-datatable-cell-template>
+                                          <span > {{ value }} </span>
+                                      </ng-template>
+                                  </ngx-datatable-column>
+
+                                  <ngx-datatable-column [width]="80" name="Status" prop="status" [draggable]="false"
+                                      [sortable]="false">
+                                      <ng-template let-value="value" ngx-datatable-cell-template>
+                                        <span *ngIf="value === 1" > <strong class="label label-success">{{ StockStatus[value] }}</strong> </span>
+                                          <span *ngIf="value === 2" > <strong class="label label-info">{{ StockStatus[value] }}</strong> </span>
+                                          <span *ngIf="value === 3" > <strong class="label label-secondary">{{ StockStatus[value] }}</strong> </span>
+                                          <span *ngIf="value === 4" > <strong class="label label-warning">{{ StockStatus[value] }}</strong> </span>
+                                          <span *ngIf="value === 5" > <strong class="label label-danger">{{ StockStatus[value] }}</strong> </span>
+                                          <span *ngIf="value === 6" > <strong class="label label-primary">{{ StockStatus[value] }}</strong> </span>
+                                          <span *ngIf="value === 7" > <strong class="label label-warning">{{ StockStatus[value] }}</strong> </span>
+                                          <span *ngIf="value === 8" > <strong class="label label-danger">{{ StockStatus[value] }}</strong> </span>
+
+                                        </ng-template>
+                                  </ngx-datatable-column>
+
+                              </ngx-datatable>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <ng-template #template>
+      <div class="modal-header ">
+          <h4 class="modal-title pull-left " [innerHtml]="modalTitleSIM" id="modalTitleSIM"></h4>
+          <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideSIM()">
+              <i class="icofont icofont-close"></i>
+          </button>
+      </div>
+      <div class="modal-body pb-0">
+          <app-card>
+            <div class="row">
+
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-12">
+                  <div class="table-responsive">
+                      <table class="table table-xs table-hover table-bordered table-striped">
+                          <thead>
+                              <tr>
+                                  <th scope="col">SIM CID No</th>
+                                  <th scope="col">ICCID No</th>
+                                  <th scope="col">Select For Return</th>
+                              </tr>
+                          </thead>
+
+                          <tbody>
+                              <tr *ngFor="let item of simList; let i=index">
+                                  <th>{{item.CID_no}}</th>
+                                  <th>{{item.sim}}</th>
+                                  <th>
+                                    <!-- <input type="text"class="form-control" [(ngModel)]="item.iccid"  required /> -->
+                                    <div class="checkbox-fade fade-in-default">
+                                      <label>
+                                          <input type="checkbox" [(ngModel)]="item.selected">
+                                          <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                      </label>
+                                  </div>
+                                  </th>
+
+
+                              </tr>
+                          </tbody>
+                      </table>
+                      </div>
+                  </div>
+
+              </div>
+              </div>
+          </div>
+
+          </app-card>
+      </div>
+      <div class="modal-footer">
+          <div class="pr-4">
+              <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideSIM()"> <i
+                      class="icofont icofont-close"></i> Close</button>
+
+              <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmitSIM()"><i
+                      class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+          </div>
+
+      </div>
+  </ng-template>
+
+    <ng-template #templateCancel>
+      <div class="modal-header ">
+          <h4 class="modal-title pull-left " [innerHtml]="modalTitleSIM" id="modalTitleSIM"></h4>
+          <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideSIMCancel()">
+              <i class="icofont icofont-close"></i>
+          </button>
+      </div>
+      <div class="modal-body pb-0">
+          <app-card>
+            <div class="row">
+
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-12">
+                  <div class="table-responsive">
+                      <table class="table table-xs table-hover table-bordered table-striped">
+                          <thead>
+                              <tr>
+                                  <th scope="col">SIM CID No</th>
+                                  <th scope="col">ICCID No</th>
+                                  <th scope="col">Select For Return</th>
+                              </tr>
+                          </thead>
+
+                          <tbody>
+                              <tr *ngFor="let item of simList; let i=index">
+                                  <th>{{item.CID_no}}</th>
+                                  <th>{{item.sim}}</th>
+                                  <th>
+                                    <!-- <input type="text"class="form-control" [(ngModel)]="item.iccid"  required /> -->
+                                    <div class="checkbox-fade fade-in-default">
+                                      <label>
+                                          <input type="checkbox" [(ngModel)]="item.selected">
+                                          <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                      </label>
+                                  </div>
+                                  </th>
+
+
+                              </tr>
+                          </tbody>
+                      </table>
+                      </div>
+                  </div>
+
+              </div>
+              </div>
+          </div>
+
+          </app-card>
+      </div>
+      <div class="modal-footer">
+          <div class="pr-4">
+              <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideSIMCancel()"> <i
+                      class="icofont icofont-close"></i> Close</button>
+
+              <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmitSIMCancel()"><i
+                      class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+          </div>
+
+      </div>
+  </ng-template>
+
+</block-ui>

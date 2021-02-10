@@ -83,6 +83,11 @@ export const AppRoutes: Routes = [
         // canActivate: [AuthGuard]
       },
       {
+        path: 'sold-device-list',
+        loadChildren: () => import('./sold-device-list/sold-device-list.module').then(m => m.SoldDeviceListModule),
+        // canActivate: [AuthGuard]
+      },
+      {
         path: 'updatable-sim-list',
         loadChildren: () => import('./updatable-sim-list/updatable-sim-list.module').then(m => m.UpdatableSIMListModule),
         // canActivate: [AuthGuard]
@@ -95,6 +100,11 @@ export const AppRoutes: Routes = [
       {
         path: 'cancelled-sim-list',
         loadChildren: () => import('./cancelled-sim-list/cancelled-sim-list.module').then(m => m.CancelledSIMListModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'sold-sim-list',
+        loadChildren: () => import('./sold-sim-list/sold-sim-list.module').then(m => m.SoldSIMListModule),
         // canActivate: [AuthGuard]
       },
       {

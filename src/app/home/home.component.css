@@ -4,3 +4,7 @@
 .icon-w-40{
     width: 40px !important;
 }
+
+.div-pointer{
+    cursor: pointer;
+}

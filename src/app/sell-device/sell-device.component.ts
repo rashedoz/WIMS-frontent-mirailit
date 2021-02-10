@@ -22,6 +22,7 @@ import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { BsDatepickerConfig } from "ngx-bootstrap/datepicker";
 import { Page } from "./../_models/page";
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
+import { SubscriptionStatus } from "./../_models/enums";
 
 @Component({
   selector: "app-sell-device",
@@ -40,7 +41,7 @@ export class SellDeviceComponent implements OnInit {
   subTotal:number =0;
   discount:number=0;
   paidAmount:number=0;
-
+  SubscriptionStatus = SubscriptionStatus;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
   modalTitle = "Add ";
@@ -58,6 +59,7 @@ export class SellDeviceComponent implements OnInit {
 
   customerList: Array<any> = [];
   deviceList: Array<any> = [];
+  subscriptionList: Array<any> = [];
   // planList: Array<any> = [];
   customer_id = null;
   constructor(
@@ -87,6 +89,7 @@ export class SellDeviceComponent implements OnInit {
     this.entryForm = this.formBuilder.group({
       id: [null],
       customer: [null, [Validators.required]],
+      subscription: [null, [Validators.required]],
       itemHistory: this.formBuilder.array([this.initItemHistory()]),
     });
     this.itemHistoryList = this.entryForm.get("itemHistory") as FormArray;
@@ -115,6 +118,43 @@ export class SellDeviceComponent implements OnInit {
     }
 
     
+    onCustomerChange(e){
+      this.entryForm.controls['subscription'].setValue(null);
+      if(e){
+        this.getItemList(e.id);
+      }
+    }
+  
+    // onSubChange(e){
+    //   if(e && e.subscribed_items.length > 0){
+    //    let item  = [];
+    //     e.subscribed_items.forEach(element => {
+    //       item.push({
+    //         sim:this.getObj(element.sim,this.simListOld),
+    //         plan:this.getObj(element.plan,this.planList),
+    //       })
+    //     });
+    //     if(item.length > 0){
+    //       this.subItemList = item;
+    //     }      
+       
+    //   }
+    // }
+
+    getItemList(customerId) {
+      this._service.get("subscription/get-active-subscription-list?customer="+customerId).subscribe(
+        (res) => {
+        //  this.itemList = res;
+  
+          this.subscriptionList = res;
+          // const key = 'subscription';
+          // this.subscriptionList = [...new Map(this.itemList.map(item =>
+          //   [item[key], item])).values()];
+        },
+        (err) => {}
+      );
+    }
+
   initItemHistory() {
     return this.formBuilder.group({
       device: [null, [Validators.required]],
@@ -223,7 +263,8 @@ export class SellDeviceComponent implements OnInit {
       device_sales_details.push({
         device: element.device.id,
         IMEI:element.IMEI,
-        device_cost: Number(element.amount)
+        device_cost: Number(element.amount),
+        subscription:this.entryForm.value.subscription
       });
     });
 
@@ -236,8 +277,11 @@ export class SellDeviceComponent implements OnInit {
       discount:Number(this.discount),
       payable_amount:(Number(this.subTotal) + Number(this.oneTimeCharge)) - Number(this.discount),
       so_far_paid:0,
+      subscription:this.entryForm.value.subscription,
       device_sales_details:device_sales_details
     };
+
+
 
     this.confirmService.confirm('Are you sure?', 'You are selling device.')
     .subscribe(

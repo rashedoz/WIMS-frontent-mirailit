@@ -20,7 +20,8 @@ export class HomeComponent implements OnInit {
   public currentUser: any;
   public simStock: any;
   public deviceStock: any;
-  courseOptions: any = null;
+  public billCount: any;
+  public customerDueList: Array<any> = [];
   // highcharts = Highcharts;
   @BlockUI() blockUI: NgBlockUI;
 
@@ -37,6 +38,8 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.getSIMCount();
     this.getDeviceCount();
+    this.getBillCount();
+    this.getCustomerDueList();
     // this.getCourseEnrollmentCount();
   }
 
@@ -51,10 +54,23 @@ export class HomeComponent implements OnInit {
   getDeviceCount() {
     this._service.get('stock/get-current-device-stock-history').subscribe(res => {    
       this.deviceStock = res;    
-      console.log(this.deviceStock); 
     }, err => {}
     );
   }
 
+  getBillCount() {
+    this._service.get('subscription/get-bill-counts').subscribe(res => {    
+      this.billCount = res;    
+    }, err => {}
+    );
+  }
+  getCustomerDueList() {
+    this._service.get('get-customer-list-with-due').subscribe(res => {    
+      this.customerDueList = res;    
+      console.log(this.customerDueList); 
+    }, err => {}
+    );
+  }
 
 }
+ 

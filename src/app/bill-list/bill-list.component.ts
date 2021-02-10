@@ -181,7 +181,7 @@ export class BillListComponent implements OnInit {
         this.activeTable = 0;
         this.tempRows = res;
         this.bilList = res;
-        this.columnsWithSearch = Object.keys(this.bilList[0]);
+        if(this.bilList.length > 0) this.columnsWithSearch = Object.keys(this.bilList[0]);
         // this.page.totalElements = res.Total;
         // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
         setTimeout(() => {
@@ -208,7 +208,7 @@ export class BillListComponent implements OnInit {
         this.activeTable = 1;
         this.tempRows = res.filter(x=>x.subscription != null);
         this.subscriptionBilList = res.filter(x=>x.subscription != null);
-        this.columnsWithSearch = Object.keys(this.subscriptionBilList[0]);
+        if(this.subscriptionBilList.length > 0) this.columnsWithSearch = Object.keys(this.subscriptionBilList[0]);
         // this.page.totalElements = res.Total;
         // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
         setTimeout(() => {
@@ -234,6 +234,7 @@ export class BillListComponent implements OnInit {
         this.activeTable = 2;
         this.tempRows = res;
         this.simBilList = res;
+        
         if(this.simBilList.length > 0)  this.columnsWithSearch = Object.keys(this.simBilList[0]);
         // this.page.totalElements = res.Total;
         // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
@@ -286,7 +287,7 @@ export class BillListComponent implements OnInit {
         this.activeTable = 4;
         this.tempRows = res;
         this.bilList = res;
-        this.columnsWithSearch = Object.keys(this.bilList[0]);
+        if(this.bilList.length > 0) this.columnsWithSearch = Object.keys(this.bilList[0]);
         // this.page.totalElements = res.Total;
         // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
         setTimeout(() => {
@@ -312,7 +313,7 @@ export class BillListComponent implements OnInit {
         this.activeTable = 6;
         this.tempRows = res;
         this.bilList = res;
-        this.columnsWithSearch = Object.keys(this.bilList[0]);
+        if(this.bilList.length > 0) this.columnsWithSearch = Object.keys(this.bilList[0]);
         // this.page.totalElements = res.Total;
         // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
         setTimeout(() => {
@@ -338,7 +339,7 @@ export class BillListComponent implements OnInit {
         this.activeTable = 5;
         this.tempRows = res;
         this.bilList = res;
-        this.columnsWithSearch = Object.keys(this.bilList[0]);
+        if(this.bilList.length > 0) this.columnsWithSearch = Object.keys(this.bilList[0]);
         // this.page.totalElements = res.Total;
         // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
         setTimeout(() => {

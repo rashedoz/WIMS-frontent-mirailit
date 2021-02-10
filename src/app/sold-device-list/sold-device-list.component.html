@@ -1,0 +1,203 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header">
+                            <h5>Sold Device List </h5>
+
+                            <button class="btn btn-warning btn-sm float-right" (click)="openModalDeviceCancel(templateCancel)"><i
+                                class=" icofont icofont-close-line "></i> Permanently Cancel</button>
+                              <button class="btn btn-primary btn-sm float-right mr-2" (click)="openModalDevice(template)"><i
+                                class=" icofont icofont-plus "></i> Return to Stock</button>
+
+                        </div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12 ">
+                                  <ngx-datatable class="material table-bordered" [rows]="rows" [scrollbarH]="true"
+                                  [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                                  [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
+
+                                  <!-- <ngx-datatable-column [width]="8" name="SL" prop="id" [draggable]="false" [sortable]="false">
+                                      <ng-template let-row="row" ngx-datatable-cell-template>
+                                          <span > {{ row.id }} </span>
+                                      </ng-template>
+                                  </ngx-datatable-column> -->
+
+                                  <ngx-datatable-column [width]="100" name="DID No" prop="DID_no" [draggable]="false" [sortable]="false">
+                                      <ng-template let-value="value" ngx-datatable-cell-template>
+                                          <span > {{ value }} </span>
+                                      </ng-template>
+                                  </ngx-datatable-column>
+
+                                  <ngx-datatable-column [width]="200" name="IMEI" prop="IMEI" [draggable]="false"
+                                  [sortable]="false">
+                                  <ng-template let-value="value" ngx-datatable-cell-template>
+                                      <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>
+                                  </ng-template>
+                              </ngx-datatable-column>
+
+
+                                <ngx-datatable-column [width]="80" name="Status" prop="status" [draggable]="false"
+                                    [sortable]="false">
+                                    <ng-template let-value="value" ngx-datatable-cell-template>
+                                        <span *ngIf="value === 1" > <strong class="label label-success">{{ StockStatus[value] }}</strong> </span>
+                                        <span *ngIf="value === 2" > <strong class="label label-info">{{ StockStatus[value] }}</strong> </span>
+                                        <span *ngIf="value === 3" > <strong class="label label-secondary">{{ StockStatus[value] }}</strong> </span>
+                                        <span *ngIf="value === 4" > <strong class="label label-warning">{{ StockStatus[value] }}</strong> </span>
+                                        <span *ngIf="value === 5" > <strong class="label label-danger">{{ StockStatus[value] }}</strong> </span>
+                                        <span *ngIf="value === 6" > <strong class="label label-primary">{{ StockStatus[value] }}</strong> </span>
+                                        <span *ngIf="value === 7" > <strong class="label label-primary">{{ StockStatus[value] }}</strong> </span>
+                                        <span *ngIf="value === 8" > <strong class="label label-Danger">{{ StockStatus[value] }}</strong> </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                                  <!-- <ngx-datatable-column [width]="80" name="Stock Entry Date" prop="created_at" [draggable]="false"
+                                      [sortable]="false">
+                                      <ng-template let-value="value" ngx-datatable-cell-template>
+                                          <span >  {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
+                                      </ng-template>
+                                  </ngx-datatable-column> -->
+
+                              </ngx-datatable>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <ng-template #template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitleDevice" id="modalTitleDevice"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideDevice()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body pb-0">
+            <app-card>
+              <div class="row">
+  
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-xs table-hover table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Device DID No</th>
+                                    <th scope="col">IMEI No</th>
+                                    <th scope="col">Select For Return</th>
+                                </tr>
+                            </thead>
+  
+                            <tbody>
+                                <tr *ngFor="let item of deviceList; let i=index">
+                                    <th>{{item.DID_no}}</th>
+                                    <th>{{item.IMEI}}</th>
+                                    <th>
+                                      <!-- <input type="text"class="form-control" [(ngModel)]="item.iccid"  required /> -->
+                                      <div class="checkbox-fade fade-in-default">
+                                        <label>
+                                            <input type="checkbox" [(ngModel)]="item.selected">
+                                            <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                        </label>
+                                    </div>
+                                    </th>
+  
+  
+                                </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+  
+                </div>
+                </div>
+            </div>
+  
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+                <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideDevice()"> <i
+                        class="icofont icofont-close"></i> Close</button>
+  
+                <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmitDevice()"><i
+                        class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+            </div>
+  
+        </div>
+    </ng-template>
+  
+      <ng-template #templateCancel>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitleDevice" id="modalTitleDevice"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideDeviceCancel()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body pb-0">
+            <app-card>
+              <div class="row">
+  
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-xs table-hover table-bordered table-striped">
+                            <thead>
+                                <tr>                                
+                                    <th scope="col">Device DID No</th>
+                                    <th scope="col">IMEI No</th>
+                                    <th scope="col">Select For Return</th>
+                                </tr>
+                            </thead>
+  
+                            <tbody>
+                                <tr *ngFor="let item of deviceList; let i=index">
+                                  <th>{{item.DID_no}}</th>
+                                  <th>{{item.IMEI}}</th>
+                                    <th>
+                                      <!-- <input type="text"class="form-control" [(ngModel)]="item.iccid"  required /> -->
+                                      <div class="checkbox-fade fade-in-default">
+                                        <label>
+                                            <input type="checkbox" [(ngModel)]="item.selected">
+                                            <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                        </label>
+                                    </div>
+                                    </th>
+  
+  
+                                </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+  
+                </div>
+                </div>
+            </div>
+  
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+                <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideDeviceCancel()"> <i
+                        class="icofont icofont-close"></i> Close</button>
+  
+                <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmitDeviceCancel()"><i
+                        class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+            </div>
+  
+        </div>
+    </ng-template>
+
+</block-ui>

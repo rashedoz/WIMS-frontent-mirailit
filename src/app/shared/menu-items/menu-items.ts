@@ -122,6 +122,13 @@ const MENUITEMS = [
                      permission: 'is_superuser,is_staff',
                 },
                 {
+                  state: 'sold-sim-list',
+                  name: 'Sold SIM List',
+                  type: 'link',
+                  icon: 'ti-control-forward',
+                   permission: 'is_superuser,is_staff',
+               },
+                {
                     state: 'cancelled-sim-list',
                     name: 'Cancelled SIM List',
                     type: 'link',
@@ -201,7 +208,7 @@ const MENUITEMS = [
                 type: 'link',
                 icon: 'ti-control-forward',
                  permission: 'is_superuser,is_staff',
-            },
+            },              
             {
                 state: 'updatable-device-list',
                 name: 'Updatable Device List',
@@ -209,6 +216,13 @@ const MENUITEMS = [
                 icon: 'ti-control-forward',
                  permission: 'is_superuser,is_staff',
             },
+            {
+              state: 'sold-device-list',
+              name: 'Sold Device List',
+              type: 'link',
+              icon: 'ti-control-forward',
+               permission: 'is_superuser,is_staff',
+           },
             {
                 state: 'cancelled-device-list',
                 name: 'Cancelled Device List',

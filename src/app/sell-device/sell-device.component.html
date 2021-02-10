@@ -39,19 +39,20 @@
             <hr> -->
             <div class="row ">
               <div class="col-lg-6">
-
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label">Customer </label>
                   <div class="col-sm-9">
-                    <ng-select  [searchFn]="customSearchFn" [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false" formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
-                      bindLabel="first_name" bindValue="id" placeholder="Select a customer">
-                      <ng-template ng-label-tmp let-item="item">                          
-                        {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
+                    <ng-select (change)="onCustomerChange($event)" [searchFn]="customSearchFn"
+                    [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false"
+                    formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
+                    bindLabel="first_name" bindValue="id" placeholder="Select a customer">
+                    <ng-template ng-label-tmp let-item="item">                          
+                      {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
+                  </ng-template>
+                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                      {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
                     </ng-template>
-                      <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-                        {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}} 
-                    </ng-template>
-                    </ng-select>
+                  </ng-select>
                     <div *ngIf="submitted && f.customer.errors" class="error-text">
                       <span *ngIf="f.customer.errors.required" class="text-danger"> Customer is required</span>
 
@@ -59,6 +60,46 @@
                   </div>
                 </div>
               </div>
+
+              <div class="col-lg-6">
+                <div class="form-group row">
+                  <label class="col-sm-4 col-form-label">Subscription </label>
+                  <div class="col-sm-8">
+                    <ng-select 
+                      [ngClass]="{ 'is-invalid': submitted && f.subscription.errors }" [clearable]="false"
+                      formControlName="subscription" [clearOnBackspace]="false" [items]="subscriptionList"
+                      bindLabel="id" bindValue="id" placeholder="Select subscription">
+
+                      <ng-template ng-option-tmp let-item="item" let-index="index">
+
+                        <div>
+                          <div class="card-body">
+                            <div class="row mb-3">
+                              <div class="col-sm-6 pt-2">
+                                <h6 class="card-subtitle text-muted">Subscription No: {{item.id}}</h6>
+                              </div>
+                              <div class="col-sm-6">
+                                <span *ngIf="item.status == 1" class=" card-subtitle"> Status : <strong
+                                    class="label label-success">{{ SubscriptionStatus[item.status] }}</strong></span>
+                                <span *ngIf="item.status == 2" class=" card-subtitle"> Status : <strong
+                                    class="label label-warning">{{ SubscriptionStatus[item.status] }}</strong></span>
+                              </div>
+                            </div>
+                            <p class="card-text"> Id : {{item.alias}}</p>
+                          </div>
+                        </div>
+                      </ng-template>
+
+
+                    </ng-select>
+                    <div *ngIf="submitted && f.subscription.errors" class="error-text">
+                      <span *ngIf="f.subscription.errors.required" class="text-danger"> Subscription is required</span>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>

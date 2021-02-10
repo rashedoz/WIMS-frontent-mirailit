@@ -1,157 +1,239 @@
+
 <div class="row mb-2">
-    <div class="col-lg-12">
-        <div class="card card-border-primary">
-            <div class="card-header">
-                <h5>SIM </h5>
+    <div class="col-md-8">
+        <div class="row mb-2">
+            <div class="col-lg-12">
+                <div class="card card-border-primary">
+                    <div class="card-header">
+                        <h5>SIM </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="simStock">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <div class="card client-blocks dark-primary-border">
+                            <div class="card-block">
+                                <h5>Currently Available SIM Qty </h5>
+                                <ul>
+                                    <li> <img class="text-danger icon-w-40" src="assets/icon/custom/available.png">
+                                    </li>
+                                    <li class="text-right text-success f-42">
+                                        {{simStock.available_stock_qty}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <div class="card client-blocks dark-primary-border">
+                            <div class="card-block">
+                                <h5>Currently SIM Held Qty</h5>
+                                <ul>
+                                    <li> <img class="text-warning icon-w-40" src="assets/icon/custom/held.png">
+                                    </li>
+                                    <li class="text-right text-warning f-42">
+                                        {{simStock.held_qty}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <div class="card client-blocks dark-primary-border">
+                            <div class="card-block">
+                                <h5>Total Sold SIM Qty</h5>
+                                <ul>
+                                    <li> <img class="text-success icon-w-40" src="assets/icon/custom/sold2.png">
+                                    </li>
+                                    <li class="text-right text-success f-42">
+                                        {{simStock.sold_qty}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-12 mb-3 div-pointer">
+                        <div class="card client-blocks sucsess-border">
+                            <div class="card-block" [routerLink]="['/cancelled-sim-list']" routerLinkActive="router-link-active" >
+                                <h5>Currently Cancelled SIM Qty</h5>
+                                <ul>
+                                    <li> <img class="text-danger icon-w-40" src="assets/icon/custom/cancel.png">
+                                    </li>
+                                    <li class="text-right text-warning f-42">
+                                        {{simStock.cancelled_qty}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <div class="card client-blocks sucsess-border">
+                            <div class="card-block">
+                                <h5>Currently Reissued SIM Qty</h5>
+                                <ul>
+                                    <li> <img class="text-danger icon-w-40" src="assets/icon/custom/return.png">
+                                    </li>
+                                    <li class="text-right text-primary f-42">
+                                        {{simStock.reissued_qty}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <div class="card client-blocks sucsess-border">
+                            <div class="card-block">
+                                <h5>Currently Subscribed SIM Qty</h5>
+                                <ul>
+                                    <li> <img class="text-danger icon-w-40" src="assets/icon/custom/subscribe.png">
+                                    </li>
+                                    <li class="text-right text-primary f-42">
+                                        {{simStock.subscribed_qty}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <div class="card client-blocks warning-border">
+                            <div class="card-block">
+                                <h5>This month’s Sold SIM Qty</h5>
+                                <ul>
+                                    <li> <img class="text-success icon-w-40" src="assets/icon/custom/sold2.png">
+                                    </li>
+                                    <li class="text-right text-success f-42">
+                                        {{simStock.sim_sold_this_month}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <div class="card client-blocks warning-border">
+                            <div class="card-block">
+                                <h5>This month’s Reissued SIM Qty</h5>
+                                <ul>
+                                    <li> <img class="text-danger icon-w-40" src="assets/icon/custom/return.png">
+                                    </li>
+                                    <li class="text-right text-primary f-42">
+                                        {{simStock.sim_reissued_this_month}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <div class="card client-blocks warning-border">
+                            <div class="card-block">
+                                <h5>This month’s Subscribed SIM Qty</h5>
+                                <ul>
+                                    <li> <img class="text-danger icon-w-40" src="assets/icon/custom/subscribe.png">
+                                    </li>
+                                    <li class="text-right text-primary f-42">
+                                        {{simStock.sim_subscribed_this_month}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="row" *ngIf="simStock">
     <div class="col-md-4">
-        <div class="row">
-            <div class="col-md-12 mb-3">
-                <div class="card client-blocks dark-primary-border">
+        <div class="row mb-2">
+            <div class="col-lg-12">
+                <div class="card card-border-primary">
+                    <div class="card-header">
+                        <h5>Device </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="deviceStock">
+            <div class="col-md-12 mb-1">
+                <div class="card client-blocks success-border">
                     <div class="card-block">
-                        <h5>Currently Available SIM Qty </h5>
+                        <h5>Currently Available Device Qty </h5>
                         <ul>
                             <li> <img class="text-danger icon-w-40" src="assets/icon/custom/available.png">
                             </li>
                             <li class="text-right text-success f-42">
-                                {{simStock.available_stock_qty}}
+                                {{deviceStock.available_stock_qty}}
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 mb-3">
-                <div class="card client-blocks dark-primary-border">
-                    <div class="card-block">
-                        <h5>Currently SIM Held Qty</h5>
-                        <ul>
-                            <li> <img class="text-warning icon-w-40" src="assets/icon/custom/held.png">
-                            </li>
-                            <li class="text-right text-warning f-42">
-                                {{simStock.held_qty}}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12 mb-3">
-                <div class="card client-blocks dark-primary-border">
-                    <div class="card-block">
-                        <h5>Total Sold SIM Qty</h5>
-                        <ul>
-                            <li> <img class="text-success icon-w-40" src="assets/icon/custom/sold2.png">
-                            </li>
-                            <li class="text-right text-success f-42">
-                                {{simStock.sold_qty}}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="row">
-            <div class="col-md-12 mb-3">
-                <div class="card client-blocks sucsess-border">
-                    <div class="card-block">
-                        <h5>Currently Cancelled SIM Qty</h5>
+        
+        
+            <div class="col-md-12 mb-1 div-pointer">
+                <div class="card client-blocks warning-border">
+                    <div class="card-block" [routerLink]="['/cancelled-device-list']" routerLinkActive="router-link-active">
+                        <h5>Currently Cancelled Device Qty</h5>
                         <ul>
                             <li> <img class="text-danger icon-w-40" src="assets/icon/custom/cancel.png">
                             </li>
                             <li class="text-right text-warning f-42">
-                                {{simStock.cancelled_qty}}
+                                {{deviceStock.cancelled_qty}}
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 mb-3">
-                <div class="card client-blocks sucsess-border">
+        
+        
+            <div class="col-md-12 mb-1">
+                <div class="card client-blocks">
                     <div class="card-block">
-                        <h5>Currently Reissued SIM Qty</h5>
+                        <h5>Total Sold Device Qty</h5>
                         <ul>
-                            <li> <img class="text-danger icon-w-40" src="assets/icon/custom/return.png">
+                            <li> <img class="text-danger icon-w-40" src="assets/icon/custom/sold.png">
                             </li>
                             <li class="text-right text-primary f-42">
-                                {{simStock.reissued_qty}}
+                                {{deviceStock.sold_qty}}
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 mb-3">
-                <div class="card client-blocks sucsess-border">
+    
+            <div class="col-md-12 mb-1">
+                <div class="card client-blocks primary-dark-border">
                     <div class="card-block">
-                        <h5>Currently Subscribed SIM Qty</h5>
+                        <h5>This month’s Sold Device Qty</h5>
                         <ul>
-                            <li> <img class="text-danger icon-w-40" src="assets/icon/custom/subscribe.png">
+                            <li> <img class="text-danger icon-w-40" src="assets/icon/custom/sold.png">
                             </li>
                             <li class="text-right text-primary f-42">
-                                {{simStock.subscribed_qty}}
+                                {{deviceStock.device_sold_this_month}}
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-4">
-        <div class="row">
-            <div class="col-md-12 mb-3">
-                <div class="card client-blocks warning-border">
-                    <div class="card-block">
-                        <h5>This month’s Sold SIM Qty</h5>
-                        <ul>
-                            <li> <img class="text-success icon-w-40" src="assets/icon/custom/sold2.png">
-                            </li>
-                            <li class="text-right text-success f-42">
-                                {{simStock.sim_sold_this_month}}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12 mb-3">
-                <div class="card client-blocks warning-border">
-                    <div class="card-block">
-                        <h5>This month’s Reissued SIM Qty</h5>
-                        <ul>
-                            <li> <img class="text-danger icon-w-40" src="assets/icon/custom/return.png">
-                            </li>
-                            <li class="text-right text-primary f-42">
-                                {{simStock.sim_reissued_this_month}}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12 mb-3">
-                <div class="card client-blocks warning-border">
-                    <div class="card-block">
-                        <h5>This month’s Subscribed SIM Qty</h5>
-                        <ul>
-                            <li> <img class="text-danger icon-w-40" src="assets/icon/custom/subscribe.png">
-                            </li>
-                            <li class="text-right text-primary f-42">
-                                {{simStock.sim_subscribed_this_month}}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+
     </div>
 </div>
+
+
 <div class="row mt-3 mb-2">
     <div class="col-lg-12">
         <div class="card card-border-primary">
             <div class="card-header">
-                <h5>Device </h5>
+                <h5>Bill </h5>
             </div>
         </div>
     </div>
@@ -159,16 +241,16 @@
 <div class="row">
 
     <div class="col-md-12 col-xl-4">
-    <div class="row" *ngIf="deviceStock">
+    <div class="row" *ngIf="billCount">
         <div class="col-md-12 mb-1">
             <div class="card client-blocks success-border">
                 <div class="card-block">
-                    <h5>Currently Available Device Qty </h5>
+                    <h5>Fully Paid Bills </h5>
                     <ul>
-                        <li> <img class="text-danger icon-w-40" src="assets/icon/custom/available.png">
+                        <li> <img class="icon-w-40" src="assets/icon/custom/full-paid-bill.png">
                         </li>
                         <li class="text-right text-success f-42">
-                            {{deviceStock.available_stock_qty}}
+                            {{billCount.fully_paid_bills}}
                         </li>
                     </ul>
                 </div>
@@ -179,12 +261,12 @@
         <div class="col-md-12 mb-1">
             <div class="card client-blocks warning-border">
                 <div class="card-block">
-                    <h5>Currently Cancelled Device Qty</h5>
+                    <h5>Partially Paid Bills</h5>
                     <ul>
-                        <li> <img class="text-danger icon-w-40" src="assets/icon/custom/cancel.png">
+                        <li> <img class="icon-w-40" src="assets/icon/custom/partially-paid-bill.png">
                         </li>
                         <li class="text-right text-warning f-42">
-                            {{deviceStock.cancelled_qty}}
+                            {{billCount.partially_paid_bills}}
                         </li>
                     </ul>
                 </div>
@@ -193,34 +275,19 @@
     
     
         <div class="col-md-12 mb-1">
-            <div class="card client-blocks">
+            <div class="card client-blocks danger-border">
                 <div class="card-block">
-                    <h5>Total Sold Device Qty</h5>
+                    <h5>Unpaid Bills</h5>
                     <ul>
-                        <li> <img class="text-danger icon-w-40" src="assets/icon/custom/sold.png">
+                        <li> <img class="icon-w-40" src="assets/icon/custom/unpaid-bill.png">
                         </li>
-                        <li class="text-right text-primary f-42">
-                            {{deviceStock.sold_qty}}
+                        <li class="text-right text-danger f-42">
+                            {{billCount.unpaid_bills}}
                         </li>
                     </ul>
                 </div>
             </div>
-        </div>
-
-        <div class="col-md-12 mb-1">
-            <div class="card client-blocks primary-dark-border">
-                <div class="card-block">
-                    <h5>This month’s Sold Device Qty</h5>
-                    <ul>
-                        <li> <img class="text-danger icon-w-40" src="assets/icon/custom/sold.png">
-                        </li>
-                        <li class="text-right text-primary f-42">
-                            {{deviceStock.device_sold_this_month}}
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+        </div>       
     </div>
 
     </div>
@@ -229,91 +296,30 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="card table-1-card">
+                    <div class="card-header">
+                        <h5>Customer Due List </h5>
+                        <button class="btn btn-primary btn-mini float-right" [routerLink]="['/customer-due-list']" routerLinkActive="router-link-active"  >Show More</button>
+                    </div>
                     <div class="card-block">
-                        <div class="table-responsive">
+                        <div class="table-responsive" *ngIf="customerDueList.length > 0">
                             <table class="table">
                                 <thead>
                                     <tr class="text-capitalize">
-                                        <th>Type</th>
-                                        <th>Lead Name</th>
-                                        <th>Views</th>
-                                        <th>Favourites</th>
-                                        <th>Last Visit</th>
-                                        <th>Last Action</th>
-                                        <th>Last Date</th>
+                                        <th>Customer Code</th>
+                                        <th>Name</th>
+                                        <th>Mobile</th>
+                                        <th>Email</th>
+                                        <th>Total Due</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td><a href="#!">Buyer</a>
-                                        </td>
-                                        <td>Denish Ann</td>
-                                        <td>153</td>
-                                        <td>100</td>
-                                        <td>20</td>
-                                        <td>9.23 A.M.</td>
-                                        <td>9/27/2015</td>
-                                    </tr>
-                                    <tr>
-                                        <td><a class="text-danger" href="#!">Lanload</a>
-                                        </td>
-                                        <td>John Doe</td>
-                                        <td>121</td>
-                                        <td>100</td>
-                                        <td>20</td>
-                                        <td>6.23 A.M.</td>
-                                        <td>8/27/2015</td>
-                                    </tr>
-                                    <tr>
-                                        <td><a href="#!">Buyer</a>
-                                        </td>
-                                        <td>Henry Joe</td>
-                                        <td>154</td>
-                                        <td>140</td>
-                                        <td>30</td>
-                                        <td>7.54 P.M.</td>
-                                        <td>4/30/2015</td>
-                                    </tr>
-                                    <tr>
-                                        <td><a class="text-danger" href="#!">Lanload</a>
-                                        </td>
-                                        <td>Sara Soudein</td>
-                                        <td>153</td>
-                                        <td>100</td>
-                                        <td>20</td>
-                                        <td>9.23 A.M.</td>
-                                        <td>5/20/2016</td>
-                                    </tr>
-                                    <tr>
-                                        <td><a href="#!">Buyer</a>
-                                        </td>
-                                        <td>Denish Ann</td>
-                                        <td>153</td>
-                                        <td>100</td>
-                                        <td>20</td>
-                                        <td>9.23 A.M.</td>
-                                        <td>3/26/2015</td>
-                                    </tr>
-                                    <tr>
-                                        <td><a class="text-info" href="#!">Lanload</a>
-                                        </td>
-                                        <td>Stefen Joe</td>
-                                        <td>153</td>
-                                        <td>100</td>
-                                        <td>20</td>
-                                        <td>11.45 A.M.</td>
-                                        <td>5/20/2017</td>
-                                    </tr>
-                                    <tr>
-                                        <td><a href="#!">Buyer</a>
-                                        </td>
-                                        <td>Mark Backlus</td>
-                                        <td>153</td>
-                                        <td>100</td>
-                                        <td>20</td>
-                                        <td>12.40 A.M.</td>
-                                        <td>3/27/2017</td>
-                                    </tr>
+                                    <tr *ngFor="let item of customerDueList">                                       
+                                        <td>{{item.customer_code}}</td>
+                                        <td>{{item.first_name}} {{item.last_name}}</td>
+                                        <td>{{item.mobile}}</td>
+                                        <td>{{item.email}}</td>
+                                        <td>{{item.total_due}}</td>
+                                    </tr>                                    
                                 </tbody>
                             </table>
                         </div>
