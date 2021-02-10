@@ -103,6 +103,16 @@ export const AppRoutes: Routes = [
         // canActivate: [AuthGuard]
       },
       {
+        path: 'cancelled-device-list',
+        loadChildren: () => import('./cancelled-device-list/cancelled-device-list.module').then(m => m.CancelledDeviceListModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'permanently-cancelled-device-list',
+        loadChildren: () => import('./permanently-cancelled-device-list/permanently-cancelled-device-list.module').then(m => m.PermanentlyCancelledDeviceListModule),
+        // canActivate: [AuthGuard]
+      },
+      {
         path: 'data-plan-list',
         loadChildren: () => import('./data-plan/data-plan.module').then(m => m.DataPlanModule),
         // canActivate: [AuthGuard]

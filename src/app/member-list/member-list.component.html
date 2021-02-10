@@ -98,6 +98,13 @@
                  <form [formGroup]="RegistrerFormChangePassword" class="col-sm-12">
                                                          
                    
+                        <div class="form-group row" *ngIf="user">
+                            <label class="col-sm-4 col-form-label">Name </label>
+                            <div class="col-sm-8">
+                                <label class="font-weight-bold col-form-label"><h5>{{user.first_name}} {{user.last_name}}</h5></label>
+                            </div>
+                        </div>
+
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label">New Password </label>
                             <div class="col-sm-8">

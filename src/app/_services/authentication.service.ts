@@ -80,7 +80,7 @@ export class AuthenticationService {
       if(data.is_wholesaler){
         Roles.push("is_wholesaler");
       }
-      console.log(Roles);
+     // console.log(Roles);
         const user = {
           id: data.id,
           email: data.email,

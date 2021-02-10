@@ -12,7 +12,7 @@ export class ErrorInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(catchError(err => {
-            const errorMsg = err.error.detail || err.error.Message || err.error.error_description || err.error || err.statusText;
+            const errorMsg = err.error.Errors[0].message || err.error.detail || err.error.Message || err.error.error_description || err.error || err.statusText;
             this.toastr.error(errorMsg, 'Error!', { timeOut: 3000 });    
 
             // if(err.status === 400) {

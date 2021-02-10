@@ -208,8 +208,21 @@ const MENUITEMS = [
                 type: 'link',
                 icon: 'ti-control-forward',
                  permission: 'is_superuser,is_staff',
+            },
+            {
+                state: 'cancelled-device-list',
+                name: 'Cancelled Device List',
+                type: 'link',
+                icon: 'ti-control-forward',
+                  permission: 'is_superuser,is_staff',
+            },
+            {
+                state: 'permanently-cancelled-device-list',
+                name: 'Permanently Cancelled Device List',
+                type: 'link',
+                icon: 'ti-control-forward',
+                  permission: 'is_superuser,is_staff',
             }
-
 
           ]
       },

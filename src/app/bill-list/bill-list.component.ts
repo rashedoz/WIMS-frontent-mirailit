@@ -160,9 +160,18 @@ export class BillListComponent implements OnInit {
       case 3:
         this.getDeviceBillList();
         break;
-
+      case 4:
+        this.getFullPaidBillList();
+        break;
+      case 5:
+        this.getUnpaidBillList();
+        break;
+      case 6:
+        this.getPartiallypaidBillList();
+        break;
     }
   }
+ 
 
 
   getBillList() {
@@ -252,6 +261,84 @@ export class BillListComponent implements OnInit {
         this.tempRows = res;
         this.deviceBilList = res;
         this.columnsWithSearch = Object.keys(this.deviceBilList[0]);
+        // this.page.totalElements = res.Total;
+        // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+        setTimeout(() => {
+          this.loadingIndicator = false;
+        }, 1000);
+        // const key = 'subscription';
+        // this.subscriptionList = [...new Map(this.itemList.map(item =>
+        //   [item[key], item])).values()];
+      },
+      (err) => {
+        this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+      }
+    );
+  }
+
+  getFullPaidBillList() {
+    this.loadingIndicator = true;
+    this._service.get("subscription/get-fully-paid-bill-list").subscribe(
+      (res) => {
+        this.activeTable = 4;
+        this.tempRows = res;
+        this.bilList = res;
+        this.columnsWithSearch = Object.keys(this.bilList[0]);
+        // this.page.totalElements = res.Total;
+        // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+        setTimeout(() => {
+          this.loadingIndicator = false;
+        }, 1000);
+        // const key = 'subscription';
+        // this.subscriptionList = [...new Map(this.itemList.map(item =>
+        //   [item[key], item])).values()];
+      },
+      (err) => {
+        this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+      }
+    );
+  }
+
+  getPartiallypaidBillList() {
+    this.loadingIndicator = true;
+    this._service.get("subscription/get-partially-paid-bill-list").subscribe(
+      (res) => {
+        this.activeTable = 6;
+        this.tempRows = res;
+        this.bilList = res;
+        this.columnsWithSearch = Object.keys(this.bilList[0]);
+        // this.page.totalElements = res.Total;
+        // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+        setTimeout(() => {
+          this.loadingIndicator = false;
+        }, 1000);
+        // const key = 'subscription';
+        // this.subscriptionList = [...new Map(this.itemList.map(item =>
+        //   [item[key], item])).values()];
+      },
+      (err) => {
+        this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+      }
+    );
+  }
+
+  getUnpaidBillList() {
+    this.loadingIndicator = true;
+    this._service.get("subscription/get-unpaid-bill-list").subscribe(
+      (res) => {
+        this.activeTable = 5;
+        this.tempRows = res;
+        this.bilList = res;
+        this.columnsWithSearch = Object.keys(this.bilList[0]);
         // this.page.totalElements = res.Total;
         // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
         setTimeout(() => {

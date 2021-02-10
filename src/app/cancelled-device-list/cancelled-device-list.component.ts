@@ -23,7 +23,7 @@ export class CancelledDeviceListComponent implements OnInit {
   StockStatus = StockStatus;
   modalTitleDevice = 'Add Items For Return to Stock';
   btnSaveText = 'Return to Stock';
-  modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
+  modalConfig: any = { class: 'modal-dialog-scrollable gray modal-lg', backdrop: 'static' };
   modalRef: BsModalRef;
 
   deviceList = [];
@@ -129,6 +129,46 @@ export class CancelledDeviceListComponent implements OnInit {
 
   }
 
+  onFormSubmitDeviceCancel() {
+
+    let device_list = [];
+  //
+    this.deviceList.filter(x=>x.selected).forEach(element => {
+      device_list.push({
+        id:element.id
+      });
+    });
+    const obj = {
+      device_list : device_list
+    };
+
+    if(device_list.length == 0){
+      this.toastr.warning('No item selected', 'Warning!', { closeButton: true, disableTimeOut: true });
+      return;
+    }
+    this.blockUI.start('Canceling...');
+    this._service.post('stock/mark-devices-as-permanently-cancelled', obj).subscribe(
+      data => {
+        this.blockUI.stop();
+        if (data.IsReport == "Success") {
+          this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+          this.modalHideDeviceCancel();
+          this.getList();
+
+        } else if (data.IsReport == "Warning") {
+          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+        } else {
+          this.toastr.error(data.Msg, 'Error!', { timeOut: 2000 });
+        }
+      },
+      err => {
+        this.blockUI.stop();
+        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+      }
+    );
+
+  }
+
 
   modalHideDevice() {
     this.modalRef.hide();
@@ -138,11 +178,34 @@ export class CancelledDeviceListComponent implements OnInit {
 
 
   openModalDevice(template: TemplateRef<any>) {
+    this.modalTitleDevice = 'Add Items For Return to Stock';
+    this.btnSaveText = 'Return to Stock';
     this.rows.forEach(element => {
       this.deviceList.push({
         id: element.id,
-        device_id: element.id,
-        device: element.ICCID_no,
+        DID_no:element.DID_no,
+        IMEI:element.IMEI,
+        selected: false
+      })
+    });
+    this.modalRef = this.modalService.show(template, this.modalConfig);
+  }
+
+  modalHideDeviceCancel() {
+    this.modalRef.hide();
+    this.submitted = false;
+    this.deviceList = [];
+  }
+
+
+  openModalDeviceCancel(template: TemplateRef<any>) {
+    this.modalTitleDevice = 'Add Items For Permanently Cancelled';
+    this.btnSaveText = 'Permanently Cancelled';
+    this.rows.forEach(element => {
+      this.deviceList.push({
+        id: element.id,
+        DID_no:element.DID_no,
+        IMEI:element.IMEI,
         selected: false
       })
     });

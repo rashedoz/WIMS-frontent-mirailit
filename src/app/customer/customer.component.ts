@@ -34,7 +34,7 @@ export class CustomerComponent implements OnInit {
   modalConfig: any = { class: 'gray modal-xl', backdrop: 'static' };
   modalConfigmd: any = { class: 'gray modal-md', backdrop: 'static' };
   modalRef: BsModalRef;
-
+  user;
   // modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
   // modalRef: BsModalRef;
   // modalRefRetailer: BsModalRef;
@@ -325,6 +325,7 @@ changePassword(row, template: TemplateRef<any>) {
 
   this.modalTitle = 'Change Password';
   this.btnSaveText = 'Change';
+  this.user = row;
   this.RegistrerFormChangePassword.controls['id'].setValue(row.id);    
   this.modalRef = this.modalService.show(template, this.modalConfigmd);
 
@@ -612,6 +613,7 @@ changePassword(row, template: TemplateRef<any>) {
   modalHideChangePassword() {
     this.RegistrerFormChangePassword.reset();
     this.modalRef.hide();
+    this.user = null;
     this.submitted = false;
     this.btnSaveText = 'Save';
   }

@@ -42,6 +42,7 @@ export class MemberListComponent implements OnInit {
   @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
   scrollBarHorizontal = (window.innerWidth < 1200);
   details;
+  user;
   constructor(
     private modalService: BsModalService,
     public formBuilder: FormBuilder,
@@ -192,6 +193,7 @@ changePassword(row, template: TemplateRef<any>) {
 
     this.modalTitle = 'Change Password';
     this.btnSaveText = 'Change';
+    this.user = row;
     this.RegistrerFormChangePassword.controls['id'].setValue(row.id);    
     this.modalRef = this.modalService.show(template, this.modalConfigmd);
   
@@ -360,6 +362,7 @@ modalHideChangePassword() {
   this.modalRef.hide();
   this.submitted = false;
   this.modalTitle = 'Add Member';
+  this.user = null;
   this.btnSaveText = 'Save';
 }
 

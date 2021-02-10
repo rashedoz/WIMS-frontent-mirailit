@@ -64,7 +64,11 @@ export class LoginSystemAdminComponent implements OnInit {
 
     this.authService.login({ UserName: this.LoginForm.value.Email, Password: this.LoginForm.value.Password}).subscribe(
       data => {
-      this.blockUI.stop();
+     
+        if(!data){
+          this.blockUI.stop();
+          return;
+        } 
         if (data.access) {
 
           this.authService.verifyToken(data.access).subscribe(

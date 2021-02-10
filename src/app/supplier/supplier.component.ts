@@ -33,7 +33,7 @@ export class SupplierComponent implements OnInit {
   supplierList = [];
   loadingIndicator = false;
   ColumnMode = ColumnMode;
-
+  details;
   scrollBarHorizontal = (window.innerWidth < 1200);
 
   constructor(
@@ -99,24 +99,26 @@ export class SupplierComponent implements OnInit {
     );
   }
 
-  getItem(id, template: TemplateRef<any>) {
-    this.blockUI.start('Getting data...');
-    this._service.get('Supplier/GetSupplierById/' + id).subscribe(res => {
-      this.blockUI.stop();
-      if (!res.Success) {
-        this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
-        return;
-      }
-      this.modalTitle = 'Update Set';
-      this.btnSaveText = 'Update';
-      this.entryForm.controls['id'].setValue(res.Record.Id);
-      this.entryForm.controls['name'].setValue(res.Record.Name);
-      this.entryForm.controls['isActive'].setValue(res.Record.IsActive);
-      this.modalRef = this.modalService.show(template, this.modalConfig);
-    }, err => {
-      this.blockUI.stop();
-      this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
-    });
+  getItem(row, template: TemplateRef<any>) {
+
+    this.modalTitle = 'Update Supplier';
+    this.btnSaveText = 'Update';
+
+    this.entryForm.controls['id'].setValue(row.id);
+    this.entryForm.controls['mobile'].setValue(row.mobile);
+    this.entryForm.controls['name'].setValue(row.name);
+    this.entryForm.controls['alternative_mobile'].setValue(row.alternative_mobile);
+    this.entryForm.controls['address_one'].setValue(row.address_one);
+    this.entryForm.controls['address_two'].setValue(row.address_two);
+    this.entryForm.controls['preferred_payment_method'].setValue(row.preferred_payment_method);
+    this.entryForm.controls['acc_number'].setValue(row.acc_number);
+    this.modalRef = this.modalService.show(template, this.modalConfig);
+  }
+
+  showDetails(row, template: TemplateRef<any>) {
+    this.modalTitle = 'Details';
+    this.details = row;
+    this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 
   onFormSubmit() {
@@ -124,6 +126,45 @@ export class SupplierComponent implements OnInit {
     if (this.entryForm.invalid) {
       return;
     }
+    let id = this.entryForm.value.id;
+
+    if(id){
+
+      this.blockUI.start('Updating...');
+
+      const obj = {
+        //id: this.entryForm.value.id ? this.entryForm.value.id : 0,
+        name: this.entryForm.value.name.trim(),
+        mobile: this.entryForm.value.mobile.trim(),
+        alternative_mobile: this.entryForm.value.alternative_mobile ? this.entryForm.value.alternative_mobile.trim() : null,
+        address_one: this.entryForm.value.address_one ? this.entryForm.value.address_one.trim() : null,
+        address_two: this.entryForm.value.address_two ? this.entryForm.value.address_two.trim() : null,
+        preferred_payment_method: this.entryForm.value.preferred_payment_method ? this.entryForm.value.preferred_payment_method.trim() : null,
+        acc_number: this.entryForm.value.acc_number ? this.entryForm.value.acc_number.trim() : null,
+      };
+  
+      this._service.put('supplier/edit-supplier/'+id, obj).subscribe(
+        data => {
+          this.blockUI.stop();
+          if (data.IsReport === "Success") {
+            this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+            this.modalHide();
+            this.getList();
+  
+          } else if (data.IsReport === "Warning") {
+            this.toastr.warning(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+
+          } else {
+            this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+          }
+        },
+        err => {
+          this.blockUI.stop();
+          this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+        }
+      );
+
+    }else{
 
     this.blockUI.start('Saving...');
 
@@ -141,10 +182,13 @@ export class SupplierComponent implements OnInit {
     this._service.post('supplier/save-supplier', obj).subscribe(
       data => {
         this.blockUI.stop();
-        if (data) {
+        if (data.IsReport === "Success") {
           this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
           this.modalHide();
           this.getList();
+
+        } else if (data.IsReport === "Warning") {
+          this.toastr.warning(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
 
         } else {
           this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
@@ -155,12 +199,14 @@ export class SupplierComponent implements OnInit {
         this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
       }
     );
+  }
 
   }
 
   modalHide() {
     this.entryForm.reset();
     this.modalRef.hide();
+    this.details = null;
     this.submitted = false;
     this.modalTitle = 'Add Supplier';
     this.btnSaveText = 'Save';

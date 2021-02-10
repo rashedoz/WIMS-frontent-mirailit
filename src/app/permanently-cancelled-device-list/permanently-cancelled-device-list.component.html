@@ -1,0 +1,59 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header">
+                            <h5>Permanently Cancelled Device List </h5>
+                          
+                        </div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12 ">
+                                  <ngx-datatable class="material table-bordered" [rows]="rows"
+                                  [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                                  [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
+
+                                  <ngx-datatable-column [width]="100" name="DID No" prop="DID_no" [draggable]="false" [sortable]="false">
+                                    <ng-template let-value="value" ngx-datatable-cell-template>
+                                        <span > {{ value }} </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                                <ngx-datatable-column [width]="200" name="IMEI" prop="IMEI" [draggable]="false"
+                                    [sortable]="false">
+                                    <ng-template let-value="value" ngx-datatable-cell-template>
+                                        <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                                  <ngx-datatable-column [width]="80" name="Status" prop="status" [draggable]="false"
+                                      [sortable]="false">
+                                      <ng-template let-value="value" ngx-datatable-cell-template>
+                                        <span *ngIf="value === 1" > <strong class="label label-success">{{ StockStatus[value] }}</strong> </span>
+                                          <span *ngIf="value === 2" > <strong class="label label-info">{{ StockStatus[value] }}</strong> </span>
+                                          <span *ngIf="value === 3" > <strong class="label label-secondary">{{ StockStatus[value] }}</strong> </span>
+                                          <span *ngIf="value === 4" > <strong class="label label-warning">{{ StockStatus[value] }}</strong> </span>
+                                          <span *ngIf="value === 5" > <strong class="label label-danger">{{ StockStatus[value] }}</strong> </span>
+                                          <span *ngIf="value === 6" > <strong class="label label-primary">{{ StockStatus[value] }}</strong> </span>
+                                          <span *ngIf="value === 7" > <strong class="label label-warning">{{ StockStatus[value] }}</strong> </span>
+                                          <span *ngIf="value === 8" > <strong class="label label-danger">{{ StockStatus[value] }}</strong> </span>
+
+                                        </ng-template>
+                                  </ngx-datatable-column>
+
+                              </ngx-datatable>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</block-ui>
