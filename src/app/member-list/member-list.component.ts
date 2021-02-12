@@ -93,6 +93,7 @@ export class MemberListComponent implements OnInit {
 
     this.RegistrerFormChangePassword = this.formBuilder.group({
       id:[null],    
+      old_password: ['', [Validators.required, Validators.minLength(6)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required]
     }, {
@@ -306,7 +307,8 @@ onFormSubmitChangePassword() {
 
     const obj = {
       user_id: this.RegistrerFormChangePassword.value.id,
-      password: this.RegistrerFormChangePassword.value.password.trim(),     
+      old_password: this.RegistrerFormChangePassword.value.old_password.trim(),     
+      new_password: this.RegistrerFormChangePassword.value.password.trim()     
     };
   
     this._service.post('update-user-password', obj).subscribe(
@@ -318,9 +320,7 @@ onFormSubmitChangePassword() {
           this.getList();
         }
         else if (data.IsReport == "Warning") {
-          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-          this.modalHideChangePassword();
-          this.getList();
+          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });        
         }else {
           this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
         }

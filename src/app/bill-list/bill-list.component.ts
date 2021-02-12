@@ -365,8 +365,8 @@ export class BillListComponent implements OnInit {
   }
 
   onChangePaid(value) {
-    if (parseFloat(value) > this.newTotal - this.discount) {
-      this.paidAmount = this.newTotal - this.discount;
+    if (parseFloat(value) > this.newTotal) {
+      this.paidAmount = this.newTotal;
     }
   }
 
@@ -386,7 +386,7 @@ export class BillListComponent implements OnInit {
       transaction_type:"Payment In",
       payment_method: this.isPayBalanceEnable ? 2:1,
       session:this.billItem.session,
-      discount:Number(this.discount),
+      discount: 0,//Number(this.discount),
       paid_amount:Number(this.paidAmount),
       refund_amount:0,
       due:0,
@@ -459,7 +459,7 @@ export class BillListComponent implements OnInit {
 
   onChangePayBalance(e){
     this.isPayBalanceEnable = e;
-    let net = Number(this.newTotal) - Number(this.discount);
+    let net = Number(this.newTotal); // - Number(this.discount);
     if(e){
       if(Number(this.balanceObj.balance) > net){
         this.paidAmount = net;
@@ -818,7 +818,7 @@ export class BillListComponent implements OnInit {
         doc.text( res.total_amount,rightStartCol2 + 42, startY,null, 'right' );
       }
 
-      if(res.status == 3){
+      if(res.status === 3 || res.status === 4){
         var img = new Image()
         img.src = 'assets/images/paid.png'
         doc.addImage(img, 'png', startX + 100 , startY + 50, 80, 60)

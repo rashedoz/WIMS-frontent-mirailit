@@ -7,7 +7,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { CommonService } from '../_services/common.service';
 import { AuthenticationService } from '../_services/authentication.service';
 import { DatePipe } from '@angular/common';
-
+import { MustMatch } from './../_helpers/must-match.validator';
 @Component({
   selector: 'app-profile-edit',
   templateUrl: './profile-edit.component.html',
@@ -16,7 +16,9 @@ import { DatePipe } from '@angular/common';
 
 export class ProfileEditComponent implements OnInit {
   submitted = false;
+  submittedPassword = false;
   RegistrerForm: FormGroup;
+  RegistrerFormChangePassword: FormGroup;
   public currentUser: any;
   @BlockUI() blockUI: NgBlockUI;
   bsConfig: Partial<BsDatepickerConfig>;
@@ -58,10 +60,25 @@ export class ProfileEditComponent implements OnInit {
     firstName: [null, [Validators.required]],
     lastName: [null, [Validators.required]]
   });
+
+  this.RegistrerFormChangePassword = this.formBuilder.group({
+    id:[null],    
+    old_password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    confirmPassword: ['', Validators.required]
+  }, {
+    validator: MustMatch('password', 'confirmPassword')
+});
+
   this.getDetails();
   }
+
+
   get f() {
     return this.RegistrerForm.controls;
+  }
+  get p() {
+    return this.RegistrerFormChangePassword.controls;
   }
   getDetails() {
 
@@ -91,6 +108,7 @@ export class ProfileEditComponent implements OnInit {
       this.RegistrerForm.controls['occupation'].setValue(res.occupation);
       this.RegistrerForm.controls['firstName'].setValue(res.first_name);
       this.RegistrerForm.controls['lastName'].setValue(res.last_name);
+      this.RegistrerFormChangePassword.controls['id'].setValue(res.id);
 
     }, err => {
       this.blockUI.stop();
@@ -130,11 +148,49 @@ onFormSubmit() {
         this.blockUI.stop();
         if (data.IsReport == "Success") {
           this.toastr.success(data.Msg, 'Success!', { timeOut: 4000 });
-          this.getDetails();    
+          this.getDetails();   
         
+        } else if (data.IsReport == "Warning") {
+          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });        
         }
         
         else {
+          this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+        }
+      },
+      err => {
+        this.blockUI.stop();
+        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+      }
+    );
+
+}
+
+onFormSubmitChangePassword() {
+  this.submittedPassword = true;
+  if (this.RegistrerFormChangePassword.invalid) {
+    return;
+  }
+
+    this.blockUI.start('Changing...');
+
+    const obj = {
+      user_id: this.RegistrerFormChangePassword.value.id,
+      old_password: this.RegistrerFormChangePassword.value.old_password.trim(),     
+      new_password: this.RegistrerFormChangePassword.value.password.trim()     
+    };
+  
+    this._service.post('update-user-password', obj).subscribe(
+      data => {
+        this.blockUI.stop();
+        if (data.IsReport == "Success") {
+          this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+          this.getDetails(); 
+          this.submittedPassword = false;
+        }
+        else if (data.IsReport == "Warning") {
+          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });        
+        }else {
           this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
         }
       },

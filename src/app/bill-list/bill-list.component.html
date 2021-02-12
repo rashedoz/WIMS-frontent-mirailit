@@ -873,20 +873,21 @@
                       <th>Total Refunded </th>
                       <th width="40%" class="text-right pr-4">{{billItem.parent_refund_amount}}</th>
                   </tr>
-                  <tr class="table-info" style="font-size: 20px;">
+                  <!-- <tr class="table-info" style="font-size: 20px;">
                       <th> Payable Amount </th>
                       <th width="40%" class="text-right pr-4">{{newTotal}}</th>
-                  </tr>
-                  <tr>
+                  </tr> -->
+                  <!-- <tr>
                       <th>Discount</th>
                       <td class="pr-1">
                           <input [disabled]="isPayBalanceEnable" type="text" class="form-control form-control-sm text-right pr-3"
                               numeric numericType="number" (change)="onChangeDiscount(discount)" [(ngModel)]="discount" [ngModelOptions]="{standalone: true}">
                       </td>
-                  </tr>
-                <tr>
-                      <th>Net-Total</th>
-                      <th class="text-right pr-4">{{subTotal - discount - (billItem.so_far_paid - billItem.parent_refund_amount)}}</th>
+                  </tr> -->                
+                
+                <tr class="table-info" style="font-size: 20px;">
+                    <th> Payable Amount </th>
+                      <th class="text-right pr-4">{{subTotal - (billItem.so_far_paid - billItem.parent_refund_amount)}}</th>
                   </tr>
                    <tr>
                       <th>Paid Amount</th>

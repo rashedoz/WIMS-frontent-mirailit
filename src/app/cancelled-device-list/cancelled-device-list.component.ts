@@ -1,5 +1,5 @@
 import { Component, TemplateRef, ViewChild, ElementRef, ViewEncapsulation, OnInit } from '@angular/core';
-import { ColumnMode } from '@swimlane/ngx-datatable';
+import { ColumnMode,DatatableComponent } from '@swimlane/ngx-datatable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonService } from '../_services/common.service';
@@ -25,7 +25,8 @@ export class CancelledDeviceListComponent implements OnInit {
   btnSaveText = 'Return to Stock';
   modalConfig: any = { class: 'modal-dialog-scrollable gray modal-lg', backdrop: 'static' };
   modalRef: BsModalRef;
-
+  @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
+  tempRows = [];
   deviceList = [];
 
   page = new Page();
@@ -188,6 +189,7 @@ export class CancelledDeviceListComponent implements OnInit {
         selected: false
       })
     });
+    this.tempRows = this.deviceList;
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 
@@ -209,8 +211,22 @@ export class CancelledDeviceListComponent implements OnInit {
         selected: false
       })
     });
+    this.tempRows = this.deviceList;
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 
+  updateFilter(event) {
+    const val = event.target.value.toLowerCase();
+
+    const temp = this.tempRows.filter(function(d) {
+      return d['DID_no'].toLowerCase().indexOf(val) !== -1 ||
+             d['IMEI'].toLowerCase().indexOf(val) !== -1 ||!val;
+      });
+
+    // update the rows
+    this.deviceList = temp;
+    // Whenever the filter changes, always go back to the first page
+    this.table.offset = 0;
+  }
 
 }

@@ -68,25 +68,28 @@
               <div class="col-md-12">
                 <div class="row">
                   <div class="col-md-12">
-                  <div class="table-responsive">
-                      <table class="table table-xs table-hover table-bordered table-striped">
-                          <thead>
-                              <tr>
-                                  <th scope="col">DID No</th>
-                                  <th scope="col">IMEI</th>
-                              </tr>
-                          </thead>
 
-                          <tbody>
-                              <tr *ngFor="let item of deviceItemList; let i=index">
-                                  <th>{{item.DID_no}}</th>
-                                  <th><input type="text"class="form-control" [(ngModel)]="item.IMEI"  required /></th>
+                    <ngx-datatable  class="material table-bordered" [rows]="deviceItemList"
+                    [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                    [headerHeight]="30" [footerHeight]="50" [limit]="10" rowHeight="auto" >
 
+                    <ngx-datatable-column [width]="60" name="DID No" prop="DID_no" [draggable]="false" [sortable]="false">
+                        <ng-template let-value="value" ngx-datatable-cell-template>
+                            <span title="{{ value }}"> {{ value }} </span>
+                        </ng-template>
+                    </ngx-datatable-column>    
+                
+                  
+                    <ngx-datatable-column [width]="150" name="IMEI" prop="Id" [draggable]="false"
+                        [sortable]="false">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <input type="text"class="form-control mt-2" [(ngModel)]="row.IMEI"  required />
+                        </ng-template>
+                    </ngx-datatable-column>
+                  
+                </ngx-datatable>
+    
 
-                              </tr>
-                          </tbody>
-                      </table>
-                      </div>
                   </div>
 
               </div>

@@ -76,37 +76,48 @@
 
               <div class="col-md-12">
                 <div class="row">
-                  <div class="col-md-12">
-                  <div class="table-responsive">
-                      <table class="table table-xs table-hover table-bordered table-striped">
-                          <thead>
-                              <tr>
-                                  <th scope="col">SIM CID No</th>
-                                  <th scope="col">ICCID No</th>
-                                  <th scope="col">Select For Return</th>
-                              </tr>
-                          </thead>
-
-                          <tbody>
-                              <tr *ngFor="let item of simList; let i=index">
-                                  <th>{{item.CID_no}}</th>
-                                  <th>{{item.sim}}</th>
-                                  <th>
-                                    <!-- <input type="text"class="form-control" [(ngModel)]="item.iccid"  required /> -->
-                                    <div class="checkbox-fade fade-in-default">
-                                      <label>
-                                          <input type="checkbox" [(ngModel)]="item.selected">
-                                          <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
-                                      </label>
-                                  </div>
-                                  </th>
-
-
-                              </tr>
-                          </tbody>
-                      </table>
+                    <div class="col-lg-8">
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <input type="text" class="form-control"
+                                    placeholder="Search SIM by CID No, ICCID No"
+                                    (keyup)="updateFilter($event)" />
+                            </div>
+                        </div>
+                    </div>
+    
+                      <div class="col-md-12">
+    
+                        <ngx-datatable #table class="material table-bordered" [rows]="simList"
+                        [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                        [headerHeight]="30" [footerHeight]="50" [limit]="10" rowHeight="auto"  >
+    
+                        <ngx-datatable-column name="SIM CID No" prop="CID_no" [draggable]="false" [sortable]="false">
+                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                <span title="{{ value }}"> {{ value }} </span>
+                            </ng-template>
+                        </ngx-datatable-column>
+    
+                        <ngx-datatable-column name="ICCID No" prop="sim" [draggable]="false" [sortable]="false">
+                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                <span title="{{ value }}"> {{ value }} </span>
+                            </ng-template>
+                        </ngx-datatable-column>
+                      
+                        <ngx-datatable-column [width]="100" [width]="100" name="Select For Return" prop="Id" [draggable]="false"
+                            [sortable]="false">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <div class="checkbox-fade fade-in-default mt-2">
+                                    <label>
+                                        <input type="checkbox" [(ngModel)]="row.selected">
+                                        <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                    </ngx-datatable>
+    
                       </div>
-                  </div>
 
               </div>
               </div>
@@ -137,42 +148,55 @@
           <app-card>
             <div class="row">
 
-              <div class="col-md-12">
-                <div class="row">
-                  <div class="col-md-12">
-                  <div class="table-responsive">
-                      <table class="table table-xs table-hover table-bordered table-striped">
-                          <thead>
-                              <tr>
-                                  <th scope="col">SIM CID No</th>
-                                  <th scope="col">ICCID No</th>
-                                  <th scope="col">Select For Return</th>
-                              </tr>
-                          </thead>
+                <div class="col-lg-8">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control"
+                                placeholder="Search SIM by CID No, ICCID No"
+                                (keyup)="updateFilter($event)" />
+                        </div>
+                    </div>
+                </div>
 
-                          <tbody>
-                              <tr *ngFor="let item of simList; let i=index">
-                                  <th>{{item.CID_no}}</th>
-                                  <th>{{item.sim}}</th>
-                                  <th>
-                                    <!-- <input type="text"class="form-control" [(ngModel)]="item.iccid"  required /> -->
-                                    <div class="checkbox-fade fade-in-default">
-                                      <label>
-                                          <input type="checkbox" [(ngModel)]="item.selected">
-                                          <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
-                                      </label>
-                                  </div>
-                                  </th>
-
-
-                              </tr>
-                          </tbody>
-                      </table>
+                <div class="col-md-12">
+                    <div class="row">
+                      <div class="col-md-12">
+    
+                        <ngx-datatable #table class="material table-bordered" [rows]="simList"
+                        [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                        [headerHeight]="30" [footerHeight]="50" [limit]="10" rowHeight="auto" >
+    
+                        <ngx-datatable-column name="SIM CID No" prop="CID_no" [draggable]="false" [sortable]="false">
+                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                <span title="{{ value }}"> {{ value }} </span>
+                            </ng-template>
+                        </ngx-datatable-column>
+    
+                        <ngx-datatable-column name="ICCID No" prop="sim" [draggable]="false" [sortable]="false">
+                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                <span title="{{ value }}"> {{ value }} </span>
+                            </ng-template>
+                        </ngx-datatable-column>
+                      
+                        <ngx-datatable-column [width]="120" name="Select For Cancel" prop="Id" [draggable]="false"
+                            [sortable]="false">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <div class="checkbox-fade fade-in-default mt-2">
+                                    <label>
+                                        <input type="checkbox" [(ngModel)]="row.selected">
+                                        <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                    </label>
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                    </ngx-datatable>
+    
+             
                       </div>
+    
                   </div>
-
-              </div>
-              </div>
+                  </div>
+      
           </div>
 
           </app-card>

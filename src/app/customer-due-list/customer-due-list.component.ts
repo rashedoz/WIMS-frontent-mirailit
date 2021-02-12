@@ -34,7 +34,7 @@ export class CustomerDueListComponent implements OnInit {
   modalConfig: any = { class: 'gray modal-xl', backdrop: 'static' };
   modalConfigmd: any = { class: 'gray modal-md', backdrop: 'static' };
   modalRef: BsModalRef;
-
+  user;
   // modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
   // modalRef: BsModalRef;
   // modalRefRetailer: BsModalRef;
@@ -114,6 +114,7 @@ export class CustomerDueListComponent implements OnInit {
     // });
     this.RegistrerFormChangePassword = this.formBuilder.group({
       id:[null],    
+      old_password: ['', [Validators.required, Validators.minLength(6)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required]
     }, {
@@ -322,7 +323,7 @@ get p() {
   
 }
 changePassword(row, template: TemplateRef<any>) {
-
+  this.user = row;
   this.modalTitle = 'Change Password';
   this.btnSaveText = 'Change';
   this.RegistrerFormChangePassword.controls['id'].setValue(row.id);    
@@ -489,7 +490,8 @@ changePassword(row, template: TemplateRef<any>) {
   
       const obj = {
         user_id: this.RegistrerFormChangePassword.value.id,
-        password: this.RegistrerFormChangePassword.value.password.trim(),     
+        old_password: this.RegistrerFormChangePassword.value.old_password.trim(),     
+        new_password: this.RegistrerFormChangePassword.value.password.trim()    
       };
     
       this._service.post('update-user-password', obj).subscribe(
@@ -502,8 +504,7 @@ changePassword(row, template: TemplateRef<any>) {
           }
           else if (data.IsReport == "Warning") {
             this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-            this.modalHideChangePassword();
-            this.getList();
+          
           }else {
             this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
           }
