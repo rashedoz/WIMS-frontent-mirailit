@@ -14,19 +14,19 @@
                             <h5 *ngIf="activeTable == 5">Unpaid Bill List </h5>
                             <h5 *ngIf="activeTable == 6">Partially Paid Bill List </h5>
 
-                            <button class="btn btn-primary btn-sm mr-2" [ngClass]="{'b-active': isbuttonActive}" (click)="showBillTable(0)">
+                            <button class="btn btn-primary btn-sm mr-2" [ngClass]="{'b-active': activeTable == 0}" (click)="showBillTable(0)">
                                 All Bill</button>
-                            <button class="btn btn-primary btn-sm mr-2" (click)="showBillTable(1)">
+                            <button class="btn btn-primary btn-sm mr-2" [ngClass]="{'b-active': activeTable == 1 }" (click)="showBillTable(1)">
                                 Subscription Bill</button>
-                                <button class="btn btn-primary btn-sm mr-2" (click)="showBillTable(2)">
+                                <button class="btn btn-primary btn-sm mr-2" [ngClass]="{'b-active': activeTable == 2}" (click)="showBillTable(2)">
                                     SIM Sales Bill</button>
-                                    <button class="btn btn-primary btn-sm mr-3" (click)="showBillTable(3)">
+                                    <button class="btn btn-primary btn-sm mr-3" [ngClass]="{'b-active': activeTable == 3}" (click)="showBillTable(3)">
                                         Device Sales Bill</button>
-                                    <button class="btn btn-primary btn-sm mr-2" (click)="showBillTable(4)">
+                                    <button class="btn btn-primary btn-sm mr-2" [ngClass]="{'b-active': activeTable == 4}" (click)="showBillTable(4)">
                                         Fully Paid Bill</button>
-                                    <button class="btn btn-primary btn-sm mr-2" (click)="showBillTable(5)">
+                                    <button class="btn btn-primary btn-sm mr-2" [ngClass]="{'b-active': activeTable == 5}" (click)="showBillTable(5)">
                                         Unpaid Paid Bill</button>
-                                    <button class="btn btn-primary btn-sm mr-2" (click)="showBillTable(6)">
+                                    <button class="btn btn-primary btn-sm mr-2" [ngClass]="{'b-active': activeTable == 6}" (click)="showBillTable(6)">
                                         Partially Paid Bill</button>
 
 

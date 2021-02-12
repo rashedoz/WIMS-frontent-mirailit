@@ -198,6 +198,11 @@ export const AppRoutes: Routes = [
         // canActivate: [AuthGuard]
       },
       {
+        path: 'bill-list/:page_type',
+        loadChildren: () => import('./bill-list/bill-list.module').then(m => m.BillListModule),
+        // canActivate: [AuthGuard]
+      },
+      {
         path: 'payment-list',
         loadChildren: () => import('./payment-list/payment-list.module').then(m => m.PaymentListModule),
         // canActivate: [AuthGuard]

@@ -242,9 +242,9 @@
 
     <div class="col-md-12 col-xl-4">
     <div class="row" *ngIf="billCount">
-        <div class="col-md-12 mb-1">
+        <div class="col-md-12 mb-1 div-pointer">
             <div class="card client-blocks success-border">
-                <div class="card-block">
+                <div class="card-block" [routerLink]="['/bill-list/fully-paid']" routerLinkActive="router-link-active" >
                     <h5>Fully Paid Bills </h5>
                     <ul>
                         <li> <img class="icon-w-40" src="assets/icon/custom/full-paid-bill.png">
@@ -258,9 +258,9 @@
         </div>
     
     
-        <div class="col-md-12 mb-1">
+        <div class="col-md-12 mb-1 div-pointer">
             <div class="card client-blocks warning-border">
-                <div class="card-block">
+                <div class="card-block" [routerLink]="['/bill-list/partially-paid']" routerLinkActive="router-link-active" >
                     <h5>Partially Paid Bills</h5>
                     <ul>
                         <li> <img class="icon-w-40" src="assets/icon/custom/partially-paid-bill.png">
@@ -274,9 +274,9 @@
         </div>
     
     
-        <div class="col-md-12 mb-1">
+        <div class="col-md-12 mb-1 div-pointer">
             <div class="card client-blocks danger-border">
-                <div class="card-block">
+                <div class="card-block" [routerLink]="['/bill-list/unpaid']" routerLinkActive="router-link-active" >
                     <h5>Unpaid Bills</h5>
                     <ul>
                         <li> <img class="icon-w-40" src="assets/icon/custom/unpaid-bill.png">

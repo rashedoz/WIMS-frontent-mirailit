@@ -2,7 +2,7 @@ import { Component, TemplateRef, ViewChild, ElementRef, ViewEncapsulation, OnIni
 import { ColumnMode,DatatableComponent } from '@swimlane/ngx-datatable';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router,ActivatedRoute } from "@angular/router";
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { CommonService } from '../_services/common.service';
 import { ToastrService } from 'ngx-toastr';
@@ -75,7 +75,7 @@ export class BillListComponent implements OnInit {
   balance:number=0;
   isPayBalanceEnableShow = false;
   isPayBalanceEnable = false;
-
+  pageType = null;
 
   fontSizes: any = {
     HeadTitleFontSize: 18,
@@ -99,10 +99,13 @@ export class BillListComponent implements OnInit {
     private _service: CommonService,
     private toastr: ToastrService,
     public datepipe: DatePipe,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     // this.page.pageNumber = 0;
     // this.page.size = 10;
+    this.pageType = this.route.snapshot.params['page_type'];
+    console.log(this.pageType);
     window.onresize = () => {
       this.scrollBarHorizontal = (window.innerWidth < 1200);
     };
@@ -117,13 +120,28 @@ export class BillListComponent implements OnInit {
    this.entryFormBill = this.formBuilder.group({
     invoice_month: [null, [Validators.required]],
   });
-  this.getBillList();
+
 
   // this.entryFormBill.get('invoice_month').disable();
   this.entryFormBill.get('invoice_month').setValue(moment().format('MMM-YYYY'));
 
+  if(this.pageType){
+    switch (this.pageType) {
+      case 'fully-paid':
+        this.getFullPaidBillList();
+        break;
+      case 'partially-paid':
+        this.getPartiallypaidBillList();
+        break;
+      case 'unpaid':
+        this.getUnpaidBillList();
+        break;
+    }
+  } else {
+    this.getBillList();
   }
 
+  }
 
 
   getBillStatus(id){
@@ -545,7 +563,9 @@ export class BillListComponent implements OnInit {
       // link.click();
 
       console.log(res);
-      const doc = new jsPDF("p", "mm", "a4");
+      const doc = new jsPDF('p', 'mm', 'a4');
+      //Dimension of A4 in mm: 210 × 297
+      //Dimension of A4 in pts: 595 × 842
       doc.setProperties({
         title: "Invoice"
       });
@@ -842,7 +862,7 @@ export class BillListComponent implements OnInit {
         doc.setFontSize(this.fontSizes.SubTitleFontSize);
         doc.setFont("times", "bold");
         doc.text( res.total_amount,rightStartCol2 + 42, startY,null, 'right' );
-        
+
         if(Number(res.parent_refund_amount) > 0){
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
@@ -860,7 +880,7 @@ export class BillListComponent implements OnInit {
   
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
-          doc.text( res.discount,rightStartCol2 + 42, startY ,null, 'right' );
+          doc.text( +"- "+res.discount,rightStartCol2 + 42, startY ,null, 'right' );
         }
 
         if(Number(res.so_far_paid) > 0){
@@ -904,7 +924,7 @@ export class BillListComponent implements OnInit {
           doc.setFontSize(this.fontSizes.TitleFontSize);
           doc.setFont("times", "bold");
           doc.text( res.payable_amount,rightStartCol2 + 42, startY,null, 'right' );
-        }  
+        } 
       }
 
       if(res.status === 3 || res.status === 4){
