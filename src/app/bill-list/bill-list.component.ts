@@ -189,7 +189,7 @@ export class BillListComponent implements OnInit {
         break;
     }
   }
- 
+
 
 
   getBillList() {
@@ -252,7 +252,7 @@ export class BillListComponent implements OnInit {
         this.activeTable = 2;
         this.tempRows = res;
         this.simBilList = res;
-        
+
         if(this.simBilList.length > 0)  this.columnsWithSearch = Object.keys(this.simBilList[0]);
         // this.page.totalElements = res.Total;
         // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
@@ -770,7 +770,7 @@ export class BillListComponent implements OnInit {
 
 
       if(row.bill_type != "Subscription"){
-        
+
         doc.setFontSize(this.fontSizes.SubTitleFontSize);
         doc.setFont("times", "bold");
         doc.text('One Time Charge', rightStartCol2 - 20,startY,null, 'left' );
@@ -779,7 +779,7 @@ export class BillListComponent implements OnInit {
         doc.setFont("times", "bold");
         doc.text( res.one_time_charge,rightStartCol2 + 42, startY ,null, 'right' );
 
-        
+
         doc.setFontSize(this.fontSizes.SubTitleFontSize);
         doc.setFont("times", "bold");
         doc.text('Sub Total', rightStartCol2-5,startY += 8,null, 'left' );
@@ -794,7 +794,7 @@ export class BillListComponent implements OnInit {
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text('Refund Amount', rightStartCol2 - 18,startY += 8,null, 'left' );
-  
+
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text( res.parent_refund_amount,rightStartCol2 + 42, startY ,null, 'right' );
@@ -803,7 +803,7 @@ export class BillListComponent implements OnInit {
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text('Discount', rightStartCol2 - 4,startY += 8,null, 'left' );
-  
+
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text("- "+ res.discount,rightStartCol2 + 42, startY ,null, 'right' );
@@ -815,26 +815,26 @@ export class BillListComponent implements OnInit {
             doc.setFontSize(this.fontSizes.TitleFontSize);
             doc.setFont("times", "bold");
             doc.text('Payable Amount', rightStartCol2-24,(startY += 8),null, 'left' );
-    
-    
+
+
             doc.setFontSize(this.fontSizes.TitleFontSize);
             doc.setFont("times", "bold");
             doc.text( res.payable_amount,rightStartCol2 + 42, startY,null, 'right' );
           }else {
-         
+
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text('So Far Paid', rightStartCol2 - 10,startY += 8,null, 'left' );
-  
+
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text( "- "+res.so_far_paid,rightStartCol2 + 42, startY ,null, 'right' );
 
-          
+
           doc.setFontSize(this.fontSizes.TitleFontSize);
           doc.setFont("times", "bold");
           doc.text('Payable Amount', rightStartCol2-24,(startY += 8),null, 'left' );
-  
+
           let amount_with_so_far_paid = Number(res.payable_amount) - Number(res.so_far_paid);
           doc.setFontSize(this.fontSizes.TitleFontSize);
           doc.setFont("times", "bold");
@@ -845,12 +845,12 @@ export class BillListComponent implements OnInit {
           doc.setFontSize(this.fontSizes.TitleFontSize);
           doc.setFont("times", "bold");
           doc.text('Payable Amount', rightStartCol2-24,(startY += 8),null, 'left' );
-  
-  
+
+
           doc.setFontSize(this.fontSizes.TitleFontSize);
           doc.setFont("times", "bold");
           doc.text( res.payable_amount,rightStartCol2 + 42, startY,null, 'right' );
-        }        
+        }
 
       } else {
 
@@ -867,7 +867,7 @@ export class BillListComponent implements OnInit {
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text('Refund Amount', rightStartCol2 - 18,startY += 8,null, 'left' );
-  
+
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text( res.parent_refund_amount,rightStartCol2 + 42, startY ,null, 'right' );
@@ -877,10 +877,10 @@ export class BillListComponent implements OnInit {
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text('Discount', rightStartCol2 - 5,startY += 8,null, 'left' );
-  
+
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
-          doc.text( +"- "+res.discount,rightStartCol2 + 42, startY ,null, 'right' );
+          doc.text("- "+res.discount,rightStartCol2 + 42, startY ,null, 'right' );
         }
 
         if(Number(res.so_far_paid) > 0){
@@ -889,26 +889,26 @@ export class BillListComponent implements OnInit {
             doc.setFontSize(this.fontSizes.TitleFontSize);
             doc.setFont("times", "bold");
             doc.text('Payable Amount', rightStartCol2-24,(startY += 8),null, 'left' );
-    
-    
+
+
             doc.setFontSize(this.fontSizes.TitleFontSize);
             doc.setFont("times", "bold");
             doc.text( res.payable_amount,rightStartCol2 + 42, startY,null, 'right' );
           }else {
-         
+
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text('So Far Paid', rightStartCol2 - 10,startY += 8,null, 'left' );
-  
+
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text( "- "+res.so_far_paid,rightStartCol2 + 42, startY ,null, 'right' );
 
-          
+
           doc.setFontSize(this.fontSizes.TitleFontSize);
           doc.setFont("times", "bold");
           doc.text('Payable Amount', rightStartCol2-24,(startY += 8),null, 'left' );
-  
+
           let amount_with_so_far_paid = Number(res.payable_amount) - Number(res.so_far_paid);
           doc.setFontSize(this.fontSizes.TitleFontSize);
           doc.setFont("times", "bold");
@@ -919,12 +919,12 @@ export class BillListComponent implements OnInit {
           doc.setFontSize(this.fontSizes.TitleFontSize);
           doc.setFont("times", "bold");
           doc.text('Payable Amount', rightStartCol2-24,(startY += 8),null, 'left' );
-  
-  
+
+
           doc.setFontSize(this.fontSizes.TitleFontSize);
           doc.setFont("times", "bold");
           doc.text( res.payable_amount,rightStartCol2 + 42, startY,null, 'right' );
-        } 
+        }
       }
 
       if(res.status === 3 || res.status === 4){
