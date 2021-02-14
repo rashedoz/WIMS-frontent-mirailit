@@ -799,6 +799,8 @@ export class BillListComponent implements OnInit {
           doc.setFont("times", "bold");
           doc.text( res.parent_refund_amount,rightStartCol2 + 42, startY ,null, 'right' );
         }
+
+
         if(Number(res.discount) > 0){
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
@@ -809,48 +811,36 @@ export class BillListComponent implements OnInit {
           doc.text("- "+ res.discount,rightStartCol2 + 42, startY ,null, 'right' );
         }
 
-        if(Number(res.so_far_paid) > 0){
+          if(Number(res.so_far_paid) > 0){
 
-          if(res.status === 3 || res.status === 4){
+            doc.setFontSize(this.fontSizes.SubTitleFontSize);
+            doc.setFont("times", "bold");
+            doc.text('Payable Amount', rightStartCol2 - 18,(startY += 8),null, 'left' );
+
+            doc.setFontSize(this.fontSizes.SubTitleFontSize);
+            doc.setFont("times", "bold");
+            doc.text( res.payable_amount,rightStartCol2 + 42, startY,null, 'right' );
+
             doc.setFontSize(this.fontSizes.TitleFontSize);
             doc.setFont("times", "bold");
-            doc.text('Payable Amount', rightStartCol2-24,(startY += 8),null, 'left' );
+            doc.text('Paid Amount', rightStartCol2 - 16,startY += 8,null, 'left' );
 
+            doc.setFontSize(this.fontSizes.TitleFontSize);
+            doc.setFont("times", "bold");
+            doc.text( res.so_far_paid,rightStartCol2 + 42, startY ,null, 'right' );
+          } else {
+
+            doc.setFontSize(this.fontSizes.TitleFontSize);
+            doc.setFont("times", "bold");
+            doc.text('Payable Amount', rightStartCol2 - 18,(startY += 8),null, 'left' );
 
             doc.setFontSize(this.fontSizes.TitleFontSize);
             doc.setFont("times", "bold");
             doc.text( res.payable_amount,rightStartCol2 + 42, startY,null, 'right' );
-          }else {
 
-          doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text('So Far Paid', rightStartCol2 - 10,startY += 8,null, 'left' );
-
-          doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text( "- "+res.so_far_paid,rightStartCol2 + 42, startY ,null, 'right' );
+          }
 
 
-          doc.setFontSize(this.fontSizes.TitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text('Payable Amount', rightStartCol2-24,(startY += 8),null, 'left' );
-
-          let amount_with_so_far_paid = Number(res.payable_amount) - Number(res.so_far_paid);
-          doc.setFontSize(this.fontSizes.TitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text( amount_with_so_far_paid.toString(),rightStartCol2 + 42, startY,null, 'right' );
-        }
-
-        }else{
-          doc.setFontSize(this.fontSizes.TitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text('Payable Amount', rightStartCol2-24,(startY += 8),null, 'left' );
-
-
-          doc.setFontSize(this.fontSizes.TitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text( res.payable_amount,rightStartCol2 + 42, startY,null, 'right' );
-        }
 
       } else {
 
@@ -885,45 +875,31 @@ export class BillListComponent implements OnInit {
 
         if(Number(res.so_far_paid) > 0){
 
-          if(res.status === 3 || res.status === 4){
-            doc.setFontSize(this.fontSizes.TitleFontSize);
-            doc.setFont("times", "bold");
-            doc.text('Payable Amount', rightStartCol2-24,(startY += 8),null, 'left' );
-
-
-            doc.setFontSize(this.fontSizes.TitleFontSize);
-            doc.setFont("times", "bold");
-            doc.text( res.payable_amount,rightStartCol2 + 42, startY,null, 'right' );
-          }else {
+          doc.setFontSize(this.fontSizes.SubTitleFontSize);
+          doc.setFont("times", "bold");
+          doc.text('Payable Amount', rightStartCol2 - 18,(startY += 8),null, 'left' );
 
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
-          doc.text('So Far Paid', rightStartCol2 - 10,startY += 8,null, 'left' );
-
-          doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text( "- "+res.so_far_paid,rightStartCol2 + 42, startY ,null, 'right' );
-
+          doc.text( res.payable_amount,rightStartCol2 + 42, startY,null, 'right' );
 
           doc.setFontSize(this.fontSizes.TitleFontSize);
           doc.setFont("times", "bold");
-          doc.text('Payable Amount', rightStartCol2-24,(startY += 8),null, 'left' );
+          doc.text('Paid Amount', rightStartCol2 - 16,startY += 8,null, 'left' );
 
-          let amount_with_so_far_paid = Number(res.payable_amount) - Number(res.so_far_paid);
           doc.setFontSize(this.fontSizes.TitleFontSize);
           doc.setFont("times", "bold");
-          doc.text( amount_with_so_far_paid.toString(),rightStartCol2 + 42, startY,null, 'right' );
-        }
+          doc.text( res.so_far_paid,rightStartCol2 + 42, startY ,null, 'right' );
+        } else {
 
-        }else{
           doc.setFontSize(this.fontSizes.TitleFontSize);
           doc.setFont("times", "bold");
-          doc.text('Payable Amount', rightStartCol2-24,(startY += 8),null, 'left' );
-
+          doc.text('Payable Amount', rightStartCol2 - 18,(startY += 8),null, 'left' );
 
           doc.setFontSize(this.fontSizes.TitleFontSize);
           doc.setFont("times", "bold");
           doc.text( res.payable_amount,rightStartCol2 + 42, startY,null, 'right' );
+
         }
       }
 

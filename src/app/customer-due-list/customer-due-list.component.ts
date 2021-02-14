@@ -113,8 +113,8 @@ export class CustomerDueListComponent implements OnInit {
     //   // customerType: [null, [Validators.required]]
     // });
     this.RegistrerFormChangePassword = this.formBuilder.group({
-      id:[null],    
-      old_password: ['', [Validators.required, Validators.minLength(6)]],
+      id:[null],
+      // old_password: ['', [Validators.required, Validators.minLength(6)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required]
     }, {
@@ -230,7 +230,7 @@ get p() {
         this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
         return;
       }
-    
+
       this.historyList = res;
       this.modalRef = this.modalService.show(template, this.modalConfig);
       // this.page.totalElements = res.Total;
@@ -284,12 +284,12 @@ get p() {
 
   // console.log(row);
     this._service.get('subscription/get-subscription-detail/'+row.id).subscribe(res => {
-      row.details = res;     
+      row.details = res;
     }, err => { });
 
   this.tableHistory.rowDetail.toggleExpandRow(row);
 
-  
+
 
   }
 
@@ -320,13 +320,13 @@ get p() {
     // this.RegistrerForm.controls['confirmPassword'].setValue(null);
     // this.RegistrerForm.controls['password'].setValue(null);
     this.modalRef = this.modalService.show(template, this.modalConfig);
-  
+
 }
 changePassword(row, template: TemplateRef<any>) {
   this.user = row;
   this.modalTitle = 'Change Password';
   this.btnSaveText = 'Change';
-  this.RegistrerFormChangePassword.controls['id'].setValue(row.id);    
+  this.RegistrerFormChangePassword.controls['id'].setValue(row.id);
   this.modalRef = this.modalService.show(template, this.modalConfigmd);
 
 }
@@ -389,15 +389,15 @@ changePassword(row, template: TemplateRef<any>) {
       return;
     }
     let id = this.RegistrerForm.value.id;
-  
+
     if(id){
       this.blockUI.start('Updating...');
-  
+
       const obj = {
-        // email: this.RegistrerForm.value.email.trim(),     
+        // email: this.RegistrerForm.value.email.trim(),
         first_name: this.RegistrerForm.value.firstName.trim(),
         last_name: this.RegistrerForm.value.lastName.trim(),
-        mobile: this.RegistrerForm.value.mobile.trim(),  
+        mobile: this.RegistrerForm.value.mobile.trim(),
         alternative_mobile:this.RegistrerForm.value.alternative_mobile,
         occupation:this.RegistrerForm.value.occupation,
         nid:this.RegistrerForm.value.nid,
@@ -408,7 +408,7 @@ changePassword(row, template: TemplateRef<any>) {
         telephone:this.RegistrerForm.value.telephone,
         preferred_payment_method:this.RegistrerForm.value.preferred_payment_method,
       };
-    
+
       this._service.put('update-user-profile/'+id, obj).subscribe(
         data => {
           this.blockUI.stop();
@@ -417,7 +417,7 @@ changePassword(row, template: TemplateRef<any>) {
             this.modalHide();
             this.getList();
           }
-          
+
           else {
             this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
           }
@@ -427,21 +427,21 @@ changePassword(row, template: TemplateRef<any>) {
           this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
         }
       );
-  
+
     }else{
       this.blockUI.start('Saving...');
-  
-      const obj = {     
+
+      const obj = {
         password: 123456,
-        email: this.RegistrerForm.value.email.trim(),     
+        email: this.RegistrerForm.value.email.trim(),
         first_name: this.RegistrerForm.value.firstName.trim(),
         last_name: this.RegistrerForm.value.lastName.trim(),
-        mobile: this.RegistrerForm.value.mobile.trim(),  
+        mobile: this.RegistrerForm.value.mobile.trim(),
         alternative_mobile:this.RegistrerForm.value.alternative_mobile,
         occupation:this.RegistrerForm.value.occupation,
         nid:this.RegistrerForm.value.nid,
         address_one:this.RegistrerForm.value.address_one,
-        address_two:this.RegistrerForm.value.address_two,       
+        address_two:this.RegistrerForm.value.address_two,
         fax:this.RegistrerForm.value.fax,
         acc_number:this.RegistrerForm.value.acc_number,
         preferred_payment_method:this.RegistrerForm.value.preferred_payment_method,
@@ -452,7 +452,7 @@ changePassword(row, template: TemplateRef<any>) {
         is_staff: 0,
         is_superuser:0
       };
-    
+
       this._service.post('register-user', obj).subscribe(
         data => {
           this.blockUI.stop();
@@ -473,11 +473,11 @@ changePassword(row, template: TemplateRef<any>) {
         }
       );
     }
-  
-   
-  
+
+
+
   }
-  
+
 
 
   onFormSubmitChangePassword() {
@@ -485,16 +485,16 @@ changePassword(row, template: TemplateRef<any>) {
     if (this.RegistrerFormChangePassword.invalid) {
       return;
     }
-  
+
       this.blockUI.start('Changing...');
-  
+
       const obj = {
         user_id: this.RegistrerFormChangePassword.value.id,
-        old_password: this.RegistrerFormChangePassword.value.old_password.trim(),     
-        new_password: this.RegistrerFormChangePassword.value.password.trim()    
+        // old_password: this.RegistrerFormChangePassword.value.old_password.trim(),
+        new_password: this.RegistrerFormChangePassword.value.password.trim()
       };
-    
-      this._service.post('update-user-password', obj).subscribe(
+
+      this._service.post('update-user-password-without-old-password', obj).subscribe(
         data => {
           this.blockUI.stop();
           if (data.IsReport == "Success") {
@@ -504,7 +504,7 @@ changePassword(row, template: TemplateRef<any>) {
           }
           else if (data.IsReport == "Warning") {
             this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-          
+
           }else {
             this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
           }
@@ -514,10 +514,10 @@ changePassword(row, template: TemplateRef<any>) {
           this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
         }
       );
-  
-  
-   
-  
+
+
+
+
   }
 
 
@@ -596,20 +596,20 @@ changePassword(row, template: TemplateRef<any>) {
     this.isEdit = false;
     this.modalTitle = 'Add Customer';
     this.btnSaveText = 'Save';
-  
+
     // this.RegistrerForm.controls["password"].setValidators(Validators.required);
     // this.RegistrerForm.controls["password"].updateValueAndValidity();
     // this.RegistrerForm.controls["confirmPassword"].setValidators(Validators.required);
     // this.RegistrerForm.controls["confirmPassword"].updateValueAndValidity();
     this.RegistrerForm.controls['email'].enable();
   }
-  
-  openModal(template: TemplateRef<any>,type) {  
+
+  openModal(template: TemplateRef<any>,type) {
     this.type = type;
     this.modalTitle = 'Add ' +type;
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
-  
+
   modalHideChangePassword() {
     this.RegistrerFormChangePassword.reset();
     this.modalRef.hide();
@@ -617,10 +617,10 @@ changePassword(row, template: TemplateRef<any>) {
     this.btnSaveText = 'Save';
   }
 
-  modalHideHistory() {  
+  modalHideHistory() {
     this.modalRef.hide();
   }
-  
+
 
 
 }
