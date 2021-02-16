@@ -10,6 +10,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from './../_models/page';
 import { MustMatch } from './../_helpers/must-match.validator';
 import { SubscriptionStatus,SubsItemsStaus } from '../_models/enums';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({
   selector: 'app-customer-due-list',
@@ -39,12 +40,13 @@ export class CustomerDueListComponent implements OnInit {
   // modalRef: BsModalRef;
   // modalRefRetailer: BsModalRef;
 
-
+  @ViewChild(TemplateRef, { static: false }) tpl: TemplateRef<any>;
   @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
   @ViewChild(DatatableComponent, { static: false }) tableWholesaler: DatatableComponent;
   @ViewChild(DatatableComponent, { static: false }) tableRetailer: DatatableComponent;
   @ViewChild(DatatableComponent, { static: false }) tableCustomerDue: DatatableComponent;
-  @ViewChild(DatatableComponent, { static: false }) tableHistory: DatatableComponent;
+  // @ViewChild(DatatableComponent, { static: false }) tableHistory: DatatableComponent;
+  @ViewChild('dataTable', { static: false }) tableHistory: any;
 
 
   page = new Page();
@@ -65,6 +67,7 @@ export class CustomerDueListComponent implements OnInit {
     public formBuilder: FormBuilder,
     private _service: CommonService,
     private toastr: ToastrService,
+    public ngxSmartModalService: NgxSmartModalService,
     private authService: AuthenticationService,
     private router: Router
   ) {
@@ -223,7 +226,7 @@ get p() {
     );
   }
 
-  showHistory(row,template: TemplateRef<any>) {
+  showHistory(row) {
     this.loadingIndicator = true;
     this._service.get('subscription/get-subscription-list-by-customer-id/'+row.id).subscribe(res => {
       if (!res) {
@@ -232,7 +235,8 @@ get p() {
       }
 
       this.historyList = res;
-      this.modalRef = this.modalService.show(template, this.modalConfig);
+      this.ngxSmartModalService.create('historyModal', this.tpl).open();
+
       // this.page.totalElements = res.Total;
       // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
@@ -618,7 +622,8 @@ changePassword(row, template: TemplateRef<any>) {
   }
 
   modalHideHistory() {
-    this.modalRef.hide();
+    // this.ngxSmartModalService.closeAll();
+    this.ngxSmartModalService.getModal('historyModal').close();
   }
 
 

@@ -740,6 +740,7 @@ export class BillListComponent implements OnInit {
             phone_number:element.sim.phone_number ? element.sim.phone_number : '--',
             amount:element.amount
           });
+
         });
 
       /** Table */
@@ -761,7 +762,184 @@ export class BillListComponent implements OnInit {
       }
 
 
+      // @ts-ignore
+      if (doc.previousAutoTable.finalY > 200) {
+         doc.addPage();
+         // @ts-ignore
+         startY = 20;
 
+
+      if(row.bill_type != "Subscription"){
+
+        doc.setFontSize(this.fontSizes.SubTitleFontSize);
+        doc.setFont("times", "bold");
+        doc.text('One Time Charge', rightStartCol2 - 20,startY,null, 'left' );
+
+        doc.setFontSize(this.fontSizes.SubTitleFontSize);
+        doc.setFont("times", "bold");
+        doc.text( res.one_time_charge,rightStartCol2 + 42, startY ,null, 'right' );
+
+
+        doc.setFontSize(this.fontSizes.SubTitleFontSize);
+        doc.setFont("times", "bold");
+        doc.text('Sub Total', rightStartCol2-5,startY += 8,null, 'left' );
+
+
+        doc.setFontSize(this.fontSizes.SubTitleFontSize);
+        doc.setFont("times", "bold");
+        doc.text( res.total_amount,rightStartCol2 + 42, startY,null, 'right' );
+
+
+        if(Number(res.parent_refund_amount) > 0){
+          doc.setFontSize(this.fontSizes.SubTitleFontSize);
+          doc.setFont("times", "bold");
+          doc.text('Refund Amount', rightStartCol2 - 18,startY += 8,null, 'left' );
+
+          doc.setFontSize(this.fontSizes.SubTitleFontSize);
+          doc.setFont("times", "bold");
+          doc.text( res.parent_refund_amount,rightStartCol2 + 42, startY ,null, 'right' );
+        }
+
+
+        if(Number(res.discount) > 0){
+          doc.setFontSize(this.fontSizes.SubTitleFontSize);
+          doc.setFont("times", "bold");
+          doc.text('Discount', rightStartCol2 - 4,startY += 8,null, 'left' );
+
+          doc.setFontSize(this.fontSizes.SubTitleFontSize);
+          doc.setFont("times", "bold");
+          doc.text("- "+ res.discount,rightStartCol2 + 42, startY ,null, 'right' );
+        }
+
+          if(Number(res.so_far_paid) > 0){
+
+            doc.setFontSize(this.fontSizes.SubTitleFontSize);
+            doc.setFont("times", "bold");
+            doc.text('Payable Amount', rightStartCol2 - 18,(startY += 8),null, 'left' );
+
+            doc.setFontSize(this.fontSizes.SubTitleFontSize);
+            doc.setFont("times", "bold");
+            doc.text( res.payable_amount,rightStartCol2 + 42, startY,null, 'right' );
+
+            doc.setFontSize(this.fontSizes.TitleFontSize);
+            doc.setFont("times", "bold");
+            doc.text('Paid Amount', rightStartCol2 - 16,startY += 8,null, 'left' );
+
+            doc.setFontSize(this.fontSizes.TitleFontSize);
+            doc.setFont("times", "bold");
+            doc.text( res.so_far_paid,rightStartCol2 + 42, startY ,null, 'right' );
+          } else {
+
+            doc.setFontSize(this.fontSizes.TitleFontSize);
+            doc.setFont("times", "bold");
+            doc.text('Payable Amount', rightStartCol2 - 18,(startY += 8),null, 'left' );
+
+            doc.setFontSize(this.fontSizes.TitleFontSize);
+            doc.setFont("times", "bold");
+            doc.text( res.payable_amount,rightStartCol2 + 42, startY,null, 'right' );
+
+          }
+
+
+
+      } else {
+
+        doc.setFontSize(this.fontSizes.SubTitleFontSize);
+        doc.setFont("times", "bold");
+        doc.text('Sub Total', rightStartCol2-5,startY += 8,null, 'left' );
+
+
+        doc.setFontSize(this.fontSizes.SubTitleFontSize);
+        doc.setFont("times", "bold");
+        doc.text( res.total_amount,rightStartCol2 + 42, startY,null, 'right' );
+
+        if(Number(res.parent_refund_amount) > 0){
+          doc.setFontSize(this.fontSizes.SubTitleFontSize);
+          doc.setFont("times", "bold");
+          doc.text('Refund Amount', rightStartCol2 - 18,startY += 8,null, 'left' );
+
+          doc.setFontSize(this.fontSizes.SubTitleFontSize);
+          doc.setFont("times", "bold");
+          doc.text( res.parent_refund_amount,rightStartCol2 + 42, startY ,null, 'right' );
+        }
+
+        if(Number(res.discount) > 0){
+          doc.setFontSize(this.fontSizes.SubTitleFontSize);
+          doc.setFont("times", "bold");
+          doc.text('Discount', rightStartCol2 - 5,startY += 8,null, 'left' );
+
+          doc.setFontSize(this.fontSizes.SubTitleFontSize);
+          doc.setFont("times", "bold");
+          doc.text("- "+res.discount,rightStartCol2 + 42, startY ,null, 'right' );
+        }
+
+        if(Number(res.so_far_paid) > 0){
+
+          doc.setFontSize(this.fontSizes.SubTitleFontSize);
+          doc.setFont("times", "bold");
+          doc.text('Payable Amount', rightStartCol2 - 18,(startY += 8),null, 'left' );
+
+          doc.setFontSize(this.fontSizes.SubTitleFontSize);
+          doc.setFont("times", "bold");
+          doc.text( res.payable_amount,rightStartCol2 + 42, startY,null, 'right' );
+
+          doc.setFontSize(this.fontSizes.TitleFontSize);
+          doc.setFont("times", "bold");
+          doc.text('Paid Amount', rightStartCol2 - 16,startY += 8,null, 'left' );
+
+          doc.setFontSize(this.fontSizes.TitleFontSize);
+          doc.setFont("times", "bold");
+          doc.text( res.so_far_paid,rightStartCol2 + 42, startY ,null, 'right' );
+        } else {
+
+          doc.setFontSize(this.fontSizes.TitleFontSize);
+          doc.setFont("times", "bold");
+          doc.text('Payable Amount', rightStartCol2 - 18,(startY += 8),null, 'left' );
+
+          doc.setFontSize(this.fontSizes.TitleFontSize);
+          doc.setFont("times", "bold");
+          doc.text( res.payable_amount,rightStartCol2 + 42, startY,null, 'right' );
+
+        }
+      }
+
+      if(res.status === 3 || res.status === 4){
+        var img = new Image()
+        img.src = 'assets/images/paid.png'
+        doc.addImage(img, 'png', startX + 100 , startY + 20, 80, 60)
+      }
+
+      /** Terms and conditions */
+      doc.setFontSize(this.fontSizes.SubTitleFontSize);
+      doc.setFont("times", "bolditalic");
+      doc.text( "Terms and Conditions",startX, (startY += this.lineSpacing.NormalSpacing + 15),null, 'left' );
+
+      doc.setFontSize(this.fontSizes.NormalFontSize);
+      doc.setFont("times", "normal");
+      doc.text( "* Minimum 2 year contract, if you cancel before 2 year extra pay 2500 yen.",startX, (startY += 6),null, 'left' );
+
+      doc.setFontSize(this.fontSizes.NormalFontSize);
+      doc.setFont("times", "normal");
+      doc.text( "* For Wifi machine damage, lost penalty up to 10000 yen.",startX, (startY += 5),null, 'left' );
+
+      doc.setFontSize(this.fontSizes.NormalFontSize);
+      doc.setFont("times", "normal");
+      doc.text( "* 2 year contract, after 2 year if you cancel must be return (Box, Charger and main device) is in good condition.",startX, (startY += 5),null, 'left' );
+
+      doc.setFontSize(this.fontSizes.NormalFontSize);
+      doc.setFont("times", "normal");
+      doc.text( "* Wifi Reconnect Line open tie minimum 48 Hours.",startX, (startY += 5),null, 'left' );
+
+      doc.setFontSize(this.fontSizes.NormalFontSize);
+      doc.setFont("times", "normal");
+      doc.text( "* Payment Date - Every month before 25th of the month.",startX, (startY += 5),null, 'left' );
+
+      doc.setFontSize(this.fontSizes.NormalFontSize);
+      doc.setFont("times", "normal");
+      doc.text( "* Pak code change 3500 yen.",startX, (startY += 5),null, 'left' );
+
+
+      }else {
 
 
 
@@ -906,7 +1084,7 @@ export class BillListComponent implements OnInit {
       if(res.status === 3 || res.status === 4){
         var img = new Image()
         img.src = 'assets/images/paid.png'
-        doc.addImage(img, 'png', startX + 100 , startY + 50, 80, 60)
+        doc.addImage(img, 'png', startX + 100 , startY + 20, 80, 60)
       }
 
       /** Terms and conditions */
@@ -939,7 +1117,7 @@ export class BillListComponent implements OnInit {
       doc.text( "* Pak code change 3500 yen.",startX, (startY += 5),null, 'left' );
 
 
-
+      }
       window.open(URL.createObjectURL(doc.output("blob")));
       this.blockUI.stop();
     },
