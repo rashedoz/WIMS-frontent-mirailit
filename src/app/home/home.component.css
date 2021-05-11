@@ -6,17 +6,9 @@
 }
 
 .div-pointer{
-<<<<<<< HEAD
-    cursor: pointer;
-}
-h5 {
-    font-size: 9px !important;
-}
-=======
   cursor: pointer;
 }
 h5.custom-title {
   font-size: 12px !important;
   font-weight: 600;
 }
->>>>>>> b0b22fbf7e5bd1e49f440d88c42ea59b51cdcd6e

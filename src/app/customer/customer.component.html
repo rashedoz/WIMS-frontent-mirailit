@@ -670,189 +670,6 @@
         </div>
     </ng-template>
 
-<<<<<<< HEAD
-
-    <ngx-smart-modal [escapable]="false" [dismissable]="false" #historyModal identifier="historyModal" (onAnyCloseEventFinished)="modalHideHistory()" customClass="nsm-dialog-animation-btt modal-xl pt-2 mt-5">
-    <div class="card">
-        <div class="card-header">
-            <h4 class="card-title pull-left " > Subscription History </h4>
-        </div>
-        <div class="card-body">
-
-            <div class="row ">
-                <div class="col-lg-12 ">
-
-                  <ngx-datatable #dataTable class="material table-bordered" [rows]="historyList" [loadingIndicator]="loadingIndicator"
-                  [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                  [rowHeight]="'auto'" [limit]="10">
-
-
-
-                         <!-- Row Detail Template -->
-                         <ngx-datatable-row-detail  [rowHeight]="'100%'">
-                          <ng-template let-row="row" let-expanded="expanded"
-                              ngx-datatable-row-detail-template>
-                              <div class="w-50">
-                                  <table
-                                      class="table table-xs table-hover table-bordered table-striped">
-                                      <thead>
-                                          <tr>
-                                              <th width="40%" scope="col">SIM</th>
-                                              <th width="30%" scope="col">Plan</th>
-                                          </tr>
-                                      </thead>
-                                      <tbody>
-                                          <tr *ngFor="let item of row.details">
-                                              <th> {{item.sim.ICCID_no}} </th>
-                                              <th> {{item.plan.plan}} </th>
-
-                                          </tr>
-                                      </tbody>
-                                  </table>
-                              </div>
-                          </ng-template>
-                      </ngx-datatable-row-detail>
-
-                      <ngx-datatable-column [width]="30" name="#" [resizeable]="false"
-                          [sortable]="false" [draggable]="false" [canAutoResize]="false">
-                          <ng-template let-row="row" let-expanded="expanded"
-                              ngx-datatable-cell-template>
-                              <a href="javascript:void(0)" [class.datatable-icon-right]="!expanded"
-                                  [class.datatable-icon-down]="expanded" title="Expand/Collapse Row"
-                                  (click)="toggleExpandRow(row)">
-                              </a>
-                          </ng-template>
-                      </ngx-datatable-column>
-
-                      <ngx-datatable-column [width]="150" name="Subscription No" prop="id" [draggable]="false" [sortable]="false">
-                        <ng-template let-row="row" ngx-datatable-cell-template>
-                            <p > {{ row.id }}  <i *ngIf="row.future_state_type == 'Will_Hold' " title="Undo Held Subscription"  class=" mt-1 ml-2 icofont-ui-reply icofont-flip-horizontal text-warning icofont-2x"></i></p>
-                            <p><em *ngIf="row.future_state && row.status === 1"> <small>--{{row.future_state}}</small></em></p>
-                        </ng-template>
-                    </ngx-datatable-column>
-
-                  <!-- <ngx-datatable-column [width]="200" name="Subscription A" prop="alias" [draggable]="false" [sortable]="false">
-                      <ng-template let-row="row" ngx-datatable-cell-template>
-                          <span > {{ row.alias }} </span>
-                      </ng-template>
-                  </ngx-datatable-column> -->
-
-                  <!-- <ngx-datatable-column [width]="220" name="Wholesaler/Retailer Name" prop="customer" [draggable]="false" [sortable]="false">
-                      <ng-template let-value="value" ngx-datatable-cell-template>
-                          <span > {{ value }} </span>
-                      </ng-template>
-                  </ngx-datatable-column> -->
-
-                  <ngx-datatable-column [width]="150" name="Activation Date" prop="activation_date" [draggable]="false" [sortable]="false">
-                      <ng-template let-value="value" ngx-datatable-cell-template>
-                        <span >  {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
-                      </ng-template>
-                  </ngx-datatable-column>
-
-                  <ngx-datatable-column [width]="150" name="Cancellation Date" prop="cancellation_date" [draggable]="false" [sortable]="false">
-                      <ng-template let-value="value" ngx-datatable-cell-template>
-                        <span *ngIf="value" >  {{ value | amDateFormat:'DD-MMM-YYYY'}} </span>
-                        <span *ngIf="!value" >  --- </span>
-                      </ng-template>
-                  </ngx-datatable-column>
-                  <ngx-datatable-column [width]="150" name="Held Date" prop="held_date" [draggable]="false" [sortable]="false">
-                    <ng-template let-value="value" ngx-datatable-cell-template>
-                      <span *ngIf="value" >  {{ value | amDateFormat:'DD-MMM-YYYY'}} </span>
-                      <span *ngIf="!value" >  --- </span>
-                    </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column [width]="200" name="Subscription Status" prop="status" [draggable]="false" [sortable]="false">
-                    <ng-template let-value="value" ngx-datatable-cell-template>
-                      <span *ngIf="value == 1" > <strong class="label label-success">{{ SubscriptionStatus[value] }}</strong> </span>
-                        <span *ngIf="value == 2" ><strong class="label label-danger">{{ SubscriptionStatus[value] }}</strong> </span>
-                        <span *ngIf="value == 3" ><strong class="label label-warning">{{ SubscriptionStatus[value] }}</strong> </span>
-                    </ng-template>
-                </ngx-datatable-column>
-
-                  <!-- <ngx-datatable-column [width]="80" name="Created Date" prop="created_at" [draggable]="false"
-                      [sortable]="false">
-                      <ng-template let-value="value" ngx-datatable-cell-template>
-                          <span >  {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
-                      </ng-template>
-                  </ngx-datatable-column> -->
-
-              </ngx-datatable>
-                </div>
-            </div>
-
-        </div>
-        <div class="card-footer text-center">
-            <button type="button" (click)="modalHideHistory()" class="btn btn-info btn-sm mb-1"> Close</button>
-        </div>
-    </div>
-</ngx-smart-modal>
-
-
-    <!-- <ng-template #templateHistory>
-        <div class="modal-header ">
-            <h4 class="modal-title pull-left " id="modalTitle"> Subscription History </h4>
-            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideHistory()">
-                <i class="icofont icofont-close"></i>
-            </button>
-        </div>
-        <div class="modal-body pb-0">
-            <app-card>
-                <div class="row ">
-                    <div class="col-lg-12 ">
-
-                      <ngx-datatable #tableHistory class="material table-bordered" [rows]="historyList" [loadingIndicator]="loadingIndicator"
-                      [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                      [rowHeight]="'auto'" [limit]="10">
-
-
-                             <ngx-datatable-row-detail  [rowHeight]="'100%'">
-                              <ng-template let-row="row" let-expanded="expanded"
-                                  ngx-datatable-row-detail-template>
-                                  <div class="w-50">
-                                      <table
-                                          class="table table-xs table-hover table-bordered table-striped">
-                                          <thead>
-                                              <tr>
-                                                  <th width="40%" scope="col">SIM</th>
-                                                  <th width="30%" scope="col">Plan</th>
-                                              </tr>
-                                          </thead>
-                                          <tbody>
-                                              <tr *ngFor="let item of row.details">
-                                                  <th> {{item.sim.ICCID_no}} </th>
-                                                  <th> {{item.plan.plan}} </th>
-
-                                              </tr>
-                                          </tbody>
-                                      </table>
-                                  </div>
-                              </ng-template>
-                          </ngx-datatable-row-detail>
-
-                          <ngx-datatable-column [width]="30" name="#" [resizeable]="false"
-                              [sortable]="false" [draggable]="false" [canAutoResize]="false">
-                              <ng-template let-row="row" let-expanded="expanded"
-                                  ngx-datatable-cell-template>
-                                  <a href="javascript:void(0)" [class.datatable-icon-right]="!expanded"
-                                      [class.datatable-icon-down]="expanded" title="Expand/Collapse Row"
-                                      (click)="toggleExpandRow(row)">
-                                  </a>
-                              </ng-template>
-                          </ngx-datatable-column>
-
-                          <ngx-datatable-column [width]="150" name="Subscription No" prop="id" [draggable]="false" [sortable]="false">
-                            <ng-template let-row="row" ngx-datatable-cell-template>
-                                <p > {{ row.id }}  <i *ngIf="row.future_state_type == 'Will_Hold' " title="Undo Held Subscription"  class=" mt-1 ml-2 icofont-ui-reply icofont-flip-horizontal text-warning icofont-2x"></i></p>
-                                <p><em *ngIf="row.future_state && row.status === 1"> <small>--{{row.future_state}}</small></em></p>
-                            </ng-template>
-                        </ngx-datatable-column>
-
-    
-
-                      <ngx-datatable-column [width]="150" name="Activation Date" prop="activation_date" [draggable]="false" [sortable]="false">
-                          <ng-template let-value="value" ngx-datatable-cell-template>
-                            <span >  {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
-=======
     <ngx-smart-modal [escapable]="false" [dismissable]="false" #historyModal identifier="historyModal" (onAnyCloseEventFinished)="modalHideHistory()" customClass="nsm-dialog-animation-btt modal-xl pt-2 mt-5">
       <div class="card">
           <div class="card-header">
@@ -909,7 +726,6 @@
                           <ng-template let-row="row" ngx-datatable-cell-template>
                               <p > {{ row.id }}  <i *ngIf="row.future_state_type == 'Will_Hold' " title="Undo Held Subscription"  class=" mt-1 ml-2 icofont-ui-reply icofont-flip-horizontal text-warning icofont-2x"></i></p>
                               <p><em *ngIf="row.future_state && row.status === 1"> <small>--{{row.future_state}}</small></em></p>
->>>>>>> b0b22fbf7e5bd1e49f440d88c42ea59b51cdcd6e
                           </ng-template>
                       </ngx-datatable-column>
 
@@ -925,27 +741,6 @@
                           <span *ngIf="!value" >  --- </span>
                         </ng-template>
                     </ngx-datatable-column>
-<<<<<<< HEAD
-
-              
-
-                  </ngx-datatable>
-                    </div>
-                </div>
-            </app-card>
-        </div>
-        <div class="modal-footer">
-            <div class="pr-4">
-                <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideHistory()"> <i
-                        class="icofont icofont-close"></i> Close</button>
-
-            </div>
-
-        </div>
-    </ng-template> -->
-
-    <ng-template #templateDetails> 
-=======
                     <ngx-datatable-column [width]="150" name="Held Date" prop="held_date" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span *ngIf="value" >  {{ value | amDateFormat:'DD-MMM-YYYY'}} </span>
@@ -972,7 +767,6 @@
   </ngx-smart-modal>
 
     <ng-template #templateDetails>
->>>>>>> b0b22fbf7e5bd1e49f440d88c42ea59b51cdcd6e
         <div class="modal-header ">
             <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
             <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">

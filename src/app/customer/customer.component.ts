@@ -41,10 +41,6 @@ export class CustomerComponent implements OnInit {
   // modalRefRetailer: BsModalRef;
 
   @ViewChild(TemplateRef, { static: false }) tpl: TemplateRef<any>;
-<<<<<<< HEAD
-
-=======
->>>>>>> b0b22fbf7e5bd1e49f440d88c42ea59b51cdcd6e
   @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
   @ViewChild(DatatableComponent, { static: false }) tableWholesaler: DatatableComponent;
   @ViewChild(DatatableComponent, { static: false }) tableRetailer: DatatableComponent;

@@ -236,10 +236,6 @@ get p() {
 
       this.historyList = res;
       this.ngxSmartModalService.create('historyModal', this.tpl).open();
-<<<<<<< HEAD
-=======
-
->>>>>>> b0b22fbf7e5bd1e49f440d88c42ea59b51cdcd6e
       // this.page.totalElements = res.Total;
       // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
@@ -624,12 +620,8 @@ changePassword(row, template: TemplateRef<any>) {
     this.btnSaveText = 'Save';
   }
 
-<<<<<<< HEAD
-  modalHideHistory() {  
-=======
   modalHideHistory() {
     // this.ngxSmartModalService.closeAll();
->>>>>>> b0b22fbf7e5bd1e49f440d88c42ea59b51cdcd6e
     this.ngxSmartModalService.getModal('historyModal').close();
   }
 
