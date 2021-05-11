@@ -33,7 +33,7 @@ import { UploadDialogComponent } from './../_helpers/upload-dialog/dialog.compon
 import { UploadService } from './../_services/upload.service';
 import { UiSwitchModule } from 'ngx-toggle-switch';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
-
+import { NgxSmartModalModule } from 'ngx-smart-modal';
 
 // import { MatCheckboxModule } from '@angular/material/checkbox';
 // import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -62,7 +62,7 @@ import { NgxMatMomentModule } from '@angular-material-components/moment-adapter'
       BlockUIModule.forRoot(),
       BsDatepickerModule.forRoot(),
       TabsModule.forRoot(),
-
+      NgxSmartModalModule.forRoot(),
       NgSelectModule,
       UiSwitchModule,
       FlexLayoutModule,
@@ -121,6 +121,7 @@ import { NgxMatMomentModule } from '@angular-material-components/moment-adapter'
       FlexLayoutModule,
       BsDatepickerModule,
       TimepickerModule,
+      NgxSmartModalModule,
       // NgxMatDatetimePickerModule,
       // NgxMatTimepickerModule,
       BsDropdownModule,

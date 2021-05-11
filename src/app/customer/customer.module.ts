@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { CustomerComponent } from './customer.component';
 import { CustomerRoutes } from './customer.routing';
 import {SharedModule} from './../shared/shared.module';
-
+// import { NgxSmartModalModule } from 'ngx-smart-modal';
 @NgModule({
   imports: [
       CommonModule,
