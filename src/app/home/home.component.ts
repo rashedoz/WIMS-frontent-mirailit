@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit {
     private router: Router,
     private _service: CommonService
   ) {
-   // this.currentUser = this.authService.currentUserDetails.value;
+    this.currentUser = this.authService.currentUserDetails.value;
     // console.log(this.currentUser);
   }
 
@@ -45,32 +45,31 @@ export class HomeComponent implements OnInit {
 
   getSIMCount() {
     this._service.get('stock/get-current-sim-stock-history').subscribe(res => {
-      this.simStock = res;   
-    
+      this.simStock = res;
+
     }, err => { }
     );
   }
 
   getDeviceCount() {
-    this._service.get('stock/get-current-device-stock-history').subscribe(res => {    
-      this.deviceStock = res;    
+    this._service.get('stock/get-current-device-stock-history').subscribe(res => {
+      this.deviceStock = res;
     }, err => {}
     );
   }
 
   getBillCount() {
-    this._service.get('subscription/get-bill-counts').subscribe(res => {    
-      this.billCount = res;    
+    this._service.get('subscription/get-bill-counts').subscribe(res => {
+      this.billCount = res;
     }, err => {}
     );
   }
   getCustomerDueList() {
-    this._service.get('get-customer-list-with-due').subscribe(res => {    
-      this.customerDueList = res;    
-      console.log(this.customerDueList); 
+    this._service.get('get-customer-list-with-due').subscribe(res => {
+      this.customerDueList = res;
+      console.log(this.customerDueList);
     }, err => {}
     );
   }
 
 }
- 

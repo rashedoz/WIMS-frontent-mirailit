@@ -45,7 +45,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 // import { NgxMatDatetimePickerModule } from '@angular-material-components/datetime-picker';
 // import { NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 import { NgxMatMomentModule } from '@angular-material-components/moment-adapter';
-
+import { NgxSmartModalModule } from 'ngx-smart-modal';
 
 @NgModule({
   imports: [
@@ -63,6 +63,10 @@ import { NgxMatMomentModule } from '@angular-material-components/moment-adapter'
       BsDatepickerModule.forRoot(),
       TabsModule.forRoot(),
       NgxSmartModalModule.forRoot(),
+<<<<<<< HEAD
+=======
+
+>>>>>>> b0b22fbf7e5bd1e49f440d88c42ea59b51cdcd6e
       NgSelectModule,
       UiSwitchModule,
       FlexLayoutModule,
@@ -115,6 +119,7 @@ import { NgxMatMomentModule } from '@angular-material-components/moment-adapter'
       ModalModule,
       MomentModule,
       TabsModule,
+      NgxSmartModalModule,
       NgSelectModule,
       BlockUIModule,
       UiSwitchModule,

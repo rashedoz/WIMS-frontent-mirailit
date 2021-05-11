@@ -1,5 +1,22 @@
 
+<<<<<<< HEAD
 <div class="row mb-2">
+=======
+
+<ng-container *ngIf="currentUser.is_customer; else elseTemplate">
+  <div class="row mb-2">
+    <div class="col-lg-12">
+        <div class="card card-border-primary">
+            <div class="card-header">
+                <h4 class="text-center"> Welcome </h4>
+            </div>
+        </div>
+    </div>
+</div>
+</ng-container>
+<ng-template #elseTemplate>
+  <div class="row mb-2">
+>>>>>>> b0b22fbf7e5bd1e49f440d88c42ea59b51cdcd6e
     <div class="col-lg-8 col-sm-12">
         <div class="row mb-2">
             <div class="col-lg-12 col-sm-12">
@@ -16,7 +33,7 @@
                     <div class="col-md-12 mb-3">
                         <div class="card client-blocks dark-primary-border">
                             <div class="card-block">
-                                <h5>Currently Available SIM Qty </h5>
+                                <h5 class="custom-title">Currently Available SIM Qty </h5>
                                 <ul>
                                     <li> <img class="text-danger icon-w-40" src="assets/icon/custom/available.png">
                                     </li>
@@ -30,7 +47,7 @@
                     <div class="col-md-12 mb-3">
                         <div class="card client-blocks dark-primary-border">
                             <div class="card-block">
-                                <h5>Currently SIM Held Qty</h5>
+                                <h5 class="custom-title">Currently SIM Held Qty</h5>
                                 <ul>
                                     <li> <img class="text-warning icon-w-40" src="assets/icon/custom/held.png">
                                     </li>
@@ -44,7 +61,7 @@
                     <div class="col-md-12 mb-3">
                         <div class="card client-blocks dark-primary-border">
                             <div class="card-block">
-                                <h5>Total Sold SIM Qty</h5>
+                                <h5 class="custom-title">Total Sold SIM Qty</h5>
                                 <ul>
                                     <li> <img class="text-success icon-w-40" src="assets/icon/custom/sold2.png">
                                     </li>
@@ -62,7 +79,7 @@
                     <div class="col-md-12 mb-3 div-pointer">
                         <div class="card client-blocks sucsess-border">
                             <div class="card-block" [routerLink]="['/cancelled-sim-list']" routerLinkActive="router-link-active" >
-                                <h5>Currently Cancelled SIM Qty</h5>
+                                <h5 class="custom-title">Currently Cancelled SIM Qty</h5>
                                 <ul>
                                     <li> <img class="text-danger icon-w-40" src="assets/icon/custom/cancel.png">
                                     </li>
@@ -76,7 +93,7 @@
                     <div class="col-md-12 mb-3">
                         <div class="card client-blocks sucsess-border">
                             <div class="card-block">
-                                <h5>Currently Reissued SIM Qty</h5>
+                                <h5 class="custom-title">Currently Reissued SIM Qty</h5>
                                 <ul>
                                     <li> <img class="text-danger icon-w-40" src="assets/icon/custom/return.png">
                                     </li>
@@ -90,7 +107,7 @@
                     <div class="col-md-12 mb-3">
                         <div class="card client-blocks sucsess-border">
                             <div class="card-block">
-                                <h5>Currently Subscribed SIM Qty</h5>
+                                <h5 class="custom-title">Currently Subscribed SIM Qty</h5>
                                 <ul>
                                     <li> <img class="text-danger icon-w-40" src="assets/icon/custom/subscribe.png">
                                     </li>
@@ -108,7 +125,7 @@
                     <div class="col-md-12 mb-3">
                         <div class="card client-blocks warning-border">
                             <div class="card-block">
-                                <h5>This month’s Sold SIM Qty</h5>
+                                <h5 class="custom-title">This month’s Sold SIM Qty</h5>
                                 <ul>
                                     <li> <img class="text-success icon-w-40" src="assets/icon/custom/sold2.png">
                                     </li>
@@ -122,7 +139,7 @@
                     <div class="col-md-12 mb-3">
                         <div class="card client-blocks warning-border">
                             <div class="card-block">
-                                <h5>This month’s Reissued SIM Qty</h5>
+                                <h5 class="custom-title">This month’s Reissued SIM Qty</h5>
                                 <ul>
                                     <li> <img class="text-danger icon-w-40" src="assets/icon/custom/return.png">
                                     </li>
@@ -136,7 +153,7 @@
                     <div class="col-md-12 mb-3">
                         <div class="card client-blocks warning-border">
                             <div class="card-block">
-                                <h5>This month’s Subscribed SIM Qty</h5>
+                                <h5 class="custom-title">This month’s Subscribed SIM Qty</h5>
                                 <ul>
                                     <li> <img class="text-danger icon-w-40" src="assets/icon/custom/subscribe.png">
                                     </li>
@@ -156,7 +173,11 @@
             <div class="col-lg-12">
                 <div class="card card-border-primary">
                     <div class="card-header">
+<<<<<<< HEAD
                         <h6>Device </h6>
+=======
+                      <h6>Device </h6>
+>>>>>>> b0b22fbf7e5bd1e49f440d88c42ea59b51cdcd6e
                     </div>
                 </div>
             </div>
@@ -165,7 +186,7 @@
             <div class="col-md-12 mb-1">
                 <div class="card client-blocks success-border">
                     <div class="card-block">
-                        <h5>Currently Available Device Qty </h5>
+                        <h5 class="custom-title">Currently Available Device Qty </h5>
                         <ul>
                             <li> <img class="text-danger icon-w-40" src="assets/icon/custom/available.png">
                             </li>
@@ -176,12 +197,12 @@
                     </div>
                 </div>
             </div>
-        
-        
+
+
             <div class="col-md-12 mb-1 div-pointer">
                 <div class="card client-blocks warning-border">
                     <div class="card-block" [routerLink]="['/cancelled-device-list']" routerLinkActive="router-link-active">
-                        <h5>Currently Cancelled Device Qty</h5>
+                        <h5 class="custom-title">Currently Cancelled Device Qty</h5>
                         <ul>
                             <li> <img class="text-danger icon-w-40" src="assets/icon/custom/cancel.png">
                             </li>
@@ -192,12 +213,12 @@
                     </div>
                 </div>
             </div>
-        
-        
+
+
             <div class="col-md-12 mb-1">
                 <div class="card client-blocks">
                     <div class="card-block">
-                        <h5>Total Sold Device Qty</h5>
+                        <h5 class="custom-title">Total Sold Device Qty</h5>
                         <ul>
                             <li> <img class="text-danger icon-w-40" src="assets/icon/custom/sold.png">
                             </li>
@@ -208,11 +229,11 @@
                     </div>
                 </div>
             </div>
-    
+
             <div class="col-md-12 mb-1">
                 <div class="card client-blocks primary-dark-border">
                     <div class="card-block">
-                        <h5>This month’s Sold Device Qty</h5>
+                        <h5 class="custom-title">This month’s Sold Device Qty</h5>
                         <ul>
                             <li> <img class="text-danger icon-w-40" src="assets/icon/custom/sold.png">
                             </li>
@@ -227,7 +248,6 @@
 
     </div>
 </div>
-
 
 <div class="row mt-3 mb-2">
     <div class="col-lg-12">
@@ -245,7 +265,7 @@
         <div class="col-md-12 mb-1 div-pointer">
             <div class="card client-blocks success-border">
                 <div class="card-block" [routerLink]="['/bill-list/fully-paid']" routerLinkActive="router-link-active" >
-                    <h5>Fully Paid Bills </h5>
+                    <h5 class="custom-title">Fully Paid Bills </h5>
                     <ul>
                         <li> <img class="icon-w-40" src="assets/icon/custom/full-paid-bill.png">
                         </li>
@@ -256,12 +276,12 @@
                 </div>
             </div>
         </div>
-    
-    
+
+
         <div class="col-md-12 mb-1 div-pointer">
             <div class="card client-blocks warning-border">
                 <div class="card-block" [routerLink]="['/bill-list/partially-paid']" routerLinkActive="router-link-active" >
-                    <h5>Partially Paid Bills</h5>
+                    <h5 class="custom-title">Partially Paid Bills</h5>
                     <ul>
                         <li> <img class="icon-w-40" src="assets/icon/custom/partially-paid-bill.png">
                         </li>
@@ -272,12 +292,12 @@
                 </div>
             </div>
         </div>
-    
-    
+
+
         <div class="col-md-12 mb-1 div-pointer">
             <div class="card client-blocks danger-border">
                 <div class="card-block" [routerLink]="['/bill-list/unpaid']" routerLinkActive="router-link-active" >
-                    <h5>Unpaid Bills</h5>
+                    <h5 class="custom-title">Unpaid Bills</h5>
                     <ul>
                         <li> <img class="icon-w-40" src="assets/icon/custom/unpaid-bill.png">
                         </li>
@@ -287,7 +307,7 @@
                     </ul>
                 </div>
             </div>
-        </div>       
+        </div>
     </div>
 
     </div>
@@ -297,7 +317,7 @@
             <div class="col-sm-12">
                 <div class="card table-1-card">
                     <div class="card-header">
-                        <h5>Customer Due List </h5>
+                        <h5 class="custom-title">Customer Due List </h5>
                         <button class="btn btn-primary btn-mini float-right" [routerLink]="['/customer-due-list']" routerLinkActive="router-link-active"  >Show More</button>
                     </div>
                     <div class="card-block">
@@ -313,13 +333,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let item of customerDueList">                                       
+                                    <tr *ngFor="let item of customerDueList">
                                         <td>{{item.customer_code}}</td>
                                         <td>{{item.first_name}} {{item.last_name}}</td>
                                         <td>{{item.mobile}}</td>
                                         <td>{{item.email}}</td>
                                         <td>{{item.total_due}}</td>
-                                    </tr>                                    
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -331,7 +351,7 @@
                 <div class="card borderless-card">
                     <div class="card-block clock-widget">
                         <div id="current-time">7:22:38 AM</div>
-                        <h5>Sunday 30th April , 2017</h5>
+                        <h5 class="custom-title">Sunday 30th April , 2017</h5>
                         <i class="icofont icofont-ui-alarm basic-alarm"></i>
                         <i class="icofont icofont-ui-alarm bg-alarm"></i>
                     </div>
@@ -343,4 +363,10 @@
 
 
 </div>
+</ng-template>
+
+
+
+
+
 
