@@ -370,6 +370,13 @@ const MENUITEMS = [
         icon: 'ti-control-forward',
          permission: 'is_superuser,is_staff',
       },
+      {
+        state: 'bulk-entry',
+        name: 'Bulk Entry',
+        type: 'link',
+        icon: 'ti-control-forward',
+         permission: 'is_superuser',
+      },
     ]
   }
 ];

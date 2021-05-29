@@ -541,12 +541,21 @@ changePassword(row, template: TemplateRef<any>) {
 
     // filter our data
     const temp = this.tempRows.filter(function (d) {
-      return d.first_name.toLowerCase().indexOf(val) !== -1 ||
-             d.last_name.toLowerCase().indexOf(val) !== -1 ||
-             d.email.toLowerCase().indexOf(val) !== -1 ||
-             d.customer_code.toLowerCase().indexOf(val) !== -1 ||
-             d.mobile.indexOf(val) !== -1 ||
-        !val;
+      if(d.mobile){
+        return d.first_name.toLowerCase().indexOf(val) !== -1 ||
+        d.last_name.toLowerCase().indexOf(val) !== -1 ||
+        d.email.toLowerCase().indexOf(val) !== -1 ||
+        d.customer_code.toLowerCase().indexOf(val) !== -1 ||
+        d.mobile.indexOf(val) !== -1 ||
+   !val;
+      }else{
+        return d.first_name.toLowerCase().indexOf(val) !== -1 ||
+        d.last_name.toLowerCase().indexOf(val) !== -1 ||
+        d.email.toLowerCase().indexOf(val) !== -1 ||
+        d.customer_code.toLowerCase().indexOf(val) !== -1 ||
+   !val;
+      }
+     
     });
 
     // update the rows
@@ -560,12 +569,20 @@ changePassword(row, template: TemplateRef<any>) {
 
     // filter our data
     const temp = this.tempRows.filter(function (d) {
-      return d.first_name.toLowerCase().indexOf(val) !== -1 ||
-             d.last_name.toLowerCase().indexOf(val) !== -1 ||
-             d.email.toLowerCase().indexOf(val) !== -1 ||
-             d.customer_code.toLowerCase().indexOf(val) !== -1 ||
-             d.mobile.indexOf(val) !== -1 ||
-        !val;
+      if(d.mobile){
+        return d.first_name.toLowerCase().indexOf(val) !== -1 ||
+        d.last_name.toLowerCase().indexOf(val) !== -1 ||
+        d.email.toLowerCase().indexOf(val) !== -1 ||
+        d.customer_code.toLowerCase().indexOf(val) !== -1 ||
+        d.mobile.indexOf(val) !== -1 ||
+   !val;
+      }else{
+        return d.first_name.toLowerCase().indexOf(val) !== -1 ||
+        d.last_name.toLowerCase().indexOf(val) !== -1 ||
+        d.email.toLowerCase().indexOf(val) !== -1 ||
+        d.customer_code.toLowerCase().indexOf(val) !== -1 ||
+   !val;
+      }
     });
 
     // update the rows
@@ -578,12 +595,20 @@ changePassword(row, template: TemplateRef<any>) {
 
     // filter our data
     const temp = this.tempRows.filter(function (d) {
-      return d.first_name.toLowerCase().indexOf(val) !== -1 ||
-             d.last_name.toLowerCase().indexOf(val) !== -1 ||
-             d.email.toLowerCase().indexOf(val) !== -1 ||
-             d.customer_code.toLowerCase().indexOf(val) !== -1 ||
-             d.mobile.indexOf(val) !== -1 ||
-        !val;
+      if(d.mobile){
+        return d.first_name.toLowerCase().indexOf(val) !== -1 ||
+        d.last_name.toLowerCase().indexOf(val) !== -1 ||
+        d.email.toLowerCase().indexOf(val) !== -1 ||
+        d.customer_code.toLowerCase().indexOf(val) !== -1 ||
+        d.mobile.indexOf(val) !== -1 ||
+   !val;
+      }else{
+        return d.first_name.toLowerCase().indexOf(val) !== -1 ||
+        d.last_name.toLowerCase().indexOf(val) !== -1 ||
+        d.email.toLowerCase().indexOf(val) !== -1 ||
+        d.customer_code.toLowerCase().indexOf(val) !== -1 ||
+   !val;
+      }
     });
 
     // update the rows

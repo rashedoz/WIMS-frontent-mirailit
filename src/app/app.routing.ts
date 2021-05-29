@@ -277,6 +277,11 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./customer-balance-list/customer-balance-list.module').then(m => m.CustomerBalanceListModule),
         // canActivate: [AuthGuard]
       },
+      {
+        path: 'bulk-entry',
+        loadChildren: () => import('./bulk-entry/bulk-entry.module').then(m => m.BulkEntryModule),
+        // canActivate: [AuthGuard]
+      },
 
     ]
   }, {
