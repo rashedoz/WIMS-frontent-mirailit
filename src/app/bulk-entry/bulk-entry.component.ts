@@ -128,9 +128,9 @@ export class BulkEntryComponent implements OnInit {
       list.forEach((element,i) => {
           this.retrailerList.push({
             password: 'Customer!@#$%^',
-            email: "customer"+(i+716)+"@gmail.com",
+            email: element['email'] != undefined ? element['email'].trim() : "customer"+(i+774)+"@gmail.com",
             first_name: element['first_name'].trim(),
-            last_name: "(R)",
+            last_name: element['last_name'] != undefined ? element['last_name'].trim() : "(R)",
             mobile: element['mobile'] != undefined ? element['mobile'].trim() : null,
             // alternative_mobile:null,
             // occupation:null,
