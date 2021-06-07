@@ -218,7 +218,8 @@ export class BulkEntryComponent implements OnInit {
             this.simList.push({
               id: Number(element['id']),
               ICCID_no: element['ICCID_no'],
-              phone_number:element['phone_number']
+              phone_number:element['phone_number'],
+              CID_no:element['CID_no']
             })
           });  
           console.log(this.simList);
