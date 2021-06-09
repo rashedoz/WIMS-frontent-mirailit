@@ -128,7 +128,7 @@ export class BulkEntryComponent implements OnInit {
       list.forEach((element,i) => {
           this.retrailerList.push({
             password: 'Customer!@#$%^',
-            email: element['email'] != undefined ? element['email'].trim() : "customer"+(i+774)+"@gmail.com",
+            email: element['email'] != undefined ? element['email'].trim() : "customer"+(i+66)+"@gmail.com",
             first_name: element['first_name'].trim(),
             last_name: element['last_name'] != undefined ? element['last_name'].trim() : "(R)",
             mobile: element['mobile'] != undefined ? element['mobile'].trim() : null,
@@ -282,7 +282,7 @@ export class BulkEntryComponent implements OnInit {
 
         simArray.forEach((sim,i) => {
           subscribed_items_array.push({
-            "session":"Mar-2021",
+            "session":"Jun-2021",
             "sim": Number(sim.trim()),
             "ICCID_no": iccidArray[i].trim(),
             "plan": Number(planArray[i].trim()),
@@ -311,7 +311,7 @@ export class BulkEntryComponent implements OnInit {
             "total_amount":totalAmount,
             "discount":0,
             "payable_amount": totalAmount,
-            "session": "Mar-2021",
+            "session": "Jun-2021",
             "customer":Number(element['customer']),
             "so_far_paid":0,
             "parent_refund_amount":0

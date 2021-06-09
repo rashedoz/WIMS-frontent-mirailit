@@ -30,6 +30,8 @@ export class AllDeviceListComponent implements OnInit {
   ColumnMode = ColumnMode;
   scrollBarHorizontal = (window.innerWidth < 1200);
 
+  searchParam = '';
+
   constructor(
     public formBuilder: FormBuilder,
     private _service: CommonService,
@@ -51,26 +53,27 @@ export class AllDeviceListComponent implements OnInit {
 
 
 
-  // setPage(pageInfo) {
-  //   this.page.pageNumber = pageInfo.offset;
-  //   this.getList();
-  // }
+  setPage(pageInfo) {
+    this.page.pageNumber = pageInfo.offset;
+    this.getList();
+}
 
   getList() {
     this.loadingIndicator = true;
-    // const obj = {
-    //   size: this.page.size,
-    //   pageNumber: this.page.pageNumber
-    // };
-    this._service.get('stock/get-device-list').subscribe(res => {
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param:this.searchParam
+    };
+    this._service.get('stock/get-device-list',obj).subscribe(res => {
 
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
         return;
       }
-      this.rows = res;
-      // this.page.totalElements = res.Total;
-      // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+      this.rows = res.results;
+      this.page.totalElements = res.count;
+      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -81,6 +84,15 @@ export class AllDeviceListComponent implements OnInit {
       }, 1000);
     }
     );
+  }
+
+  filterSearch(e){
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParam = e.target.value;
+      this.getList();
+    }
   }
 
 }

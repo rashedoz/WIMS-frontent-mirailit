@@ -61,6 +61,12 @@ export class CustomerComponent implements OnInit {
 
   scrollBarHorizontal = (window.innerWidth < 1200);
   details;
+
+  searchParamAll = '';
+  searchParamWholesaler = '';
+  searchParamRetailer = '';
+  searchParamDue = '';
+
   constructor(
     private modalService: BsModalService,
     public formBuilder: FormBuilder,
@@ -134,10 +140,22 @@ get p() {
   return this.RegistrerFormChangePassword.controls;
 }
 
-  setPage(pageInfo) {
-   // this.page.pageNumber = pageInfo.offset;
-    this.getList();
-  }
+setPageAll(pageInfo) {
+  this.page.pageNumber = pageInfo.offset;
+  this.getList();
+}
+setPageWholesaler(pageInfo) {
+  this.page.pageNumber = pageInfo.offset;
+  this.getWholesalerList();
+}
+setPageRetailer(pageInfo) {
+  this.page.pageNumber = pageInfo.offset;
+  this.getRetailerList();
+}
+setPageDue(pageInfo) {
+  this.page.pageNumber = pageInfo.offset;
+  this.getCustomerDueList();
+}
 
   showDetails(row, template: TemplateRef<any>) {
     this.blockUI.start('Getting data...');
@@ -161,15 +179,23 @@ get p() {
     this.isbuttonActive = false;
     switch (id) {
       case 0:
+        this.page.pageNumber = 0;
+        this.page.size = 10;
         this.getList();
         break;
       case 1:
+        this.page.pageNumber = 0;
+        this.page.size = 10;
         this.getWholesalerList();
         break;
       case 2:
+        this.page.pageNumber = 0;
+        this.page.size = 10;
         this.getRetailerList();
         break;
       case 3:
+        this.page.pageNumber = 0;
+        this.page.size = 10;
         this.getCustomerDueList();
         break;
 
@@ -178,16 +204,22 @@ get p() {
 
   getList() {
     this.loadingIndicator = true;
-    this._service.get('user-list?is_customer=true').subscribe(res => {
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param:this.searchParamAll
+    };
+    this._service.get('get-customer-list',obj).subscribe(res => {
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
         return;
       }
       this.activeTable = 0;
       this.tempRows = res;
-      this.customerList = res;
-      // this.page.totalElements = res.Total;
-      // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+      this.customerList = res.results;
+   //   this.rows = res.results;
+      this.page.totalElements = res.count;
+      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -338,7 +370,7 @@ changePassword(row, template: TemplateRef<any>) {
 
   getWholesalerList() {
     this.loadingIndicator = true;
-    this._service.get('user-list?is_customer=true&is_wholesaler=true').subscribe(res => {
+    this._service.get('get-wholesaler-list').subscribe(res => {
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
         return;
@@ -362,7 +394,7 @@ changePassword(row, template: TemplateRef<any>) {
 
   getRetailerList() {
     this.loadingIndicator = true;
-    this._service.get('user-list?is_customer=true&is_retailer=true').subscribe(res => {
+    this._service.get('get-retailer-list').subscribe(res => {
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
         return;
@@ -529,39 +561,38 @@ changePassword(row, template: TemplateRef<any>) {
 
 
 
+  updateFilter(e) {
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParamAll = e.target.value;
+      this.getList();
+    }
+  //   const val = event.target.value.toLowerCase();
 
-
-
-
-
-
-
-  updateFilter(event) {
-    const val = event.target.value.toLowerCase();
-
-    // filter our data
-    const temp = this.tempRows.filter(function (d) {
-      if(d.mobile){
-        return d.first_name.toLowerCase().indexOf(val) !== -1 ||
-        d.last_name.toLowerCase().indexOf(val) !== -1 ||
-        d.email.toLowerCase().indexOf(val) !== -1 ||
-        d.customer_code.toLowerCase().indexOf(val) !== -1 ||
-        d.mobile.indexOf(val) !== -1 ||
-   !val;
-      }else{
-        return d.first_name.toLowerCase().indexOf(val) !== -1 ||
-        d.last_name.toLowerCase().indexOf(val) !== -1 ||
-        d.email.toLowerCase().indexOf(val) !== -1 ||
-        d.customer_code.toLowerCase().indexOf(val) !== -1 ||
-   !val;
-      }
+  //   // filter our data
+  //   const temp = this.tempRows.filter(function (d) {
+  //     if(d.mobile){
+  //       return d.first_name.toLowerCase().indexOf(val) !== -1 ||
+  //       d.last_name.toLowerCase().indexOf(val) !== -1 ||
+  //       d.email.toLowerCase().indexOf(val) !== -1 ||
+  //       d.customer_code.toLowerCase().indexOf(val) !== -1 ||
+  //       d.mobile.indexOf(val) !== -1 ||
+  //  !val;
+  //     }else{
+  //       return d.first_name.toLowerCase().indexOf(val) !== -1 ||
+  //       d.last_name.toLowerCase().indexOf(val) !== -1 ||
+  //       d.email.toLowerCase().indexOf(val) !== -1 ||
+  //       d.customer_code.toLowerCase().indexOf(val) !== -1 ||
+  //  !val;
+  //     }
      
-    });
+  //   });
 
-    // update the rows
-    this.customerList = temp;
-    // Whenever the filter changes, always go back to the first page
-    this.table.offset = 0;
+  //   // update the rows
+  //   this.customerList = temp;
+  //   // Whenever the filter changes, always go back to the first page
+  //   this.table.offset = 0;
   }
 
   updateFilterWholesaler(event) {

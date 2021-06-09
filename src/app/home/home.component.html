@@ -304,7 +304,7 @@
 
     </div>
 
-    <div class="col-md-12 col-xl-8">
+    <div class="col-md-12 col-xl-8 mb-5">
         <div class="row">
             <div class="col-sm-12">
                 <div class="card table-1-card">
@@ -314,13 +314,44 @@
                     </div>
                     <div class="card-block">
                         <div class="table-responsive" *ngIf="customerDueList.length > 0">
+                            <!-- <ngx-datatable class="material table-bordered" [scrollbarH]="true" [rows]="customerDueList" [loadingIndicator]="loadingIndicator"
+                            [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                            rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                            (page)="setPage($event)">
+
+                       
+
+                            <ngx-datatable-column [width]="100" name="Code" prop="customer_code" [draggable]="false" [sortable]="false">
+                                <ng-template let-value="value" ngx-datatable-cell-template>
+                                    <span > {{ value }} </span>
+                                </ng-template>
+                            </ngx-datatable-column>                           
+
+                            <ngx-datatable-column [width]="220" name="Name" prop="first_name" [draggable]="false" [sortable]="false">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    <span > {{ row.first_name }} {{row.last_name}}</span>
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column [width]="100" name="Mobile" prop="mobile" [draggable]="false" [sortable]="false">
+                                <ng-template let-value="value" ngx-datatable-cell-template>
+                                    <span > {{ value }} </span>
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column [width]="100" name="Total Due" prop="total_due" [draggable]="false" [sortable]="false">
+                                <ng-template let-value="value" ngx-datatable-cell-template>
+                                    <span > {{ value }} </span>
+                                </ng-template>
+                            </ngx-datatable-column>                          
+
+                        </ngx-datatable> -->
                             <table class="table">
                                 <thead>
                                     <tr class="text-capitalize">
                                         <th>Customer Code</th>
                                         <th>Name</th>
                                         <th>Mobile</th>
-                                        <th>Email</th>
                                         <th>Total Due</th>
                                     </tr>
                                 </thead>
@@ -329,7 +360,6 @@
                                         <td>{{item.customer_code}}</td>
                                         <td>{{item.first_name}} {{item.last_name}}</td>
                                         <td>{{item.mobile}}</td>
-                                        <td>{{item.email}}</td>
                                         <td>{{item.total_due}}</td>
                                     </tr>
                                 </tbody>
