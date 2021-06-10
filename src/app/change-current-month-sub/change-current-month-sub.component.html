@@ -12,25 +12,37 @@
               <div class="col-md-12">
                 <div class="btn-group float-right" dropdown placement="bottom right">
                   <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
-                          aria-controls="dropdown-basic">
+                    aria-controls="dropdown-basic">
                     Subscription <span class="caret"></span>
                   </button>
 
-                  <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu dropdown-menu-right"
-                      role="menu" aria-labelledby="button-animated">
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/create-subscription']" routerLinkActive="router-link-active" > Create Subscription</a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/add-product-to-subscription']" routerLinkActive="router-link-active" >Add Product To Subscription </a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/subscription-list']" routerLinkActive="router-link-active" >All Subscription List</a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/wholesaler-subscription-list']" routerLinkActive="router-link-active" > Wholesaler Subscription List</a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/retailer-subscription-list']" routerLinkActive="router-link-active" > Retailer Subscription List</a></li>
+                  <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu"
+                    aria-labelledby="button-animated">
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/create-subscription']"
+                        routerLinkActive="router-link-active"> Create Subscription</a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/subscription-list']"
+                        [queryParams]="{tab:'all'}" routerLinkActive="router-link-active">All Subscription List</a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/subscription-list']"
+                        [queryParams]="{tab:'wholesaler'}" routerLinkActive="router-link-active"> Wholesaler
+                        Subscription List</a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/subscription-list']"
+                        [queryParams]="{tab:'retailer'}" routerLinkActive="router-link-active"> Retailer Subscription
+                        List</a></li>
                     <hr>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-current-month-subscription']" routerLinkActive="router-link-active" >Change Current Month Subscription </a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-current-month']" routerLinkActive="router-link-active" >Remove Product From Current Month </a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/cancel-entrie-subscription-from-current-month']" routerLinkActive="router-link-active" >Cancel Entrie Subscription From Current Month </a></li>
-                    <hr>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-next-month-subscription']" routerLinkActive="router-link-active" >Change Next Month Subscription </a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-next-month']" routerLinkActive="router-link-active" >Remove Product From Next Month </a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/cancel-entrie-subscription-from-next-month']" routerLinkActive="router-link-active" >Cancel Entrie Subscription From Next Month </a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/add-product-to-subscription']"
+                        routerLinkActive="router-link-active">Add Product To Subscription </a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-current-month-subscription']"
+                        routerLinkActive="router-link-active">Change Current Month Subscription </a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-current-month']"
+                        routerLinkActive="router-link-active">Remove Product From Current Month </a></li>
+                    <li role="menuitem"><a class="dropdown-item"
+                        [routerLink]="['/cancel-entrie-subscription-from-current-month']"
+                        routerLinkActive="router-link-active">Cancel Entrie Subscription From Current Month </a></li>
+                    <!-- <hr>
+                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-next-month-subscription']" routerLinkActive="router-link-active" >Change Next Month Subscription </a></li>
+                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-next-month']" routerLinkActive="router-link-active" >Remove Product From Next Month </a></li>
+                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/cancel-entrie-subscription-from-next-month']" routerLinkActive="router-link-active" >Cancel Entrie Subscription From Next Month </a></li> -->
+
 
                   </ul>
                 </div>
@@ -43,19 +55,21 @@
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label">Customer </label>
                   <div class="col-sm-9">
-                    <ng-select (change)="onCustomerChange($event)"  [searchFn]="customSearchFn" [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false" formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
+                    <ng-select (change)="onCustomerChange($event)" [searchFn]="customSearchFn"
+                      [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false"
+                      formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
                       bindLabel="first_name" bindValue="id" placeholder="Select a customer">
-                      <ng-template ng-label-tmp let-item="item">                          
+                      <ng-template ng-label-tmp let-item="item">
                         {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
-                    </ng-template>
+                      </ng-template>
                       <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-                        {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}} 
-                    </ng-template>
+                        {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
+                      </ng-template>
                     </ng-select>
                     <div *ngIf="submitted && f.customer.errors" class="error-text">
                       <span *ngIf="f.customer.errors.required" class="text-danger"> Customer is required</span>
 
-                  </div>
+                    </div>
                   </div>
                 </div>
 
@@ -65,31 +79,37 @@
                 <div class="form-group row">
                   <label class="col-sm-4 col-form-label">Subscription </label>
                   <div class="col-sm-8">
-                    <ng-select (change)="onSubscriptionChange($event)" [ngClass]="{ 'is-invalid': submitted && f.subscription.errors }" [clearable]="false" formControlName="subscription" [clearOnBackspace]="false" [items]="subscriptionList"
-                    bindLabel="id" bindValue="id" placeholder="Select subscription">
+                    <ng-select (change)="onSubscriptionChange($event)"
+                      [ngClass]="{ 'is-invalid': submitted && f.subscription.errors }" [clearable]="false"
+                      formControlName="subscription" [clearOnBackspace]="false" [items]="subscriptionList"
+                      bindLabel="id" bindValue="id" placeholder="Select subscription">
 
-                    <ng-template ng-option-tmp let-item="item" let-index="index">
+                      <ng-template ng-option-tmp let-item="item" let-index="index">
 
-                      <div>
+                        <div>
                           <div class="card-body">
                             <div class="row mb-3">
-                              <div class="col-sm-6 pt-2"><h6 class="card-subtitle text-muted">Subscription No: {{item.id}}</h6></div>
+                              <div class="col-sm-6 pt-2">
+                                <h6 class="card-subtitle text-muted">Subscription No: {{item.id}}</h6>
+                              </div>
                               <div class="col-sm-6">
-                                <span *ngIf="item.status == 1" class=" card-subtitle"> Status : <strong class="label label-success">{{ SubscriptionStatus[item.status] }}</strong></span>
-                                <span *ngIf="item.status == 2" class=" card-subtitle"> Status : <strong class="label label-warning">{{ SubscriptionStatus[item.status] }}</strong></span>
+                                <span *ngIf="item.status == 1" class=" card-subtitle"> Status : <strong
+                                    class="label label-success">{{ SubscriptionStatus[item.status] }}</strong></span>
+                                <span *ngIf="item.status == 2" class=" card-subtitle"> Status : <strong
+                                    class="label label-warning">{{ SubscriptionStatus[item.status] }}</strong></span>
                               </div>
                             </div>
-                             <p class="card-text">  Id : {{item.alias}}</p>
+                            <p class="card-text"> Id : {{item.alias}}</p>
                           </div>
-                      </div>
-                  </ng-template>
+                        </div>
+                      </ng-template>
 
 
-                  </ng-select>
+                    </ng-select>
                     <div *ngIf="submitted && f.subscription.errors" class="error-text">
                       <span *ngIf="f.subscription.errors.required" class="text-danger"> Subscription is required</span>
 
-                  </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -126,70 +146,98 @@
                       </tr>
                     </thead>
                     <tbody formArrayName="itemHistory" *ngFor="let item of itemFormArray; let i = index;">
-                        <tr  [formGroupName]="i">
-                            <th>
-                              <ng-select [clearable]="false" appendTo="body" (change)="onSIMChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}" formControlName="sim" [clearOnBackspace]="false" [items]="simList"
-                              bindLabel="id" placeholder="Select a sim"></ng-select>
-                              <div *ngIf="submitted && item_his.controls[i].get('sim').errors" class="error-text">
-                                <small *ngIf="item_his.controls[i].get('sim').errors.required" class="text-danger"> SIM
-                                  is required</small>
+                      <tr [formGroupName]="i">
+                        <th>
+                          <ng-select [clearable]="false" appendTo="body" (change)="onSIMChange($event, item)"
+                            [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}"
+                            formControlName="sim" [clearOnBackspace]="false" [items]="simList" bindLabel="id"
+                            placeholder="Select a sim"></ng-select>
+                          <div *ngIf="submitted && item_his.controls[i].get('sim').errors" class="error-text">
+                            <small *ngIf="item_his.controls[i].get('sim').errors.required" class="text-danger"> SIM
+                              is required</small>
 
-                              </div>
-                            </th>
-                            <th>
-                              <ng-select [clearable]="false" appendTo="body" [clearOnBackspace]="false" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('plan').errors}" formControlName="plan"  [items]="planList"
-                            bindLabel="plan" bindValue="id" placeholder="Select a plan"></ng-select>
-                            <div *ngIf="submitted && item_his.controls[i].get('plan').errors" class="error-text">
-                              <small *ngIf="item_his.controls[i].get('plan').errors.required" class="text-danger"> Plan is required</small>
+                          </div>
+                        </th>
+                        <th>
+                          <ng-select [clearable]="false" appendTo="body" [clearOnBackspace]="false"
+                            [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('plan').errors}"
+                            formControlName="plan" [items]="planList" bindLabel="plan" bindValue="id"
+                            placeholder="Select a plan"></ng-select>
+                          <div *ngIf="submitted && item_his.controls[i].get('plan').errors" class="error-text">
+                            <small *ngIf="item_his.controls[i].get('plan').errors.required" class="text-danger"> Plan is
+                              required</small>
 
-                            </div>
-                            </th>
-                            <th>
-                              <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('amount').errors}" formControlName="amount"  />
-                            <div *ngIf="submitted && item_his.controls[i].get('amount').errors" class="error-text">
-                              <small *ngIf="item_his.controls[i].get('amount').errors.required" class="text-danger"> Amount is required</small>
-                            </div>
-                            </th>
-                            <th>
-                              <ng-select [clearable]="true" appendTo="body" (change)="onPlanChange($event, item)"   [clearOnBackspace]="false" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('new_plan').errors}" formControlName="new_plan"  [items]="planList"
-                            bindLabel="plan" bindValue="id" placeholder="Select a plan"></ng-select>
-                            <div *ngIf="submitted && item_his.controls[i].get('new_plan').errors" class="error-text">
-                              <small *ngIf="item_his.controls[i].get('new_plan').errors.required" class="text-danger"> New plan is required</small>
+                          </div>
+                        </th>
+                        <th>
+                          <input type="text" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('amount').errors}"
+                            formControlName="amount" />
+                          <div *ngIf="submitted && item_his.controls[i].get('amount').errors" class="error-text">
+                            <small *ngIf="item_his.controls[i].get('amount').errors.required" class="text-danger">
+                              Amount is required</small>
+                          </div>
+                        </th>
+                        <th>
+                          <ng-select [clearable]="true" appendTo="body" (change)="onPlanChange($event, item)"
+                            [clearOnBackspace]="false"
+                            [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('new_plan').errors}"
+                            formControlName="new_plan" [items]="planList" bindLabel="plan" bindValue="id"
+                            placeholder="Select a plan"></ng-select>
+                          <div *ngIf="submitted && item_his.controls[i].get('new_plan').errors" class="error-text">
+                            <small *ngIf="item_his.controls[i].get('new_plan').errors.required" class="text-danger"> New
+                              plan is required</small>
 
-                            </div>
-                            </th>
-                            <th>
-                              <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('plan_changes').errors}" formControlName="plan_changes"  />
-                            <div *ngIf="submitted && item_his.controls[i].get('plan_changes').errors" class="error-text">
-                              <small *ngIf="item_his.controls[i].get('plan_changes').errors.required" class="text-danger"> Changes plan is required</small>
-                            </div>
-                            </th>
-                            <th>
-                              <input type="text" numeric numericType="decimal" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('changes_price').errors}" formControlName="changes_price"  />
-                            <div *ngIf="submitted && item_his.controls[i].get('changes_price').errors" class="error-text">
-                              <small *ngIf="item_his.controls[i].get('changes_price').errors.required" class="text-danger"> Changes Price is required</small>
-                            </div>
-                            </th>
-                            <th>
-                              <input type="text" numeric numericType="decimal" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('actual_price').errors}" formControlName="actual_price"  />
-                            <div *ngIf="submitted && item_his.controls[i].get('actual_price').errors" class="error-text">
-                              <small *ngIf="item_his.controls[i].get('actual_price').errors.required" class="text-danger"> Unit price is required</small>
-                            </div>
-                            </th>
-                            <th>
-                              <input type="text" numeric numericType="decimal" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('payable_amount').errors}" formControlName="payable_amount"  />
-                            <div *ngIf="submitted && item_his.controls[i].get('payable_amount').errors" class="error-text">
-                              <small *ngIf="item_his.controls[i].get('payable_amount').errors.required" class="text-danger"> Payable amount is required</small>
-                            </div>
-                            </th>
-                            <th>
-                              <input type="text" numeric numericType="decimal" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('refund_amount').errors}" formControlName="refund_amount"  />
-                            <div *ngIf="submitted && item_his.controls[i].get('refund_amount').errors" class="error-text">
-                              <small *ngIf="item_his.controls[i].get('refund_amount').errors.required" class="text-danger"> Refund amount is required</small>
-                            </div>
-                            </th>
+                          </div>
+                        </th>
+                        <th>
+                          <input type="text" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('plan_changes').errors}"
+                            formControlName="plan_changes" />
+                          <div *ngIf="submitted && item_his.controls[i].get('plan_changes').errors" class="error-text">
+                            <small *ngIf="item_his.controls[i].get('plan_changes').errors.required" class="text-danger">
+                              Changes plan is required</small>
+                          </div>
+                        </th>
+                        <th>
+                          <input type="text" numeric numericType="decimal" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('changes_price').errors}"
+                            formControlName="changes_price" />
+                          <div *ngIf="submitted && item_his.controls[i].get('changes_price').errors" class="error-text">
+                            <small *ngIf="item_his.controls[i].get('changes_price').errors.required"
+                              class="text-danger"> Changes Price is required</small>
+                          </div>
+                        </th>
+                        <th>
+                          <input type="text" numeric numericType="decimal" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('actual_price').errors}"
+                            formControlName="actual_price" />
+                          <div *ngIf="submitted && item_his.controls[i].get('actual_price').errors" class="error-text">
+                            <small *ngIf="item_his.controls[i].get('actual_price').errors.required" class="text-danger">
+                              Unit price is required</small>
+                          </div>
+                        </th>
+                        <th>
+                          <input type="text" numeric numericType="decimal" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('payable_amount').errors}"
+                            formControlName="payable_amount" />
+                          <div *ngIf="submitted && item_his.controls[i].get('payable_amount').errors"
+                            class="error-text">
+                            <small *ngIf="item_his.controls[i].get('payable_amount').errors.required"
+                              class="text-danger"> Payable amount is required</small>
+                          </div>
+                        </th>
+                        <th>
+                          <input type="text" numeric numericType="decimal" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('refund_amount').errors}"
+                            formControlName="refund_amount" />
+                          <div *ngIf="submitted && item_his.controls[i].get('refund_amount').errors" class="error-text">
+                            <small *ngIf="item_his.controls[i].get('refund_amount').errors.required"
+                              class="text-danger"> Refund amount is required</small>
+                          </div>
+                        </th>
 
-                        </tr>
+                      </tr>
                     </tbody>
                   </table>
 
@@ -197,7 +245,7 @@
                 </div>
                 <button class="btn btn-success btn-sm btn-outline-success  mt-3 float-right" (click)="onFormSubmit()">
                   <i class="icofont-save"></i> {{btnSaveText}}
-              </button>
+                </button>
               </div>
 
 

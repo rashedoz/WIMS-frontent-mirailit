@@ -17,22 +17,23 @@
                   </button>
 
                   <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu dropdown-menu-right"
-                      role="menu" aria-labelledby="button-animated">
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/create-subscription']" routerLinkActive="router-link-active" > Create Subscription</a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/add-product-to-subscription']" routerLinkActive="router-link-active" >Add Product To Subscription </a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/subscription-list']" routerLinkActive="router-link-active" >All Subscription List</a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/wholesaler-subscription-list']" routerLinkActive="router-link-active" > Wholesaler Subscription List</a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/retailer-subscription-list']" routerLinkActive="router-link-active" > Retailer Subscription List</a></li>
-                    <hr>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-current-month-subscription']" routerLinkActive="router-link-active" >Change Current Month Subscription </a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-current-month']" routerLinkActive="router-link-active" >Remove Product From Current Month </a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/cancel-entrie-subscription-from-current-month']" routerLinkActive="router-link-active" >Cancel Entrie Subscription From Current Month </a></li>
-                    <hr>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-next-month-subscription']" routerLinkActive="router-link-active" >Change Next Month Subscription </a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-next-month']" routerLinkActive="router-link-active" >Remove Product From Next Month </a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/cancel-entrie-subscription-from-next-month']" routerLinkActive="router-link-active" >Cancel Entrie Subscription From Next Month </a></li>
+                  role="menu" aria-labelledby="button-animated">
+                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/create-subscription']" routerLinkActive="router-link-active" > Create Subscription</a></li>
+                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/subscription-list']" [queryParams]="{tab:'all'}" routerLinkActive="router-link-active" >All Subscription List</a></li>
+                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/subscription-list']" [queryParams]="{tab:'wholesaler'}" routerLinkActive="router-link-active" > Wholesaler Subscription List</a></li>
+                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/subscription-list']" [queryParams]="{tab:'retailer'}" routerLinkActive="router-link-active" > Retailer Subscription List</a></li>
+                <hr>
+                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/add-product-to-subscription']" routerLinkActive="router-link-active" >Add Product To Subscription </a></li>
+                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-current-month-subscription']" routerLinkActive="router-link-active" >Change Current Month Subscription </a></li>
+                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-current-month']" routerLinkActive="router-link-active" >Remove Product From Current Month </a></li>
+                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/cancel-entrie-subscription-from-current-month']" routerLinkActive="router-link-active" >Cancel Entrie Subscription From Current Month </a></li>
+                <!-- <hr>
+                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-next-month-subscription']" routerLinkActive="router-link-active" >Change Next Month Subscription </a></li>
+                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-next-month']" routerLinkActive="router-link-active" >Remove Product From Next Month </a></li>
+                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/cancel-entrie-subscription-from-next-month']" routerLinkActive="router-link-active" >Cancel Entrie Subscription From Next Month </a></li> -->
 
-                  </ul>
+
+              </ul>
                 </div>
               </div>
             </div>
@@ -45,11 +46,11 @@
                   <div class="col-sm-9">
                     <ng-select (change)="onCustomerChange($event)" [searchFn]="customSearchFn" [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false" formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
                       bindLabel="first_name" bindValue="id" placeholder="Select a customer">
-                      <ng-template ng-label-tmp let-item="item">                          
+                      <ng-template ng-label-tmp let-item="item">
                         {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
                     </ng-template>
                       <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-                        {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}} 
+                        {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
                     </ng-template>
                     </ng-select>
                     <div *ngIf="submitted && f.customer.errors" class="error-text">
@@ -124,13 +125,13 @@
                             <th>
                               <ng-select [clearable]="false" appendTo="body" (change)="onSIMChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}" formControlName="sim" [clearOnBackspace]="false" [items]="simList"
                                placeholder="Select a sim">
-                              <ng-template ng-label-tmp let-item="item">                          
+                              <ng-template ng-label-tmp let-item="item">
                                 {{item.CID_no}} - {{item.ICCID_no}} - {{item.phone_number}}
                             </ng-template>
                             <!-- <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
                              {{item.CID_no}} - {{item.ICCID_no}} - {{item.phone_number}}
                           </ng-template> -->
-                    
+
                           </ng-select>
                               <div *ngIf="submitted && item_his.controls[i].get('sim').errors" class="error-text">
                                 <small *ngIf="item_his.controls[i].get('sim').errors.required" class="text-danger"> SIM
@@ -140,7 +141,7 @@
                             <th>
                               <ng-select [clearable]="false" appendTo="body" [clearOnBackspace]="false" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('plan').errors}" formControlName="plan"  [items]="planList"
                              placeholder="Select a plan">
-                            <ng-template ng-label-tmp let-item="item">                          
+                            <ng-template ng-label-tmp let-item="item">
                               {{item.plan}}
                           </ng-template>
                         </ng-select>

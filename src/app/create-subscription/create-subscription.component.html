@@ -19,18 +19,19 @@
                   <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu dropdown-menu-right"
                       role="menu" aria-labelledby="button-animated">
                     <li role="menuitem"><a class="dropdown-item" [routerLink]="['/create-subscription']" routerLinkActive="router-link-active" > Create Subscription</a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/add-product-to-subscription']" routerLinkActive="router-link-active" >Add Product To Subscription </a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/subscription-list']" routerLinkActive="router-link-active" >All Subscription List</a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/wholesaler-subscription-list']" routerLinkActive="router-link-active" > Wholesaler Subscription List</a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/retailer-subscription-list']" routerLinkActive="router-link-active" > Retailer Subscription List</a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/subscription-list']" [queryParams]="{tab:'all'}" routerLinkActive="router-link-active" >All Subscription List</a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/subscription-list']" [queryParams]="{tab:'wholesaler'}" routerLinkActive="router-link-active" > Wholesaler Subscription List</a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/subscription-list']" [queryParams]="{tab:'retailer'}" routerLinkActive="router-link-active" > Retailer Subscription List</a></li>
                     <hr>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/add-product-to-subscription']" routerLinkActive="router-link-active" >Add Product To Subscription </a></li>
                     <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-current-month-subscription']" routerLinkActive="router-link-active" >Change Current Month Subscription </a></li>
                     <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-current-month']" routerLinkActive="router-link-active" >Remove Product From Current Month </a></li>
                     <li role="menuitem"><a class="dropdown-item" [routerLink]="['/cancel-entrie-subscription-from-current-month']" routerLinkActive="router-link-active" >Cancel Entrie Subscription From Current Month </a></li>
-                    <hr>
+                    <!-- <hr>
                     <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-next-month-subscription']" routerLinkActive="router-link-active" >Change Next Month Subscription </a></li>
                     <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-next-month']" routerLinkActive="router-link-active" >Remove Product From Next Month </a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/cancel-entrie-subscription-from-next-month']" routerLinkActive="router-link-active" >Cancel Entrie Subscription From Next Month </a></li>
+                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/cancel-entrie-subscription-from-next-month']" routerLinkActive="router-link-active" >Cancel Entrie Subscription From Next Month </a></li> -->
+
 
                   </ul>
                 </div>

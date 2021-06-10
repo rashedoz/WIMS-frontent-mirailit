@@ -10,11 +10,11 @@
                             <h5 *ngIf="activeTable == 1">Wholesaler Subscription List </h5>
                             <h5 *ngIf="activeTable == 2">Retailer Subscription List </h5>
 
-                            <button class="btn btn-primary btn-sm mr-2" [ngClass]="{'b-active': isbuttonActive}" (click)="showSubTable(0)">
+                            <button class="btn btn-primary btn-sm mr-2" [ngClass]="{'b-active': isbuttonActiveTab0}" (click)="showSubTable(0)">
                               All </button>
-                          <button class="btn btn-primary btn-sm mr-2" (click)="showSubTable(1)">
+                          <button class="btn btn-primary btn-sm mr-2" [ngClass]="{'b-active': isbuttonActiveTab1}" (click)="showSubTable(1)">
                             Wholesaler</button>
-                              <button class="btn btn-primary btn-sm mr-2" (click)="showSubTable(2)">
+                              <button class="btn btn-primary btn-sm mr-2" [ngClass]="{'b-active': isbuttonActiveTab2}" (click)="showSubTable(2)">
                                 Retailer</button>
                           </div>
                         <div class="card-block ">

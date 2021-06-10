@@ -1,7 +1,7 @@
 import { Component, TemplateRef, ViewChild, ElementRef, ViewEncapsulation, OnInit } from '@angular/core';
 import { ColumnMode,DatatableComponent } from '@swimlane/ngx-datatable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router,ActivatedRoute } from '@angular/router';
 import { CommonService } from '../_services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
@@ -20,7 +20,9 @@ export class SubscriptionListComponent implements OnInit {
   entryForm: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
-  isbuttonActive = true;
+  isbuttonActiveTab0 = true;
+  isbuttonActiveTab1 = false;
+  isbuttonActiveTab2 = false;
   activeTable = 0;
   @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
   @ViewChild(DatatableComponent, { static: false }) tableWholesaler: DatatableComponent;
@@ -43,24 +45,46 @@ export class SubscriptionListComponent implements OnInit {
   searchParamWholesaler = '';
   searchParamRetailer = '';
 
+  tab;
+
   constructor(
     private confirmService: ConfirmService,
     public formBuilder: FormBuilder,
     private _service: CommonService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.page.pageNumber = 0;
     this.page.size = 10;
     window.onresize = () => {
       this.scrollBarHorizontal = (window.innerWidth < 1200);
     };
+
+    this.route.queryParams.subscribe(params => {
+      this.tab = params['tab'];
+      if(this.tab){
+        switch (this.tab) {
+          case 'all':
+            this.showSubTable(0);
+            break;
+          case 'wholesaler':
+            this.showSubTable(1);
+            break;
+          case 'retailer':
+            this.showSubTable(2);
+            break;
+        }
+      }else {
+        this.getList();
+      }
+    });
   }
 
 
   ngOnInit() {
 
-    this.getList();
+
   }
 
 
@@ -114,6 +138,7 @@ export class SubscriptionListComponent implements OnInit {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
         return;
       }
+
       this.activeTable = 1;
     //  this.tempRows = res;
       this.wholesalerList = res.results;
@@ -289,24 +314,40 @@ export class SubscriptionListComponent implements OnInit {
   }
 
   showSubTable(id){
-    this.isbuttonActive = false;
+   // this.isbuttonActive = false;
     switch (id) {
       case 0:
+
+        this.isbuttonActiveTab0 = true;
+        this.isbuttonActiveTab1 = false;
+        this.isbuttonActiveTab2 = false;
+
         this.page.pageNumber = 0;
         this.page.size = 10;
         this.getList();
         break;
       case 1:
+        this.isbuttonActiveTab0 = false;
+        this.isbuttonActiveTab1 = true;
+        this.isbuttonActiveTab2 = false;
+
         this.page.pageNumber = 0;
         this.page.size = 10;
        this.getListWholesaler();
         break;
       case 2:
+
+        this.isbuttonActiveTab0 = false;
+        this.isbuttonActiveTab1 = false;
+        this.isbuttonActiveTab2 = true;
+
         this.page.pageNumber = 0;
         this.page.size = 10;
        this.getListRetailer();
         break;
     }
   }
+
+
 
 }
