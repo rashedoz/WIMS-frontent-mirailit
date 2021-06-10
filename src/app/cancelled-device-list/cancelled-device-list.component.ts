@@ -226,18 +226,18 @@ export class CancelledDeviceListComponent implements OnInit {
     }
   }
 
-  // updateFilter(event) {
-  //   const val = event.target.value.toLowerCase();
+  updateFilter(event) {
+    const val = event.target.value.toLowerCase();
 
-  //   const temp = this.tempRows.filter(function(d) {
-  //     return d['DID_no'].toLowerCase().indexOf(val) !== -1 ||
-  //            d['IMEI'].toLowerCase().indexOf(val) !== -1 ||!val;
-  //     });
+    const temp = this.tempRows.filter(function(d) {
+      return d['DID_no'].toLowerCase().indexOf(val) !== -1 ||
+             d['IMEI'].toLowerCase().indexOf(val) !== -1 ||!val;
+      });
 
-  //   // update the rows
-  //   this.deviceList = temp;
-  //   // Whenever the filter changes, always go back to the first page
-  //   this.table.offset = 0;
-  // }
+    // update the rows
+    this.deviceList = temp;
+    // Whenever the filter changes, always go back to the first page
+    this.table.offset = 0;
+  }
 
 }

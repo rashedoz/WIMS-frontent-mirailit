@@ -31,11 +31,17 @@ export class SubscriptionListComponent implements OnInit {
   rows = [];
   tempRows = [];
   customerList = [];
+  wholesalerList = [];
+  retailerList = [];
   loadingIndicator = false;
   ColumnMode = ColumnMode;
   scrollBarHorizontal = (window.innerWidth < 1200);
   SubscriptionStatus = SubscriptionStatus;
   SubsItemsStaus = SubsItemsStaus;
+
+  searchParamAll = '';
+  searchParamWholesaler = '';
+  searchParamRetailer = '';
 
   constructor(
     private confirmService: ConfirmService,
@@ -66,21 +72,23 @@ export class SubscriptionListComponent implements OnInit {
 
   getList() {
     this.loadingIndicator = true;
-    // const obj = {
-    //   size: this.page.size,
-    //   pageNumber: this.page.pageNumber
-    // };
-    this._service.get('subscription/get-all-subscription-list').subscribe(res => {
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param:this.searchParamAll
+    };
+    this._service.get('subscription/get-all-subscription-list',obj).subscribe(res => {
 
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
         return;
       }
       this.activeTable = 0;
-      this.tempRows = res;
-      this.customerList = res;
-      // this.page.totalElements = res.Total;
-      // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+    //  this.tempRows = res;
+      this.customerList = res.results;
+      //   this.rows = res.results;
+         this.page.totalElements = res.count;
+         this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -95,21 +103,22 @@ export class SubscriptionListComponent implements OnInit {
 
   getListWholesaler() {
     this.loadingIndicator = true;
-    // const obj = {
-    //   size: this.page.size,
-    //   pageNumber: this.page.pageNumber
-    // };
-    this._service.get('subscription/get-wholesaler-all-subscription-list').subscribe(res => {
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param:this.searchParamWholesaler
+    };
+    this._service.get('subscription/get-wholesaler-all-subscription-list',obj).subscribe(res => {
 
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
         return;
       }
       this.activeTable = 1;
-      this.tempRows = res;
-      this.customerList = res;
-      // this.page.totalElements = res.Total;
-      // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+    //  this.tempRows = res;
+      this.wholesalerList = res.results;
+      this.page.totalElements = res.count;
+      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -124,21 +133,22 @@ export class SubscriptionListComponent implements OnInit {
 
   getListRetailer() {
     this.loadingIndicator = true;
-    // const obj = {
-    //   size: this.page.size,
-    //   pageNumber: this.page.pageNumber
-    // };
-    this._service.get('subscription/get-retailer-all-subscription-list').subscribe(res => {
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param:this.searchParamRetailer
+    };
+    this._service.get('subscription/get-retailer-all-subscription-list',obj).subscribe(res => {
 
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
         return;
       }
       this.activeTable = 2;
-      this.tempRows = res;
-      this.customerList = res;
-      // this.page.totalElements = res.Total;
-      // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+     // this.tempRows = res;
+      this.retailerList = res.results;
+      this.page.totalElements = res.count;
+      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -191,20 +201,45 @@ export class SubscriptionListComponent implements OnInit {
     }
 
 
-  updateFilter(event) {
-    const val = event.target.value.toLowerCase();
-   
-    // filter our data
-    const temp = this.tempRows.filter(function (d) {
-      return d.customer.first_name.toLowerCase().indexOf(val) !== -1 ||
-             d.customer.last_name.toLowerCase().indexOf(val) !== -1 ||
-             d.customer.email.toLowerCase().indexOf(val) !== -1 ||
-             d.customer.mobile.toLowerCase().indexOf(val) !== -1 ||
-             d.customer.customer_code.toLowerCase().indexOf(val) !== -1 ||
-        !val;
-    });
-    this.customerList = temp;
-    this.table.offset = 0;
+  updateFilter(e) {
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParamAll = e.target.value;
+      this.getList();
+    }
+    // const val = event.target.value.toLowerCase();
+
+    // // filter our data
+    // const temp = this.tempRows.filter(function (d) {
+    //   return d.customer.first_name.toLowerCase().indexOf(val) !== -1 ||
+    //          d.customer.last_name.toLowerCase().indexOf(val) !== -1 ||
+    //          d.customer.email.toLowerCase().indexOf(val) !== -1 ||
+    //          d.customer.mobile.toLowerCase().indexOf(val) !== -1 ||
+    //          d.customer.customer_code.toLowerCase().indexOf(val) !== -1 ||
+    //     !val;
+    // });
+    // this.customerList = temp;
+    // this.table.offset = 0;
+  }
+  updateFilterWholesaler(e) {
+
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParamWholesaler = e.target.value;
+      this.getListWholesaler();
+    }
+  }
+
+  updateFilterRetailer(e) {
+
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParamRetailer = e.target.value;
+      this.getListRetailer();
+    }
   }
 
   undoSubscription(row){
@@ -240,16 +275,35 @@ export class SubscriptionListComponent implements OnInit {
      );
   }
 
+  setPageAll(pageInfo) {
+    this.page.pageNumber = pageInfo.offset;
+    this.getList();
+  }
+  setPageWholesaler(pageInfo) {
+    this.page.pageNumber = pageInfo.offset;
+    this.getListWholesaler();
+  }
+  setPageRetailer(pageInfo) {
+    this.page.pageNumber = pageInfo.offset;
+    this.getListRetailer();
+  }
+
   showSubTable(id){
     this.isbuttonActive = false;
     switch (id) {
       case 0:
+        this.page.pageNumber = 0;
+        this.page.size = 10;
         this.getList();
         break;
       case 1:
+        this.page.pageNumber = 0;
+        this.page.size = 10;
        this.getListWholesaler();
         break;
       case 2:
+        this.page.pageNumber = 0;
+        this.page.size = 10;
        this.getListRetailer();
         break;
     }

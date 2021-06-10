@@ -5,21 +5,21 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card card-border-primary">
-                        <div class="card-header">                      
+                        <div class="card-header">
                             <h5 *ngIf="activeTable == 0"> All Subscription List </h5>
                             <h5 *ngIf="activeTable == 1">Wholesaler Subscription List </h5>
                             <h5 *ngIf="activeTable == 2">Retailer Subscription List </h5>
-                       
+
                             <button class="btn btn-primary btn-sm mr-2" [ngClass]="{'b-active': isbuttonActive}" (click)="showSubTable(0)">
                               All </button>
                           <button class="btn btn-primary btn-sm mr-2" (click)="showSubTable(1)">
                             Wholesaler</button>
                               <button class="btn btn-primary btn-sm mr-2" (click)="showSubTable(2)">
-                                Retailer</button>                       
+                                Retailer</button>
                           </div>
                         <div class="card-block ">
 
-                         
+
                           <!-- <div class="row">
                             <div class="col-md-12">
                               <div class="btn-group float-right" dropdown placement="bottom right">
@@ -66,9 +66,10 @@
                             <div class="row ">
                                 <div class="col-lg-12 ">
 
-                                  <ngx-datatable #table class="material table-bordered" [rows]="customerList" [loadingIndicator]="loadingIndicator"
-                                  [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                                  [rowHeight]="'auto'" [limit]="10">
+                                  <ngx-datatable #table class="material table-bordered" [scrollbarH]="true" [rows]="customerList" [loadingIndicator]="loadingIndicator"
+                                  [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                                  rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                                  (page)="setPageAll($event)">
 
 
 
@@ -176,19 +177,20 @@
                               <div class="col-lg-7">
                                 <div class="form-group row">
                                   <div class="col-sm-12">
-                                    <input type="text" class="form-control" placeholder="Search wholesaler by first name, last name, code, mobile, email" (keyup)="updateFilter($event)" />
-  
+                                    <input type="text" class="form-control" placeholder="Search wholesaler by first name, last name, code, mobile, email" (keyup)="updateFilterWholesaler($event)" />
+
                                   </div>
                                 </div>
                               </div>
                             </div>
-  
+
                               <div class="row ">
                                   <div class="col-lg-12 ">
-                                  <ngx-datatable #tableWholesaler class="material table-bordered" [rows]="customerList" [loadingIndicator]="loadingIndicator"
-                                    [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                                    [rowHeight]="'auto'" [limit]="10">
-  
+                                  <ngx-datatable #tableWholesaler class="material table-bordered"  [scrollbarH]="true" [rows]="wholesalerList" [loadingIndicator]="loadingIndicator"
+                                  [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                                  rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                                  (page)="setPageWholesaler($event)">
+
                                            <!-- Row Detail Template -->
                                            <ngx-datatable-row-detail  [rowHeight]="'100%'">
                                             <ng-template let-row="row" let-expanded="expanded"
@@ -219,7 +221,7 @@
                                               </div>
                                             </ng-template>
                                         </ngx-datatable-row-detail>
-  
+
                                         <ngx-datatable-column [width]="30" name="#" [resizeable]="false"
                                             [sortable]="false" [draggable]="false" [canAutoResize]="false">
                                             <ng-template let-row="row" let-expanded="expanded"
@@ -230,27 +232,27 @@
                                                 </a>
                                             </ng-template>
                                         </ngx-datatable-column>
-  
+
                                         <ngx-datatable-column [width]="300" name="Subscription No" prop="id" [draggable]="false" [sortable]="false">
                                           <ng-template let-row="row" ngx-datatable-cell-template>
                                               <p > {{ row.id }}  <i *ngIf="row.future_state_type == 'Will_Hold' " title="Undo Held Subscription" (click)="undoSubscription(row)" class=" mt-1 ml-2 icofont-ui-reply icofont-flip-horizontal text-warning icofont-2x"></i></p>
                                               <p><em *ngIf="row.future_state && row.status === 1"> <small>--{{row.future_state}}</small></em></p>
                                           </ng-template>
                                       </ngx-datatable-column>
-  
-  
+
+
                                     <ngx-datatable-column [width]="200" name="Wholesaler Name" prop="customer" [draggable]="false" [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
                                           <span > {{ value.first_name }} {{ value.last_name }} </span>
                                         </ng-template>
                                     </ngx-datatable-column>
-  
+
                                     <ngx-datatable-column [width]="100" name="Activation Date" prop="activation_date" [draggable]="false" [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
                                           <span >  {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
                                         </ng-template>
                                     </ngx-datatable-column>
-  
+
                                     <ngx-datatable-column [width]="150" name="Cancellation Date" prop="cancellation_date" [draggable]="false" [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
                                           <span *ngIf="value" >  {{ value | amDateFormat:'DD-MMM-YYYY'}} </span>
@@ -269,9 +271,9 @@
                                             <span *ngIf="value == 2" ><strong class="label label-danger">{{ SubscriptionStatus[value] }}</strong> </span>
                                             <span *ngIf="value == 3" ><strong class="label label-warning">{{ SubscriptionStatus[value] }}</strong> </span>
                                         </ng-template>
-                                    </ngx-datatable-column>  
-                            
-  
+                                    </ngx-datatable-column>
+
+
                                 </ngx-datatable>
                                   </div>
                               </div>
@@ -282,19 +284,20 @@
                               <div class="col-lg-7">
                                 <div class="form-group row">
                                   <div class="col-sm-12">
-                                    <input type="text" class="form-control" placeholder="Search retailer by first name, last name,code, mobile, email" (keyup)="updateFilter($event)" />
-  
+                                    <input type="text" class="form-control" placeholder="Search retailer by first name, last name,code, mobile, email" (keyup)="updateFilterRetailer($event)" />
+
                                   </div>
                                 </div>
                               </div>
                             </div>
-  
+
                               <div class="row ">
                                   <div class="col-lg-12 ">
-                                    <ngx-datatable #table class="material table-bordered" [rows]="customerList" [loadingIndicator]="loadingIndicator"
-                                    [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                                    [rowHeight]="'auto'" [limit]="10">
-  
+                                    <ngx-datatable #table class="material table-bordered" [scrollbarH]="true" [rows]="retailerList" [loadingIndicator]="loadingIndicator"
+                                    [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                                    rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                                    (page)="setPageRetailer($event)">
+
                                            <!-- Row Detail Template -->
                                            <ngx-datatable-row-detail  [rowHeight]="'100%'">
                                             <ng-template let-row="row" let-expanded="expanded"
@@ -325,7 +328,7 @@
                                               </div>
                                             </ng-template>
                                         </ngx-datatable-row-detail>
-  
+
                                         <ngx-datatable-column [width]="30" name="#" [resizeable]="false"
                                             [sortable]="false" [draggable]="false" [canAutoResize]="false">
                                             <ng-template let-row="row" let-expanded="expanded"
@@ -336,26 +339,26 @@
                                                 </a>
                                             </ng-template>
                                         </ngx-datatable-column>
-  
+
                                         <ngx-datatable-column [width]="300" name="Subscription No" prop="id" [draggable]="false" [sortable]="false">
                                           <ng-template let-row="row" ngx-datatable-cell-template>
                                               <p > {{ row.id }}  <i *ngIf="row.future_state_type == 'Will_Hold' " title="Undo Held Subscription" (click)="undoSubscription(row)" class=" mt-1 ml-2 icofont-ui-reply icofont-flip-horizontal text-warning icofont-2x"></i></p>
                                               <p><em *ngIf="row.future_state && row.status === 1"> <small>--{{row.future_state}}</small></em></p>
                                           </ng-template>
                                       </ngx-datatable-column>
-  
+
                                     <ngx-datatable-column [width]="200" name="Retailer Name" prop="customer" [draggable]="false" [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
                                           <span > {{ value.first_name }} {{ value.last_name }} </span>
                                         </ng-template>
                                     </ngx-datatable-column>
-  
+
                                     <ngx-datatable-column [width]="150" name="Activation Date" prop="activation_date" [draggable]="false" [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
                                           <span >  {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
                                         </ng-template>
                                     </ngx-datatable-column>
-  
+
                                     <ngx-datatable-column [width]="150" name="Cancellation Date" prop="cancellation_date" [draggable]="false" [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
                                           <span *ngIf="value" >  {{ value | amDateFormat:'DD-MMM-YYYY'}} </span>
@@ -375,14 +378,14 @@
                                           <span *ngIf="value == 3" ><strong class="label label-warning">{{ SubscriptionStatus[value] }}</strong> </span>
                                       </ng-template>
                                   </ngx-datatable-column>
-  
+
                                     <!-- <ngx-datatable-column [width]="80" name="Created Date" prop="created_at" [draggable]="false"
                                         [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
                                             <span >  {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
                                         </ng-template>
                                     </ngx-datatable-column> -->
-  
+
                                 </ngx-datatable>
                                   </div>
                               </div>
