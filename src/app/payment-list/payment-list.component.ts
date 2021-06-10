@@ -46,7 +46,7 @@ export class PaymentListComponent implements OnInit {
   discount:number=0;
   paidAmount:number=0;
   billItem;
-
+  searchParam = '';
   constructor(
     private modalService: BsModalService,
     public formBuilder: FormBuilder,
@@ -54,8 +54,8 @@ export class PaymentListComponent implements OnInit {
     private toastr: ToastrService,
     private router: Router
   ) {
-    // this.page.pageNumber = 0;
-    // this.page.size = 10;
+    this.page.pageNumber = 0;
+    this.page.size = 10;
     window.onresize = () => {
       this.scrollBarHorizontal = (window.innerWidth < 1200);
     };
@@ -85,15 +85,35 @@ export class PaymentListComponent implements OnInit {
   //     this.getBillListByCustomer(e.id);
   //   }
   // }
+  setPage(pageInfo) {
+    this.page.pageNumber = pageInfo.offset;
+    this.getPaymentList();
+}
 
   getPaymentList() {
     this.loadingIndicator = true;
-    this._service.get("payment/get-payment-list").subscribe(
+    let obj;
+    if(this.searchParam){
+      obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber + 1,
+        search_param:this.searchParam
+      };
+    }else {
+      obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber + 1
+      };
+    }
+
+    this._service.get("payment/get-payment-list",obj).subscribe(
       (res) => {
-        this.tempRows = res;
-        this.paymentList = res;
-        if(this.paymentList.length > 0) this.columnsWithSearch = Object.keys(this.paymentList[0]);
-       
+       // this.tempRows = res;
+        this.paymentList = res.results;
+        this.page.totalElements = res.count;
+        this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+       // if(this.paymentList.length > 0) this.columnsWithSearch = Object.keys(this.paymentList[0]);
+
         // this.page.totalElements = res.Total;
         // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
         setTimeout(() => {
@@ -112,26 +132,35 @@ export class PaymentListComponent implements OnInit {
     );
   }
 
-  updateFilter(event) {
-    const val = event.target.value.toLowerCase();
+  // updateFilter(event) {
+  //   const val = event.target.value.toLowerCase();
 
-      // assign filtered matches to the active datatable
-      const temp = this.tempRows.filter(item => {
-        // iterate through each row's column data
-        for (let i = 0; i < this.columnsWithSearch.length; i++){
-          var colValue = item[this.columnsWithSearch[i]] ;  
-          // if no filter OR colvalue is NOT null AND contains the given filter
-          if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
-            // found match, return true to add to result set
-            return true;
-          }
-        }
-      });
+  //     // assign filtered matches to the active datatable
+  //     const temp = this.tempRows.filter(item => {
+  //       // iterate through each row's column data
+  //       for (let i = 0; i < this.columnsWithSearch.length; i++){
+  //         var colValue = item[this.columnsWithSearch[i]] ;
+  //         // if no filter OR colvalue is NOT null AND contains the given filter
+  //         if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
+  //           // found match, return true to add to result set
+  //           return true;
+  //         }
+  //       }
+  //     });
 
-    // update the rows
-    this.paymentList = temp;
-    // Whenever the filter changes, always go back to the first page
-    this.table.offset = 0;
+  //   // update the rows
+  //   this.paymentList = temp;
+  //   // Whenever the filter changes, always go back to the first page
+  //   this.table.offset = 0;
+  // }
+
+  filterSearch(e){
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParam = e.target.value;
+      this.getPaymentList();
+    }
   }
 
 

@@ -46,6 +46,11 @@ export class CustomerBalanceListComponent implements OnInit {
   modalRef: BsModalRef;
   balanceDetails : any = {};
   item;
+
+  searchParamAll = '';
+  searchParamWholesaler = '';
+  searchParamRetailer = '';
+
   constructor(
     private modalService: BsModalService,
     private confirmService: ConfirmService,
@@ -74,10 +79,20 @@ export class CustomerBalanceListComponent implements OnInit {
   get f() {
     return this.entryForm.controls;
   }
-  // setPage(pageInfo) {
-  //   this.page.pageNumber = pageInfo.offset;
-  //   this.getList();
-  // }
+
+
+  setPageAll(pageInfo) {
+    this.page.pageNumber = pageInfo.offset;
+    this.getList();
+  }
+  setPageWholesaler(pageInfo) {
+    this.page.pageNumber = pageInfo.offset;
+    this.getWholesalerList();
+  }
+  setPageRetailer(pageInfo) {
+    this.page.pageNumber = pageInfo.offset;
+    this.getRetailerList();
+  }
 
   customSearchFn(term: string, item: any) {
     term = term.toLocaleLowerCase();
@@ -94,12 +109,21 @@ export class CustomerBalanceListComponent implements OnInit {
     this.isbuttonActive = false;
     switch (id) {
       case 0:
+        this.searchParamAll = '';
+        this.page.pageNumber = 0;
+        this.page.size = 10;
         this.getList();
         break;
       case 1:
+        this.searchParamWholesaler = '';
+        this.page.pageNumber = 0;
+        this.page.size = 10;
         this.getWholesalerList();
         break;
       case 2:
+        this.searchParamRetailer = '';
+        this.page.pageNumber = 0;
+        this.page.size = 10;
         this.getRetailerList();
         break;
 
@@ -107,13 +131,18 @@ export class CustomerBalanceListComponent implements OnInit {
   }
   getList() {
     this.loadingIndicator = true;
-    this._service.get('user-list?is_customer=true').subscribe(res => {
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param:this.searchParamAll
+    };
+
+    this._service.get('get-customer-list-with-balance',obj).subscribe(res => {
       this.activeTable = 0;
-      this.customerList = res;
-      this.rows = res;
-      this.tempRows = res;
-      // this.page.totalElements = res.Total;
-      // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+      this.customerList = res.results;
+      this.rows = res.results;
+      this.page.totalElements = res.count;
+      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -128,16 +157,21 @@ export class CustomerBalanceListComponent implements OnInit {
 
   getWholesalerList() {
     this.loadingIndicator = true;
-    this._service.get('user-list?is_customer=true&is_wholesaler=true').subscribe(res => {
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param:this.searchParamWholesaler
+    };
+    this._service.get('get-wholesaler-list-with-balance',obj).subscribe(res => {
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
         return;
       }
       this.activeTable = 1;
-      this.tempRows = res;
-      this.wholesalerList = res;
-      // this.page.totalElements = res.Total;
-      // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+    //  this.tempRows = res;
+      this.wholesalerList = res.results;
+      this.page.totalElements = res.count;
+      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -151,17 +185,22 @@ export class CustomerBalanceListComponent implements OnInit {
   }
 
   getRetailerList() {
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param:this.searchParamRetailer
+    };
     this.loadingIndicator = true;
-    this._service.get('user-list?is_customer=true&is_retailer=true').subscribe(res => {
+    this._service.get('get-retailer-list-with-balance',obj).subscribe(res => {
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
         return;
       }
       this.activeTable = 2;
-      this.tempRows = res;
-      this.retailerList = res;
-      // this.page.totalElements = res.Total;
-      // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+     // this.tempRows = res;
+      this.retailerList = res.results;
+      this.page.totalElements = res.count;
+      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -178,6 +217,7 @@ export class CustomerBalanceListComponent implements OnInit {
     this.item = row;
     this._service.get('get-customer-balance-loading-history/'+row.id).subscribe(res => {
       this.balanceDetails = res;
+      console.log(this.balanceDetails);
       this.modalRef = this.modalService.show(template, this.modalConfigLg);
     }, err => {}
     );
@@ -220,58 +260,78 @@ export class CustomerBalanceListComponent implements OnInit {
   }
 
 
-  updateFilter(event) {
-    const val = event.target.value.toLowerCase();
+  updateFilter(e) {
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParamAll = e.target.value;
+      this.getList();
+    }
 
-    // filter our data
-    const temp = this.tempRows.filter(function (d) {
-      return d.first_name.toLowerCase().indexOf(val) !== -1 ||
-             d.last_name.toLowerCase().indexOf(val) !== -1 ||
-             d.customer_code.toLowerCase().indexOf(val) !== -1 ||
-             d.mobile.indexOf(val) !== -1 ||
-        !val;
-    });
+    // const val = event.target.value.toLowerCase();
 
-    // update the rows
-    this.rows = temp;
-    // Whenever the filter changes, always go back to the first page
-    this.table.offset = 0;
+    // // filter our data
+    // const temp = this.tempRows.filter(function (d) {
+    //   return d.first_name.toLowerCase().indexOf(val) !== -1 ||
+    //          d.last_name.toLowerCase().indexOf(val) !== -1 ||
+    //          d.customer_code.toLowerCase().indexOf(val) !== -1 ||
+    //          d.mobile.indexOf(val) !== -1 ||
+    //     !val;
+    // });
+
+    // // update the rows
+    // this.rows = temp;
+    // // Whenever the filter changes, always go back to the first page
+    // this.table.offset = 0;
   }
 
-  updateFilterWholesaler(event) {
-    const val = event.target.value.toLowerCase();
+  updateFilterWholesaler(e) {
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParamWholesaler = e.target.value;
+      this.getWholesalerList();
+    }
+    // const val = event.target.value.toLowerCase();
 
-    // filter our data
-    const temp = this.tempRows.filter(function (d) {
-      return d.first_name.toLowerCase().indexOf(val) !== -1 ||
-             d.last_name.toLowerCase().indexOf(val) !== -1 ||
-             d.customer_code.toLowerCase().indexOf(val) !== -1 ||
-             d.mobile.indexOf(val) !== -1 ||
-        !val;
-    });
+    // // filter our data
+    // const temp = this.tempRows.filter(function (d) {
+    //   return d.first_name.toLowerCase().indexOf(val) !== -1 ||
+    //          d.last_name.toLowerCase().indexOf(val) !== -1 ||
+    //          d.customer_code.toLowerCase().indexOf(val) !== -1 ||
+    //          d.mobile.indexOf(val) !== -1 ||
+    //     !val;
+    // });
 
-    // update the rows
-    this.wholesalerList = temp;
-    // Whenever the filter changes, always go back to the first page
-    this.tableWholesaler.offset = 0;
+    // // update the rows
+    // this.wholesalerList = temp;
+    // // Whenever the filter changes, always go back to the first page
+    // this.tableWholesaler.offset = 0;
   }
 
-  updateFilterRetailer(event) {
-    const val = event.target.value.toLowerCase();
+  updateFilterRetailer(e) {
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParamRetailer = e.target.value;
+      this.getRetailerList();
+    }
+    // const val = event.target.value.toLowerCase();
 
-    // filter our data
-    const temp = this.tempRows.filter(function (d) {
-      return d.first_name.toLowerCase().indexOf(val) !== -1 ||
-             d.last_name.toLowerCase().indexOf(val) !== -1 ||
-             d.customer_code.toLowerCase().indexOf(val) !== -1 ||
-             d.mobile.indexOf(val) !== -1 ||
-        !val;
-    });
+    // // filter our data
+    // const temp = this.tempRows.filter(function (d) {
+    //   return d.first_name.toLowerCase().indexOf(val) !== -1 ||
+    //          d.last_name.toLowerCase().indexOf(val) !== -1 ||
+    //          d.customer_code.toLowerCase().indexOf(val) !== -1 ||
+    //          d.mobile.indexOf(val) !== -1 ||
+    //     !val;
+    // });
 
-    // update the rows
-    this.retailerList = temp;
-    // Whenever the filter changes, always go back to the first page
-    this.tableRetailer.offset = 0;
+    // // update the rows
+    // this.retailerList = temp;
+    // // Whenever the filter changes, always go back to the first page
+    // this.tableRetailer.offset = 0;
+
   }
 
 

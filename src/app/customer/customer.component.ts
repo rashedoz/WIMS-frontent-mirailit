@@ -180,21 +180,26 @@ setPageDue(pageInfo) {
     this.isbuttonActive = false;
     switch (id) {
       case 0:
+        this.searchParamAll = '';
         this.page.pageNumber = 0;
         this.page.size = 10;
         this.getList();
         break;
       case 1:
+        this.searchParamWholesaler = '';
         this.page.pageNumber = 0;
         this.page.size = 10;
         this.getWholesalerList();
         break;
       case 2:
+
+        this.searchParamRetailer = '';
         this.page.pageNumber = 0;
         this.page.size = 10;
         this.getRetailerList();
         break;
       case 3:
+        this.searchParamDue = '';
         this.page.pageNumber = 0;
         this.page.size = 10;
         this.getCustomerDueList();

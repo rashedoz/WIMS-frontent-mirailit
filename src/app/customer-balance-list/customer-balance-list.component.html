@@ -36,9 +36,10 @@
                                 </div>
                                 <div class="row ">
                                     <div class="col-lg-12 ">
-                                    <ngx-datatable #table class="material table-bordered" [rows]="rows"
-                                    [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                    [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
+                                    <ngx-datatable #table class="material table-bordered"   [scrollbarH]="true" [rows]="rows" [loadingIndicator]="loadingIndicator"
+                                    [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                                    rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                                    (page)="setPageAll($event)">
 
                                 <ngx-datatable-column [width]="100" name="Customer Code" prop="customer_code"
                                     [draggable]="false" [sortable]="false">
@@ -102,9 +103,10 @@
                                 </div>
                                 <div class="row ">
                                     <div class="col-lg-12 ">
-                                    <ngx-datatable #tableWholesaler class="material table-bordered" [rows]="wholesalerList"
-                                    [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                    [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
+                                    <ngx-datatable #tableWholesaler class="material table-bordered"  [scrollbarH]="true" [rows]="wholesalerList" [loadingIndicator]="loadingIndicator"
+                                    [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                                    rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                                    (page)="setPageWholesaler($event)">
 
                                     <ngx-datatable-column [width]="100" name="Customer Code" prop="customer_code"
                                     [draggable]="false" [sortable]="false">
@@ -168,9 +170,10 @@
                                 </div>
                                 <div class="row ">
                                     <div class="col-lg-12 ">
-                                    <ngx-datatable #tableRetailer class="material table-bordered" [rows]="retailerList"
-                                    [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                    [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
+                                    <ngx-datatable #tableRetailer class="material table-bordered" [scrollbarH]="true" [rows]="retailerList" [loadingIndicator]="loadingIndicator"
+                                    [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                                    rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                                    (page)="setPageRetailer($event)">
 
                                     <ngx-datatable-column [width]="100" name="Customer Code" prop="customer_code"
                                     [draggable]="false" [sortable]="false">
@@ -244,13 +247,13 @@
                       <div class="col-sm-8">
                         <ng-select  [searchFn]="customSearchFn" [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false" formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
                         bindLabel="first_name" bindValue="id" placeholder="Search a customer by name">
-                        <ng-template ng-label-tmp let-item="item">                          
+                        <ng-template ng-label-tmp let-item="item">
                             {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
                         </ng-template>
                         <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-                            <h6 class="card-title">{{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}</h6>  
+                            <h6 class="card-title">{{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}</h6>
                         </ng-template>
-                  
+
                     </ng-select>
 
                           <div *ngIf="submitted && f.customer.errors" class="error-text">
@@ -301,17 +304,17 @@
           <app-card>
             <div class="row">
 
-                <table class="table" *ngIf="balanceDetails.customer">                  
+                <table class="table" *ngIf="balanceDetails.customer">
                     <tbody>
                       <tr>
                         <th> Name  :  {{balanceDetails.customer.first_name}} {{balanceDetails.customer.Name_name}}</th>
                         <th> Code  :  {{balanceDetails.customer.customer_code}}</th>
-                      </tr>                      
+                      </tr>
                       <tr>
                         <th>  Email  :  {{balanceDetails.customer.email}} </th>
                         <th> Mobile :  {{balanceDetails.customer.mobile}}</th>
-                       
-                      </tr>                      
+
+                      </tr>
                     </tbody>
                   </table>
 
