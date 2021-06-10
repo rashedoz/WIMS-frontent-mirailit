@@ -125,7 +125,6 @@ export class BillListComponent implements OnInit {
       this.scrollBarHorizontal = (window.innerWidth < 1200);
     };
 
-
   }
 
 
@@ -214,36 +213,43 @@ export class BillListComponent implements OnInit {
       case 0:
         this.page.pageNumber = 0;
         this.page.size = 10;
+        this.searchParamAll = '';
         this.getBillList();
         break;
       case 1:
         this.page.pageNumber = 0;
         this.page.size = 10;
+        this.searchParamSubscription = '';
         this.getSubscriptionBillList();
         break;
       case 2:
         this.page.pageNumber = 0;
         this.page.size = 10;
+        this.searchParamSim = '';
         this.getSIMBillList();
         break;
       case 3:
         this.page.pageNumber = 0;
         this.page.size = 10;
+        this.searchParamDevice = '';
         this.getDeviceBillList();
         break;
       case 4:
         this.page.pageNumber = 0;
         this.page.size = 10;
+        this.searchParamFullyPaid = '';
         this.getFullPaidBillList();
         break;
       case 5:
         this.page.pageNumber = 0;
         this.page.size = 10;
+        this.searchParamUnPaid = '';
         this.getUnpaidBillList();
         break;
       case 6:
         this.page.pageNumber = 0;
         this.page.size = 10;
+        this.searchParamPartiallyPaid = '';
         this.getPartiallypaidBillList();
         break;
     }
@@ -253,11 +259,20 @@ export class BillListComponent implements OnInit {
 
   getBillList() {
     this.loadingIndicator = true;
-    const obj = {
-      limit: this.page.size,
-      page: this.page.pageNumber + 1,
-      search_param:this.searchParamAll
-    };
+    let obj
+    if(this.searchParamAll){
+      obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber + 1,
+        search_param:this.searchParamAll
+      };
+    }else{
+       obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber + 1
+      };
+    }
+
     this._service.get("subscription/get-bill-list",obj).subscribe(
       (res) => {
         this.activeTable = 0;
@@ -287,12 +302,21 @@ export class BillListComponent implements OnInit {
 
   getSubscriptionBillList() {
     this.loadingIndicator = true;
-    const obj = {
-      limit: this.page.size,
-      page: this.page.pageNumber + 1,
-      search_param:this.searchParamSubscription
-    };
-    this._service.get("subscription/get-subscripton-bill-list",obj).subscribe(
+    let obj
+    if(this.searchParamSubscription){
+      obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber + 1,
+        search_param:this.searchParamSubscription
+      };
+    }else{
+       obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber + 1
+      };
+    }
+
+    this._service.get("subscription/get-subscription-bill-list",obj).subscribe(
       (res) => {
         this.activeTable = 1;
       //  this.tempRows = res.filter(x => x.subscription != null);
@@ -324,11 +348,20 @@ export class BillListComponent implements OnInit {
 
   getSIMBillList() {
     this.loadingIndicator = true;
-    const obj = {
-      limit: this.page.size,
-      page: this.page.pageNumber + 1,
-      search_param:this.searchParamSim
-    };
+    let obj
+    if(this.searchParamSim){
+      obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber + 1,
+        search_param:this.searchParamSim
+      };
+    }else{
+       obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber + 1
+      };
+    }
+
     this._service.get("subscription/get-sim-sales-list",obj).subscribe(
       (res) => {
         this.activeTable = 2;
@@ -356,11 +389,20 @@ export class BillListComponent implements OnInit {
 
   getDeviceBillList() {
     this.loadingIndicator = true;
-    const obj = {
-      limit: this.page.size,
-      page: this.page.pageNumber + 1,
-      search_param:this.searchParamDevice
-    };
+    let obj
+    if(this.searchParamDevice){
+      obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber + 1,
+        search_param:this.searchParamDevice
+      };
+    }else{
+       obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber + 1
+      };
+    }
+
     this._service.get("subscription/get-device-sales-list",obj).subscribe(
       (res) => {
         this.activeTable = 3;
@@ -389,11 +431,20 @@ export class BillListComponent implements OnInit {
 
   getFullPaidBillList() {
     this.loadingIndicator = true;
-    const obj = {
-      limit: this.page.size,
-      page: this.page.pageNumber + 1,
-      search_param:this.searchParamFullyPaid
-    };
+    let obj
+    if(this.searchParamFullyPaid){
+      obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber + 1,
+        search_param:this.searchParamFullyPaid
+      };
+    }else{
+       obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber + 1
+      };
+    }
+
     this._service.get("subscription/get-fully-paid-bill-list",obj).subscribe(
       (res) => {
         this.activeTable = 4;
@@ -421,11 +472,20 @@ export class BillListComponent implements OnInit {
 
   getPartiallypaidBillList() {
     this.loadingIndicator = true;
-    const obj = {
-      limit: this.page.size,
-      page: this.page.pageNumber + 1,
-      search_param:this.searchParamPartiallyPaid
-    };
+    let obj
+    if(this.searchParamPartiallyPaid){
+      obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber + 1,
+        search_param:this.searchParamPartiallyPaid
+      };
+    }else{
+       obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber + 1
+      };
+    }
+
     this._service.get("subscription/get-partially-paid-bill-list",obj).subscribe(
       (res) => {
         this.activeTable = 6;
@@ -453,11 +513,20 @@ export class BillListComponent implements OnInit {
 
   getUnpaidBillList() {
     this.loadingIndicator = true;
-    const obj = {
-      limit: this.page.size,
-      page: this.page.pageNumber + 1,
-      search_param:this.searchParamUnPaid
-    };
+    let obj
+    if(this.searchParamUnPaid){
+      obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber + 1,
+        search_param:this.searchParamUnPaid
+      };
+    }else{
+       obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber + 1
+      };
+    }
+
     this._service.get("subscription/get-unpaid-bill-list",obj).subscribe(
       (res) => {
         this.activeTable = 5;
