@@ -1,11 +1,13 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { AuthenticationService } from './../_services/authentication.service';
 import { CommonService } from './../_services/common.service';
+import { ColumnMode } from '@swimlane/ngx-datatable';
 // import * as Highcharts from 'highcharts';
 // import HC_exporting from 'highcharts/modules/exporting';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { Page } from '../_models/page';
 // HC_exporting(Highcharts);
 
 @Component({
@@ -22,6 +24,9 @@ export class HomeComponent implements OnInit {
   public deviceStock: any;
   public billCount: any;
   public customerDueList: Array<any> = [];
+  page = new Page();
+  loadingIndicator = false;
+  ColumnMode = ColumnMode;
   // highcharts = Highcharts;
   @BlockUI() blockUI: NgBlockUI;
 
@@ -31,6 +36,8 @@ export class HomeComponent implements OnInit {
     private router: Router,
     private _service: CommonService
   ) {
+    this.page.pageNumber = 0;
+    this.page.size = 6;
     this.currentUser = this.authService.currentUserDetails.value;
     // console.log(this.currentUser);
   }
@@ -42,6 +49,10 @@ export class HomeComponent implements OnInit {
     this.getCustomerDueList();
     // this.getCourseEnrollmentCount();
   }
+  setPage(pageInfo) {
+    this.page.pageNumber = pageInfo.offset;
+    this.getCustomerDueList();
+}
 
   getSIMCount() {
     this._service.get('stock/get-current-sim-stock-history').subscribe(res => {
@@ -65,9 +76,16 @@ export class HomeComponent implements OnInit {
     );
   }
   getCustomerDueList() {
-    this._service.get('get-customer-list-with-due').subscribe(res => {
-      this.customerDueList = res;
-      console.log(this.customerDueList);
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param:''
+    };
+    this._service.get('get-customer-list-with-due',obj).subscribe(res => {
+      this.customerDueList = res.results;
+      this.page.totalElements = res.count;
+      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+     // console.log(this.customerDueList);
     }, err => {}
     );
   }

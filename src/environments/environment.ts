@@ -5,9 +5,6 @@
 
 export const environment = {
   production: false,
-  //  apiUrl: 'https://wims-test.herokuapp.com/api/',
-  //  baseUrl: 'https://wims-test.herokuapp.com/',
-   apiUrl: 'http://wims-dev.ap-northeast-1.elasticbeanstalk.com/api/',
-   baseUrl: 'http://wims-dev.ap-northeast-1.elasticbeanstalk.com/',
-
+   apiUrl: 'http://wims-env.eba-hpubgjit.ap-northeast-1.elasticbeanstalk.com/api/',
+   baseUrl: 'http://wims-env.eba-hpubgjit.ap-northeast-1.elasticbeanstalk.com/',
 };

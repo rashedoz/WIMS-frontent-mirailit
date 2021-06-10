@@ -103,6 +103,9 @@ export class SellDeviceComponent implements OnInit {
     return this.entryForm.controls;
   }
 
+
+
+
   get item_his(): FormArray {
     return this.entryForm.get("itemHistory") as FormArray;
   }
