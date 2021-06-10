@@ -36,7 +36,7 @@ export class AllSIMListComponent implements OnInit {
   modalRef: BsModalRef;
   modalRefICCID: BsModalRef;
   simLifecycleDetails : Array<any> = [];
-
+  searchParam = '';
   constructor(
     public formBuilder: FormBuilder,
     private _service: CommonService,
@@ -59,28 +59,28 @@ export class AllSIMListComponent implements OnInit {
 
 
 
-  // setPage(pageInfo) {
-  //   this.page.pageNumber = pageInfo.offset;
-  //   this.getList();
-  // }
+  setPage(pageInfo) {
+    this.page.pageNumber = pageInfo.offset;
+    this.getList();
+}
 
   getList() {
     this.loadingIndicator = true;
-    // const obj = {
-    //   size: this.page.size,
-    //   pageNumber: this.page.pageNumber
-    // };
-    this._service.get('stock/get-sim-list').subscribe(res => {
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param:this.searchParam
+    };
+    this._service.get('stock/get-sim-list',obj).subscribe(res => {
 
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
         return;
       }
-      this.tempRows = res;
-      this.rows = res;
-      if(this.rows.length > 0)this.columnsWithSearch = Object.keys(this.rows[0]);
-      // this.page.totalElements = res.Total;
-      // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+     // this.tempRows = res;
+      this.rows =  res.results;
+      this.page.totalElements = res.count;
+      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -93,28 +93,37 @@ export class AllSIMListComponent implements OnInit {
     );
   }
 
-  updateFilterBill(event) {
-
-    const val = event.target.value.toString().toLowerCase().trim();
-
-      // assign filtered matches to the active datatable
-      const temp = this.tempRows.filter(item => {
-        // iterate through each row's column data
-        for (let i = 0; i < this.columnsWithSearch.length; i++){
-          var colValue = item[this.columnsWithSearch[i]] ;  
-          // if no filter OR colvalue is NOT null AND contains the given filter
-          if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
-            // found match, return true to add to result set
-            return true;
-          }
-        }
-      });
-
-    // update the rows
-    this.rows = temp;
-    // // Whenever the filter changes, always go back to the first page
-     this.table.offset = 0;
+  filterSearch(e){
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParam = e.target.value;
+      this.getList();
+    }
   }
+
+  // updateFilterBill(event) {
+
+  //   const val = event.target.value.toString().toLowerCase().trim();
+
+  //     // assign filtered matches to the active datatable
+  //     const temp = this.tempRows.filter(item => {
+  //       // iterate through each row's column data
+  //       for (let i = 0; i < this.columnsWithSearch.length; i++){
+  //         var colValue = item[this.columnsWithSearch[i]] ;
+  //         // if no filter OR colvalue is NOT null AND contains the given filter
+  //         if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
+  //           // found match, return true to add to result set
+  //           return true;
+  //         }
+  //       }
+  //     });
+
+  //   // update the rows
+  //   this.rows = temp;
+  //   // // Whenever the filter changes, always go back to the first page
+  //    this.table.offset = 0;
+  // }
 
 
   modalHide() {
@@ -143,7 +152,7 @@ export class AllSIMListComponent implements OnInit {
   openModalICCID(item, template: TemplateRef<any>) {
 
     this._service.get('stock/get-sim-iccid-history/'+item.id).subscribe(res => {
-      
+
        this.iccidHistory = res;
        this.modalRefICCID = this.modalService.show(template, this.modalConfig);
 

@@ -14,28 +14,40 @@
                               class=" icofont icofont-plus "></i> Return to Stock</button>
                         </div>
                         <div class="card-block ">
+                          <div class="row">
+                            <div class="col-lg-7">
+                              <div class="form-group row">
+                                <div class="col-sm-12">
+                                  <input type="text" class="form-control" placeholder="Search SIM by CID No, ICCID No, Phone Number" (keyup)="filterSearch($event)" />
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                             <div class="row ">
                                 <div class="col-lg-12 ">
-                                  <ngx-datatable class="material table-bordered" [rows]="rows"
-                                  [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                  [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
+                                  <ngx-datatable class="material table-bordered" [scrollbarH]="true" [rows]="rows" [loadingIndicator]="loadingIndicator"
+                                  [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                                  rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                                  (page)="setPage($event)">
 
-                                  <ngx-datatable-column [width]="8" name="SIM Id" prop="id" [draggable]="false" [sortable]="false">
+                                  <ngx-datatable-column [width]="100" name="SIM CID" prop="CID_no" [draggable]="false" [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
                                           <span > {{ value }} </span>
                                       </ng-template>
                                   </ngx-datatable-column>
-                                  <ngx-datatable-column [width]="8" name="SIM ICCID_no" prop="ICCID_no" [draggable]="false" [sortable]="false">
+                                  <ngx-datatable-column [width]="100" name="Phone Number" prop="phone_number" [draggable]="false" [sortable]="false">
+                                    <ng-template let-value="value" ngx-datatable-cell-template>
+                                        <span > {{ value }} </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                  <ngx-datatable-column [width]="100" name="SIM ICCID_no" prop="ICCID_no" [draggable]="false" [sortable]="false">
                                     <ng-template let-value="value" ngx-datatable-cell-template>
                                         <span > {{ value }} </span>
                                     </ng-template>
                                 </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="100" name="SIM SL" prop="sim_auto_serial_no" [draggable]="false" [sortable]="false">
-                                      <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span > {{ value }} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
+
 
                                   <ngx-datatable-column [width]="80" name="Status" prop="status" [draggable]="false"
                                       [sortable]="false">
@@ -104,7 +116,7 @@
                             <span title="{{ value }}"> {{ value }} </span>
                         </ng-template>
                     </ngx-datatable-column>
-                  
+
                     <ngx-datatable-column [width]="100" [width]="100" name="Select For Return" prop="Id" [draggable]="false"
                         [sortable]="false">
                         <ng-template let-row="row" ngx-datatable-cell-template>
@@ -158,7 +170,7 @@
                         </div>
                     </div>
                 </div>
-                
+
               <div class="col-md-12">
                 <div class="row">
                   <div class="col-md-12">
@@ -178,7 +190,7 @@
                             <span title="{{ value }}"> {{ value }} </span>
                         </ng-template>
                     </ngx-datatable-column>
-                  
+
                     <ngx-datatable-column [width]="120" name="Select For Cancel" prop="Id" [draggable]="false"
                         [sortable]="false">
                         <ng-template let-row="row" ngx-datatable-cell-template>
@@ -192,7 +204,7 @@
                     </ngx-datatable-column>
                 </ngx-datatable>
 
-         
+
                   </div>
 
               </div>

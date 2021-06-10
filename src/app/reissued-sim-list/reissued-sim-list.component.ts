@@ -37,7 +37,7 @@ export class ReissuedSIMListComponent implements OnInit {
   modalRef: BsModalRef;
   simObj;
   simDetails : Array<any> = [];
-
+  searchParam = '';
   constructor(
     private modalService: BsModalService,
     private confirmService: ConfirmService,
@@ -61,27 +61,29 @@ export class ReissuedSIMListComponent implements OnInit {
 
 
 
-  // setPage(pageInfo) {
-  //   this.page.pageNumber = pageInfo.offset;
-  //   this.getList();
-  // }
+  setPage(pageInfo) {
+    this.page.pageNumber = pageInfo.offset;
+    this.getList();
+}
 
   getList() {
     this.loadingIndicator = true;
-    // const obj = {
-    //   size: this.page.size,
-    //   pageNumber: this.page.pageNumber
-    // };
-    this._service.get('stock/get-reissued-sim-list').subscribe(res => {
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param:this.searchParam
+    };
+    this._service.get('stock/get-reissued-sim-list',obj).subscribe(res => {
 
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
         return;
       }
-      this.rows = res;
-      this.tempRows = res;
-      // this.page.totalElements = res.Total;
-      // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+      // this.rows = res;
+      // this.tempRows = res;
+      this.rows = res.results;
+      this.page.totalElements = res.count;
+      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -92,6 +94,15 @@ export class ReissuedSIMListComponent implements OnInit {
       }, 1000);
     }
     );
+  }
+
+  filterSearch(e){
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParam = e.target.value;
+      this.getList();
+    }
   }
 
 
@@ -147,21 +158,21 @@ export class ReissuedSIMListComponent implements OnInit {
     );
   }
 
-  updateFilter(event) {
-    const val = event.target.value.toLowerCase();
+  // updateFilter(event) {
+  //   const val = event.target.value.toLowerCase();
 
-    // filter our data
-    const temp = this.tempRows.filter(function (d) {
-      return d.ICCID_no != null ? d.ICCID_no.toLowerCase().indexOf(val) !== -1 : '' ||
-             d.CID_no.toLowerCase().indexOf(val) !== -1 ||
-        !val;
-    });
+  //   // filter our data
+  //   const temp = this.tempRows.filter(function (d) {
+  //     return d.ICCID_no != null ? d.ICCID_no.toLowerCase().indexOf(val) !== -1 : '' ||
+  //            d.CID_no.toLowerCase().indexOf(val) !== -1 ||
+  //       !val;
+  //   });
 
-    // update the rows
-    this.rows = temp;
-    // Whenever the filter changes, always go back to the first page
-    this.table.offset = 0;
-  }
+  //   // update the rows
+  //   this.rows = temp;
+  //   // Whenever the filter changes, always go back to the first page
+  //   this.table.offset = 0;
+  // }
 
   onSelect({selected}, template: TemplateRef<any>) {
     if(selected[0]){
@@ -184,7 +195,7 @@ export class ReissuedSIMListComponent implements OnInit {
   }
 
   showDetails(template){
-    this._service.get('stock/get-sim-total-reissue-history?sim='+this.simObj.id).subscribe(res => {
+    this._service.get('stock/get-sim-entire-reissue-history/'+this.simObj.id).subscribe(res => {
       if(res.length){
         this.simDetails = res;
         this.modalRef = this.modalService.show(template, this.modalConfig);
