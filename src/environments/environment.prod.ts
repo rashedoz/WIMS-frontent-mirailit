@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://wims-test.herokuapp.com/api/',
-  baseUrl: 'https://wims-test.herokuapp.com/'
+  apiUrl: 'http://wims-dev.ap-northeast-1.elasticbeanstalk.com/api/',
+  baseUrl: 'http://wims-dev.ap-northeast-1.elasticbeanstalk.com/',
 };
