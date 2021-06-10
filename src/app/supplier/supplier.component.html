@@ -14,20 +14,21 @@
                         <div class="card-block ">
                             <div class="row">
                                 <div class="col-lg-7">
-                                  <div class="form-group row">                                  
+                                  <div class="form-group row">
                                     <div class="col-sm-12">
-                                      <input type="text" class="form-control" placeholder="Search supplier by name, mobile, address" (keyup)="updateFilter($event)" />
-                                     
+                                      <input type="text" class="form-control" placeholder="Search supplier by name, mobile, address" (keyup)="filterSearch($event)" />
+
                                     </div>
                                   </div>
                                 </div>
                               </div>
                             <div class="row ">
                                 <div class="col-lg-12 ">
-                                    <ngx-datatable #table class="material table-bordered" [rows]="supplierList"
-                                        [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                        [headerHeight]="40" [footerHeight]="50" rowHeight="auto"  [limit]="10"
-                                      >
+                                    <ngx-datatable #table class="material table-bordered"
+                                    [scrollbarH]="true" [rows]="supplierList" [loadingIndicator]="loadingIndicator"
+                                    [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                                    rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                                    (page)="setPage($event)">
 
                                         <ngx-datatable-column [width]="350" name="Supplier Name" prop="name"
                                             [draggable]="false" [sortable]="false">
@@ -86,7 +87,7 @@
         </div>
         <div class="modal-body " *ngIf="details">
             <app-card>
-              
+
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group row">
@@ -97,52 +98,52 @@
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label font-weight-bold">Mobile </label>
-                            <div class="col-sm-8">                               
+                            <div class="col-sm-8">
                                 <label class="col-form-label">: {{details.mobile}} </label>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label font-weight-bold">Alternative Mobile </label>
-                            <div class="col-sm-8">                             
+                            <div class="col-sm-8">
                                 <label class="col-form-label">: {{details.alternative_mobile}} </label>
-    
+
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label font-weight-bold">Account Number </label>
-                            <div class="col-sm-8">                             
+                            <div class="col-sm-8">
                                 <label class="col-form-label">: {{details.acc_number}} </label>
                             </div>
                         </div>
-                       
+
                     </div>
                     <div class="col-md-6">
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label font-weight-bold">Preferred Payment Method </label>
-                            <div class="col-sm-8">                               
+                            <div class="col-sm-8">
                                 <label class="col-form-label">: {{details.preferred_payment_method}} </label>
-                   
+
                             </div>
                         </div>
-                       
+
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label font-weight-bold">Address One </label>
-                            <div class="col-sm-8">                                
+                            <div class="col-sm-8">
                                 <label class="col-form-label">: {{details.address_one}} </label>
                             </div>
                         </div>
-                   
+
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label font-weight-bold">Address Two  </label>
-                            <div class="col-sm-8">                              
+                            <div class="col-sm-8">
                                     <label class="col-form-label">: {{details.address_two}} </label>
-    
+
                             </div>
                         </div>
                     </div>
                 </div>
-                 
-               
+
+
             </app-card>
         </div>
         <div class="modal-footer">
@@ -150,7 +151,7 @@
 
                 <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHide()"> <i
                         class="icofont icofont-close"></i> Close</button>
-               
+
             </div>
 
         </div>
@@ -173,10 +174,10 @@
                                 <input type="text" formControlName="name"
                                     [ngClass]="{ 'is-invalid': submitted && f.name.errors }" type="text"
                                     class="form-control" />
-    
+
                                 <div *ngIf="submitted && f.name.errors" class="error-text">
                                     <span *ngIf="f.name.errors.required" class="text-danger"> Supplier name is required</span>
-    
+
                                 </div>
                             </div>
                         </div>
@@ -186,10 +187,10 @@
                                 <input type="text" formControlName="mobile"
                                     [ngClass]="{ 'is-invalid': submitted && f.mobile.errors }" type="text"
                                     class="form-control" />
-    
+
                                 <div *ngIf="submitted && f.mobile.errors" class="error-text">
                                     <span *ngIf="f.mobile.errors.required" class="text-danger"> Mobile number is required</span>
-    
+
                                 </div>
                             </div>
                         </div>
@@ -197,57 +198,57 @@
                             <label class="col-sm-4 col-form-label">Alternative Mobile </label>
                             <div class="col-sm-8">
                                 <input type="text" formControlName="alternative_mobile" type="text"  class="form-control" />
-    
-    
+
+
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label">Account Number </label>
                             <div class="col-sm-8">
                                 <input type="text" formControlName="acc_number"   type="text"  class="form-control" />
-    
+
                             </div>
                         </div>
-                       
+
                     </div>
                     <div class="col-md-6">
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label">Preferred Payment Method </label>
                             <div class="col-sm-8">
                                 <input type="text" formControlName="preferred_payment_method"  type="text"class="form-control" />
-    
-                   
+
+
                             </div>
                         </div>
-                       
+
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label">Address One </label>
                             <div class="col-sm-8">
                                 <textarea type="text" rows="1" formControlName="address_one"
                                     [ngClass]="{ 'is-invalid': submitted && f.address_one.errors }" type="text"
                                     class="form-control" > </textarea>
-    
+
                                 <div *ngIf="submitted && f.address_one.errors" class="error-text">
                                     <span *ngIf="f.address_one.errors.required" class="text-danger"> Address one is required</span>
-    
+
                                 </div>
                             </div>
                         </div>
-                   
+
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label">Address Two  </label>
                             <div class="col-sm-8">
                                 <textarea type="text" rows="1" formControlName="address_two"  type="text"
                                     class="form-control" ></textarea>
-    
-    
+
+
                             </div>
                         </div>
                     </div>
                 </div>
             </form>
-                 
-               
+
+
 
                     <!-- <div class="row">
                         <div class="col-md-6">
@@ -265,7 +266,7 @@
                             </div>
                         </div>
                     </div> -->
-               
+
             </app-card>
         </div>
         <div class="modal-footer">

@@ -35,7 +35,7 @@ export class SupplierComponent implements OnInit {
   ColumnMode = ColumnMode;
   details;
   scrollBarHorizontal = (window.innerWidth < 1200);
-
+  searchParam = '';
   constructor(
     private modalService: BsModalService,
     public formBuilder: FormBuilder,
@@ -71,20 +71,28 @@ export class SupplierComponent implements OnInit {
   }
 
   setPage(pageInfo) {
-   // this.page.pageNumber = pageInfo.offset;
+    this.page.pageNumber = pageInfo.offset;
     this.getList();
-  }
+}
 
   getList() {
     this.loadingIndicator = true;
-    this._service.get('supplier/get-supplier-list').subscribe(res => {
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param:this.searchParam
+    };
+    this._service.get('supplier/get-supplier-list',obj).subscribe(res => {
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
         return;
       }
-      this.tempRows = res;
-      this.supplierList = res;
-      if(this.supplierList.length > 0)this.columnsWithSearch = Object.keys(this.supplierList[0]);
+   //   this.tempRows = res;
+      this.supplierList = res.results;
+      this.page.totalElements = res.count;
+      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+
+      // if(this.supplierList.length > 0)this.columnsWithSearch = Object.keys(this.supplierList[0]);
       // this.page.totalElements = res.Total;
       // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
@@ -97,6 +105,15 @@ export class SupplierComponent implements OnInit {
       }, 1000);
     }
     );
+  }
+
+  filterSearch(e){
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParam = e.target.value;
+      this.getList();
+    }
   }
 
   getItem(row, template: TemplateRef<any>) {
@@ -142,7 +159,7 @@ export class SupplierComponent implements OnInit {
         preferred_payment_method: this.entryForm.value.preferred_payment_method ? this.entryForm.value.preferred_payment_method.trim() : null,
         acc_number: this.entryForm.value.acc_number ? this.entryForm.value.acc_number.trim() : null,
       };
-  
+
       this._service.put('supplier/edit-supplier/'+id, obj).subscribe(
         data => {
           this.blockUI.stop();
@@ -150,7 +167,7 @@ export class SupplierComponent implements OnInit {
             this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
             this.modalHide();
             this.getList();
-  
+
           } else if (data.IsReport === "Warning") {
             this.toastr.warning(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
 
@@ -217,26 +234,26 @@ export class SupplierComponent implements OnInit {
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 
-  updateFilter(event) {
-    const val = event.target.value.toLowerCase();
+  // updateFilter(event) {
+  //   const val = event.target.value.toLowerCase();
 
-      // assign filtered matches to the active datatable
-      const temp = this.tempRows.filter(item => {
-        // iterate through each row's column data
-        for (let i = 0; i < this.columnsWithSearch.length; i++){
-          var colValue = item[this.columnsWithSearch[i]] ;  
-          // if no filter OR colvalue is NOT null AND contains the given filter
-          if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
-            // found match, return true to add to result set
-            return true;
-          }
-        }
-      });
+  //     // assign filtered matches to the active datatable
+  //     const temp = this.tempRows.filter(item => {
+  //       // iterate through each row's column data
+  //       for (let i = 0; i < this.columnsWithSearch.length; i++){
+  //         var colValue = item[this.columnsWithSearch[i]] ;
+  //         // if no filter OR colvalue is NOT null AND contains the given filter
+  //         if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
+  //           // found match, return true to add to result set
+  //           return true;
+  //         }
+  //       }
+  //     });
 
-    // update the rows
-    this.supplierList = temp;
-    // Whenever the filter changes, always go back to the first page
-    this.table.offset = 0;
-  }
+  //   // update the rows
+  //   this.supplierList = temp;
+  //   // Whenever the filter changes, always go back to the first page
+  //   this.table.offset = 0;
+  // }
 
 }
