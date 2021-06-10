@@ -53,7 +53,7 @@ export class AllDeviceListComponent implements OnInit {
 
 
 
-  setPage(pageInfo) {
+setPage(pageInfo) {
     this.page.pageNumber = pageInfo.offset;
     this.getList();
 }
