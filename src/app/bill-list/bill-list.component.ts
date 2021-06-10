@@ -54,6 +54,21 @@ export class BillListComponent implements OnInit {
   subscriptionBilList = [];
   simBilList = [];
   deviceBilList = [];
+
+  fullPaidBilList = [];
+  unPaidBilList = [];
+  partiallyPaidBilList = [];
+
+
+
+  searchParamAll = '';
+  searchParamSubscription = '';
+  searchParamSim = '';
+  searchParamDevice = '';
+  searchParamFullyPaid = '';
+  searchParamUnPaid = '';
+  searchParamPartiallyPaid = '';
+
   isbuttonActive = true;
 
   loadingIndicator = false;
@@ -102,8 +117,8 @@ export class BillListComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    // this.page.pageNumber = 0;
-    // this.page.size = 10;
+    this.page.pageNumber = 0;
+    this.page.size = 10;
     this.pageType = this.route.snapshot.params['page_type'];
     console.log(this.pageType);
     window.onresize = () => {
@@ -163,28 +178,72 @@ export class BillListComponent implements OnInit {
   //   }
   // }
 
+  setPageAll(pageInfo) {
+    this.page.pageNumber = pageInfo.offset;
+    this.getBillList();
+  }
+  setPageSubscription(pageInfo) {
+    this.page.pageNumber = pageInfo.offset;
+    this.getSubscriptionBillList();
+  }
+  setPageSIM(pageInfo) {
+    this.page.pageNumber = pageInfo.offset;
+    this.getSIMBillList();
+  }
+  setPageDevice(pageInfo) {
+    this.page.pageNumber = pageInfo.offset;
+    this.getDeviceBillList();
+  }
+  setPageFullPaid(pageInfo) {
+    this.page.pageNumber = pageInfo.offset;
+    this.getFullPaidBillList();
+  }
+  setPageUnPaid(pageInfo) {
+    this.page.pageNumber = pageInfo.offset;
+    this.getUnpaidBillList();
+  }
+  setPagePartiallyPaid(pageInfo) {
+    this.page.pageNumber = pageInfo.offset;
+    this.getPartiallypaidBillList();
+  }
+
+
   showBillTable(id) {
     this.isbuttonActive = false;
     switch (id) {
       case 0:
+        this.page.pageNumber = 0;
+        this.page.size = 10;
         this.getBillList();
         break;
       case 1:
+        this.page.pageNumber = 0;
+        this.page.size = 10;
         this.getSubscriptionBillList();
         break;
       case 2:
+        this.page.pageNumber = 0;
+        this.page.size = 10;
         this.getSIMBillList();
         break;
       case 3:
+        this.page.pageNumber = 0;
+        this.page.size = 10;
         this.getDeviceBillList();
         break;
       case 4:
+        this.page.pageNumber = 0;
+        this.page.size = 10;
         this.getFullPaidBillList();
         break;
       case 5:
+        this.page.pageNumber = 0;
+        this.page.size = 10;
         this.getUnpaidBillList();
         break;
       case 6:
+        this.page.pageNumber = 0;
+        this.page.size = 10;
         this.getPartiallypaidBillList();
         break;
     }
@@ -194,12 +253,19 @@ export class BillListComponent implements OnInit {
 
   getBillList() {
     this.loadingIndicator = true;
-    this._service.get("subscription/get-bill-list").subscribe(
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param:this.searchParamAll
+    };
+    this._service.get("subscription/get-bill-list",obj).subscribe(
       (res) => {
         this.activeTable = 0;
-        this.tempRows = res;
-        this.bilList = res;
-        if (this.bilList.length > 0) this.columnsWithSearch = Object.keys(this.bilList[0]);
+       // this.tempRows = res;
+        this.bilList = res.results;
+        this.page.totalElements = res.count;
+        this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+      //  if (this.bilList.length > 0) this.columnsWithSearch = Object.keys(this.bilList[0]);
         // this.page.totalElements = res.Total;
         // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
         setTimeout(() => {
@@ -221,12 +287,23 @@ export class BillListComponent implements OnInit {
 
   getSubscriptionBillList() {
     this.loadingIndicator = true;
-    this._service.get("subscription/get-bill-list").subscribe(
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param:this.searchParamSubscription
+    };
+    this._service.get("subscription/get-subscripton-bill-list",obj).subscribe(
       (res) => {
         this.activeTable = 1;
-        this.tempRows = res.filter(x => x.subscription != null);
-        this.subscriptionBilList = res.filter(x => x.subscription != null);
-        if (this.subscriptionBilList.length > 0) this.columnsWithSearch = Object.keys(this.subscriptionBilList[0]);
+      //  this.tempRows = res.filter(x => x.subscription != null);
+
+        this.subscriptionBilList = res.results; //.filter(x => x.subscription != null);
+
+        this.page.totalElements = res.count;
+        this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+
+
+        //   if (this.subscriptionBilList.length > 0) this.columnsWithSearch = Object.keys(this.subscriptionBilList[0]);
         // this.page.totalElements = res.Total;
         // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
         setTimeout(() => {
@@ -247,15 +324,20 @@ export class BillListComponent implements OnInit {
 
   getSIMBillList() {
     this.loadingIndicator = true;
-    this._service.get("subscription/get-sim-sales-list").subscribe(
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param:this.searchParamSim
+    };
+    this._service.get("subscription/get-sim-sales-list",obj).subscribe(
       (res) => {
         this.activeTable = 2;
-        this.tempRows = res;
-        this.simBilList = res;
+      //  this.tempRows = res;
+        this.simBilList = res.results;
+        this.page.totalElements = res.count;
+        this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
 
-        if (this.simBilList.length > 0) this.columnsWithSearch = Object.keys(this.simBilList[0]);
-        // this.page.totalElements = res.Total;
-        // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+      //  if (this.simBilList.length > 0) this.columnsWithSearch = Object.keys(this.simBilList[0]);
         setTimeout(() => {
           this.loadingIndicator = false;
         }, 1000);
@@ -274,14 +356,21 @@ export class BillListComponent implements OnInit {
 
   getDeviceBillList() {
     this.loadingIndicator = true;
-    this._service.get("subscription/get-device-sales-list").subscribe(
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param:this.searchParamDevice
+    };
+    this._service.get("subscription/get-device-sales-list",obj).subscribe(
       (res) => {
         this.activeTable = 3;
-        this.tempRows = res;
-        this.deviceBilList = res;
-        this.columnsWithSearch = Object.keys(this.deviceBilList[0]);
-        // this.page.totalElements = res.Total;
-        // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+      //  this.tempRows = res;
+        this.deviceBilList = res.results;
+        this.page.totalElements = res.count;
+        this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+
+      //  this.columnsWithSearch = Object.keys(this.deviceBilList[0]);
+
         setTimeout(() => {
           this.loadingIndicator = false;
         }, 1000);
@@ -300,14 +389,20 @@ export class BillListComponent implements OnInit {
 
   getFullPaidBillList() {
     this.loadingIndicator = true;
-    this._service.get("subscription/get-fully-paid-bill-list").subscribe(
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param:this.searchParamFullyPaid
+    };
+    this._service.get("subscription/get-fully-paid-bill-list",obj).subscribe(
       (res) => {
         this.activeTable = 4;
-        this.tempRows = res;
-        this.bilList = res;
-        if (this.bilList.length > 0) this.columnsWithSearch = Object.keys(this.bilList[0]);
-        // this.page.totalElements = res.Total;
-        // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+      //  this.tempRows = res;
+        this.fullPaidBilList = res.results;
+        this.page.totalElements = res.count;
+        this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+       // if (this.bilList.length > 0) this.columnsWithSearch = Object.keys(this.bilList[0]);
+
         setTimeout(() => {
           this.loadingIndicator = false;
         }, 1000);
@@ -326,14 +421,20 @@ export class BillListComponent implements OnInit {
 
   getPartiallypaidBillList() {
     this.loadingIndicator = true;
-    this._service.get("subscription/get-partially-paid-bill-list").subscribe(
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param:this.searchParamPartiallyPaid
+    };
+    this._service.get("subscription/get-partially-paid-bill-list",obj).subscribe(
       (res) => {
         this.activeTable = 6;
-        this.tempRows = res;
-        this.bilList = res;
-        if (this.bilList.length > 0) this.columnsWithSearch = Object.keys(this.bilList[0]);
-        // this.page.totalElements = res.Total;
-        // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+      //  this.tempRows = res;
+        this.partiallyPaidBilList = res.results;
+        this.page.totalElements = res.count;
+        this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+       // if (this.bilList.length > 0) this.columnsWithSearch = Object.keys(this.bilList[0]);
+
         setTimeout(() => {
           this.loadingIndicator = false;
         }, 1000);
@@ -352,14 +453,21 @@ export class BillListComponent implements OnInit {
 
   getUnpaidBillList() {
     this.loadingIndicator = true;
-    this._service.get("subscription/get-unpaid-bill-list").subscribe(
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param:this.searchParamUnPaid
+    };
+    this._service.get("subscription/get-unpaid-bill-list",obj).subscribe(
       (res) => {
         this.activeTable = 5;
-        this.tempRows = res;
-        this.bilList = res;
-        if (this.bilList.length > 0) this.columnsWithSearch = Object.keys(this.bilList[0]);
-        // this.page.totalElements = res.Total;
-        // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+     //   this.tempRows = res;
+        this.unPaidBilList  =  res.results;
+        this.page.totalElements = res.count;
+        this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+
+       // if (this.bilList.length > 0) this.columnsWithSearch = Object.keys(this.bilList[0]);
+
         setTimeout(() => {
           this.loadingIndicator = false;
         }, 1000);
@@ -741,7 +849,7 @@ export class BillListComponent implements OnInit {
             ICCID_no: element.sim.ICCID_no,
             phone_number: element.sim.phone_number ? element.sim.phone_number : '--',
             amount: element.amount
-          });  
+          });
 
         });
 
@@ -773,7 +881,7 @@ export class BillListComponent implements OnInit {
 
 
       if(row.bill_type != "Subscription"){
-        
+
         doc.setFontSize(this.fontSizes.SubTitleFontSize);
         doc.setFont("times", "bold");
         doc.text('One Time Charge', rightStartCol2 - 20,startY,null, 'left' );
@@ -782,7 +890,7 @@ export class BillListComponent implements OnInit {
         doc.setFont("times", "bold");
         doc.text( res.one_time_charge,rightStartCol2 + 42, startY ,null, 'right' );
 
-        
+
         doc.setFontSize(this.fontSizes.SubTitleFontSize);
         doc.setFont("times", "bold");
         doc.text('Sub Total', rightStartCol2-5,startY += 8,null, 'left' );
@@ -797,7 +905,7 @@ export class BillListComponent implements OnInit {
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text('Refund Amount', rightStartCol2 - 18,startY += 8,null, 'left' );
-  
+
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text( res.parent_refund_amount,rightStartCol2 + 42, startY ,null, 'right' );
@@ -806,7 +914,7 @@ export class BillListComponent implements OnInit {
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text('Discount', rightStartCol2 - 4,startY += 8,null, 'left' );
-  
+
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text("- "+ res.discount,rightStartCol2 + 42, startY ,null, 'right' );
@@ -818,26 +926,26 @@ export class BillListComponent implements OnInit {
             doc.setFontSize(this.fontSizes.TitleFontSize);
             doc.setFont("times", "bold");
             doc.text('Payable Amount', rightStartCol2-24,(startY += 8),null, 'left' );
-    
-    
+
+
             doc.setFontSize(this.fontSizes.TitleFontSize);
             doc.setFont("times", "bold");
             doc.text( res.payable_amount,rightStartCol2 + 42, startY,null, 'right' );
           }else {
-         
+
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text('So Far Paid', rightStartCol2 - 10,startY += 8,null, 'left' );
-  
+
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text( "- "+res.so_far_paid,rightStartCol2 + 42, startY ,null, 'right' );
 
-          
+
           doc.setFontSize(this.fontSizes.TitleFontSize);
           doc.setFont("times", "bold");
           doc.text('Payable Amount', rightStartCol2-24,(startY += 8),null, 'left' );
-  
+
           let amount_with_so_far_paid = Number(res.payable_amount) - Number(res.so_far_paid);
           doc.setFontSize(this.fontSizes.TitleFontSize);
           doc.setFont("times", "bold");
@@ -848,12 +956,12 @@ export class BillListComponent implements OnInit {
           doc.setFontSize(this.fontSizes.TitleFontSize);
           doc.setFont("times", "bold");
           doc.text('Payable Amount', rightStartCol2-24,(startY += 8),null, 'left' );
-  
-  
+
+
           doc.setFontSize(this.fontSizes.TitleFontSize);
           doc.setFont("times", "bold");
           doc.text( res.payable_amount,rightStartCol2 + 42, startY,null, 'right' );
-        }        
+        }
 
       } else {
 
@@ -870,7 +978,7 @@ export class BillListComponent implements OnInit {
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text('Refund Amount', rightStartCol2 - 18,startY += 8,null, 'left' );
-  
+
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text( res.parent_refund_amount,rightStartCol2 + 42, startY ,null, 'right' );
@@ -880,7 +988,7 @@ export class BillListComponent implements OnInit {
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text('Discount', rightStartCol2 - 5,startY += 8,null, 'left' );
-  
+
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text( +"- "+res.discount,rightStartCol2 + 42, startY ,null, 'right' );
@@ -892,26 +1000,26 @@ export class BillListComponent implements OnInit {
             doc.setFontSize(this.fontSizes.TitleFontSize);
             doc.setFont("times", "bold");
             doc.text('Payable Amount', rightStartCol2-24,(startY += 8),null, 'left' );
-    
-    
+
+
             doc.setFontSize(this.fontSizes.TitleFontSize);
             doc.setFont("times", "bold");
             doc.text( res.payable_amount,rightStartCol2 + 42, startY,null, 'right' );
           }else {
-         
+
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text('So Far Paid', rightStartCol2 - 10,startY += 8,null, 'left' );
-  
+
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text( "- "+res.so_far_paid,rightStartCol2 + 42, startY ,null, 'right' );
 
-          
+
           doc.setFontSize(this.fontSizes.TitleFontSize);
           doc.setFont("times", "bold");
           doc.text('Payable Amount', rightStartCol2-24,(startY += 8),null, 'left' );
-  
+
           let amount_with_so_far_paid = Number(res.payable_amount) - Number(res.so_far_paid);
           doc.setFontSize(this.fontSizes.TitleFontSize);
           doc.setFont("times", "bold");
@@ -922,12 +1030,12 @@ export class BillListComponent implements OnInit {
           doc.setFontSize(this.fontSizes.TitleFontSize);
           doc.setFont("times", "bold");
           doc.text('Payable Amount', rightStartCol2-24,(startY += 8),null, 'left' );
-  
-  
+
+
           doc.setFontSize(this.fontSizes.TitleFontSize);
           doc.setFont("times", "bold");
           doc.text( res.payable_amount,rightStartCol2 + 42, startY,null, 'right' );
-        } 
+        }
       }
 
       if(res.status === 3 || res.status === 4){
@@ -1190,118 +1298,153 @@ export class BillListComponent implements OnInit {
   }
 
 
-  updateFilterBill(event) {
-    const val = event.target.value.toLowerCase();
+  searchFilterAllBill(e) {
 
-    // // filter our data
-    // const temp = this.tempRows.filter(function (d) {
-    //   return d.customer.toLowerCase().indexOf(val) !== -1 ||
-    //     !val;
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParamAll = e.target.value;
+      this.getBillList();
+    }
+
+    // const val = event.target.value.toLowerCase();
+
+
+    // // assign filtered matches to the active datatable
+    // const temp = this.tempRows.filter(item => {
+    //   // iterate through each row's column data
+    //   for (let i = 0; i < this.columnsWithSearch.length; i++) {
+    //     var colValue = item[this.columnsWithSearch[i]];
+    //     // if no filter OR colvalue is NOT null AND contains the given filter
+    //     if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
+    //       // found match, return true to add to result set
+    //       return true;
+    //     }
+    //   }
     // });
 
-    // assign filtered matches to the active datatable
-    const temp = this.tempRows.filter(item => {
-      // iterate through each row's column data
-      for (let i = 0; i < this.columnsWithSearch.length; i++) {
-        var colValue = item[this.columnsWithSearch[i]];
-        // if no filter OR colvalue is NOT null AND contains the given filter
-        if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
-          // found match, return true to add to result set
-          return true;
-        }
-      }
-    });
-
-    // update the rows
-    this.bilList = temp;
-    // Whenever the filter changes, always go back to the first page
-    this.table.offset = 0;
+    // // update the rows
+    // this.bilList = temp;
+    // // Whenever the filter changes, always go back to the first page
+    // this.table.offset = 0;
   }
 
-  updateFilterSubscription(event) {
-    const val = event.target.value.toLowerCase();
+  searchFilterSubscription(e) {
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParamSubscription  = e.target.value;
+      this.getSubscriptionBillList();
+    }
+    // const val = event.target.value.toLowerCase();
 
-    // // filter our data
-    // const temp = this.tempRows.filter(function (d) {
-    //   return d.customer.toLowerCase().indexOf(val) !== -1 ||
-    //     !val;
+
+    // // assign filtered matches to the active datatable
+    // const temp = this.tempRows.filter(item => {
+    //   // iterate through each row's column data
+    //   for (let i = 0; i < this.columnsWithSearch.length; i++) {
+    //     var colValue = item[this.columnsWithSearch[i]];
+    //     // if no filter OR colvalue is NOT null AND contains the given filter
+    //     if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
+    //       // found match, return true to add to result set
+    //       return true;
+    //     }
+    //   }
     // });
 
-    // assign filtered matches to the active datatable
-    const temp = this.tempRows.filter(item => {
-      // iterate through each row's column data
-      for (let i = 0; i < this.columnsWithSearch.length; i++) {
-        var colValue = item[this.columnsWithSearch[i]];
-        // if no filter OR colvalue is NOT null AND contains the given filter
-        if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
-          // found match, return true to add to result set
-          return true;
-        }
-      }
-    });
-
-    // update the rows
-    this.subscriptionBilList = temp;
-    // Whenever the filter changes, always go back to the first page
-    this.table.offset = 0;
+    // // update the rows
+    // this.subscriptionBilList = temp;
+    // // Whenever the filter changes, always go back to the first page
+    // this.table.offset = 0;
   }
 
-  updateFilterSIM(event) {
-    const val = event.target.value.toLowerCase();
+  searchFilterSIM(e) {
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParamSim = e.target.value;
+      this.getSIMBillList();
+    }
 
-    // // filter our data
-    // const temp = this.tempRows.filter(function (d) {
-    //   return d.customer.toLowerCase().indexOf(val) !== -1 ||
-    //     !val;
+    // const val = event.target.value.toLowerCase();
+
+
+    // // assign filtered matches to the active datatable
+    // const temp = this.tempRows.filter(item => {
+    //   // iterate through each row's column data
+    //   for (let i = 0; i < this.columnsWithSearch.length; i++) {
+    //     var colValue = item[this.columnsWithSearch[i]];
+    //     // if no filter OR colvalue is NOT null AND contains the given filter
+    //     if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
+    //       // found match, return true to add to result set
+    //       return true;
+    //     }
+    //   }
     // });
 
-    // assign filtered matches to the active datatable
-    const temp = this.tempRows.filter(item => {
-      // iterate through each row's column data
-      for (let i = 0; i < this.columnsWithSearch.length; i++) {
-        var colValue = item[this.columnsWithSearch[i]];
-        // if no filter OR colvalue is NOT null AND contains the given filter
-        if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
-          // found match, return true to add to result set
-          return true;
-        }
-      }
-    });
-
-    // update the rows
-    this.simBilList = temp;
-    // Whenever the filter changes, always go back to the first page
-    this.tableSIM.offset = 0;
+    // // update the rows
+    // this.simBilList = temp;
+    // // Whenever the filter changes, always go back to the first page
+    // this.tableSIM.offset = 0;
   }
 
-  updateFilterDevice(event) {
-    const val = event.target.value.toLowerCase();
+  searchFilterDevice(e) {
 
-    // // filter our data
-    // const temp = this.tempRows.filter(function (d) {
-    //   return d.customer.toLowerCase().indexOf(val) !== -1 ||
-    //     !val;
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParamDevice = e.target.value;
+      this.getDeviceBillList();
+    }
+
+    // const val = event.target.value.toLowerCase();
+
+    // // assign filtered matches to the active datatable
+    // const temp = this.tempRows.filter(item => {
+    //   // iterate through each row's column data
+    //   for (let i = 0; i < this.columnsWithSearch.length; i++) {
+    //     var colValue = item[this.columnsWithSearch[i]];
+    //     // if no filter OR colvalue is NOT null AND contains the given filter
+    //     if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
+    //       // found match, return true to add to result set
+    //       return true;
+    //     }
+    //   }
     // });
 
-    // assign filtered matches to the active datatable
-    const temp = this.tempRows.filter(item => {
-      // iterate through each row's column data
-      for (let i = 0; i < this.columnsWithSearch.length; i++) {
-        var colValue = item[this.columnsWithSearch[i]];
-        // if no filter OR colvalue is NOT null AND contains the given filter
-        if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
-          // found match, return true to add to result set
-          return true;
-        }
-      }
-    });
 
 
+    // // update the rows
+    // this.deviceBilList = temp;
+    // // Whenever the filter changes, always go back to the first page
+    // this.tableDevice.offset = 0;
+  }
 
-    // update the rows
-    this.deviceBilList = temp;
-    // Whenever the filter changes, always go back to the first page
-    this.tableDevice.offset = 0;
+  searchFilterFullyPaid(e) {
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParamFullyPaid = e.target.value;
+      this.getFullPaidBillList();
+    }
+  }
+
+  searchFilterUnPaid(e) {
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParamUnPaid = e.target.value;
+      this.getUnpaidBillList();
+    }
+  }
+
+  searchFilterPartiallyPaid(e) {
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParamPartiallyPaid = e.target.value;
+      this.getPartiallypaidBillList();
+    }
   }
 
 }

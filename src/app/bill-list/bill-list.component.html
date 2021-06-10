@@ -52,7 +52,7 @@
                                 <div class="col-lg-7">
                                   <div class="form-group row">
                                     <div class="col-sm-12">
-                                      <input type="text" class="form-control" placeholder="Search by customer, Bill No, Bill Type, Subscription No" (keyup)="updateFilterBill($event)" />
+                                      <input type="text" class="form-control" placeholder="Search by customer, Bill No, Bill Type, Subscription No" (keyup)="searchFilterAllBill($event)" />
 
                                     </div>
                                   </div>
@@ -61,9 +61,10 @@
                                 <div class="row">
                                     <div class="col-lg-12 ">
 
-                                      <ngx-datatable  #table class="material table-bordered" [rows]="bilList" [loadingIndicator]="loadingIndicator"
-                                        [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                                        [rowHeight]="'auto'" [limit]="10">
+                                      <ngx-datatable  #table class="material table-bordered" [scrollbarH]="true" [rows]="bilList" [loadingIndicator]="loadingIndicator"
+                                      [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                                      rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                                      (page)="setPageAll($event)">
 
 
                                       <ngx-datatable-column [width]="200" name="Customer" prop="customer" [draggable]="false" [sortable]="false">
@@ -165,7 +166,7 @@
                                 <div class="col-lg-7">
                                   <div class="form-group row">
                                     <div class="col-sm-12">
-                                      <input type="text" class="form-control" placeholder="Search by customer, Bill No, Bill Type, Subscription No" (keyup)="updateFilterSubscription($event)" />
+                                      <input type="text" class="form-control" placeholder="Search by customer, Bill No, Bill Type, Subscription No" (keyup)="searchFilterSubscription($event)" />
 
                                     </div>
                                   </div>
@@ -174,9 +175,10 @@
                                 <div class="row">
                                     <div class="col-lg-12 ">
 
-                                      <ngx-datatable  #table class="material table-bordered" [rows]="subscriptionBilList" [loadingIndicator]="loadingIndicator"
-                                        [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                                        [rowHeight]="'auto'" [limit]="10">
+                                      <ngx-datatable  #table class="material table-bordered"  [scrollbarH]="true" [rows]="subscriptionBilList" [loadingIndicator]="loadingIndicator"
+                                      [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                                      rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                                      (page)="setPageSubscription($event)">
 
 
                                       <ngx-datatable-column [width]="200" name="Customer" prop="customer" [draggable]="false" [sortable]="false">
@@ -212,7 +214,7 @@
                                               <span > {{ value }} </span>
                                           </ng-template>
                                       </ngx-datatable-column>
-                                  
+
 
                                       <ngx-datatable-column [width]="100" name="Discount" prop="discount" [draggable]="false" [sortable]="false">
                                           <ng-template let-value="value" ngx-datatable-cell-template>
@@ -271,7 +273,7 @@
                                 <div class="col-lg-7">
                                   <div class="form-group row">
                                     <div class="col-sm-12">
-                                      <input type="text" class="form-control" placeholder="Search by customer, Bill No, Bill Type, Subscription No" (keyup)="updateFilterSIM($event)" />
+                                      <input type="text" class="form-control" placeholder="Search by customer, Bill No, Bill Type, Subscription No" (keyup)="searchFilterSIM($event)" />
 
                                     </div>
                                   </div>
@@ -280,9 +282,10 @@
                                 <div class="row">
                                     <div class="col-lg-12 ">
 
-                                      <ngx-datatable  #tableSIM class="material table-bordered" [rows]="simBilList" [loadingIndicator]="loadingIndicator"
-                                        [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                                        [rowHeight]="'auto'" [limit]="10">
+                                      <ngx-datatable  #tableSIM class="material table-bordered"  [scrollbarH]="true" [rows]="simBilList" [loadingIndicator]="loadingIndicator"
+                                      [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                                      rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                                      (page)="setPageSIM($event)">
 
 
                                       <ngx-datatable-column [width]="200" name="Customer" prop="customer" [draggable]="false" [sortable]="false">
@@ -382,7 +385,7 @@
                                 <div class="col-lg-7">
                                   <div class="form-group row">
                                     <div class="col-sm-12">
-                                      <input type="text" class="form-control" placeholder="Search by customer, Bill No, Bill Type, Subscription No" (keyup)="updateFilterDevice($event)" />
+                                      <input type="text" class="form-control" placeholder="Search by customer, Bill No, Bill Type, Subscription No" (keyup)="searchFilterDevice($event)" />
 
                                     </div>
                                   </div>
@@ -391,9 +394,10 @@
                                 <div class="row">
                                     <div class="col-lg-12 ">
 
-                                      <ngx-datatable  #tableDevice class="material table-bordered" [rows]="deviceBilList" [loadingIndicator]="loadingIndicator"
-                                        [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                                        [rowHeight]="'auto'" [limit]="10">
+                                      <ngx-datatable  #tableDevice class="material table-bordered"  [scrollbarH]="true" [rows]="deviceBilList" [loadingIndicator]="loadingIndicator"
+                                      [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                                      rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                                      (page)="setPageDevice($event)">
 
 
                                       <ngx-datatable-column [width]="200" name="Customer" prop="customer" [draggable]="false" [sortable]="false">
@@ -490,7 +494,7 @@
                                 <div class="col-lg-7">
                                   <div class="form-group row">
                                     <div class="col-sm-12">
-                                      <input type="text" class="form-control" placeholder="Search by customer, Bill No, Bill Type, Subscription No" (keyup)="updateFilterBill($event)" />
+                                      <input type="text" class="form-control" placeholder="Search by customer, Bill No, Bill Type, Subscription No" (keyup)="searchFilterFullyPaid($event)" />
 
                                     </div>
                                   </div>
@@ -499,16 +503,17 @@
                                 <div class="row">
                                     <div class="col-lg-12 ">
 
-                                      <ngx-datatable  #table class="material table-bordered" [rows]="bilList" [loadingIndicator]="loadingIndicator"
-                                        [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                                        [rowHeight]="'auto'" [limit]="10">
+                                      <ngx-datatable  #table class="material table-bordered"  [scrollbarH]="true" [rows]="fullPaidBilList" [loadingIndicator]="loadingIndicator"
+                                      [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                                      rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                                      (page)="setPageFullPaid($event)">
 
 
                                       <ngx-datatable-column [width]="200" name="Customer" prop="customer" [draggable]="false" [sortable]="false">
                                           <ng-template let-value="value" ngx-datatable-cell-template>
                                               <span > {{ value }} </span>
                                           </ng-template>
-                                      </ngx-datatable-column>                               
+                                      </ngx-datatable-column>
 
                                       <ngx-datatable-column [width]="150" name="Bill Type" prop="bill_type" [draggable]="false" [sortable]="false">
                                           <ng-template let-value="value" ngx-datatable-cell-template>
@@ -598,7 +603,7 @@
                                 <div class="col-lg-7">
                                 <div class="form-group row">
                                     <div class="col-sm-12">
-                                    <input type="text" class="form-control" placeholder="Search by customer, Bill No, Bill Type, Subscription No" (keyup)="updateFilterBill($event)" />
+                                    <input type="text" class="form-control" placeholder="Search by customer, Bill No, Bill Type, Subscription No" (keyup)="searchParamUnPaid($event)" />
 
                                     </div>
                                 </div>
@@ -607,16 +612,17 @@
                                 <div class="row">
                                     <div class="col-lg-12 ">
 
-                                    <ngx-datatable  #table class="material table-bordered" [rows]="bilList" [loadingIndicator]="loadingIndicator"
-                                        [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                                        [rowHeight]="'auto'" [limit]="10">
+                                    <ngx-datatable  #table class="material table-bordered"  [scrollbarH]="true" [rows]="unPaidBilList" [loadingIndicator]="loadingIndicator"
+                                    [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                                    rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                                    (page)="setPageUnPaid($event)">
 
 
                                     <ngx-datatable-column [width]="200" name="Customer" prop="customer" [draggable]="false" [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
                                             <span > {{ value }} </span>
                                         </ng-template>
-                                    </ngx-datatable-column>                               
+                                    </ngx-datatable-column>
 
                                     <ngx-datatable-column [width]="150" name="Bill Type" prop="bill_type" [draggable]="false" [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
@@ -701,13 +707,13 @@
                                 </div>
                         </div>
 
-                        
+
                         <div *ngIf="activeTable == 6">
                             <div class="row">
                                 <div class="col-lg-7">
                                 <div class="form-group row">
                                     <div class="col-sm-12">
-                                    <input type="text" class="form-control" placeholder="Search by customer, Bill No, Bill Type, Subscription No" (keyup)="updateFilterBill($event)" />
+                                    <input type="text" class="form-control" placeholder="Search by customer, Bill No, Bill Type, Subscription No" (keyup)="searchParamPartiallyPaid($event)" />
 
                                     </div>
                                 </div>
@@ -716,16 +722,17 @@
                                 <div class="row">
                                     <div class="col-lg-12 ">
 
-                                    <ngx-datatable  #table class="material table-bordered" [rows]="bilList" [loadingIndicator]="loadingIndicator"
-                                        [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                                        [rowHeight]="'auto'" [limit]="10">
+                                    <ngx-datatable  #table class="material table-bordered" [scrollbarH]="true" [rows]="partiallyPaidBilList" [loadingIndicator]="loadingIndicator"
+                                    [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                                    rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                                    (page)="setPagePartiallyPaid($event)">
 
 
                                     <ngx-datatable-column [width]="200" name="Customer" prop="customer" [draggable]="false" [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
                                             <span > {{ value }} </span>
                                         </ng-template>
-                                    </ngx-datatable-column>                               
+                                    </ngx-datatable-column>
 
                                     <ngx-datatable-column [width]="150" name="Bill Type" prop="bill_type" [draggable]="false" [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
@@ -877,8 +884,8 @@
                           <input [disabled]="isPayBalanceEnable" type="text" class="form-control form-control-sm text-right pr-3"
                               numeric numericType="number" (change)="onChangeDiscount(discount)" [(ngModel)]="discount" [ngModelOptions]="{standalone: true}">
                       </td>
-                  </tr> -->                
-                
+                  </tr> -->
+
                 <tr class="table-info" style="font-size: 20px;">
                     <th> Payable Amount </th>
                       <th class="text-right pr-4">{{subTotal - (billItem.so_far_paid - billItem.parent_refund_amount)}}</th>

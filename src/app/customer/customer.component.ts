@@ -218,7 +218,6 @@ setPageDue(pageInfo) {
       this.activeTable = 0;
    //   this.tempRows = res;
       this.customerList = res.results;
-   //   this.rows = res.results;
       this.page.totalElements = res.count;
       this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
