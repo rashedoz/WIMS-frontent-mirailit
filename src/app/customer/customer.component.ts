@@ -53,6 +53,7 @@ export class CustomerComponent implements OnInit {
   activeTable = 0;
   tempRows = [];
   customerList = [];
+  dueCustomerList = [];
   wholesalerList = [];
   retailerList = [];
   historyList = [];
@@ -215,7 +216,7 @@ setPageDue(pageInfo) {
         return;
       }
       this.activeTable = 0;
-      this.tempRows = res;
+   //   this.tempRows = res;
       this.customerList = res.results;
    //   this.rows = res.results;
       this.page.totalElements = res.count;
@@ -235,16 +236,21 @@ setPageDue(pageInfo) {
 
   getCustomerDueList() {
     this.loadingIndicator = true;
-    this._service.get('get-customer-list-with-due').subscribe(res => {
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param:this.searchParamDue
+    };
+    this._service.get('get-customer-list-with-due',obj).subscribe(res => {
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
         return;
       }
       this.activeTable = 3;
-      this.tempRows = res;
-      this.customerList = res;
-      // this.page.totalElements = res.Total;
-      // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+    //  this.tempRows = res;
+      this.dueCustomerList = res.results;
+      this.page.totalElements = res.count;
+      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -370,16 +376,21 @@ changePassword(row, template: TemplateRef<any>) {
 
   getWholesalerList() {
     this.loadingIndicator = true;
-    this._service.get('get-wholesaler-list').subscribe(res => {
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param:this.searchParamWholesaler
+    };
+    this._service.get('get-wholesaler-list',obj).subscribe(res => {
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
         return;
       }
       this.activeTable = 1;
-      this.tempRows = res;
-      this.wholesalerList = res;
-      // this.page.totalElements = res.Total;
-      // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+    //  this.tempRows = res;
+      this.wholesalerList = res.results;
+      this.page.totalElements = res.count;
+      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -394,16 +405,21 @@ changePassword(row, template: TemplateRef<any>) {
 
   getRetailerList() {
     this.loadingIndicator = true;
-    this._service.get('get-retailer-list').subscribe(res => {
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param:this.searchParamRetailer
+    };
+    this._service.get('get-retailer-list',obj).subscribe(res => {
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
         return;
       }
       this.activeTable = 2;
-      this.tempRows = res;
-      this.retailerList = res;
-      // this.page.totalElements = res.Total;
-      // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+    //  this.tempRows = res;
+      this.retailerList = res.results;
+      this.page.totalElements = res.count;
+      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -586,7 +602,7 @@ changePassword(row, template: TemplateRef<any>) {
   //       d.customer_code.toLowerCase().indexOf(val) !== -1 ||
   //  !val;
   //     }
-     
+
   //   });
 
   //   // update the rows
@@ -595,57 +611,81 @@ changePassword(row, template: TemplateRef<any>) {
   //   this.table.offset = 0;
   }
 
-  updateFilterWholesaler(event) {
-    const val = event.target.value.toLowerCase();
+  updateFilterWholesaler(e) {
 
-    // filter our data
-    const temp = this.tempRows.filter(function (d) {
-      if(d.mobile){
-        return d.first_name.toLowerCase().indexOf(val) !== -1 ||
-        d.last_name.toLowerCase().indexOf(val) !== -1 ||
-        d.email.toLowerCase().indexOf(val) !== -1 ||
-        d.customer_code.toLowerCase().indexOf(val) !== -1 ||
-        d.mobile.indexOf(val) !== -1 ||
-   !val;
-      }else{
-        return d.first_name.toLowerCase().indexOf(val) !== -1 ||
-        d.last_name.toLowerCase().indexOf(val) !== -1 ||
-        d.email.toLowerCase().indexOf(val) !== -1 ||
-        d.customer_code.toLowerCase().indexOf(val) !== -1 ||
-   !val;
-      }
-    });
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParamWholesaler = e.target.value;
+      this.getWholesalerList();
+    }
 
-    // update the rows
-    this.wholesalerList = temp;
-    // Whenever the filter changes, always go back to the first page
-    this.tableWholesaler.offset = 0;
+  //   const val = event.target.value.toLowerCase();
+
+  //   // filter our data
+  //   const temp = this.tempRows.filter(function (d) {
+  //     if(d.mobile){
+  //       return d.first_name.toLowerCase().indexOf(val) !== -1 ||
+  //       d.last_name.toLowerCase().indexOf(val) !== -1 ||
+  //       d.email.toLowerCase().indexOf(val) !== -1 ||
+  //       d.customer_code.toLowerCase().indexOf(val) !== -1 ||
+  //       d.mobile.indexOf(val) !== -1 ||
+  //  !val;
+  //     }else{
+  //       return d.first_name.toLowerCase().indexOf(val) !== -1 ||
+  //       d.last_name.toLowerCase().indexOf(val) !== -1 ||
+  //       d.email.toLowerCase().indexOf(val) !== -1 ||
+  //       d.customer_code.toLowerCase().indexOf(val) !== -1 ||
+  //  !val;
+  //     }
+  //   });
+
+  //   // update the rows
+  //   this.wholesalerList = temp;
+  //   // Whenever the filter changes, always go back to the first page
+  //   this.tableWholesaler.offset = 0;
   }
-  updateFilterRetailer(event) {
-    const val = event.target.value.toLowerCase();
+  updateFilterRetailer(e) {
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParamRetailer = e.target.value;
+      this.getRetailerList();
+    }
 
-    // filter our data
-    const temp = this.tempRows.filter(function (d) {
-      if(d.mobile){
-        return d.first_name.toLowerCase().indexOf(val) !== -1 ||
-        d.last_name.toLowerCase().indexOf(val) !== -1 ||
-        d.email.toLowerCase().indexOf(val) !== -1 ||
-        d.customer_code.toLowerCase().indexOf(val) !== -1 ||
-        d.mobile.indexOf(val) !== -1 ||
-   !val;
-      }else{
-        return d.first_name.toLowerCase().indexOf(val) !== -1 ||
-        d.last_name.toLowerCase().indexOf(val) !== -1 ||
-        d.email.toLowerCase().indexOf(val) !== -1 ||
-        d.customer_code.toLowerCase().indexOf(val) !== -1 ||
-   !val;
-      }
-    });
+  //   const val = event.target.value.toLowerCase();
 
-    // update the rows
-    this.retailerList = temp;
-    // Whenever the filter changes, always go back to the first page
-    this.tableRetailer.offset = 0;
+  //   // filter our data
+  //   const temp = this.tempRows.filter(function (d) {
+  //     if(d.mobile){
+  //       return d.first_name.toLowerCase().indexOf(val) !== -1 ||
+  //       d.last_name.toLowerCase().indexOf(val) !== -1 ||
+  //       d.email.toLowerCase().indexOf(val) !== -1 ||
+  //       d.customer_code.toLowerCase().indexOf(val) !== -1 ||
+  //       d.mobile.indexOf(val) !== -1 ||
+  //  !val;
+  //     }else{
+  //       return d.first_name.toLowerCase().indexOf(val) !== -1 ||
+  //       d.last_name.toLowerCase().indexOf(val) !== -1 ||
+  //       d.email.toLowerCase().indexOf(val) !== -1 ||
+  //       d.customer_code.toLowerCase().indexOf(val) !== -1 ||
+  //  !val;
+  //     }
+  //   });
+
+  //   // update the rows
+  //   this.retailerList = temp;
+  //   // Whenever the filter changes, always go back to the first page
+  //   this.tableRetailer.offset = 0;
+  }
+
+  updateFilterDue(e) {
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParamDue = e.target.value;
+      this.getCustomerDueList();
+    }
   }
 
   modalHide() {

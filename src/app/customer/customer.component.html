@@ -50,7 +50,7 @@
                                 </div>
                                 <div class="row ">
                                     <div class="col-lg-12 ">
-                                        <ngx-datatable #table class="material table-bordered"                                         [scrollbarH]="true" [rows]="customerList" [loadingIndicator]="loadingIndicator"
+                                        <ngx-datatable #table class="material table-bordered"   [scrollbarH]="true" [rows]="customerList" [loadingIndicator]="loadingIndicator"
                                         [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
                                         rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
                                         (page)="setPageAll($event)">
@@ -140,10 +140,10 @@
                                 </div>
                                 <div class="row ">
                                     <div class="col-lg-12 ">
-                                        <ngx-datatable #tableWholesaler class="material table-bordered"
-                                            [rows]="wholesalerList" [scrollbarH]="true"
-                                            [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                            [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [limit]="10">
+                                        <ngx-datatable #tableWholesaler class="material table-bordered"   [scrollbarH]="true" [rows]="wholesalerList" [loadingIndicator]="loadingIndicator"
+                                            [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                                            rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                                            (page)="setPageWholesaler($event)">
                                             <ngx-datatable-column [width]="150" name="Customer Code"
                                                 prop="customer_code" [draggable]="false" [sortable]="false">
                                                 <ng-template let-value="value" ngx-datatable-cell-template>
@@ -226,10 +226,10 @@
                                 </div>
                                 <div class="row ">
                                     <div class="col-lg-12 ">
-                                        <ngx-datatable #tableRetailer class="material table-bordered"
-                                            [rows]="retailerList" [scrollbarH]="true"
-                                            [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                            [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [limit]="10">
+                                        <ngx-datatable #tableRetailer class="material table-bordered" [scrollbarH]="true" [rows]="retailerList" [loadingIndicator]="loadingIndicator"
+                                            [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                                            rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                                            (page)="setPageRetailer($event)">
                                             <ngx-datatable-column [width]="150" name="Customer Code"
                                                 prop="customer_code" [draggable]="false" [sortable]="false">
                                                 <ng-template let-value="value" ngx-datatable-cell-template>
@@ -305,7 +305,7 @@
                                             <div class="col-sm-12">
                                                 <input type="text" class="form-control"
                                                     placeholder="Search wholesaler/retailer by code, name, mobile, email"
-                                                    (keyup)="updateFilter($event)" />
+                                                    (keyup)="updateFilterDue($event)" />
 
                                             </div>
                                         </div>
@@ -313,10 +313,10 @@
                                 </div>
                                 <div class="row ">
                                     <div class="col-lg-12 ">
-                                        <ngx-datatable #table class="material table-bordered" [rows]="customerList"
-                                            [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                            [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                                            rowHeight="'auto'" [limit]="10">
+                                        <ngx-datatable #table class="material table-bordered"   [scrollbarH]="true" [rows]="dueCustomerList" [loadingIndicator]="loadingIndicator"
+                                        [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                                        rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                                        (page)="setPageDue($event)">
                                             <!-- <ngx-datatable  #table class="material table-bordered" [rows]="bilList" [loadingIndicator]="loadingIndicator"
                                           [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
                                           [rowHeight]="'auto'" [limit]="10"> -->
