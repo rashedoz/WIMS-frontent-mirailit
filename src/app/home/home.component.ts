@@ -10,6 +10,8 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
 // HC_exporting(Highcharts);
 
+import { HttpClient } from '@angular/common/http';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -30,11 +32,22 @@ export class HomeComponent implements OnInit {
   // highcharts = Highcharts;
   @BlockUI() blockUI: NgBlockUI;
 
+
+
+  photos = [];
+  photosBuffer = [];
+  bufferSize = 50;
+  numberOfItemsFromEndBeforeFetchingMore = 10;
+  loading = false;
+
+
+
   constructor(
     private authService: AuthenticationService,
     private toastr: ToastrService,
     private router: Router,
-    private _service: CommonService
+    private _service: CommonService,
+    private http: HttpClient
   ) {
     this.page.pageNumber = 0;
     this.page.size = 6;
@@ -48,7 +61,53 @@ export class HomeComponent implements OnInit {
     this.getBillCount();
     this.getCustomerDueList();
     // this.getCourseEnrollmentCount();
+
+    this.http.get<any[]>('https://jsonplaceholder.typicode.com/photos').subscribe(photos => {
+            this.photos = photos;
+            this.photosBuffer = this.photos.slice(0, this.bufferSize);
+        });
+
   }
+
+
+
+  onScrollToEnd() {
+    this.fetchMore();
+}
+
+onScroll({ end }) {
+    if (this.loading || this.photos.length <= this.photosBuffer.length) {
+        return;
+    }
+
+    if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.photosBuffer.length) {
+        this.fetchMore();
+    }
+}
+
+private fetchMore() {
+    const len = this.photosBuffer.length;
+    const more = this.photos.slice(len, this.bufferSize + len);
+    this.loading = true;
+    // using timeout here to simulate backend API delay
+    setTimeout(() => {
+        this.loading = false;
+        this.photosBuffer = this.photosBuffer.concat(more);
+    }, 200)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
   setPage(pageInfo) {
     this.page.pageNumber = pageInfo.offset;
     this.getCustomerDueList();
