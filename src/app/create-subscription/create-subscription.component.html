@@ -49,20 +49,22 @@
                   <div class="d-flex flex-row">
 
 
-                    <ng-select [items]="photosBuffer"
+                    <ng-select [items]="customersBuffer"
+                            [trackByFn]="trackByFn"
                             [virtualScroll]="true"
+                            [dropdownPosition]="'bottom'"
                             [loading]="loading"
                             bindLabel="first_name"
                             bindValue="id"
-                            placeholder="Select photo"
+                            placeholder="Select Customer"
                             appendTo="body"
                             (scroll)="onScroll($event)"
                             (scrollToEnd)="onScrollToEnd()">
                       <ng-template ng-header-tmp>
-                          <small class="form-text text-muted">Loaded {{photosBuffer.length}} of {{photos.length}}</small>
+                          <small class="form-text text-muted">Loaded {{customersBuffer.length}} of {{page.totalElements}}</small>
                       </ng-template>
                       <ng-template ng-option-tmp let-item="item" let-index="index">
-                          <b>{{index}}</b> {{item.first_name}}
+                          <b>{{index + 1}}</b> {{item.first_name}}
                       </ng-template>
                   </ng-select>
 

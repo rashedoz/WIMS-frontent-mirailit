@@ -66,12 +66,13 @@ export class CreateSubscriptionComponent implements OnInit {
 
 
 
-  photos = [];
-  photosBuffer = [];
+  customers = [];
+  customersBuffer = [];
   bufferSize = 50;
   numberOfItemsFromEndBeforeFetchingMore = 10;
   loading = false;
-
+  count=1;
+  searchParam = '';
 
   constructor(
     private authService: AuthenticationService,
@@ -83,7 +84,7 @@ export class CreateSubscriptionComponent implements OnInit {
     private router: Router
   ) {
     this.page.pageNumber = 1;
-    this.page.size = 10;
+    this.page.size = 50;
     window.onresize = () => {
       this.scrollBarHorizontal = window.innerWidth < 1200;
     };
@@ -130,67 +131,58 @@ export class CreateSubscriptionComponent implements OnInit {
 }
 
 onScroll({ end }) {
-    if (this.loading || this.photos.length <= this.photosBuffer.length) {
+    if (this.loading || this.customers.length <= this.customersBuffer.length) {
         return;
     }
 
-    if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.photosBuffer.length) {
+    if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.customersBuffer.length) {
         this.fetchMore();
     }
 }
 
 private fetchMore() {
-    let count = 1;
-    let more;
-    const len = this.photosBuffer.length;
 
+    let more;
+   // const len = this.customersBuffer.length;
+    if(this.count <= this.page.totalPages){
+    this.count++;
+    this.page.pageNumber = this.count;
     const obj = {
       limit: this.page.size,
-      page: this.page.pageNumber
+      page: this.page.pageNumber,
+      search_param:this.searchParam
     };
-    if(count <= this.page.totalPages){
+
       this._service.get("get-customer-list",obj).subscribe(
-        (res) => {    
+        (res) => {
           more = res.results;
-          // this.page.totalElements = res.count;
-          // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-          // this.photosBuffer = this.photos.slice(0, this.bufferSize);
+          //  const more = this.customers.slice(len, this.bufferSize + len);
+          this.loading = true;
+          // using timeout here to simulate backend API delay
+          setTimeout(() => {
+              this.loading = false;
+              this.customersBuffer = this.customersBuffer.concat(more);
+          }, 200)
         },
         (err) => {}
       );
-
-      count++
     }
 
-    
-
-
- 
-
-
-  //  const more = this.photos.slice(len, this.bufferSize + len);
-    this.loading = true;
-    // using timeout here to simulate backend API delay
-    setTimeout(() => {
-        this.loading = false;
-        this.photosBuffer = this.photosBuffer.concat(more);
-    }, 200)
 }
 
 
 getCustomer() {
   const obj = {
     limit: this.page.size,
-    page: this.page.pageNumber
+    page: this.page.pageNumber,
+    search_param:this.searchParam
   };
-
   this._service.get("get-customer-list",obj).subscribe(
-    (res) => {   
-
-      this.photos = res.results;
+    (res) => {
+      this.customers = res.results;
       this.page.totalElements = res.count;
       this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-      this.photosBuffer = this.photos.slice(0, this.bufferSize);
+      this.customersBuffer = this.customers.slice(0, this.bufferSize);
     },
     (err) => {}
   );
@@ -405,7 +397,7 @@ getCustomer() {
 
 
 
- 
+
   }
 
 
@@ -465,8 +457,8 @@ getCustomer() {
         if (data) {
           console.log(data);
           this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
-          this.modalHideCustomer();  
-          this.getCustomerList();  
+          this.modalHideCustomer();
+          this.getCustomerList();
           this.entryForm.controls['customer'].setValue(data.id);
         }
         // else if (data.IsReport == "Warning") {
