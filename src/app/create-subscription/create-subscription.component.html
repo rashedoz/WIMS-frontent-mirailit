@@ -47,7 +47,27 @@
 
 
                   <div class="d-flex flex-row">
-                    <ng-select  [searchFn]="customSearchFn" [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false" formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
+
+
+                    <ng-select [items]="photosBuffer"
+                            [virtualScroll]="true"
+                            [loading]="loading"
+                            bindLabel="first_name"
+                            bindValue="id"
+                            placeholder="Select photo"
+                            appendTo="body"
+                            (scroll)="onScroll($event)"
+                            (scrollToEnd)="onScrollToEnd()">
+                      <ng-template ng-header-tmp>
+                          <small class="form-text text-muted">Loaded {{photosBuffer.length}} of {{photos.length}}</small>
+                      </ng-template>
+                      <ng-template ng-option-tmp let-item="item" let-index="index">
+                          <b>{{index}}</b> {{item.first_name}}
+                      </ng-template>
+                  </ng-select>
+
+
+                    <!-- <ng-select  [searchFn]="customSearchFn" [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false" formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
                       bindLabel="first_name" bindValue="id" placeholder="Select a customer">
                       <ng-template ng-label-tmp let-item="item">
                         {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
@@ -56,7 +76,7 @@
                       <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
                         {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
                     </ng-template>
-                    </ng-select>
+                    </ng-select> -->
                     <button type="button" class="btn btn-success btn-mini"
                         title="Add new customer" (click)="openModalCustomer(templateCustomer)">
                         <i class="icofont-plus"></i>

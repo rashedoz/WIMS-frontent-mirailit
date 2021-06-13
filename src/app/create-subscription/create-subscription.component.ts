@@ -62,6 +62,17 @@ export class CreateSubscriptionComponent implements OnInit {
   simList: Array<any> = [];
   planList: Array<any> = [];
 
+
+
+
+
+  photos = [];
+  photosBuffer = [];
+  bufferSize = 50;
+  numberOfItemsFromEndBeforeFetchingMore = 10;
+  loading = false;
+
+
   constructor(
     private authService: AuthenticationService,
     private confirmService: ConfirmService,
@@ -71,8 +82,8 @@ export class CreateSubscriptionComponent implements OnInit {
     private toastr: ToastrService,
     private router: Router
   ) {
-    // this.page.pageNumber = 0;
-    // this.page.size = 10;
+    this.page.pageNumber = 1;
+    this.page.size = 10;
     window.onresize = () => {
       this.scrollBarHorizontal = window.innerWidth < 1200;
     };
@@ -105,10 +116,88 @@ export class CreateSubscriptionComponent implements OnInit {
     this.itemHistoryList = this.entryForm.get("itemHistory") as FormArray;
     this.itemFormArray = this.entryForm.get("itemHistory")["controls"];
 
-    this.getCustomerList();
-    this.getSIMList();
+   // this.getCustomerList();
+   //  this.getSIMList();
     this.getPlanList();
+
+    this.getCustomer();
+
   }
+
+
+  onScrollToEnd() {
+    this.fetchMore();
+}
+
+onScroll({ end }) {
+    if (this.loading || this.photos.length <= this.photosBuffer.length) {
+        return;
+    }
+
+    if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.photosBuffer.length) {
+        this.fetchMore();
+    }
+}
+
+private fetchMore() {
+    let count = 1;
+    let more;
+    const len = this.photosBuffer.length;
+
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber
+    };
+    if(count <= this.page.totalPages){
+      this._service.get("get-customer-list",obj).subscribe(
+        (res) => {    
+          more = res.results;
+          // this.page.totalElements = res.count;
+          // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+          // this.photosBuffer = this.photos.slice(0, this.bufferSize);
+        },
+        (err) => {}
+      );
+
+      count++
+    }
+
+    
+
+
+ 
+
+
+  //  const more = this.photos.slice(len, this.bufferSize + len);
+    this.loading = true;
+    // using timeout here to simulate backend API delay
+    setTimeout(() => {
+        this.loading = false;
+        this.photosBuffer = this.photosBuffer.concat(more);
+    }, 200)
+}
+
+
+getCustomer() {
+  const obj = {
+    limit: this.page.size,
+    page: this.page.pageNumber
+  };
+
+  this._service.get("get-customer-list",obj).subscribe(
+    (res) => {   
+
+      this.photos = res.results;
+      this.page.totalElements = res.count;
+      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+      this.photosBuffer = this.photos.slice(0, this.bufferSize);
+    },
+    (err) => {}
+  );
+}
+
+
+
 
   get f() {
     return this.entryForm.controls;
@@ -151,6 +240,10 @@ export class CreateSubscriptionComponent implements OnInit {
       this.itemHistoryList.removeAt(i);
     }
   }
+
+
+
+
 
   getCustomerList() {
     this._service.get("user-list?is_customer=true").subscribe(
