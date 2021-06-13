@@ -179,6 +179,7 @@ getCustomer() {
   };
   this._service.get("get-customer-list",obj).subscribe(
     (res) => {
+
       this.customers = res.results;
       this.page.totalElements = res.count;
       this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
