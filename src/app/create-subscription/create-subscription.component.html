@@ -49,22 +49,22 @@
                   <div class="d-flex flex-row">
 
 
-                    <ng-select [clearable]="true" (clear)="onClearLang()" [items]="customersBuffer"
+                    <ng-select formControlName="customer" [clearable]="true" (clear)="onClearLang()" [items]="customersBuffer"
                             [virtualScroll]="true"
                             [dropdownPosition]="'bottom'"
                             [loading]="loading"
                             bindLabel="first_name"
                             bindValue="id"
-                            placeholder="Select Customer"
+                            placeholder="Select a customer"
                             appendTo="body"
                             [typeahead]="input$"
                             (scroll)="onScroll($event)"
-                            (scrollToEnd)="onScrollToEnd(select.filterValue)" #select>
+                            (scrollToEnd)="onScrollToEnd()" #select>
                       <ng-template ng-header-tmp>
                           <small class="form-text text-muted">Loaded {{customersBuffer.length}} of {{page.totalElements}}</small>
                       </ng-template>
                       <ng-template ng-option-tmp let-item="item" let-index="index">
-                          <b>{{index + 1}}</b> {{item.first_name}}
+                          <b>{{index + 1}}</b> {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
                       </ng-template>
                   </ng-select>
 
