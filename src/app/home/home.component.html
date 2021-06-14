@@ -313,8 +313,8 @@
                     <div class="card table-1-card">
                         <div class="card-header">
                             <h5 class="custom-title">Customer Due List </h5>
-                              
-                            <ng-select [items]="photosBuffer" [dropdownPosition]="'bottom'" [virtualScroll]="true" [loading]="loading" bindLabel="title"
+
+                            <!-- <ng-select [items]="photosBuffer" [dropdownPosition]="'bottom'" [virtualScroll]="true" [loading]="loading" bindLabel="title"
                                 bindValue="thumbnailUrl" placeholder="Select photo" appendTo="body" (scroll)="onScroll($event)"
                                 (scrollToEnd)="onScrollToEnd()">
                                 <ng-template ng-header-tmp>
@@ -324,7 +324,7 @@
                                 <ng-template ng-option-tmp let-item="item" let-index="index">
                                     <b>{{index}}</b> {{item.title}}
                                 </ng-template>
-                            </ng-select> 
+                            </ng-select>  -->
 
 
 
@@ -338,13 +338,13 @@
                             rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
                             (page)="setPage($event)">
 
-                       
+
 
                             <ngx-datatable-column [width]="100" name="Code" prop="customer_code" [draggable]="false" [sortable]="false">
                                 <ng-template let-value="value" ngx-datatable-cell-template>
                                     <span > {{ value }} </span>
                                 </ng-template>
-                            </ngx-datatable-column>                           
+                            </ngx-datatable-column>
 
                             <ngx-datatable-column [width]="220" name="Name" prop="first_name" [draggable]="false" [sortable]="false">
                                 <ng-template let-row="row" ngx-datatable-cell-template>
@@ -362,7 +362,7 @@
                                 <ng-template let-value="value" ngx-datatable-cell-template>
                                     <span > {{ value }} </span>
                                 </ng-template>
-                            </ngx-datatable-column>                          
+                            </ngx-datatable-column>
 
                         </ngx-datatable> -->
                                 <table class="table">
@@ -387,7 +387,7 @@
                         </div>
                     </div>
 
-          
+
 
                 </div>
                 <!-- System clock start -->

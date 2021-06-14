@@ -24,6 +24,10 @@ import { Page } from "./../_models/page";
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 import { AuthenticationService } from './../_services/authentication.service';
 import * as moment from 'moment';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+import { Subject, Observable, of, concat } from 'rxjs';
+import { distinctUntilChanged, debounceTime, switchMap, tap, catchError, filter, map } from 'rxjs/operators'
 
 @Component({
   selector: "app-create-subscription",
@@ -73,6 +77,9 @@ export class CreateSubscriptionComponent implements OnInit {
   loading = false;
   count=1;
   searchParam = '';
+  input$ = new Subject<string>();
+
+
 
   constructor(
     private authService: AuthenticationService,
@@ -81,6 +88,7 @@ export class CreateSubscriptionComponent implements OnInit {
     public formBuilder: FormBuilder,
     private _service: CommonService,
     private toastr: ToastrService,
+    private http: HttpClient,
     private router: Router
   ) {
     this.page.pageNumber = 1;
@@ -118,17 +126,34 @@ export class CreateSubscriptionComponent implements OnInit {
     this.itemFormArray = this.entryForm.get("itemHistory")["controls"];
 
    // this.getCustomerList();
-   //  this.getSIMList();
+    this.getSIMList();
     this.getPlanList();
 
     this.getCustomer();
+    this.onSearch();
 
   }
 
+  onSearch() {
+    this.input$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      switchMap(term => this.fakeService(term))
+    ).subscribe((data : any) => {
+      this.customers = data.results;
+      this.page.totalElements = data.count;
+      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+      this.customersBuffer = this.customers.slice(0, this.bufferSize);
+      })
+  }
+
+  onClearLang(): void {
+   // this.getCustomer();
+  }
 
   onScrollToEnd() {
-    this.fetchMore();
-}
+      this.fetchMore();
+  }
 
 onScroll({ end }) {
     if (this.loading || this.customers.length <= this.customersBuffer.length) {
@@ -147,12 +172,19 @@ private fetchMore() {
     if(this.count <= this.page.totalPages){
     this.count++;
     this.page.pageNumber = this.count;
-    const obj = {
-      limit: this.page.size,
-      page: this.page.pageNumber,
-      search_param:this.searchParam
-    };
-
+    let obj;
+    if(this.searchParam){
+       obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber,
+        search_param:this.searchParam
+      };
+    }else{
+       obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber
+      };
+    }
       this._service.get("get-customer-list",obj).subscribe(
         (res) => {
           more = res.results;
@@ -171,15 +203,23 @@ private fetchMore() {
 }
 
 
-getCustomer() {
-  const obj = {
-    limit: this.page.size,
-    page: this.page.pageNumber,
-    search_param:this.searchParam
-  };
+getCustomer(){
+  let obj;
+  if(this.searchParam){
+     obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber,
+      search_param:this.searchParam
+    };
+  }else{
+     obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber
+    };
+  }
+
   this._service.get("get-customer-list",obj).subscribe(
     (res) => {
-
       this.customers = res.results;
       this.page.totalElements = res.count;
       this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
@@ -187,6 +227,43 @@ getCustomer() {
     },
     (err) => {}
   );
+}
+
+private fakeService(term) {
+
+  this.page.size = 50;
+  this.page.pageNumber = 1;
+  this.searchParam = term;
+
+  let obj;
+  if(this.searchParam){
+     obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber,
+      search_param:this.searchParam
+    };
+  }else{
+     obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber
+    };
+  }
+
+  let params = new HttpParams();
+  if (obj) {
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        params = params.append(key, obj[key]);
+      }
+    }
+  }
+  return this.http.get<any>(environment.apiUrl + 'get-customer-list', { params }).pipe(
+    map(res => {
+      return res;
+    })
+  );
+  // return this.http.get<any[]>('https://jsonplaceholder.typicode.com/photos')
+  //   .pipe(map(data => data.filter((x: { title: string }) => x.title.includes(term))))
 }
 
 
