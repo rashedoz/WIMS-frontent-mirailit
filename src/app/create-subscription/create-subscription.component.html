@@ -49,7 +49,8 @@
                   <div class="d-flex flex-row">
 
 
-                    <ng-select formControlName="customer" [clearable]="true" (clear)="onClearLang()" [items]="customersBuffer"
+                    <ng-select formControlName="customer" [clearable]="true" 
+                            [items]="customersBuffer"
                             [virtualScroll]="true"
                             [dropdownPosition]="'bottom'"
                             [loading]="loading"
@@ -63,8 +64,12 @@
                       <ng-template ng-header-tmp>
                           <small class="form-text text-muted">Loaded {{customersBuffer.length}} of {{page.totalElements}}</small>
                       </ng-template>
-                      <ng-template ng-option-tmp let-item="item" let-index="index">
-                          <b>{{index + 1}}</b> {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
+                      <ng-template ng-label-tmp let-item="item">
+                        {{item.customer_code}} - {{item.first_name}} {{item.last_name}} 
+                    </ng-template>
+
+                      <ng-template ng-option-tmp let-item="item"  let-index="index">
+                           {{item.customer_code}} - {{item.first_name}} {{item.last_name}}
                       </ng-template>
                   </ng-select>
 
@@ -136,8 +141,36 @@
                     <tbody formArrayName="itemHistory" *ngFor="let item of itemFormArray; let i = index;">
                         <tr  [formGroupName]="i">
                             <th>
-                              <ng-select [clearable]="false" appendTo="body" (change)="onSIMChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}" formControlName="sim" [clearOnBackspace]="false" [items]="simList"
+
+                          <!-- <ng-select formControlName="customer" [clearable]="true" 
+                            [items]="customersBuffer"
+                            [virtualScroll]="true"
+                            [dropdownPosition]="'bottom'"
+                            [loading]="loading"
+                            bindLabel="first_name"
+                            bindValue="id"
+                            placeholder="Select a customer"
+                            appendTo="body"
+                            [typeahead]="input$"
+                            (scroll)="onScroll($event)"
+                            (scrollToEnd)="onScrollToEnd()" #select>
+                      <ng-template ng-header-tmp>
+                          <small class="form-text text-muted">Loaded {{customersBuffer.length}} of {{page.totalElements}}</small>
+                      </ng-template> -->
+
+
+                              <ng-select [clearable]="false" appendTo="body" (change)="onSIMChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}" formControlName="sim" [clearOnBackspace]="false" 
+                              [items]="simsBuffer"
+                              [virtualScroll]="true"
+                              [dropdownPosition]="'bottom'"
+                              [loading]="loadingSIM"
+                              [typeahead]="simsInput$"
+                              (scroll)="onScrollSIM($event)"
+                              (scrollToEnd)="onScrollToEndSIM()"
                               bindLabel="CID_no" placeholder="Select a sim">
+                              <ng-template ng-header-tmp>
+                                <small class="form-text text-muted">Loaded {{simsBuffer.length}} of {{pageSIM.totalElements}}</small>
+                            </ng-template>
 
                               <ng-template ng-option-tmp let-item="item" let-index="index">
                                 <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no">  {{item.CID_no}} </p>

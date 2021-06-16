@@ -56,6 +56,7 @@ export class CreateSubscriptionComponent implements OnInit {
   modalRef: BsModalRef;
 
   page = new Page();
+  pageSIM = new Page();
   rows = [];
   loadingIndicator = false;
   ColumnMode = ColumnMode;
@@ -67,9 +68,7 @@ export class CreateSubscriptionComponent implements OnInit {
   planList: Array<any> = [];
 
 
-
-
-
+// for customer
   customers = [];
   customersBuffer = [];
   bufferSize = 50;
@@ -78,6 +77,16 @@ export class CreateSubscriptionComponent implements OnInit {
   count=1;
   searchParam = '';
   input$ = new Subject<string>();
+
+//for sim
+
+  sims = [];
+  simsBuffer = [];
+  simsBufferSize = 50;
+  loadingSIM = false;
+  simsCount=1;
+  simsSearchParam = '';
+  simsInput$ = new Subject<string>();
 
 
 
@@ -93,6 +102,10 @@ export class CreateSubscriptionComponent implements OnInit {
   ) {
     this.page.pageNumber = 1;
     this.page.size = 50;
+
+    this.pageSIM.pageNumber = 1;
+    this.pageSIM.size = 50;
+
     window.onresize = () => {
       this.scrollBarHorizontal = window.innerWidth < 1200;
     };
@@ -126,11 +139,14 @@ export class CreateSubscriptionComponent implements OnInit {
     this.itemFormArray = this.entryForm.get("itemHistory")["controls"];
 
    // this.getCustomerList();
-    this.getSIMList();
+  //  this.getSIMList();
     this.getPlanList();
 
     this.getCustomer();
     this.onSearch();
+
+    this.getSIM();
+    this.onSearchSIM();
 
   }
 
@@ -138,7 +154,7 @@ export class CreateSubscriptionComponent implements OnInit {
     this.input$.pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      switchMap(term => this.fakeService(term))
+      switchMap(term => this.fakeServiceCustomer(term))
     ).subscribe((data : any) => {
       this.customers = data.results;
       this.page.totalElements = data.count;
@@ -147,11 +163,7 @@ export class CreateSubscriptionComponent implements OnInit {
       })
   }
 
-  onClearLang(): void {
-   // this.getCustomer();
-  }
-
-  onScrollToEnd() {
+ onScrollToEnd() {
       this.fetchMore();
   }
 
@@ -229,7 +241,7 @@ getCustomer(){
   );
 }
 
-private fakeService(term) {
+private fakeServiceCustomer(term) {
 
   this.page.size = 50;
   this.page.pageNumber = 1;
@@ -262,8 +274,135 @@ private fakeService(term) {
       return res;
     })
   );
-  // return this.http.get<any[]>('https://jsonplaceholder.typicode.com/photos')
-  //   .pipe(map(data => data.filter((x: { title: string }) => x.title.includes(term))))
+}
+
+
+
+/// for SIM
+  onSearchSIM() {
+    this.simsInput$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      switchMap(term => this.fakeServiceSIM(term))
+    ).subscribe((data : any) => {
+      this.sims = data.results;
+      this.pageSIM.totalElements = data.count;
+      this.pageSIM.totalPages = Math.ceil(this.pageSIM.totalElements / this.pageSIM.size);
+      this.simsBuffer = this.sims.slice(0, this.simsBufferSize);
+      })
+  }
+
+ onScrollToEndSIM() {
+      this.fetchMoreSIM();
+  }
+
+onScrollSIM({ end }) {
+    if (this.loadingSIM || this.sims.length <= this.simsBuffer.length) {
+        return;
+    }
+
+    if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.simsBuffer.length) {
+        this.fetchMoreSIM();
+    }
+}
+
+private fetchMoreSIM() {
+
+    let more;
+  
+    if(this.simsCount <= this.pageSIM.totalPages){
+    this.count++;
+    this.pageSIM.pageNumber = this.simsCount;
+    let obj;
+    if(this.simsSearchParam){
+       obj = {
+        limit: this.pageSIM.size,
+        page: this.pageSIM.pageNumber,
+        search_param:this.simsSearchParam
+      };
+    }else{
+       obj = {
+        limit: this.pageSIM.size,
+        page: this.pageSIM.pageNumber
+      };
+    }
+      this._service.get("stock/get-subscriptable-sim-list",obj).subscribe(
+        (res) => {
+          more = res.results;
+          //  const more = this.customers.slice(len, this.bufferSize + len);
+          this.loadingSIM = true;
+          // using timeout here to simulate backend API delay
+          setTimeout(() => {
+              this.loadingSIM = false;
+              this.simsBuffer = this.simsBuffer.concat(more);
+          }, 200)
+        },
+        (err) => {}
+      );
+    }
+
+}
+
+
+getSIM(){
+  let obj;
+  if(this.simsSearchParam){
+     obj = {
+      limit: this.pageSIM.size,
+      page: this.pageSIM.pageNumber,
+      search_param:this.simsSearchParam
+    };
+  }else{
+     obj = {
+      limit: this.pageSIM.size,
+      page: this.pageSIM.pageNumber
+    };
+  }
+
+  this._service.get("stock/get-subscriptable-sim-list",obj).subscribe(
+    (res) => {
+      this.sims = res.results;
+      this.pageSIM.totalElements = res.count;
+      this.pageSIM.totalPages = Math.ceil(this.pageSIM.totalElements / this.pageSIM.size);
+      this.simsBuffer = this.sims.slice(0, this.simsBufferSize);
+    },
+    (err) => {}
+  );
+}
+
+private fakeServiceSIM(term) {
+
+  this.pageSIM.size = 50;
+  this.pageSIM.pageNumber = 1;
+  this.simsSearchParam = term;
+
+  let obj;
+  if(this.simsSearchParam){
+     obj = {
+      limit: this.pageSIM.size,
+      page: this.pageSIM.pageNumber,
+      search_param:this.simsSearchParam
+    };
+  }else{
+     obj = {
+      limit: this.pageSIM.size,
+      page: this.pageSIM.pageNumber
+    };
+  }
+
+  let params = new HttpParams();
+  if (obj) {
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        params = params.append(key, obj[key]);
+      }
+    }
+  }
+  return this.http.get<any>(environment.apiUrl + 'stock/get-subscriptable-sim-list', { params }).pipe(
+    map(res => {
+      return res;
+    })
+  );
 }
 
 
