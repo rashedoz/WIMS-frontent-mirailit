@@ -24,6 +24,11 @@ import { Page } from "./../_models/page";
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 import { SubscriptionStatus } from "./../_models/enums";
 
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+import { Subject, Observable, of, concat } from 'rxjs';
+import { distinctUntilChanged, debounceTime, switchMap, tap, catchError, filter, map } from 'rxjs/operators';
+
 @Component({
   selector: "app-sell-device",
   templateUrl: "./sell-device.component.html",
@@ -51,6 +56,7 @@ export class SellDeviceComponent implements OnInit {
   modalRef: BsModalRef;
 
   page = new Page();
+  pageDevice = new Page();
   rows = [];
   loadingIndicator = false;
   ColumnMode = ColumnMode;
@@ -62,18 +68,48 @@ export class SellDeviceComponent implements OnInit {
   subscriptionList: Array<any> = [];
   // planList: Array<any> = [];
   customer_id = null;
+
+
+
+    // for customer
+    customers = [];
+    customersBuffer = [];
+    bufferSize = 50;
+    numberOfItemsFromEndBeforeFetchingMore = 10;
+    loading = false;
+    count = 1;
+    searchParam = '';
+    input$ = new Subject<string>();
+  
+    // for sim
+    devices = [];
+    devicesBuffer = [];
+    devicesBufferSize = 50;
+    loadingDevice = false;
+    devicesCount = 1;
+    devicesSearchParam = '';
+    devicesInput$ = new Subject<string>();
+
+
   constructor(
     private confirmService: ConfirmService,
     private modalService: BsModalService,
     public formBuilder: FormBuilder,
     private _service: CommonService,
+    private http: HttpClient,
     private toastr: ToastrService,
     private router: Router,
     private route: ActivatedRoute
   ) {
     this.customer_id = this.route.snapshot.params['customer_id'];
-    // this.page.pageNumber = 0;
-    // this.page.size = 10;
+
+    this.page.pageNumber = 1;
+    this.page.size = 50;
+
+    this.pageDevice.pageNumber = 1;
+    this.pageDevice.size = 50;
+    
+
     window.onresize = () => {
       this.scrollBarHorizontal = window.innerWidth < 1200;
     };
@@ -95,9 +131,277 @@ export class SellDeviceComponent implements OnInit {
     this.itemHistoryList = this.entryForm.get("itemHistory") as FormArray;
     this.itemFormArray = this.entryForm.get("itemHistory")["controls"];
 
-    this.getCustomerList();
-    this.getDeviceList();
+    // this.getCustomerList();
+    // this.getDeviceList();
+
+    this.getCustomer();
+    this.onSearch();
+
+    this.getDevice();
+    this.onSearchDevice();
+
   }
+
+
+
+  
+  onSearch() {
+    this.input$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      switchMap(term => this.fakeServiceCustomer(term))
+    ).subscribe((data: any) => {
+      this.customers = data.results;
+      this.page.totalElements = data.count;
+      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+      this.customersBuffer = this.customers.slice(0, this.bufferSize);
+    })
+  }
+
+  onScrollToEnd() {
+    this.fetchMore();
+  }
+
+  onScroll({ end }) {
+    if (this.loading || this.customers.length <= this.customersBuffer.length) {
+      return;
+    }
+
+    if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.customersBuffer.length) {
+      this.fetchMore();
+    }
+  }
+
+  private fetchMore() {
+
+    let more;
+    // const len = this.customersBuffer.length;
+    if (this.count <= this.page.totalPages) {
+      this.count++;
+      this.page.pageNumber = this.count;
+      let obj;
+      if (this.searchParam) {
+        obj = {
+          limit: this.page.size,
+          page: this.page.pageNumber,
+          search_param: this.searchParam
+        };
+      } else {
+        obj = {
+          limit: this.page.size,
+          page: this.page.pageNumber
+        };
+      }
+      this._service.get("get-customer-list", obj).subscribe(
+        (res) => {
+          more = res.results;
+          //  const more = this.customers.slice(len, this.bufferSize + len);
+          this.loading = true;
+          // using timeout here to simulate backend API delay
+          setTimeout(() => {
+            this.loading = false;
+            this.customersBuffer = this.customersBuffer.concat(more);
+          }, 200)
+        },
+        (err) => { }
+      );
+    }
+
+  }
+
+
+  getCustomer() {
+    let obj;
+    if (this.searchParam) {
+      obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber,
+        search_param: this.searchParam
+      };
+    } else {
+      obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber
+      };
+    }
+
+    this._service.get("get-customer-list", obj).subscribe(
+      (res) => {
+        this.customers = res.results;
+        this.page.totalElements = res.count;
+        this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+        this.customersBuffer = this.customers.slice(0, this.bufferSize);
+      },
+      (err) => { }
+    );
+  }
+
+  private fakeServiceCustomer(term) {
+
+    this.page.size = 50;
+    this.page.pageNumber = 1;
+    this.searchParam = term;
+
+    let obj;
+    if (this.searchParam) {
+      obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber,
+        search_param: this.searchParam
+      };
+    } else {
+      obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber
+      };
+    }
+
+    let params = new HttpParams();
+    if (obj) {
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          params = params.append(key, obj[key]);
+        }
+      }
+    }
+    return this.http.get<any>(environment.apiUrl + 'get-customer-list', { params }).pipe(
+      map(res => {
+        return res;
+      })
+    );
+  }
+
+
+
+  /// for Device
+  onSearchDevice() {
+    this.devicesInput$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      switchMap(term => this.fakeServiceDevice(term))
+    ).subscribe((data: any) => {
+      this.devices = data.results;
+      this.pageDevice.totalElements = data.count;
+      this.pageDevice.totalPages = Math.ceil(this.pageDevice.totalElements / this.pageDevice.size);
+      this.devicesBuffer = this.devices.slice(0, this.devicesBufferSize);
+    })
+  }
+
+  onScrollToEndDevice() {
+    this.fetchMoreDevice();
+  }
+
+  onScrollDevice({ end }) {
+    if (this.loadingDevice || this.devices.length <= this.devicesBuffer.length) {
+      return;
+    }
+
+    if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.devicesBuffer.length) {
+      this.fetchMoreDevice();
+    }
+  }
+
+  private fetchMoreDevice() {
+
+    let more;
+
+    if (this.devicesCount <= this.pageDevice.totalPages) {
+      this.count++;
+      this.pageDevice.pageNumber = this.devicesCount;
+      let obj;
+      if (this.devicesSearchParam) {
+        obj = {
+          limit: this.pageDevice.size,
+          page: this.pageDevice.pageNumber,
+          search_param: this.devicesSearchParam
+        };
+      } else {
+        obj = {
+          limit: this.pageDevice.size,
+          page: this.pageDevice.pageNumber
+        };
+      }
+      this._service.get("stock/get-available-device-list", obj).subscribe(
+        (res) => {
+          more = res.results;
+          //  const more = this.customers.slice(len, this.bufferSize + len);
+          this.loadingDevice = true;
+          // using timeout here to simulate backend API delay
+          setTimeout(() => {
+            this.loadingDevice = false;
+            this.devicesBuffer = this.devicesBuffer.concat(more);
+          }, 200)
+        },
+        (err) => { }
+      );
+    }
+
+  }
+
+
+  getDevice() {
+    let obj;
+    if (this.devicesSearchParam) {
+      obj = {
+        limit: this.pageDevice.size,
+        page: this.pageDevice.pageNumber,
+        search_param: this.devicesSearchParam
+      };
+    } else {
+      obj = {
+        limit: this.pageDevice.size,
+        page: this.pageDevice.pageNumber
+      };
+    }
+
+    this._service.get("stock/get-available-device-list", obj).subscribe(
+      (res) => {
+        this.devices = res.results;
+        this.pageDevice.totalElements = res.count;
+        this.pageDevice.totalPages = Math.ceil(this.pageDevice.totalElements / this.pageDevice.size);
+        this.devicesBuffer = this.devices.slice(0, this.devicesBufferSize);
+      },
+      (err) => { }
+    );
+  }
+
+  private fakeServiceDevice(term) {
+
+    this.pageDevice.size = 50;
+    this.pageDevice.pageNumber = 1;
+    this.devicesSearchParam = term;
+
+    let obj;
+    if (this.devicesSearchParam) {
+      obj = {
+        limit: this.pageDevice.size,
+        page: this.pageDevice.pageNumber,
+        search_param: this.devicesSearchParam
+      };
+    } else {
+      obj = {
+        limit: this.pageDevice.size,
+        page: this.pageDevice.pageNumber
+      };
+    }
+
+    let params = new HttpParams();
+    if (obj) {
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          params = params.append(key, obj[key]);
+        }
+      }
+    }
+    return this.http.get<any>(environment.apiUrl + 'stock/get-available-device-list', { params }).pipe(
+      map(res => {
+        return res;
+      })
+    );
+  }
+
+
+
 
   get f() {
     return this.entryForm.controls;
@@ -348,8 +652,8 @@ export class SellDeviceComponent implements OnInit {
     this.discount=0;
     this.paidAmount=0;
 
-    this.getCustomerList();
-    this.getDeviceList();
+    this.getCustomer();
+    this.getDevice();
   }
 
 

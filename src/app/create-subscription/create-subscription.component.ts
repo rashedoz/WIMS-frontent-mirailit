@@ -24,10 +24,11 @@ import { Page } from "./../_models/page";
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 import { AuthenticationService } from './../_services/authentication.service';
 import * as moment from 'moment';
+
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Subject, Observable, of, concat } from 'rxjs';
-import { distinctUntilChanged, debounceTime, switchMap, tap, catchError, filter, map } from 'rxjs/operators'
+import { distinctUntilChanged, debounceTime, switchMap, tap, catchError, filter, map } from 'rxjs/operators';
 
 @Component({
   selector: "app-create-subscription",
@@ -78,8 +79,7 @@ export class CreateSubscriptionComponent implements OnInit {
   searchParam = '';
   input$ = new Subject<string>();
 
-//for sim
-
+// for sim
   sims = [];
   simsBuffer = [];
   simsBufferSize = 50;
@@ -150,7 +150,7 @@ export class CreateSubscriptionComponent implements OnInit {
 
   }
 
-  onSearch() {
+onSearch() {
     this.input$.pipe(
       debounceTime(200),
       distinctUntilChanged(),
@@ -163,7 +163,7 @@ export class CreateSubscriptionComponent implements OnInit {
       })
   }
 
- onScrollToEnd() {
+onScrollToEnd() {
       this.fetchMore();
   }
 
@@ -642,8 +642,8 @@ private fakeServiceSIM(term) {
     this.discount=0;
     this.paidAmount=0;
 
-    this.getCustomerList();
-    this.getSIMList();
+    this.getCustomer();
+    this.getSIM();
     this.getPlanList();
   }
 
@@ -675,7 +675,7 @@ private fakeServiceSIM(term) {
           console.log(data);
           this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
           this.modalHideCustomer();
-          this.getCustomerList();
+          this.getCustomer();
           this.entryForm.controls['customer'].setValue(data.id);
         }
         // else if (data.IsReport == "Warning") {

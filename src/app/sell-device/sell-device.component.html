@@ -42,10 +42,31 @@
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label">Customer </label>
                   <div class="col-sm-9">
-                    <ng-select (change)="onCustomerChange($event)" [searchFn]="customSearchFn"
+                    <!-- <ng-select (change)="onCustomerChange($event)" [searchFn]="customSearchFn"
                     [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false"
                     formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
-                    bindLabel="first_name" bindValue="id" placeholder="Select a customer">
+                    bindLabel="first_name" bindValue="id" placeholder="Select a customer"> -->
+
+                    <ng-select formControlName="customer" [clearable]="true" 
+                            [items]="customersBuffer"
+                            [virtualScroll]="true"
+                            [dropdownPosition]="'bottom'"
+                            [loading]="loading"
+                            bindLabel="first_name"
+                            bindValue="id"
+                            placeholder="Select a customer"
+                            appendTo="body"
+                            [typeahead]="input$"
+                            (scroll)="onScroll($event)"
+                            (scrollToEnd)="onScrollToEnd()" #select>
+                      <ng-template ng-header-tmp>
+                          <small class="form-text text-muted">Loaded {{customersBuffer.length}} of {{page.totalElements}}</small>
+                      </ng-template>
+                      <ng-template ng-label-tmp let-item="item">
+                        {{item.customer_code}} - {{item.first_name}} {{item.last_name}} 
+                    </ng-template>
+
+
                     <ng-template ng-label-tmp let-item="item">
                       {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
                   </ng-template>
@@ -129,8 +150,24 @@
                     <tbody formArrayName="itemHistory" *ngFor="let item of itemFormArray; let i = index;">
                         <tr  [formGroupName]="i">
                             <th>
-                              <ng-select [clearable]="false" appendTo="body" (change)="onDeviceChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('device').errors}" formControlName="device" [clearOnBackspace]="false" [items]="deviceList"
-                              bindLabel="id" placeholder="Select a device">
+                              <!-- <ng-select [clearable]="false" appendTo="body" (change)="onDeviceChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('device').errors}" formControlName="device" [clearOnBackspace]="false" [items]="deviceList"
+                              bindLabel="id" placeholder="Select a device"> -->
+
+                              <ng-select [clearable]="false" appendTo="body" (change)="onDeviceChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('device').errors}" formControlName="device" [clearOnBackspace]="false" 
+                              [items]="devicesBuffer"
+                              [virtualScroll]="true"
+                              [dropdownPosition]="'bottom'"
+                              [loading]="loadingDevice"
+                              [typeahead]="devicesInput$"
+                              (scroll)="onScrollDevice($event)"
+                              (scrollToEnd)="onScrollToEndDevice()"
+                              bindLabel="CID_no" placeholder="Select a device">
+                              <ng-template ng-header-tmp>
+                                <small class="form-text text-muted">Loaded {{devicesBuffer.length}} of {{pageDevice.totalElements}}</small>
+                            </ng-template>
+
+
+
                             <ng-template ng-option-tmp let-item="item" let-index="index">
                               <p class="card-text font-weight-bold" *ngIf="!item.IMEI">  {{item.id}} </p>
                               <p class="card-text font-weight-bold" *ngIf="item.IMEI">  {{item.id}} ({{item.IMEI}})</p>
