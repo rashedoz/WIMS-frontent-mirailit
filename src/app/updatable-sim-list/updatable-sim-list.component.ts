@@ -97,6 +97,7 @@ export class UpdatableSIMListComponent implements OnInit {
     this.SIMItemList.filter(x=>x.iccid && x.phone_number).forEach(element => {
       sim_details.push({
         id:element.id,
+        CID_no: element.CID_no,
         ICCID_no: element.iccid,
         phone_number: element.phone_number,
       });
@@ -141,7 +142,7 @@ export class UpdatableSIMListComponent implements OnInit {
     this.rows.forEach(element => {
       this.SIMItemList.push({
         "id":element.id,
-        "CID_no":element.CID_no,
+        "CID_no":"",
         "iccid":"",
         "phone_number":"",
       });

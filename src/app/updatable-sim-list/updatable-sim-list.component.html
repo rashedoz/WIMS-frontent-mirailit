@@ -95,19 +95,32 @@
                         [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
                         [headerHeight]="30" [footerHeight]="50" [limit]="10" rowHeight="auto" >
     
-                        <ngx-datatable-column [width]="80" name="SIM CID No" prop="CID_no" [draggable]="false" [sortable]="false">
+                        <ngx-datatable-column [width]="80" name="ID" prop="id" [draggable]="false" [sortable]="false">
                             <ng-template let-value="value" ngx-datatable-cell-template>
                                 <span title="{{ value }}"> {{ value }} </span>
                             </ng-template>
-                        </ngx-datatable-column>    
-                    
-                      
+                        </ngx-datatable-column>  
+
+                        <!-- <ngx-datatable-column [width]="80" name="SIM CID No" prop="CID_no" [draggable]="false" [sortable]="false">
+                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                <span title="{{ value }}"> {{ value }} </span>
+                            </ng-template>
+                        </ngx-datatable-column>     -->
+                                          
+                        <ngx-datatable-column [width]="100" name="SIM CID No" prop="Id" [draggable]="false"
+                            [sortable]="false">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <input type="text"class="form-control mt-2" [(ngModel)]="row.CID_no"  required />
+                            </ng-template>
+                        </ngx-datatable-column>
+
                         <ngx-datatable-column [width]="120" name="ICCID No" prop="Id" [draggable]="false"
                             [sortable]="false">
                             <ng-template let-row="row" ngx-datatable-cell-template>
                                 <input type="text"class="form-control mt-2" [(ngModel)]="row.iccid"  required />
                             </ng-template>
                         </ngx-datatable-column>
+
                         <ngx-datatable-column [width]="120" name="PhoneNo" prop="Id" [draggable]="false"
                         [sortable]="false">
                         <ng-template let-row="row" ngx-datatable-cell-template>
