@@ -584,7 +584,7 @@ private fakeServiceSIM(term) {
                       .subscribe(
                           result => {
                               if (result) {
-                                this.router.navigate(['sell-device/'+customer_id]);
+                                this.router.navigate(['sell-device-by-customer/'+customer_id]);
                               }
                           },
                       );

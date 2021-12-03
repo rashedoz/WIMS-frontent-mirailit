@@ -243,8 +243,8 @@ export const AppRoutes: Routes = [
         // canActivate: [AuthGuard]
       },
       {
-        path: 'sell-device/:customer_id',
-        loadChildren: () => import('./sell-device/sell-device.module').then(m => m.SellDeviceModule),
+        path: 'sell-device-by-customer/:customer_id',
+        loadChildren: () => import('./sell-device-by-customer/sell-device-by-customer.module').then(m => m.SellDeviceByCustomerModule),
         // canActivate: [AuthGuard]
       },
       {

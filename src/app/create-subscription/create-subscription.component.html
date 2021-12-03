@@ -131,8 +131,8 @@
                   <table class="table table-xs table-hover table-bordered table-striped">
                     <thead>
                       <tr>
-                        <th width="20%" scope="col">SIM</th>
-                        <th width="20%" scope="col">ICCID</th>
+                        <th width="20%" scope="col">SIM CID No</th>
+                        <th width="20%" scope="col">ICCID No</th>
                         <th width="20%" scope="col">Plan</th>
                         <th width="20%" scope="col">Amount</th>
                         <th width="20%" scope="col">Action</th>
@@ -167,7 +167,7 @@
                               [typeahead]="simsInput$"
                               (scroll)="onScrollSIM($event)"
                               (scrollToEnd)="onScrollToEndSIM()"
-                              bindLabel="CID_no" placeholder="Select a sim">
+                              bindLabel="CID_no" placeholder="Search by sim cid">
                               <ng-template ng-header-tmp>
                                 <small class="form-text text-muted">Loaded {{simsBuffer.length}} of {{pageSIM.totalElements}}</small>
                             </ng-template>

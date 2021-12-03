@@ -30,11 +30,11 @@ import { Subject, Observable, of, concat } from 'rxjs';
 import { distinctUntilChanged, debounceTime, switchMap, tap, catchError, filter, map } from 'rxjs/operators';
 
 @Component({
-  selector: "app-sell-device",
-  templateUrl: "./sell-device.component.html",
+  selector: "app-sell-device-by-customer",
+  templateUrl: "./sell-device-by-customer.component.html",
   encapsulation: ViewEncapsulation.None,
 })
-export class SellDeviceComponent implements OnInit {
+export class SellDeviceByCustomerComponent implements OnInit {
   entryForm: FormGroup;
   itemHistoryList: FormArray;
   itemFormArray: any;
@@ -68,18 +68,19 @@ export class SellDeviceComponent implements OnInit {
   subscriptionList: Array<any> = [];
   // planList: Array<any> = [];
   customer_id = null;
+  customer;
 
 
 
     // for customer
     customers = [];
-    customersBuffer = [];
-    bufferSize = 50;
-    numberOfItemsFromEndBeforeFetchingMore = 10;
-    loading = false;
-    count = 1;
-    searchParam = '';
-    input$ = new Subject<string>();
+    // customersBuffer = [];
+    // bufferSize = 50;
+     numberOfItemsFromEndBeforeFetchingMore = 10;
+    // loading = false;
+     count = 1;
+    // searchParam = '';
+    // input$ = new Subject<string>();
   
     // for sim
     devices = [];
@@ -124,7 +125,7 @@ export class SellDeviceComponent implements OnInit {
   ngOnInit() {
     this.entryForm = this.formBuilder.group({
       id: [null],
-      customer: [null, [Validators.required]],
+      customer: [null],
       subscription: [null, [Validators.required]],
       itemHistory: this.formBuilder.array([this.initItemHistory()]),
     });
@@ -134,8 +135,10 @@ export class SellDeviceComponent implements OnInit {
     // this.getCustomerList();
     // this.getDeviceList();
 
-    this.getCustomer();
-    this.onSearch();
+    if(this.customer_id){
+      this.getCustomer();
+    }
+
 
     this.getDevice();
     this.onSearchDevice();
@@ -143,133 +146,17 @@ export class SellDeviceComponent implements OnInit {
   }
 
 
-
-  
-  onSearch() {
-    this.input$.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
-      switchMap(term => this.fakeServiceCustomer(term))
-    ).subscribe((data: any) => {
-      this.customers = data.results;
-      this.page.totalElements = data.count;
-      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-      this.customersBuffer = this.customers.slice(0, this.bufferSize);
-    })
-  }
-
-  onScrollToEnd() {
-    this.fetchMore();
-  }
-
-  onScroll({ end }) {
-    if (this.loading || this.customers.length <= this.customersBuffer.length) {
-      return;
-    }
-
-    if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.customersBuffer.length) {
-      this.fetchMore();
-    }
-  }
-
-  private fetchMore() {
-
-    let more;
-    // const len = this.customersBuffer.length;
-    if (this.count <= this.page.totalPages) {
-      this.count++;
-      this.page.pageNumber = this.count;
-      let obj;
-      if (this.searchParam) {
-        obj = {
-          limit: this.page.size,
-          page: this.page.pageNumber,
-          search_param: this.searchParam
-        };
-      } else {
-        obj = {
-          limit: this.page.size,
-          page: this.page.pageNumber
-        };
-      }
-      this._service.get("get-customer-list", obj).subscribe(
-        (res) => {
-          more = res.results;
-          //  const more = this.customers.slice(len, this.bufferSize + len);
-          this.loading = true;
-          // using timeout here to simulate backend API delay
-          setTimeout(() => {
-            this.loading = false;
-            this.customersBuffer = this.customersBuffer.concat(more);
-          }, 200)
-        },
-        (err) => { }
-      );
-    }
-
-  }
-
-
-  getCustomer() {
-    let obj;
-    if (this.searchParam) {
-      obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber,
-        search_param: this.searchParam
-      };
-    } else {
-      obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber
-      };
-    }
-
-    this._service.get("get-customer-list", obj).subscribe(
+  getCustomer(){
+    this._service.get("get-user-detail/"+this.customer_id).subscribe(
       (res) => {
-        this.customers = res.results;
-        this.page.totalElements = res.count;
-        this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-        this.customersBuffer = this.customers.slice(0, this.bufferSize);
+        this.customer = res; 
+        this.getItemList(this.customer.id);
+        console.log(this.customer);
       },
       (err) => { }
     );
   }
 
-  private fakeServiceCustomer(term) {
-
-    this.page.size = 50;
-    this.page.pageNumber = 1;
-    this.searchParam = term;
-
-    let obj;
-    if (this.searchParam) {
-      obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber,
-        search_param: this.searchParam
-      };
-    } else {
-      obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber
-      };
-    }
-
-    let params = new HttpParams();
-    if (obj) {
-      for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          params = params.append(key, obj[key]);
-        }
-      }
-    }
-    return this.http.get<any>(environment.apiUrl + 'get-customer-list', { params }).pipe(
-      map(res => {
-        return res;
-      })
-    );
-  }
 
 
 
@@ -425,13 +312,13 @@ export class SellDeviceComponent implements OnInit {
     }
 
     
-    onCustomerChange(e){
-      this.entryForm.controls['subscription'].setValue(null);
-      this.subscriptionList = [];
-      if(e){
-        this.getItemList(e.id);
-      }
-    }
+    // onCustomerChange(e){
+    //   this.entryForm.controls['subscription'].setValue(null);
+    //   this.subscriptionList = [];
+    //   if(e){
+    //     this.getItemList(e.id);
+    //   }
+    // }
   
     // onSubChange(e){
     //   if(e && e.subscribed_items.length > 0){
@@ -579,7 +466,7 @@ export class SellDeviceComponent implements OnInit {
 
 
     const obj = {
-      customer:this.entryForm.value.customer,
+      customer:this.customer.id,
       one_time_charge : Number(this.oneTimeCharge),
       total_amount: Number(this.subTotal) + Number(this.oneTimeCharge),
       discount:Number(this.discount),
@@ -652,8 +539,6 @@ export class SellDeviceComponent implements OnInit {
     this.oneTimeCharge=0;
     this.discount=0;
     this.paidAmount=0;
-
-    this.getCustomer();
     this.getDevice();
   }
 

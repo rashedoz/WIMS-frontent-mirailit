@@ -95,7 +95,7 @@
                         [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
                         [headerHeight]="30" [footerHeight]="50" [limit]="10" rowHeight="auto" >
     
-                        <ngx-datatable-column [width]="80" name="ID" prop="id" [draggable]="false" [sortable]="false">
+                        <ngx-datatable-column [width]="80" name="SL" prop="id" [draggable]="false" [sortable]="false">
                             <ng-template let-value="value" ngx-datatable-cell-template>
                                 <span title="{{ value }}"> {{ value }} </span>
                             </ng-template>
