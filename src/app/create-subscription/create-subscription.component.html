@@ -8,7 +8,7 @@
 
           </div>
           <div class="card-block ">
-            <div class="row">
+            <!-- <div class="row">
               <div class="col-md-12">
                 <div class="btn-group float-right" dropdown placement="bottom right">
                   <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
@@ -27,21 +27,15 @@
                     <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-current-month-subscription']" routerLinkActive="router-link-active" >Change Current Month Subscription </a></li>
                     <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-current-month']" routerLinkActive="router-link-active" >Remove Product From Current Month </a></li>
                     <li role="menuitem"><a class="dropdown-item" [routerLink]="['/cancel-entrie-subscription-from-current-month']" routerLinkActive="router-link-active" >Cancel Entrie Subscription From Current Month </a></li>
-                    <!-- <hr>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-next-month-subscription']" routerLinkActive="router-link-active" >Change Next Month Subscription </a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-next-month']" routerLinkActive="router-link-active" >Remove Product From Next Month </a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/cancel-entrie-subscription-from-next-month']" routerLinkActive="router-link-active" >Cancel Entrie Subscription From Next Month </a></li> -->
-
-
-                  </ul>
+                     </ul>
                 </div>
               </div>
             </div>
-            <hr>
+            <hr> -->
             <div class="row ">
               <div class="col-lg-7">
 
-                <div class="form-group row">
+                <div class="row">
                   <label class="col-sm-4 col-form-label">Customer </label>
                   <div class="col-sm-8">
 
@@ -58,6 +52,7 @@
                             bindValue="id"
                             placeholder="Select a customer"
                             appendTo="body"
+                            (change)="onCustomerChange($event)"
                             [typeahead]="input$"
                             (scroll)="onScroll($event)"
                             (scrollToEnd)="onScrollToEnd()" #select>
@@ -93,6 +88,17 @@
                     <span *ngIf="f.customer.errors.required" class="text-danger"> Customer is required</span>
 
                 </div>
+
+
+                <div class="row blog-big-user m-t-10" *ngIf="selectedCustomer">             
+                  <div class="col-sm-10">
+                      <div>
+                          <h4 class="m-b-10 text-primary">{{selectedCustomer.first_name}} {{selectedCustomer.last_name}}</h4>
+                          <h6 class="m-b-5"><i class="icofont icofont-envelope-open"></i> {{selectedCustomer.email}}</h6>
+                          <p class="m-b-5"><i class="icofont icofont-phone"></i> {{selectedCustomer.mobile}}</p>                         
+                      </div>
+                  </div>
+              </div>
 
                   </div>
                 </div>

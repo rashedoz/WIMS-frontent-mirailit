@@ -70,6 +70,7 @@ export class CreateSubscriptionComponent implements OnInit {
 
 
 // for customer
+  selectedCustomer = null;
   customers = [];
   customersBuffer = [];
   bufferSize = 50;
@@ -161,6 +162,15 @@ onSearch() {
       this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       this.customersBuffer = this.customers.slice(0, this.bufferSize);
       })
+  }
+
+  onCustomerChange(e){
+    if(e){
+      this.selectedCustomer = e;
+      console.log(this.selectedCustomer);
+    }else{
+      this.selectedCustomer = null;
+    }
   }
 
 onScrollToEnd() {
