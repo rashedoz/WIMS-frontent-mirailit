@@ -443,9 +443,11 @@ private fakeServiceSIM(term) {
   initItemHistory() {
     return this.formBuilder.group({
       sim: [null, [Validators.required]],
+      phone_number: [null, [Validators.required]],
       sim_iccid: [null, [Validators.required]],
       plan: [null, [Validators.required]],
       actual_amount: [null, [Validators.required]],
+      discount: [0],
       amount: [null, [Validators.required]],
     });
   }
@@ -492,12 +494,19 @@ private fakeServiceSIM(term) {
   }
 
   onSIMChange(e, item) {
+
     if (e.ICCID_no){
        item.controls["sim_iccid"].setValue(e.ICCID_no);
        item.controls["sim_iccid"].disable();
+
+       item.controls["phone_number"].setValue(e.phone_number);
+       item.controls["phone_number"].disable();
       }else {
         item.controls["sim_iccid"].setValue(null);
         item.controls["sim_iccid"].enable();
+
+        item.controls["phone_number"].setValue(null);
+        item.controls["phone_number"].enable();
       }
   }
 
@@ -505,8 +514,14 @@ private fakeServiceSIM(term) {
     if (e){
        item.controls["actual_amount"].setValue(e.plan_unit_price);
        item.controls["amount"].setValue(e.plan_unit_price);
-      // item.controls["amount"].disable();
+       item.controls["amount"].disable();
       }
+  }
+
+  onItemDiscountChange(value) {
+    if (parseFloat(value) > this.subTotal) {
+      this.discount = this.subTotal;
+    }
   }
 
   onChangeDiscount(value) {
@@ -528,13 +543,14 @@ private fakeServiceSIM(term) {
     }
     let subscribed_items = [];
     let subscribed_relocation_items = [];
-    this.blockUI.start('Saving...');
+  //  this.blockUI.start('Saving...');
 
     this.fromRowData.itemHistory.filter(x=> x.sim && x.sim_iccid && x.plan && x.amount).forEach(element => {
       subscribed_items.push({
         session:this.entryForm.get('session').value,
         sim: element.sim.id,
         ICCID_no:element.sim_iccid,
+        phone_number:element.phone_number,
         plan: element.plan,
         amount: Number(element.amount),
         customer:this.entryForm.value.customer
@@ -574,7 +590,8 @@ private fakeServiceSIM(term) {
     };
 
 
-
+    return ;
+    
     this.confirmService.confirm('Are you sure?', 'You are creating a new subscription.')
     .subscribe(
         result => {

@@ -137,11 +137,13 @@
                   <table class="table table-xs table-hover table-bordered table-striped">
                     <thead>
                       <tr>
-                        <th width="20%" scope="col">SIM CID No</th>
+                        <th width="15%" scope="col">SIM CID No</th>
                         <th width="20%" scope="col">ICCID No</th>
-                        <th width="20%" scope="col">Plan</th>
-                        <th width="20%" scope="col">Amount</th>
-                        <th width="20%" scope="col">Action</th>
+                        <th width="15%" scope="col">Phone Number</th>
+                        <th width="15%" scope="col">Plan</th>
+                        <th width="15%" scope="col">Amount</th>
+                        <th width="10%" scope="col">Discount</th>
+                        <th width="10%" scope="col">Action</th>
                       </tr>
                     </thead>
                     <tbody formArrayName="itemHistory" *ngFor="let item of itemFormArray; let i = index;">
@@ -197,6 +199,13 @@
                               </div>
                             </th>
                             <th>
+                              <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('phone_number').errors}" formControlName="phone_number"  />
+                              <div *ngIf="submitted && item_his.controls[i].get('phone_number').errors" class="error-text">
+                                <small *ngIf="item_his.controls[i].get('phone_number').errors.required" class="text-danger"> Phone number is required</small>
+
+                              </div>
+                            </th>
+                            <th>
                               <ng-select [clearable]="false" appendTo="body" (change)="onPlanChange($event, item)"  [clearOnBackspace]="false" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('plan').errors}" formControlName="plan"  [items]="planList"
                             bindLabel="plan" bindValue="id" placeholder="Select a plan"></ng-select>
                             <div *ngIf="submitted && item_his.controls[i].get('plan').errors" class="error-text">
@@ -205,10 +214,13 @@
                             </div>
                             </th>
                             <th>
-                              <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('amount').errors}" formControlName="amount"  />
+                              <input type="text"  class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('amount').errors}" formControlName="amount"  />
                             <div *ngIf="submitted && item_his.controls[i].get('amount').errors" class="error-text">
                               <small *ngIf="item_his.controls[i].get('amount').errors.required" class="text-danger"> Amount is required</small>
                             </div>
+                            </th>
+                            <th>
+                              <input type="text" numeric numericType="decimal" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('discount').errors}" formControlName="discount"  />                           
                             </th>
                             <th>
                               <button class="btn btn-success btn-mini pull-right mr-3" title="Add new item"
