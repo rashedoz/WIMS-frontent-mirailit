@@ -69,7 +69,7 @@ const MENUITEMS = [
       },
       {
         state: 'actions',
-        name: 'Actions',
+        name: 'Common Actions',
         type: 'link',
         icon: 'ti-control-forward',
          permission: 'is_superuser,is_staff',
@@ -158,7 +158,7 @@ const MENUITEMS = [
           type: 'sub',
            permission: 'is_superuser,is_staff',
           icon: 'icofont-brand-microsoft',
-          children: [        
+          children: [
               {
                 state: 'all-sim-list-for-reissue',
                 name: 'Reissue',
@@ -208,7 +208,7 @@ const MENUITEMS = [
                 type: 'link',
                 icon: 'ti-control-forward',
                  permission: 'is_superuser,is_staff',
-            },              
+            },
             {
                 state: 'updatable-device-list',
                 name: 'Updatable Device List',
@@ -266,7 +266,7 @@ const MENUITEMS = [
               type: 'link',
               icon: 'ti-control-forward',
                permission: 'is_superuser,is_staff',
-          }         
+          }
 
 
           ]
@@ -344,7 +344,7 @@ const MENUITEMS = [
             type: 'link',
             icon: 'ti-control-forward',
              permission: 'is_superuser,is_staff',
-        }          
+        }
 
 
         ]

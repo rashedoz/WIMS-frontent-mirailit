@@ -78,7 +78,7 @@ export class CancelEntireSubCurrentMonthComponent implements OnInit {
    count = 1;
    searchParam = '';
    input$ = new Subject<string>();
- 
+   selectedCustomer = null;
 
   constructor(
     private confirmService: ConfirmService,
@@ -114,11 +114,11 @@ export class CancelEntireSubCurrentMonthComponent implements OnInit {
 
     this.getCustomer();
    // this.getCustomerList();
-    this.getSIMList();
-    this.getPlanList();
+    // this.getSIMList();
+    // this.getPlanList();
   }
 
-  
+
   onSearch() {
     this.input$.pipe(
       debounceTime(200),
@@ -275,66 +275,95 @@ export class CancelEntireSubCurrentMonthComponent implements OnInit {
     while (this.itemHistoryList.length !== 0) {
       itemHistoryControl.removeAt(0);
     }
-    if(e){
-      this.getItemList(e.id);
+    if (e) {
+      this.selectedCustomer = e;
+      this.getItemList(e.customer_code);
+    }else{
+      this.selectedCustomer = null;
     }
   }
 
   onSubscriptionChange(e){
-    if(e){
-     this.simList = [];
-     this.planList = [];
-      this._service.get('subscription/get-subscription-detail/'+e.id).subscribe(res => {
-       
-        res.forEach(element => {
-          this.simList.push({
-            CID_no: element.sim.CID_no,
-            ICCID_no: element.sim.ICCID_no,
-            id: element.sim.id,
-            phone_number: element.sim.phone_number
-          });
-          this.planList.push({           
-            id: element.plan.id,
-            plan: element.plan.plan
-          });
+
+    if (e) {
+      this.subscriptionItemList = e.subscribed_items;
+      if (this.subscriptionItemList.length > 0) {
+        let itemHistoryControl = <FormArray>(
+          this.entryForm.controls.itemHistory
+        );
+        while (this.itemHistoryList.length !== 0) {
+          itemHistoryControl.removeAt(0);
+        }
+        this.subscriptionItemList.forEach(element => {
+          // this.getObjFromArray(this.degreeDropDownList,element.DegreeId);
+          itemHistoryControl.push(
+            this.formBuilder.group({
+              id: new FormControl({ value: element.id, disabled: true }, Validators.required),
+              sim: new FormControl({ value: element.sim, disabled: true }, Validators.required),
+              sim_cid_no: new FormControl({ value: element.sim_cid_no, disabled: true }, Validators.required),
+              sim_iccid: new FormControl({ value: element.sim_iccid, disabled: true }, Validators.required),
+              sim_phone_number: new FormControl({ value: element.sim_phone_number, disabled: true }, Validators.required),
+              plan: new FormControl({ value: element.plan, disabled: true }, Validators.required),
+              plan_id: new FormControl({ value: element.plan_id, disabled: true }, Validators.required),
+              amount: new FormControl({ value: element.amount, disabled: true }, Validators.required)
+            })
+          );
         });
-
-      if(res.length > 0){
-        this.subscriptionItemList = res;
-        if (this.subscriptionItemList.length > 0) {
-         let itemHistoryControl = <FormArray>(
-           this.entryForm.controls.itemHistory
-         );
-         while (this.itemHistoryList.length !== 0) {
-           itemHistoryControl.removeAt(0);
-         }
-         this.subscriptionItemList.forEach(element => {
-           // this.getObjFromArray(this.degreeDropDownList,element.DegreeId);
-           itemHistoryControl.push(
-             this.formBuilder.group({
-               id: new FormControl({value:element.id, disabled: true}, Validators.required),
-               sim: new FormControl({value:{id:element.sim.id,CID_no:element.sim.CID_no,ICCID_no:element.sim.ICCID_no,phone_number:element.sim.phone_number}, disabled: true}, Validators.required),
-               plan: new FormControl({value:{id:element.plan.id,plan:element.plan.plan}, disabled: true}, Validators.required),
-               amount: new FormControl({value:element.plan.plan_unit_price, disabled: true}, Validators.required)
-             })
-           );
-         });
-       }
       }
-    }, err => { });
-
     }
+
+    // if(e){
+    //  this.simList = [];
+    //  this.planList = [];
+    //   this._service.get('subscription/get-subscription-detail/'+e.id).subscribe(res => {
+
+    //     // res.forEach(element => {
+    //     //   this.simList.push({
+    //     //     CID_no: element.sim.CID_no,
+    //     //     ICCID_no: element.sim.ICCID_no,
+    //     //     id: element.sim.id,
+    //     //     phone_number: element.sim.phone_number
+    //     //   });
+    //     //   this.planList.push({
+    //     //     id: element.plan.id,
+    //     //     plan: element.plan.plan
+    //     //   });
+    //     // });
+
+    //   if(res.length > 0){
+    //     this.subscriptionItemList = res;
+    //     if (this.subscriptionItemList.length > 0) {
+    //      let itemHistoryControl = <FormArray>(
+    //        this.entryForm.controls.itemHistory
+    //      );
+    //      while (this.itemHistoryList.length !== 0) {
+    //        itemHistoryControl.removeAt(0);
+    //      }
+    //      this.subscriptionItemList.forEach(element => {
+    //        // this.getObjFromArray(this.degreeDropDownList,element.DegreeId);
+    //        itemHistoryControl.push(
+    //          this.formBuilder.group({
+    //           id: new FormControl({ value: element.id, disabled: true }, Validators.required),
+    //           sim: new FormControl({ value: element.sim, disabled: true }, Validators.required),
+    //           sim_cid_no: new FormControl({ value: element.sim_cid_no, disabled: true }, Validators.required),
+    //           sim_iccid: new FormControl({ value: element.sim_iccid, disabled: true }, Validators.required),
+    //           sim_phone_number: new FormControl({ value: element.sim_phone_number, disabled: true }, Validators.required),
+    //           plan: new FormControl({ value: element.plan, disabled: true }, Validators.required),
+    //           amount: new FormControl({ value: element.amount, disabled: true }, Validators.required),
+    //          })
+    //        );
+    //      });
+    //    }
+    //   }
+    // }, err => { });
+
+    // }
   }
 
-  getItemList(customerId) {
-    this._service.get("subscription/get-active-subscription-list?customer="+customerId).subscribe(
+  getItemList(code) {
+    this._service.get("subscription/get-active-subscription-list?search_param=" + code).subscribe(
       (res) => {
-      //  this.itemList = res;
-
-        this.subscriptionList = res;
-        // const key = 'subscription';
-        // this.subscriptionList = [...new Map(this.itemList.map(item =>
-        //   [item[key], item])).values()];
+       this.subscriptionList = res;
       },
       (err) => {}
     );
@@ -371,33 +400,33 @@ export class CancelEntireSubCurrentMonthComponent implements OnInit {
     );
   }
 
-  getSIMList() {
-    this._service.get("stock/get-subscriptable-sim-list").subscribe(
-      (res) => {
-        this.simList = res;
-      },
-      (err) => {}
-    );
-  }
+  // getSIMList() {
+  //   this._service.get("stock/get-subscriptable-sim-list").subscribe(
+  //     (res) => {
+  //       this.simList = res;
+  //     },
+  //     (err) => {}
+  //   );
+  // }
 
-  getPlanList() {
-    this._service.get("subscription/get-data-plan-list").subscribe(
-      (res) => {
-        this.planList = res;
-      },
-      (err) => {}
-    );
-  }
+  // getPlanList() {
+  //   this._service.get("subscription/get-data-plan-list").subscribe(
+  //     (res) => {
+  //       this.planList = res;
+  //     },
+  //     (err) => {}
+  //   );
+  // }
 
-  onSIMChange(e, item) {
-    if (e.ICCID_no){
-       item.controls["sim_iccid"].setValue(e.ICCID_no);
-       item.controls["sim_iccid"].disable();
-      }else {
-        item.controls["sim_iccid"].setValue(null);
-        item.controls["sim_iccid"].enable();
-      }
-  }
+  // onSIMChange(e, item) {
+  //   if (e.ICCID_no){
+  //      item.controls["sim_iccid"].setValue(e.ICCID_no);
+  //      item.controls["sim_iccid"].disable();
+  //     }else {
+  //       item.controls["sim_iccid"].setValue(null);
+  //       item.controls["sim_iccid"].enable();
+  //     }
+  // }
 
   // onChangeDiscount(value) {
   //   if (parseFloat(value) > this.subTotal) {
@@ -417,14 +446,14 @@ export class CancelEntireSubCurrentMonthComponent implements OnInit {
       return;
     }
     let subscribed_relocation_items = [];
-   // this.blockUI.start('Saving...');
+    this.blockUI.start('Saving...');
     this.fromRowData = this.entryForm.getRawValue();
     this.fromRowData.itemHistory.forEach(element => {
       subscribed_relocation_items.push({
         customer:this.entryForm.value.customer,
         subscription:this.entryForm.value.subscription,
-        sim: element.sim.id,
-        plan: element.plan.id
+        sim: element.sim,
+        plan: element.plan_id
       });
 
     });
@@ -496,10 +525,11 @@ export class CancelEntireSubCurrentMonthComponent implements OnInit {
     this.subTotal=0;
     this.discount=0;
     this.paidAmount=0;
-
+    this.selectedCustomer = null;
+    this.subscriptionList = [];
     this.getCustomerList();
-    this.getSIMList();
-    this.getPlanList();
+    // this.getSIMList();
+    // this.getPlanList();
   }
 
 

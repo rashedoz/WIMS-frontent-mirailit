@@ -167,7 +167,6 @@ onSearch() {
   onCustomerChange(e){
     if(e){
       this.selectedCustomer = e;
-      console.log(this.selectedCustomer);
     }else{
       this.selectedCustomer = null;
     }
@@ -319,9 +318,9 @@ onScrollSIM({ end }) {
 private fetchMoreSIM() {
 
     let more;
-  
+
     if(this.simsCount <= this.pageSIM.totalPages){
-    this.count++;
+    this.simsCount++;
     this.pageSIM.pageNumber = this.simsCount;
     let obj;
     if(this.simsSearchParam){
@@ -338,6 +337,7 @@ private fetchMoreSIM() {
     }
       this._service.get("stock/get-subscriptable-sim-list",obj).subscribe(
         (res) => {
+          console.log(res);
           more = res.results;
           //  const more = this.customers.slice(len, this.bufferSize + len);
           this.loadingSIM = true;
@@ -446,8 +446,8 @@ private fakeServiceSIM(term) {
       phone_number: [null, [Validators.required]],
       sim_iccid: [null, [Validators.required]],
       plan: [null, [Validators.required]],
-      actual_amount: [null, [Validators.required]],
-      discount: [0],
+      actual_amount: [{value: null, disabled: true}, [Validators.required]],
+      discount: [{value: 0, disabled: true}],
       amount: [null, [Validators.required]],
     });
   }
@@ -514,26 +514,47 @@ private fakeServiceSIM(term) {
     if (e){
        item.controls["actual_amount"].setValue(e.plan_unit_price);
        item.controls["amount"].setValue(e.plan_unit_price);
-       item.controls["amount"].disable();
+       item.controls["discount"].enable();
       }
   }
 
-  onItemDiscountChange(value) {
-    if (parseFloat(value) > this.subTotal) {
-      this.discount = this.subTotal;
+  onItemDiscountChange(e,item) {
+
+    if(Number(item.get('discount').value) > 0 ){
+      if(Number(item.get('discount').value) >= Number(item.get('actual_amount').value)){
+        this.toastr.warning('Discount amount can\'t be greater then actual amount', 'Warning!',  { timeOut: 4000 });
+        item.controls["discount"].setValue(0);
+        item.controls["amount"].setValue(item.get('actual_amount').value);
+      }else{
+        const discountedAmount = Number(item.get('actual_amount').value) - Number(item.get('discount').value);
+        item.controls["amount"].setValue(discountedAmount);
+        item.controls["discount"].setValue(Number(item.get('discount').value));
+      }
     }
+
+    let dis = 0;
+    this.fromRowData.itemHistory.forEach(element => {
+      dis = dis + Number(element.discount);
+    });
+    this.discount = dis;
+
+
   }
 
-  onChangeDiscount(value) {
-    if (parseFloat(value) > this.subTotal) {
-      this.discount = this.subTotal;
-    }
-  }
+  // onChangeDiscount(value) {
+  //   // if (parseFloat(value) > this.subTotal) {
+  //   //   this.discount = this.subTotal;
+  //   // }
+  // }
 
   onChangePaid(value) {
     if (parseFloat(value) > this.subTotal - this.discount) {
       this.paidAmount = this.subTotal - this.discount;
     }
+  }
+
+  inputFocused(event: any){
+    event.target.select()
   }
 
   onFormSubmit() {
@@ -543,7 +564,7 @@ private fakeServiceSIM(term) {
     }
     let subscribed_items = [];
     let subscribed_relocation_items = [];
-  //  this.blockUI.start('Saving...');
+    this.blockUI.start('Saving...');
 
     this.fromRowData.itemHistory.filter(x=> x.sim && x.sim_iccid && x.plan && x.amount).forEach(element => {
       subscribed_items.push({
@@ -560,7 +581,7 @@ private fakeServiceSIM(term) {
         sim: element.sim.id,
         plan: element.plan,
         actual_price: Number(element.actual_amount),
-        discount:0,
+        discount:Number(element.discount),
         payable_amount: Number(element.amount),
         changes_price:0,
         refund_amount:0,
@@ -590,8 +611,6 @@ private fakeServiceSIM(term) {
     };
 
 
-    return ;
-    
     this.confirmService.confirm('Are you sure?', 'You are creating a new subscription.')
     .subscribe(
         result => {
@@ -649,7 +668,7 @@ private fakeServiceSIM(term) {
   itemTotal(){
     this.fromRowData = this.entryForm.getRawValue();
     if(this.fromRowData.itemHistory.length > 0){
-      this.subTotal = this.fromRowData.itemHistory.map(x => Number(x.amount)).reduce((a, b) => a + b);
+      this.subTotal = this.fromRowData.itemHistory.map(x => Number(x.actual_amount)).reduce((a, b) => a + b);
     }
   }
 
@@ -699,7 +718,6 @@ private fakeServiceSIM(term) {
       data => {
         this.blockUI.stop();
         if (data) {
-          console.log(data);
           this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
           this.modalHideCustomer();
           this.getCustomer();

@@ -8,67 +8,7 @@
             <!-- <span class="code-header ">use class <code>table</code> inside table element</span> -->
           </div>
           <div class="card-block ">
-            <div class="row">
-              <div class="col-md-12">
-                <div class="btn-group float-right" dropdown placement="bottom right">
-                  <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
-                    aria-controls="dropdown-basic">
-                    Subscription <span class="caret"></span>
-                  </button>
 
-              <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu dropdown-menu-right"
-                  role="menu" aria-labelledby="button-animated">
-                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/create-subscription']" routerLinkActive="router-link-active" > Create Subscription</a></li>
-                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/subscription-list']" [queryParams]="{tab:'all'}" routerLinkActive="router-link-active" >All Subscription List</a></li>
-                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/subscription-list']" [queryParams]="{tab:'wholesaler'}" routerLinkActive="router-link-active" > Wholesaler Subscription List</a></li>
-                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/subscription-list']" [queryParams]="{tab:'retailer'}" routerLinkActive="router-link-active" > Retailer Subscription List</a></li>
-                <hr>
-                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/add-product-to-subscription']" routerLinkActive="router-link-active" >Add Product To Subscription </a></li>
-                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-current-month-subscription']" routerLinkActive="router-link-active" >Change Current Month Subscription </a></li>
-                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-current-month']" routerLinkActive="router-link-active" >Remove Product From Current Month </a></li>
-                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/cancel-entrie-subscription-from-current-month']" routerLinkActive="router-link-active" >Cancel Entrie Subscription From Current Month </a></li>
-                <!-- <hr>
-                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-next-month-subscription']" routerLinkActive="router-link-active" >Change Next Month Subscription </a></li>
-                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-next-month']" routerLinkActive="router-link-active" >Remove Product From Next Month </a></li>
-                <li role="menuitem"><a class="dropdown-item" [routerLink]="['/cancel-entrie-subscription-from-next-month']" routerLinkActive="router-link-active" >Cancel Entrie Subscription From Next Month </a></li> -->
-
-
-              </ul>
-
-                  <!-- <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu"
-                    aria-labelledby="button-animated">
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/create-subscription']"
-                        routerLinkActive="router-link-active"> Create Subscription</a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/add-product-to-subscription']"
-                        routerLinkActive="router-link-active">Add Product To Subscription </a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/subscription-list']"
-                        routerLinkActive="router-link-active">All Subscription List</a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/wholesaler-subscription-list']"
-                        routerLinkActive="router-link-active"> Wholesaler Subscription List</a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/retailer-subscription-list']"
-                        routerLinkActive="router-link-active"> Retailer Subscription List</a></li>
-                    <hr>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-current-month-subscription']"
-                        routerLinkActive="router-link-active">Change Current Month Subscription </a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-current-month']"
-                        routerLinkActive="router-link-active">Remove Product From Current Month </a></li>
-                    <li role="menuitem"><a class="dropdown-item"
-                        [routerLink]="['/cancel-entrie-subscription-from-current-month']"
-                        routerLinkActive="router-link-active">Cancel Entrie Subscription From Current Month </a></li>
-                    <hr>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-next-month-subscription']"
-                        routerLinkActive="router-link-active">Change Next Month Subscription </a></li>
-                    <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-next-month']"
-                        routerLinkActive="router-link-active">Remove Product From Next Month </a></li>
-                    <li role="menuitem"><a class="dropdown-item"
-                        [routerLink]="['/cancel-entrie-subscription-from-next-month']"
-                        routerLinkActive="router-link-active">Cancel Entrie Subscription From Next Month </a></li>
-
-                  </ul> -->
-                </div>
-              </div>
-            </div>
-            <hr>
             <div class="row ">
               <div class="col-lg-6">
 
@@ -81,7 +21,7 @@
                       bindLabel="first_name" bindValue="id" placeholder="Select a customer"> -->
 
 
-                      <ng-select (change)="onCustomerChange($event)" formControlName="customer" [clearable]="false" 
+                      <ng-select (change)="onCustomerChange($event)" formControlName="customer" [clearable]="false"
                       [items]="customersBuffer"
                       [virtualScroll]="true"
                       [dropdownPosition]="'bottom'"
@@ -110,6 +50,16 @@
                       <span *ngIf="f.customer.errors.required" class="text-danger"> Customer is required</span>
 
                     </div>
+
+                    <div class="row blog-big-user m-t-10" *ngIf="selectedCustomer">
+                      <div class="col-sm-10">
+                          <div>
+                              <h4 class="m-b-10 text-primary">{{selectedCustomer.first_name}} {{selectedCustomer.last_name}}</h4>
+                              <h6 class="m-b-5"><i class="icofont icofont-envelope-open"></i> {{selectedCustomer.email}}</h6>
+                              <p class="m-b-5"><i class="icofont icofont-phone"></i> {{selectedCustomer.mobile}}</p>
+                          </div>
+                      </div>
+                  </div>
                   </div>
                 </div>
 
@@ -174,18 +124,20 @@
                   <table class="table table-xs table-hover table-bordered table-striped">
                     <thead>
                       <tr>
-                        <th width="20%" scope="col">SIM</th>
-                        <th width="20%" scope="col">ICCID</th>
+                        <th width="20%" scope="col">SIM CID No</th>
+                        <th width="20%" scope="col">ICCID No</th>
+                        <th width="20%" scope="col">Phone Number</th>
                         <th width="20%" scope="col">Plan</th>
                         <th width="20%" scope="col">Amount</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr *ngFor="let item of subItemList">
-                        <th width="20%" >{{item.sim.CID_no}}</th>
-                        <th width="20%" >{{item.sim.ICCID_no}}</th>
-                        <th width="20%" >{{item.plan.plan}}</th>
-                        <th width="20%" >{{item.plan.plan_unit_price}}</th>
+                      <tr *ngFor="let subItem of subItemList">
+                        <th width="20%"  > {{subItem.sim_cid_no}}</th>
+                        <th width="20%" > {{subItem.sim_iccid}}</th>
+                        <th width="20%" > {{subItem.sim_phone_number}}</th>
+                        <th width="20%" > {{subItem.plan}}</th>
+                        <th width="20%" >{{subItem.amount}}</th>
                       </tr>
                     </tbody>
                   </table>
@@ -195,27 +147,25 @@
 
             <div class="row ">
               <div class="col-lg-12">
-                <h6>Add Product(s)</h6>
+                <h6 class="text-primary">Add Product(s)</h6>
                 <div class="table-responsive">
                   <table class="table table-xs table-hover table-bordered table-striped">
                     <thead>
                       <tr>
-                        <th width="20%" scope="col">SIM</th>
-                        <th width="20%" scope="col">ICCID</th>
-                        <th width="20%" scope="col">Plan</th>
-                        <th width="20%" scope="col">Amount</th>
-                        <th width="20%" scope="col">Action</th>
+                        <th width="15%" scope="col">SIM CID No</th>
+                        <th width="20%" scope="col">ICCID No</th>
+                        <th width="15%" scope="col">Phone Number</th>
+                        <th width="15%" scope="col">Plan</th>
+                        <th width="15%" scope="col">Amount</th>
+                        <th width="10%" scope="col">Discount</th>
+                        <th width="10%" scope="col">Action</th>
                       </tr>
                     </thead>
                     <tbody formArrayName="itemHistory" *ngFor="let item of itemFormArray; let i = index;">
                       <tr [formGroupName]="i">
                         <th>
-                          <!-- <ng-select [clearable]="false" appendTo="body" (change)="onSIMChange($event, item)"
-                            [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}"
-                            formControlName="sim" [clearOnBackspace]="false" [items]="simList" bindLabel="CID_no"
-                            placeholder="Select a sim"> -->
 
-                            <ng-select [clearable]="false" appendTo="body" (change)="onSIMChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}" formControlName="sim" [clearOnBackspace]="false" 
+                            <ng-select [clearable]="false" appendTo="body" (change)="onSIMChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}" formControlName="sim" [clearOnBackspace]="false"
                             [items]="simsBuffer"
                             [virtualScroll]="true"
                             [dropdownPosition]="'bottom'"
@@ -252,6 +202,13 @@
                           </div>
                         </th>
                         <th>
+                          <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('phone_number').errors}" formControlName="phone_number"  />
+                          <div *ngIf="submitted && item_his.controls[i].get('phone_number').errors" class="error-text">
+                            <small *ngIf="item_his.controls[i].get('phone_number').errors.required" class="text-danger"> Phone number is required</small>
+
+                          </div>
+                        </th>
+                        <th>
                           <ng-select (change)="onPlanChange($event, item)" [clearable]="false" appendTo="body"
                             [clearOnBackspace]="false"
                             [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('plan').errors}"
@@ -264,13 +221,13 @@
                           </div>
                         </th>
                         <th>
-                          <input type="text" class="form-control"
-                            [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('amount').errors}"
-                            formControlName="amount" />
-                          <div *ngIf="submitted && item_his.controls[i].get('amount').errors" class="error-text">
-                            <small *ngIf="item_his.controls[i].get('amount').errors.required" class="text-danger">
-                              Amount is required</small>
-                          </div>
+                          <input type="text"  class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('actual_amount').errors}" formControlName="actual_amount"  />
+                        <div *ngIf="submitted && item_his.controls[i].get('actual_amount').errors" class="error-text">
+                          <small *ngIf="item_his.controls[i].get('actual_amount').errors.required" class="text-danger"> Amount is required</small>
+                        </div>
+                        </th>
+                        <th>
+                          <input type="text" numeric numericType="number" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('discount').errors}" formControlName="discount" (keyup)="onItemDiscountChange($event,item)" (focus)="inputFocused($event)" />
                         </th>
                         <th>
                           <button class="btn btn-success btn-mini pull-right mr-3" title="Add new item"
@@ -288,34 +245,24 @@
               </div>
 
               <div class="col-lg-5 offset-lg-7">
-                <!-- <table class="table table-xs table-hover table-striped">
-                    <tbody>
-                        <tr>
-                            <th>Sub-Total {{itemTotal()}}</th>
-                            <th class="text-right pr-4">{{subTotal}}</th>
-                        </tr>
-                        <tr>
-                            <th>Discount</th>
-                            <td class="pr-1">
-                                <input  type="text" class="form-control form-control-sm text-right pr-3"
-                                    numeric numericType="number" (change)="onChangeDiscount(discount)" [(ngModel)]="discount" [ngModelOptions]="{standalone: true}">
-                            </td>
-                        </tr>
+                <table class="table table-xs table-hover table-striped">
+                  <tbody>
                       <tr>
-                            <th>Net-Total</th>
-                            <th class="text-right pr-4">{{subTotal - discount}}</th>
-                        </tr>
-                         <tr>
-                            <th>Paid Amount</th>
-                            <td class="pr-1">
-                                <input type="text" class="form-control form-control-sm text-right pr-3"
-                                    numeric numericType="number" (change)="onChangePaid(paidAmount)"
-                                    [(ngModel)]="paidAmount" [ngModelOptions]="{standalone: true}">
-                            </td>
-                        </tr>
+                          <th>Sub-Total {{itemTotal()}}</th>
+                          <th class="text-right pr-4">{{subTotal}}</th>
+                      </tr>
+                      <tr>
+                          <th >Discount</th>
+                          <th class="text-right pr-4">{{discount}}</th>
 
-                    </tbody>
-                </table> -->
+                      </tr>
+                    <tr class="table-info" style="font-size: 20px;">
+                          <th >Net-Total</th>
+                          <th class="text-right pr-4">{{subTotal - discount}}</th>
+                      </tr>
+
+                  </tbody>
+              </table>
 
                 <button class="btn btn-success btn-sm btn-outline-success float-right" (click)="onFormSubmit()">
                   <i class="icofont-save"></i> {{btnSaveText}}

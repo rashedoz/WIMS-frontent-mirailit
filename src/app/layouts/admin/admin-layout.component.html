@@ -181,10 +181,10 @@
                                     </a>
                                     <ng-template #mainContent>
                                         <a [routerLink]="['/', asideItem.state]" target="{{asideItem.target ? '_blank' : '_self'}}" appAccordionToggle>
-                                            <span *ngIf="asideItem.name === 'Actions'" style="color:#f1c40f" class="pcoded-micon"><i class="{{ asideItem.icon }}"></i></span>
-                                            <span *ngIf="asideItem.name != 'Actions'" class="pcoded-micon"><i class="{{ asideItem.icon }}"></i></span>
-                                            <span *ngIf="asideItem.name === 'Actions'" style="color:#f1c40f" class="pcoded-mtext">{{ asideItem.name }}</span>
-                                            <span *ngIf="asideItem.name != 'Actions'" class="pcoded-mtext">{{ asideItem.name }}</span>
+                                            <span *ngIf="asideItem.name === 'Common Actions'" style="color:#f1c40f" class="pcoded-micon"><i class="{{ asideItem.icon }}"></i></span>
+                                            <span *ngIf="asideItem.name != 'Common Actions'" class="pcoded-micon"><i class="{{ asideItem.icon }}"></i></span>
+                                            <span *ngIf="asideItem.name === 'Common Actions'" style="color:#f1c40f" class="pcoded-mtext">{{ asideItem.name }}</span>
+                                            <span *ngIf="asideItem.name != 'Common Actions'" class="pcoded-mtext">{{ asideItem.name }}</span>
                                             <span *ngFor="let asideBadge of asideItem.badge" class="pcoded-badge label label-{{ asideBadge.type }}">{{asideBadge.value}}</span>
                                             <span class="pcoded-mcaret"></span>
                                         </a>

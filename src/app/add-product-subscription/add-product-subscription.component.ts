@@ -53,7 +53,7 @@ export class AddProductSubscriptionComponent implements OnInit {
 
   modalConfig: any = { class: "gray modal-lg", backdrop: "static" };
   modalRef: BsModalRef;
-
+  selectedCustomer = null;
   page = new Page();
   pageSIM = new Page();
   rows = [];
@@ -132,7 +132,7 @@ export class AddProductSubscriptionComponent implements OnInit {
     this.getCustomer();
     this.getSIM();
 
-    this.getSIMListOld();
+  //  this.getSIMListOld();
     this.getPlanList();
   }
 
@@ -299,7 +299,7 @@ export class AddProductSubscriptionComponent implements OnInit {
     let more;
 
     if (this.simsCount <= this.pageSIM.totalPages) {
-      this.count++;
+      this.simsCount++;
       this.pageSIM.pageNumber = this.simsCount;
       let obj;
       if (this.simsSearchParam) {
@@ -423,35 +423,42 @@ export class AddProductSubscriptionComponent implements OnInit {
     this.entryForm.controls['subscription'].setValue(null);
     this.subItemList = [];
     if (e) {
-      this.getItemList(e.id);
+      this.selectedCustomer = e;
+      this.getItemList(e.customer_code);
+    }else{
+      this.selectedCustomer = null;
     }
   }
 
   onSubChange(e) {
-    if (e && e.subscribed_items.length > 0) {
-      let item = [];
-      e.subscribed_items.forEach(element => {
-        item.push({
-          sim: this.getObj(element.sim, this.simListOld),
-          plan: this.getObj(element.plan, this.planList),
-        })
-      });
-      if (item.length > 0) {
-        this.subItemList = item;
+      if (e && e.subscribed_items.length > 0) {
+        this.subItemList = e.subscribed_items;
+        // let item = [];
+        // e.subscribed_items.forEach(element => {
+        //   item.push({
+        //     amount:element.amount,
+        //     sim: this.getObj(element.sim, this.simListOld),
+        //     plan: this.getObj(element.plan, this.planList),
+        //   })
+        // });
+        // if (item.length > 0) {
+        //   this.subItemList = item;
+        // }
       }
 
-    }
+
   }
 
   onPlanChange(e, item) {
-    if (e) {
+    if (e){
+      item.controls["actual_amount"].setValue(e.plan_unit_price);
       item.controls["amount"].setValue(e.plan_unit_price);
-      item.controls["amount"].disable();
-    }
+      item.controls["discount"].enable();
+   }
   }
 
-  getItemList(customerId) {
-    this._service.get("subscription/get-active-subscription-list?customer=" + customerId).subscribe(
+  getItemList(code) {
+    this._service.get("subscription/get-active-subscription-list?search_param=" + code).subscribe(
       (res) => {
         //  this.itemList = res;
 
@@ -464,11 +471,18 @@ export class AddProductSubscriptionComponent implements OnInit {
     );
   }
 
+  inputFocused(event: any){
+    event.target.select()
+  }
+
   initItemHistory() {
     return this.formBuilder.group({
       sim: [null, [Validators.required]],
+      phone_number: [null, [Validators.required]],
       sim_iccid: [null, [Validators.required]],
       plan: [null, [Validators.required]],
+      actual_amount: [{value: null, disabled: true}, [Validators.required]],
+      discount: [{value: 0, disabled: true}],
       amount: [null, [Validators.required]],
     });
   }
@@ -520,20 +534,49 @@ export class AddProductSubscriptionComponent implements OnInit {
   }
 
   onSIMChange(e, item) {
-    if (e.ICCID_no) {
+    if (e.ICCID_no){
       item.controls["sim_iccid"].setValue(e.ICCID_no);
       item.controls["sim_iccid"].disable();
-    } else {
-      item.controls["sim_iccid"].setValue(null);
-      item.controls["sim_iccid"].enable();
-    }
+
+      item.controls["phone_number"].setValue(e.phone_number);
+      item.controls["phone_number"].disable();
+     }else {
+       item.controls["sim_iccid"].setValue(null);
+       item.controls["sim_iccid"].enable();
+
+       item.controls["phone_number"].setValue(null);
+       item.controls["phone_number"].enable();
+     }
   }
 
-  onChangeDiscount(value) {
-    if (parseFloat(value) > this.subTotal) {
-      this.discount = this.subTotal;
+  onItemDiscountChange(e,item) {
+
+    if(Number(item.get('discount').value) > 0 ){
+      if(Number(item.get('discount').value) >= Number(item.get('actual_amount').value)){
+        this.toastr.warning('Discount amount can\'t be greater then actual amount', 'Warning!',  { timeOut: 4000 });
+        item.controls["discount"].setValue(0);
+        item.controls["amount"].setValue(item.get('actual_amount').value);
+      }else{
+        const discountedAmount = Number(item.get('actual_amount').value) - Number(item.get('discount').value);
+        item.controls["amount"].setValue(discountedAmount);
+        item.controls["discount"].setValue(Number(item.get('discount').value));
+      }
     }
+
+    let dis = 0;
+    this.fromRowData.itemHistory.forEach(element => {
+      dis = dis + Number(element.discount);
+    });
+    this.discount = dis;
+
+
   }
+
+  // onChangeDiscount(value) {
+  //   if (parseFloat(value) > this.subTotal) {
+  //     this.discount = this.subTotal;
+  //   }
+  // }
 
   onChangePaid(value) {
     if (parseFloat(value) > this.subTotal - this.discount) {
@@ -555,6 +598,7 @@ export class AddProductSubscriptionComponent implements OnInit {
         subscription: this.entryForm.value.subscription,
         sim: element.sim.id,
         ICCID_no: element.sim_iccid,
+        phone_number:element.phone_number,
         plan: element.plan,
         amount: Number(element.amount),
         customer: this.entryForm.value.customer
@@ -565,8 +609,8 @@ export class AddProductSubscriptionComponent implements OnInit {
         customer: this.entryForm.value.customer,
         sim: element.sim.id,
         plan: element.plan,
-        actual_price: Number(element.amount),
-        discount: 0,
+        actual_price: Number(element.actual_amount),
+        discount:Number(element.discount),
         payable_amount: Number(element.amount),
         changes_price: 0,
         refund_amount: 0,
@@ -582,6 +626,8 @@ export class AddProductSubscriptionComponent implements OnInit {
       subscribed_items: subscribed_items,
       subscribed_relocation_items: subscribed_relocation_items
     };
+
+
 
 
     this.confirmService.confirm('Are you sure?', 'You are adding items to this subscription.')
@@ -624,7 +670,7 @@ export class AddProductSubscriptionComponent implements OnInit {
   itemTotal() {
     this.fromRowData = this.entryForm.getRawValue();
     if (this.fromRowData.itemHistory.length > 0) {
-      this.subTotal = this.fromRowData.itemHistory.map(x => Number(x.amount)).reduce((a, b) => a + b);
+      this.subTotal = this.fromRowData.itemHistory.map(x => Number(x.actual_amount)).reduce((a, b) => a + b);
     }
   }
 
@@ -643,11 +689,13 @@ export class AddProductSubscriptionComponent implements OnInit {
     this.subTotal = 0;
     this.discount = 0;
     this.paidAmount = 0;
+    this.selectedCustomer = null;
+    this.subscriptionList = [];
     this.subItemList = [];
     this.getCustomer();
     this.getSIM();
 
-    this.getSIMListOld();
+   // this.getSIMListOld();
     this.getPlanList();
   }
 

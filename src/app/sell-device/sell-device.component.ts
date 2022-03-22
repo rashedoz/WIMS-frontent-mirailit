@@ -80,7 +80,7 @@ export class SellDeviceComponent implements OnInit {
     count = 1;
     searchParam = '';
     input$ = new Subject<string>();
-  
+
     // for sim
     devices = [];
     devicesBuffer = [];
@@ -101,14 +101,14 @@ export class SellDeviceComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    this.customer_id = this.route.snapshot.params['customer_id'];
+   // this.customer_id = this.route.snapshot.params['customer_id'];
 
     this.page.pageNumber = 1;
     this.page.size = 50;
 
     this.pageDevice.pageNumber = 1;
     this.pageDevice.size = 50;
-    
+
 
     window.onresize = () => {
       this.scrollBarHorizontal = window.innerWidth < 1200;
@@ -144,7 +144,7 @@ export class SellDeviceComponent implements OnInit {
 
 
 
-  
+
   onSearch() {
     this.input$.pipe(
       debounceTime(200),
@@ -306,7 +306,7 @@ export class SellDeviceComponent implements OnInit {
     let more;
 
     if (this.devicesCount <= this.pageDevice.totalPages) {
-      this.count++;
+      this.devicesCount++;
       this.pageDevice.pageNumber = this.devicesCount;
       let obj;
       if (this.devicesSearchParam) {
@@ -424,15 +424,15 @@ export class SellDeviceComponent implements OnInit {
            item.mobile.toLocaleLowerCase().indexOf(term) > -1;
     }
 
-    
+
     onCustomerChange(e){
       this.entryForm.controls['subscription'].setValue(null);
       this.subscriptionList = [];
       if(e){
-        this.getItemList(e.id);
+        this.getItemList(e.customer_code);
       }
     }
-  
+
     // onSubChange(e){
     //   if(e && e.subscribed_items.length > 0){
     //    let item  = [];
@@ -444,16 +444,16 @@ export class SellDeviceComponent implements OnInit {
     //     });
     //     if(item.length > 0){
     //       this.subItemList = item;
-    //     }      
-       
+    //     }
+
     //   }
     // }
 
-    getItemList(customerId) {
-      this._service.get("subscription/get-active-subscription-list?customer="+customerId).subscribe(
+    getItemList(code) {
+      this._service.get("subscription/get-active-subscription-list?search_param="+code).subscribe(
         (res) => {
         //  this.itemList = res;
-  
+
           this.subscriptionList = res;
           // const key = 'subscription';
           // this.subscriptionList = [...new Map(this.itemList.map(item =>
@@ -485,11 +485,11 @@ export class SellDeviceComponent implements OnInit {
     this._service.get("user-list?is_customer=true").subscribe(
       (res) => {
         this.customerList = res;
-      
+
           if(this.customer_id){
             this.entryForm.controls['customer'].setValue(Number(this.customer_id));
-          } 
-      
+          }
+
       },
       (err) => {}
     );
@@ -541,6 +541,10 @@ export class SellDeviceComponent implements OnInit {
   //   }
   // }
 
+  inputFocused(event: any){
+    event.target.select()
+  }
+
   onFormSubmit() {
     this.submitted = true;
     if (this.entryForm.invalid) {
@@ -548,7 +552,7 @@ export class SellDeviceComponent implements OnInit {
     }
 
     if(Number(this.oneTimeCharge) == 0){
-     
+
       this.confirmService.confirm('One Time Charge is empty!', 'Want to procesed with empty value?')
       .subscribe(
           result => {
@@ -622,7 +626,7 @@ export class SellDeviceComponent implements OnInit {
             else{
                 this.blockUI.stop();
             }
-        },            
+        },
     );
   }
 

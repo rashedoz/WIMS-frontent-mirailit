@@ -43,7 +43,7 @@
                   <div class="d-flex flex-row">
 
 
-                    <ng-select formControlName="customer" [clearable]="true" 
+                    <ng-select formControlName="customer" [clearable]="true"
                             [items]="customersBuffer"
                             [virtualScroll]="true"
                             [dropdownPosition]="'bottom'"
@@ -60,7 +60,7 @@
                           <small class="form-text text-muted">Loaded {{customersBuffer.length}} of {{page.totalElements}}</small>
                       </ng-template>
                       <ng-template ng-label-tmp let-item="item">
-                        {{item.customer_code}} - {{item.first_name}} {{item.last_name}} 
+                        {{item.customer_code}} - {{item.first_name}} {{item.last_name}}
                     </ng-template>
 
                       <ng-template ng-option-tmp let-item="item"  let-index="index">
@@ -90,12 +90,12 @@
                 </div>
 
 
-                <div class="row blog-big-user m-t-10" *ngIf="selectedCustomer">             
+                <div class="row blog-big-user m-t-10" *ngIf="selectedCustomer">
                   <div class="col-sm-10">
                       <div>
                           <h4 class="m-b-10 text-primary">{{selectedCustomer.first_name}} {{selectedCustomer.last_name}}</h4>
                           <h6 class="m-b-5"><i class="icofont icofont-envelope-open"></i> {{selectedCustomer.email}}</h6>
-                          <p class="m-b-5"><i class="icofont icofont-phone"></i> {{selectedCustomer.mobile}}</p>                         
+                          <p class="m-b-5"><i class="icofont icofont-phone"></i> {{selectedCustomer.mobile}}</p>
                       </div>
                   </div>
               </div>
@@ -150,24 +150,7 @@
                         <tr  [formGroupName]="i">
                             <th>
 
-                          <!-- <ng-select formControlName="customer" [clearable]="true" 
-                            [items]="customersBuffer"
-                            [virtualScroll]="true"
-                            [dropdownPosition]="'bottom'"
-                            [loading]="loading"
-                            bindLabel="first_name"
-                            bindValue="id"
-                            placeholder="Select a customer"
-                            appendTo="body"
-                            [typeahead]="input$"
-                            (scroll)="onScroll($event)"
-                            (scrollToEnd)="onScrollToEnd()" #select>
-                      <ng-template ng-header-tmp>
-                          <small class="form-text text-muted">Loaded {{customersBuffer.length}} of {{page.totalElements}}</small>
-                      </ng-template> -->
-
-
-                              <ng-select [clearable]="false" appendTo="body" (change)="onSIMChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}" formControlName="sim" [clearOnBackspace]="false" 
+                              <ng-select [clearable]="false" appendTo="body" (change)="onSIMChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}" formControlName="sim" [clearOnBackspace]="false"
                               [items]="simsBuffer"
                               [virtualScroll]="true"
                               [dropdownPosition]="'bottom'"
@@ -214,13 +197,13 @@
                             </div>
                             </th>
                             <th>
-                              <input type="text"  class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('amount').errors}" formControlName="amount"  />
-                            <div *ngIf="submitted && item_his.controls[i].get('amount').errors" class="error-text">
-                              <small *ngIf="item_his.controls[i].get('amount').errors.required" class="text-danger"> Amount is required</small>
+                              <input type="text"  class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('actual_amount').errors}" formControlName="actual_amount"  />
+                            <div *ngIf="submitted && item_his.controls[i].get('actual_amount').errors" class="error-text">
+                              <small *ngIf="item_his.controls[i].get('actual_amount').errors.required" class="text-danger"> Amount is required</small>
                             </div>
                             </th>
                             <th>
-                              <input type="text" numeric numericType="decimal" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('discount').errors}" formControlName="discount"  />                           
+                              <input type="text" numeric numericType="number" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('discount').errors}" formControlName="discount" (keyup)="onItemDiscountChange($event,item)" (focus)="inputFocused($event)" />
                             </th>
                             <th>
                               <button class="btn btn-success btn-mini pull-right mr-3" title="Add new item"
@@ -246,13 +229,14 @@
                         </tr>
                         <tr>
                             <th>Discount</th>
-                            <td class="pr-1">
-                                <input  type="text" class="form-control form-control-sm text-right pr-3"
+                            <th class="text-right pr-4">{{discount}}</th>
+                            <!-- <td class="pr-1">
+                                <input readonly type="text" class="form-control form-control-sm text-right pr-3"
                                     numeric numericType="number" (change)="onChangeDiscount(discount)" [(ngModel)]="discount" [ngModelOptions]="{standalone: true}">
-                            </td>
+                            </td> -->
                         </tr>
-                      <tr>
-                            <th>Net-Total</th>
+                      <tr class="table-info" style="font-size: 20px;">
+                            <th >Net-Total</th>
                             <th class="text-right pr-4">{{subTotal - discount}}</th>
                         </tr>
                          <!-- <tr>

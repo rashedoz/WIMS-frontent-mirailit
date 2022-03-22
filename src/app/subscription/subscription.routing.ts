@@ -6,7 +6,7 @@ export const SubscriptionRoutes: Routes = [{
   path: '',
   component: SubscriptionComponent,
   data: {
-    breadcrumb: 'Actions',
+    breadcrumb: 'Common Actions',
     icon: 'icofont-home bg-c-blue',
     status: false
   }

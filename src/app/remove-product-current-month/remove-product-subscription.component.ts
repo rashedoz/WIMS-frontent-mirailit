@@ -41,15 +41,16 @@ export class RemoveProductSubscriptionComponent implements OnInit {
 
   fromRowData: any;
   SubscriptionStatus = SubscriptionStatus;
+  total_refund: number = 0;
   subTotal: number = 0;
   discount: number = 0;
   paidAmount: number = 0;
-
+  selectedCustomer = null;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
   modalTitle = "Add ";
   btnSaveText = "Remove Item From Current Month";
-
+  isSubmitDisabled:boolean = true;
   modalConfig: any = { class: "gray modal-lg", backdrop: "static" };
   modalRef: BsModalRef;
 
@@ -112,8 +113,8 @@ export class RemoveProductSubscriptionComponent implements OnInit {
 
     this.getCustomer();
     //  this.getCustomerList();
-    this.getSIMList();
-    this.getPlanList();
+    // this.getSIMList();
+    // this.getPlanList();
   }
 
 
@@ -273,14 +274,17 @@ export class RemoveProductSubscriptionComponent implements OnInit {
       itemHistoryControl.removeAt(0);
     }
     if (e) {
-      this.getItemList(e.id);
+      this.selectedCustomer = e;
+      this.getItemList(e.customer_code);
+    }else{
+      this.selectedCustomer = null;
     }
   }
 
   onSubscriptionChange(e) {
+
     if (e) {
       this.subscriptionItemList = e.subscribed_items;
-      console.log(this.subscriptionItemList);
       if (this.subscriptionItemList.length > 0) {
         let itemHistoryControl = <FormArray>(
           this.entryForm.controls.itemHistory
@@ -294,54 +298,80 @@ export class RemoveProductSubscriptionComponent implements OnInit {
             this.formBuilder.group({
               id: new FormControl({ value: element.id, disabled: true }, Validators.required),
               sim: new FormControl({ value: element.sim, disabled: true }, Validators.required),
+              sim_cid_no: new FormControl({ value: element.sim_cid_no, disabled: true }, Validators.required),
+              sim_iccid: new FormControl({ value: element.sim_iccid, disabled: true }, Validators.required),
+              sim_phone_number: new FormControl({ value: element.sim_phone_number, disabled: true }, Validators.required),
               plan: new FormControl({ value: element.plan, disabled: true }, Validators.required),
               amount: new FormControl({ value: element.amount, disabled: true }, Validators.required),
-              refund_amount: new FormControl(0),
+              refund_amount: new FormControl({ value: 0, disabled: true }),
               is_removed: new FormControl(null)
             })
           );
         });
       }
-
     }
+
   }
 
 
-  getItemList(customerId) {
-    this._service.get("subscription/get-active-subscription-list?customer=" + customerId).subscribe(
-      (res) => {
-        //  this.itemList = res;
+  onItemRefundChange(e,item) {
 
+    if(Number(item.get('refund_amount').value) > 0 ){
+      if(Number(item.get('refund_amount').value) >= Number(item.get('amount').value)){
+        this.toastr.warning('Refund amount can\'t be greater then actual amount', 'Warning!',  { timeOut: 4000 });
+        item.controls["refund_amount"].setValue(0);
+      }else{
+        item.controls["refund_amount"].setValue(Number(item.get('refund_amount').value));
+      }
+    }
+
+    this.changeTotalRefund();
+
+  }
+
+
+  changeTotalRefund(){
+    let ref = 0;
+    let checkCount = 0;
+    this.fromRowData = this.entryForm.getRawValue();
+    this.fromRowData.itemHistory.forEach(element => {
+      ref = ref + Number(element.refund_amount);
+
+      if(element.is_removed){
+        checkCount++;
+      };
+
+    });
+    this.total_refund = ref;
+    if(checkCount > 0){
+        this.isSubmitDisabled = false;
+    }else{
+      this.isSubmitDisabled = true;
+    }
+
+  }
+
+
+  onCheckboxChange(event,item){
+    if(event.target.checked){
+      item.controls["refund_amount"].enable();
+    }else{
+      item.controls["refund_amount"].setValue(0);
+      item.controls["refund_amount"].disable();
+    }
+    this.changeTotalRefund();
+  }
+
+
+  getItemList(code) {
+    this._service.get("subscription/get-active-subscription-list?search_param=" + code).subscribe(
+      (res) => {
         this.subscriptionList = res;
-        // const key = 'subscription';
-        // this.subscriptionList = [...new Map(this.itemList.map(item =>
-        //   [item[key], item])).values()];
       },
       (err) => { }
     );
   }
 
-  // initItemHistory() {
-  //   return this.formBuilder.group({
-  //     id:[null],
-  //     sim: [null, [Validators.required]],
-  //     sim_iccid: [null, [Validators.required]],
-  //     plan: [null, [Validators.required]],
-  //     amount: [null, [Validators.required]],
-  //     refund_amount: [null],
-  //     is_removed: [null]
-  //   });
-  // }
-
-  // addItemHistory() {
-  //   this.itemHistoryList.push(this.initItemHistory());
-  // }
-
-  // removeItemHistory(i) {
-  //   if (this.itemHistoryList.length > 1) {
-  //     this.itemHistoryList.removeAt(i);
-  //   }
-  // }
 
   getCustomerList() {
     this._service.get("user-list?is_customer=true").subscribe(
@@ -352,45 +382,10 @@ export class RemoveProductSubscriptionComponent implements OnInit {
     );
   }
 
-  getSIMList() {
-    this._service.get("stock/get-subscriptable-sim-list").subscribe(
-      (res) => {
-        this.simList = res;
-      },
-      (err) => { }
-    );
+  inputFocused(event: any){
+    event.target.select()
   }
 
-  getPlanList() {
-    this._service.get("subscription/get-data-plan-list").subscribe(
-      (res) => {
-        this.planList = res;
-      },
-      (err) => { }
-    );
-  }
-
-  onSIMChange(e, item) {
-    if (e.ICCID_no) {
-      item.controls["sim_iccid"].setValue(e.ICCID_no);
-      item.controls["sim_iccid"].disable();
-    } else {
-      item.controls["sim_iccid"].setValue(null);
-      item.controls["sim_iccid"].enable();
-    }
-  }
-
-  // onChangeDiscount(value) {
-  //   if (parseFloat(value) > this.subTotal) {
-  //     this.discount = this.subTotal;
-  //   }
-  // }
-
-  // onChangePaid(value) {
-  //   if (parseFloat(value) > this.subTotal - this.discount) {
-  //     this.paidAmount = this.subTotal - this.discount;
-  //   }
-  // }
 
   onFormSubmit() {
     this.submitted = true;
@@ -414,7 +409,7 @@ export class RemoveProductSubscriptionComponent implements OnInit {
       return;
     }
 
-    this.blockUI.start('Saving...');
+   this.blockUI.start('Saving...');
     const obj = {
       customer: this.entryForm.value.customer,
       subscription: this.entryForm.value.subscription,
@@ -432,7 +427,6 @@ export class RemoveProductSubscriptionComponent implements OnInit {
                 if (data.IsReport == "Success") {
                   this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
                   this.formReset();
-
                 } else if (data.IsReport == "Warning") {
                   this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
                 } else {
@@ -452,10 +446,7 @@ export class RemoveProductSubscriptionComponent implements OnInit {
 
       );
 
-
-
   }
-
 
 
   // itemTotal(){
@@ -478,12 +469,14 @@ export class RemoveProductSubscriptionComponent implements OnInit {
       itemHistoryControl.removeAt(0);
     }
     this.subTotal = 0;
+    this.total_refund = 0;
     this.discount = 0;
     this.paidAmount = 0;
-
+    this.selectedCustomer = null;
+    this.subscriptionList = [];
     this.getCustomerList();
-    this.getSIMList();
-    this.getPlanList();
+    // this.getSIMList();
+    // this.getPlanList();
   }
 
 
