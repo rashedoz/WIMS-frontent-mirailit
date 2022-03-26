@@ -31,7 +31,7 @@
                                   rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
                                   (page)="setPage($event)">
 
-                                  <ngx-datatable-column [width]="100" name="SIM CID" prop="CID_no" [draggable]="false" [sortable]="false">
+                                  <ngx-datatable-column [width]="100" name="SIM CID No" prop="CID_no" [draggable]="false" [sortable]="false">
                                     <ng-template let-value="value" ngx-datatable-cell-template>
                                         <span > {{ value }} </span>
                                     </ng-template>
@@ -41,7 +41,7 @@
                                       <span > {{ value }} </span>
                                   </ng-template>
                               </ngx-datatable-column>
-                                <ngx-datatable-column [width]="100" name="SIM ICCID_no" prop="ICCID_no" [draggable]="false" [sortable]="false">
+                                <ngx-datatable-column [width]="100" name="SIM ICCID No" prop="ICCID_no" [draggable]="false" [sortable]="false">
                                   <ng-template let-value="value" ngx-datatable-cell-template>
                                       <span > {{ value }} </span>
                                   </ng-template>

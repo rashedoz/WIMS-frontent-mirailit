@@ -38,6 +38,10 @@ export class AllSIMListForReceiveComponent implements OnInit {
   simObj;
   simDetails : Array<any> = [];
   searchParam = '';
+  url = 'stock/get-reissued-and-subscribed-sim-list';
+  selectedSIMType = {id:'Subscribed',name:'Subscribed'};
+  SIMTypeList = [{id:'Subscribed',name:'Subscribed'},{id:'Available',name:'In-Stock(Available)'},{id:'Cancelled',name:'Cancelled'},{id:'Permanently Cancelled',name:'Permanently Cancelled'}]
+
   constructor(
     private modalService: BsModalService,
     private confirmService: ConfirmService,
@@ -60,6 +64,31 @@ export class AllSIMListForReceiveComponent implements OnInit {
   }
 
 
+  onSIMTypeChange(e){
+    if(e){
+      switch (e.id) {
+        case 'Subscribed':
+          this.url = 'stock/get-reissued-and-subscribed-sim-list';
+          this.getList();
+          break;
+        case 'Available':
+          this.url = 'stock/get-reissued-and-available-sim-list';
+          this.getList();
+          break;
+        case 'Cancelled':
+          this.url = 'stock/get-reissued-and-cancelled-sim-list';
+          this.getList();
+          break;
+        case 'Permanently Cancelled':
+          this.url = 'stock/get-reissued-and-permanently-cancelled-sim-list';
+          this.getList();
+          break;
+
+        default:
+          break;
+      }
+    }
+  }
 
   setPage(pageInfo) {
     this.page.pageNumber = pageInfo.offset;
@@ -71,9 +100,11 @@ export class AllSIMListForReceiveComponent implements OnInit {
     const obj = {
       limit: this.page.size,
       page: this.page.pageNumber + 1,
-      search_param:this.searchParam
+     // search_param:this.searchParam
     };
-    this._service.get('stock/get-reissued-sim-list',obj).subscribe(res => {
+
+    //stock/get-reissued-sim-list
+    this._service.get(this.url,obj).subscribe(res => {
 
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
