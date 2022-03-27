@@ -282,6 +282,11 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./bulk-entry/bulk-entry.module').then(m => m.BulkEntryModule),
         // canActivate: [AuthGuard]
       },
+      {
+        path: 'invoice/:id',
+        loadChildren: () => import('./invoice/invoice.module').then(m => m.InvoiceModule),
+        // canActivate: [AuthGuard]
+      },
 
     ]
   }, {

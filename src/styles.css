@@ -3410,7 +3410,7 @@ table.matrics-table tr:first-child td {
 }
 
 .invoice-detail-table th:first-child {
-    width: 450px;
+    /* width: 450px; */
     text-align: left;
 }
 
