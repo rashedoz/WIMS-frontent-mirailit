@@ -36,6 +36,7 @@ export class AllSIMListComponent implements OnInit {
   modalRef: BsModalRef;
   modalRefICCID: BsModalRef;
   simLifecycleDetails : Array<any> = [];
+  url = 'stock/get-available-sim-list';
   searchParam = '';
   constructor(
     public formBuilder: FormBuilder,
@@ -58,6 +59,38 @@ export class AllSIMListComponent implements OnInit {
   }
 
 
+  // 'Available', 'Subscribed', 'Cancelled', 'Permanently Cancelled'
+
+  changeTab(type,e) {
+    this.searchParam = '';
+    this.page.pageNumber = 0;
+    this.page.size = 10;
+
+    switch (type) {
+      case 'Available':
+        this.url = 'stock/get-available-sim-list';
+        this.getList();
+        break;      
+      case 'Subscribed':
+        this.url = 'stock/get-subscribed-sim-list';
+     this.getList();
+        break;      
+      case 'Cancelled':
+        this.url = 'stock/get-cancelled-sim-list';
+     this.getList();
+        break;      
+      case 'Permanently Cancelled':
+        this.url = 'stock/get-permanently-cancelled-sim-list';
+     this.getList();
+        break;      
+      default:
+        this.url = 'stock/get-available-sim-list';
+        this.getList();
+        break;
+    }
+
+ }
+
 
   setPage(pageInfo) {
     this.page.pageNumber = pageInfo.offset;
@@ -71,7 +104,7 @@ export class AllSIMListComponent implements OnInit {
       page: this.page.pageNumber + 1,
       search_param:this.searchParam
     };
-    this._service.get('stock/get-sim-list',obj).subscribe(res => {
+    this._service.get(this.url,obj).subscribe(res => {
 
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });

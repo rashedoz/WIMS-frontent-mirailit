@@ -8206,12 +8206,12 @@ body.menu-sidebar .navbar-wrapper {
     text-align: center;
 }
 
-.nav-pills .nav-link.active.active, .nav-pills .nav-link.active.active:focus, .nav-pills .nav-link.active.active:hover, .nav-pills .nav-link.active, .nav-pills .nav-link.active:focus, .nav-pills .nav-link.active:hover, .nav-pills .nav-link.active, .nav-pills .nav-link.active:focus, .nav-pills .nav-link.active:hover {
+/* .nav-pills .nav-link.active.active, .nav-pills .nav-link.active.active:focus, .nav-pills .nav-link.active.active:hover, .nav-pills .nav-link.active, .nav-pills .nav-link.active:focus, .nav-pills .nav-link.active:hover, .nav-pills .nav-link.active, .nav-pills .nav-link.active:focus, .nav-pills .nav-link.active:hover {
     background: transparent;
     color: #0275d8;
     text-align: center;
     border-bottom: 1px solid #0275d8;
-}
+} */
 
 /**====== Basic-Buttons css Start ======**/
 

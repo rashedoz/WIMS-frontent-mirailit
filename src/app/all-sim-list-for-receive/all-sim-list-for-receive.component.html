@@ -7,9 +7,14 @@
                     <div class="card card-border-primary">
                         <div class="card-header">
                             <h5>Reissued SIM list for receive </h5>
+                            <div class="float-right" style="width: 300px;">
+                              <ng-select [(ngModel)]="selectedSIMType" (change)="onSIMTypeChange($event)" [clearable]="false" appendTo="body"  [clearOnBackspace]="false" [items]="SIMTypeList"
+                              bindLabel="id"></ng-select>
+                          </div>
+
                         </div>
                         <div class="card-block ">
-                          <div class="row">
+                          <!-- <div class="row">
                             <div class="col-lg-6">
                               <div class="form-group row">
                                 <div class="col-sm-8">
@@ -18,7 +23,7 @@
                                 </div>
                               </div>
                             </div>
-                          </div>
+                          </div> -->
                             <div class="row ">
                                 <div class="col-lg-12 ">
                                   <ngx-datatable #table class="material table-bordered" [scrollbarH]="true" [rows]="rows" [loadingIndicator]="loadingIndicator"
@@ -26,7 +31,7 @@
                                   rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
                                   (page)="setPage($event)">
 
-                                  <ngx-datatable-column [width]="100" name="SIM CID" prop="CID_no" [draggable]="false" [sortable]="false">
+                                  <ngx-datatable-column [width]="100" name="SIM CID no" prop="CID_no" [draggable]="false" [sortable]="false">
                                     <ng-template let-value="value" ngx-datatable-cell-template>
                                         <span > {{ value }} </span>
                                     </ng-template>
@@ -43,7 +48,7 @@
                                       </ng-template>
                                   </ngx-datatable-column> -->
 
-                                  <ngx-datatable-column [width]="100" name="ICCID No" prop="ICCID_no" [draggable]="false"
+                                  <ngx-datatable-column [width]="100" name="SIM sICCID No" prop="ICCID_no" [draggable]="false"
                                       [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
                                           <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>
@@ -117,7 +122,7 @@
 
     <ng-template #template>
       <div class="modal-header ">
-          <h4 class="modal-title pull-left " id="modalTitle" *ngIf="simObj"> SIM ICCID : {{simObj.ICCID_no}}</h4>
+        <h4 class="modal-title pull-left " id="modalTitle" *ngIf="simObj">SIM CID No: {{simObj.CID_no}}, SIM ICCID : {{simObj.ICCID_no}}, Phone Number : {{simObj.phone_number}} </h4>
           <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
               <i class="icofont icofont-close"></i>
           </button>
@@ -134,7 +139,7 @@
                           <thead>
                               <tr>
                                   <th width="40%" scope="col">Reissued Date</th>
-                                  <th width="60%" scope="col">Received From Company</th>
+                                  <th width="60%" scope="col">Received From Mother Company</th>
                               </tr>
                           </thead>
 
