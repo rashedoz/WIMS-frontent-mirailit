@@ -30,14 +30,12 @@ import { Subject, Observable, of, concat } from 'rxjs';
 import { distinctUntilChanged, debounceTime, switchMap, tap, catchError, filter, map } from 'rxjs/operators';
 
 @Component({
-  selector: "app-remove-product-subscription",
-  templateUrl: "./remove-product-subscription.component.html",
+  selector: "app-freeze-sims",
+  templateUrl: "./freeze-sims.component.html",
   encapsulation: ViewEncapsulation.None,
 })
-export class RemoveProductSubscriptionComponent implements OnInit {
+export class FreezeSIMsComponent implements OnInit {
   entryForm: FormGroup;
-  itemHistoryList: FormArray;
-  itemFormArray: any;
 
   fromRowData: any;
   SubscriptionStatus = SubscriptionStatus;
@@ -49,7 +47,7 @@ export class RemoveProductSubscriptionComponent implements OnInit {
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
   modalTitle = "Add ";
-  btnSaveText = "Remove Item From Current Month";
+  btnSaveText = "Save To Freeze SIM";
   isSubmitDisabled:boolean = true;
   modalConfig: any = { class: "gray modal-lg", backdrop: "static" };
   modalRef: BsModalRef;
@@ -65,8 +63,6 @@ export class RemoveProductSubscriptionComponent implements OnInit {
   itemList: Array<any> = [];
   subscriptionList: Array<any> = [];
   subscriptionItemList: Array<any> = [];
-  simList: Array<any> = [];
-  planList: Array<any> = [];
 
 
   // for customer
@@ -78,6 +74,12 @@ export class RemoveProductSubscriptionComponent implements OnInit {
   count = 1;
   searchParam = '';
   input$ = new Subject<string>();
+
+
+
+  simSelected:boolean;
+  checklist:any;
+  checkedList:any;
 
   constructor(
     private confirmService: ConfirmService,
@@ -106,10 +108,7 @@ export class RemoveProductSubscriptionComponent implements OnInit {
       id: [null],
       customer: [null, [Validators.required]],
       subscription: [null, [Validators.required]],
-      itemHistory: this.formBuilder.array([]),
     });
-    this.itemHistoryList = this.entryForm.get("itemHistory") as FormArray;
-    this.itemFormArray = this.entryForm.get("itemHistory")["controls"];
 
     this.getCustomer();
     this.onSearch();
@@ -252,9 +251,7 @@ export class RemoveProductSubscriptionComponent implements OnInit {
     return this.entryForm.controls;
   }
 
-  get item_his(): FormArray {
-    return this.entryForm.get("itemHistory") as FormArray;
-  }
+
 
   customSearchFn(term: string, item: any) {
     term = term.toLocaleLowerCase();
@@ -268,12 +265,9 @@ export class RemoveProductSubscriptionComponent implements OnInit {
 
   onCustomerChange(e) {
     this.entryForm.controls['subscription'].setValue(null);
-    let itemHistoryControl = <FormArray>(
-      this.entryForm.controls.itemHistory
-    );
-    while (this.itemHistoryList.length !== 0) {
-      itemHistoryControl.removeAt(0);
-    }
+    this.subscriptionList = [];
+    this.subscriptionItemList = [];
+
     if (e) {
       this.selectedCustomer = e;
       this.getItemList(e.customer_code);
@@ -283,85 +277,51 @@ export class RemoveProductSubscriptionComponent implements OnInit {
   }
 
   onSubscriptionChange(e) {
-
+    this.subscriptionItemList = [];
     if (e) {
-      this.subscriptionItemList = e.subscribed_items;
-      if (this.subscriptionItemList.length > 0) {
-        let itemHistoryControl = <FormArray>(
-          this.entryForm.controls.itemHistory
-        );
-        while (this.itemHistoryList.length !== 0) {
-          itemHistoryControl.removeAt(0);
-        }
-        this.subscriptionItemList.forEach(element => {
-          // this.getObjFromArray(this.degreeDropDownList,element.DegreeId);
-          itemHistoryControl.push(
-            this.formBuilder.group({
-              id: new FormControl({ value: element.id, disabled: true }, Validators.required),
-              sim: new FormControl({ value: element.sim, disabled: true }, Validators.required),
-              sim_cid_no: new FormControl({ value: element.sim_cid_no, disabled: true }, Validators.required),
-              sim_iccid: new FormControl({ value: element.sim_iccid, disabled: true }, Validators.required),
-              sim_phone_number: new FormControl({ value: element.sim_phone_number, disabled: true }, Validators.required),
-              plan: new FormControl({ value: element.plan, disabled: true }, Validators.required),
-              amount: new FormControl({ value: element.amount, disabled: true }, Validators.required),
-              refund_amount: new FormControl({ value: 0, disabled: true }),
-              is_removed: new FormControl(null)
-            })
-          );
-        });
+      this.subscriptionItemList = e.subscribed_items.filter(x=>!x.is_frozen);
+
+      this.subscriptionItemList.forEach(element => {
+        element.is_selected = false;
+     });
+
+    }
+
+  }
+
+
+
+
+
+
+    // The master checkbox will check/ uncheck all items
+    checkUncheckAll() {
+      for (var i = 0; i < this.subscriptionItemList.length; i++) {
+        this.subscriptionItemList[i].is_selected = this.simSelected;
       }
+      this.getCheckedItemList();
     }
 
-  }
+    // Check All Checkbox Checked
+    isAllSelected() {
+      this.simSelected = this.subscriptionItemList.every(function(item:any) {
+          return item.is_selected == true;
+        })
+      this.getCheckedItemList();
+    }
 
-
-  onItemRefundChange(e,item) {
-
-    if(Number(item.get('refund_amount').value) > 0 ){
-      if(Number(item.get('refund_amount').value) >= Number(item.get('amount').value)){
-        this.toastr.warning('Refund amount can\'t be greater then actual amount', 'Warning!',  { timeOut: 4000 });
-        item.controls["refund_amount"].setValue(0);
-      }else{
-        item.controls["refund_amount"].setValue(Number(item.get('refund_amount').value));
+    // Get List of Checked Items
+    getCheckedItemList(){
+      this.checkedList = [];
+      for (var i = 0; i < this.subscriptionItemList.length; i++) {
+        if(this.subscriptionItemList[i].is_selected)
+        this.checkedList.push(this.subscriptionItemList[i]);
       }
+      this.checkedList = JSON.stringify(this.checkedList);
     }
 
-    this.changeTotalRefund();
-
-  }
 
 
-  changeTotalRefund(){
-    let ref = 0;
-    let checkCount = 0;
-    this.fromRowData = this.entryForm.getRawValue();
-    this.fromRowData.itemHistory.forEach(element => {
-      ref = ref + Number(element.refund_amount);
-
-      if(element.is_removed){
-        checkCount++;
-      };
-
-    });
-    this.total_refund = ref;
-    if(checkCount > 0){
-        this.isSubmitDisabled = false;
-    }else{
-      this.isSubmitDisabled = true;
-    }
-
-  }
-
-
-  onCheckboxChange(event,item){
-    if(event.target.checked){
-      item.controls["refund_amount"].enable();
-    }else{
-      item.controls["refund_amount"].setValue(0);
-      item.controls["refund_amount"].disable();
-    }
-    this.changeTotalRefund();
-  }
 
 
   getItemList(code) {
@@ -393,36 +353,29 @@ export class RemoveProductSubscriptionComponent implements OnInit {
     if (this.entryForm.invalid) {
       return;
     }
-    let removal_items = [];
-
-    this.fromRowData = this.entryForm.getRawValue();
-    this.fromRowData.itemHistory.filter(x => x.is_removed).forEach(element => {
-      removal_items.push({
-        id: element.id,
-        sim: element.sim,
-        refund_amount: Number(element.refund_amount)
+    let sim_list = [];
+    this.subscriptionItemList.filter(x => x.is_selected).forEach(element => {
+      sim_list.push({
+        sim: element.sim
       });
 
     });
 
-    if (removal_items.length == 0) {
+    if (sim_list.length == 0) {
       this.toastr.warning('No item selected', 'Warning!', { closeButton: true, disableTimeOut: false });
       return;
     }
 
    this.blockUI.start('Saving...');
     const obj = {
-      customer: this.entryForm.value.customer,
-      subscription: this.entryForm.value.subscription,
-      removal_items: removal_items
+      sim_list: sim_list
     };
 
-
-    this.confirmService.confirm('Are you sure?', 'You are removing items from current month subscription.')
+    this.confirmService.confirm('Are you sure?', 'You are freezing the SIM(s).')
       .subscribe(
         result => {
           if (result) {
-            this._service.post('subscription/remove-products-from-current-month', obj).subscribe(
+            this._service.post('stock/freeze-sims', obj).subscribe(
               data => {
                 this.blockUI.stop();
                 if (data.IsReport == "Success") {
@@ -460,21 +413,9 @@ export class RemoveProductSubscriptionComponent implements OnInit {
   formReset() {
     this.submitted = false;
     this.entryForm.reset();
-    Object.keys(this.entryForm.controls).forEach(key => {
-      this.entryForm.controls[key].setErrors(null)
-    });
-    let itemHistoryControl = <FormArray>(
-      this.entryForm.controls.itemHistory
-    );
-    while (this.itemHistoryList.length !== 0) {
-      itemHistoryControl.removeAt(0);
-    }
-    this.subTotal = 0;
-    this.total_refund = 0;
-    this.discount = 0;
-    this.paidAmount = 0;
     this.selectedCustomer = null;
     this.subscriptionList = [];
+    this.subscriptionItemList = [];
     this.getCustomerList();
     // this.getSIMList();
     // this.getPlanList();

@@ -1,0 +1,188 @@
+<block-ui>
+  <form [formGroup]="entryForm">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card card-border-default">
+        <div class="card-header">
+          <h5> Freeze SIM </h5>
+          <!-- <span class="code-header ">use class <code>table</code> inside table element</span> -->
+        </div>
+        <div class="card-block ">
+
+          <div class="row ">
+            <div class="col-lg-6">
+
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Customer </label>
+                <div class="col-sm-9">
+                  <ng-select (change)="onCustomerChange($event)" formControlName="customer" [clearable]="false"
+                    [items]="customersBuffer" [virtualScroll]="true" [dropdownPosition]="'bottom'" [loading]="loading"
+                    bindLabel="first_name" bindValue="id" placeholder="Select a customer" appendTo="body"
+                    [typeahead]="input$" (scroll)="onScroll($event)" (scrollToEnd)="onScrollToEnd()" #select>
+                    <ng-template ng-header-tmp>
+                      <small class="form-text text-muted">Loaded {{customersBuffer.length}} of
+                        {{page.totalElements}}</small>
+                    </ng-template>
+
+                    <ng-template ng-label-tmp let-item="item">
+                      {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
+                    </ng-template>
+                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                      {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
+                    </ng-template>
+                  </ng-select>
+                  <div *ngIf="submitted && f.customer.errors" class="error-text">
+                    <span *ngIf="f.customer.errors.required" class="text-danger"> Customer is required</span>
+
+                  </div>
+
+                  <div class="row blog-big-user m-t-10" *ngIf="selectedCustomer">
+                    <div class="col-sm-10">
+                      <div>
+                        <h4 class="m-b-10 text-primary">{{selectedCustomer.first_name}} {{selectedCustomer.last_name}}
+                        </h4>
+                        <h6 class="m-b-5"><i class="icofont icofont-envelope-open"></i> {{selectedCustomer.email}}</h6>
+                        <p class="m-b-5"><i class="icofont icofont-phone"></i> {{selectedCustomer.mobile}}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+
+            </div>
+            <div class="col-lg-6">
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Subscription </label>
+                <div class="col-sm-8">
+                  <ng-select (change)="onSubscriptionChange($event)"
+                    [ngClass]="{ 'is-invalid': submitted && f.subscription.errors }" [clearable]="false"
+                    formControlName="subscription" [clearOnBackspace]="false" [items]="subscriptionList" bindLabel="id"
+                    bindValue="id" placeholder="Select subscription">
+
+                    <ng-template ng-option-tmp let-item="item" let-index="index">
+
+                      <div>
+                        <div class="card-body">
+                          <div class="row mb-3">
+                            <div class="col-sm-6 pt-2">
+                              <h6 class="card-subtitle text-muted">Subscription No: {{item.id}}</h6>
+                            </div>
+                            <div class="col-sm-6">
+                              <span *ngIf="item.status == 1" class=" card-subtitle"> Status : <strong
+                                  class="label label-success">{{ SubscriptionStatus[item.status] }}</strong></span>
+                              <span *ngIf="item.status == 2" class=" card-subtitle"> Status : <strong
+                                  class="label label-warning">{{ SubscriptionStatus[item.status] }}</strong></span>
+                            </div>
+                          </div>
+                          <!-- <p class="card-text">  Id : {{item.alias}}</p> -->
+                        </div>
+                      </div>
+                    </ng-template>
+
+
+                  </ng-select>
+                  <div *ngIf="submitted && f.subscription.errors" class="error-text">
+                    <span *ngIf="f.subscription.errors.required" class="text-danger"> Subscription is required</span>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="subscriptionList.length > 0">
+    <div class="col-lg-12">
+      <div class="card card-border-default">
+        <!-- <div class="card-header">
+            <div class="alert alert-danger mb-0" role="alert">
+              Note: During product removal, if you want to adjust the bill, you can do that by simply refunding. Type
+              refund-amount for specific product in the below section.
+            </div>
+          </div> -->
+        <div class="card-block mb-5">
+          <div class="row ">
+            <div class="col-lg-12">
+              <div class="table-responsive">
+                <table class="table table-xs table-hover table-bordered table-striped">
+                  <thead>
+                    <tr>
+
+                      <th width="8%" scope="col">
+
+                        <div class="checkbox-fade fade-in-info text-center pt-2">
+                          <label>
+                            <input type="checkbox" (change)="checkUncheckAll()" [ngModelOptions]="{standalone: true}" [(ngModel)]="simSelected">
+                            <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-info"></i></span>
+                            <strong>Freeze All</strong>
+                          </label>
+                        </div>
+                       </th>
+
+                      <th width="10%" scope="col">SIM CID No</th>
+                      <th width="20%" scope="col">ICCID No</th>
+                      <th width="15%" scope="col">Phone Number</th>
+                      <th width="15%" scope="col">Plan</th>
+                      <!-- <th width="15%" scope="col">Amount</th> -->
+                    </tr>
+                  </thead>
+                  <tbody *ngFor="let item of subscriptionItemList; let i = index;">
+
+                    <th>
+                      <div class="checkbox-fade fade-in-info text-center pt-2">
+                        <label>
+                          <input type="checkbox" (change)="isAllSelected()" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.is_selected">
+                          <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-info"></i></span>
+                        </label>
+                      </div>
+
+                    </th>
+                    <th>
+                      <input type="text" disabled="" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.sim_cid_no" />
+                    </th>
+
+                    <th>
+                      <input type="text" disabled="" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.sim_iccid" />
+                    </th>
+
+                    <th>
+                      <input type="text" disabled="" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.sim_phone_number" />
+                    </th>
+
+                    <th>
+                      <input type="text" disabled="" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.plan" />
+                    </th>
+                    <!-- <th>
+                            <input type="text" class="form-control"
+                              [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('amount').errors}"
+                              formControlName="amount" />
+                          </th> -->
+
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="col-lg-4 offset-lg-8 m-b-10" *ngIf="subscriptionItemList.length > 0">
+
+              <button class="btn btn-info btn-sm float-right" (click)="onFormSubmit()">
+                <i class="icofont-save"></i> {{btnSaveText}}
+              </button>
+            </div>
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </form>
+
+</block-ui>

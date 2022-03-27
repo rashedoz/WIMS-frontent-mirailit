@@ -113,6 +113,7 @@ export class CancelEntireSubCurrentMonthComponent implements OnInit {
     this.itemFormArray = this.entryForm.get("itemHistory")["controls"];
 
     this.getCustomer();
+    this.onSearch();
    // this.getCustomerList();
     // this.getSIMList();
     // this.getPlanList();

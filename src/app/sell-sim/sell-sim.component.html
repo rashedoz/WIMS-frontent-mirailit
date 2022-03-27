@@ -45,14 +45,14 @@
                   <div class="col-sm-9">
                     <!-- <ng-select  [searchFn]="customSearchFn" [ngClass]="{ 'is-invalid': submitted && f.customer.errors }" [clearable]="false" formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
                       bindLabel="first_name" bindValue="id" placeholder="Select a customer">
-                      <ng-template ng-label-tmp let-item="item">                          
+                      <ng-template ng-label-tmp let-item="item">
                         {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
                     </ng-template>
                       <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-                        {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}} 
+                        {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
                     </ng-template>
                     </ng-select> -->
-                    <ng-select formControlName="customer" [clearable]="true" 
+                    <ng-select formControlName="customer" [clearable]="true"
                             [items]="customersBuffer"
                             [virtualScroll]="true"
                             [dropdownPosition]="'bottom'"
@@ -67,13 +67,13 @@
                       <ng-template ng-header-tmp>
                           <small class="form-text text-muted">Loaded {{customersBuffer.length}} of {{page.totalElements}}</small>
                       </ng-template>
-                      
+
                       <ng-template ng-label-tmp let-item="item">
-                        {{item.customer_code}} - {{item.first_name}} {{item.last_name}} 
+                        {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
                     </ng-template>
 
                       <ng-template ng-option-tmp let-item="item"  let-index="index">
-                           {{item.customer_code}} - {{item.first_name}} {{item.last_name}}
+                           {{item.customer_code}} - {{item.first_name}} {{item.last_name}}- {{item.mobile}}
                       </ng-template>
                   </ng-select>
                     <div *ngIf="submitted && f.customer.errors" class="error-text">
@@ -115,7 +115,7 @@
                               <!-- <ng-select [clearable]="false" appendTo="body" (change)="onSIMChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}" formControlName="sim" [clearOnBackspace]="false" [items]="simList"
                               bindLabel="CID_no" placeholder="Select a sim"> -->
 
-                              <ng-select [clearable]="false" appendTo="body" (change)="onSIMChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}" formControlName="sim" [clearOnBackspace]="false" 
+                              <ng-select [clearable]="false" appendTo="body" (change)="onSIMChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}" formControlName="sim" [clearOnBackspace]="false"
                               [items]="simsBuffer"
                               [virtualScroll]="true"
                               [dropdownPosition]="'bottom'"
@@ -129,8 +129,8 @@
                             </ng-template>
 
                               <ng-template ng-option-tmp let-item="item" let-index="index">
-                                <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no">  {{item.CID_no}} </p>                                
-                                <p class="card-text font-weight-bold" *ngIf="item.ICCID_no">  {{item.CID_no}} ({{item.ICCID_no}})</p>                                
+                                <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no">  {{item.CID_no}} </p>
+                                <p class="card-text font-weight-bold" *ngIf="item.ICCID_no">  {{item.CID_no}} ({{item.ICCID_no}})</p>
                             </ng-template>
                             </ng-select>
                               <div *ngIf="submitted && item_his.controls[i].get('sim').errors" class="error-text">

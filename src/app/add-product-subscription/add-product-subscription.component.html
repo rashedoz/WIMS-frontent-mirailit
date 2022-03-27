@@ -20,8 +20,7 @@
                       formControlName="customer" [clearOnBackspace]="false" [items]="customerList"
                       bindLabel="first_name" bindValue="id" placeholder="Select a customer"> -->
 
-
-                      <ng-select (change)="onCustomerChange($event)" formControlName="customer" [clearable]="false"
+                      <ng-select formControlName="customer" [clearable]="true"
                       [items]="customersBuffer"
                       [virtualScroll]="true"
                       [dropdownPosition]="'bottom'"
@@ -30,22 +29,23 @@
                       bindValue="id"
                       placeholder="Select a customer"
                       appendTo="body"
+                      (change)="onCustomerChange($event)"
                       [typeahead]="input$"
                       (scroll)="onScroll($event)"
                       (scrollToEnd)="onScrollToEnd()" #select>
-                    <ng-template ng-header-tmp>
-                        <small class="form-text text-muted">Loaded {{customersBuffer.length}} of {{page.totalElements}}</small>
-                    </ng-template>
-
-
-
-                      <ng-template ng-label-tmp let-item="item">
-                        {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
-                    </ng-template>
-                      <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-                        {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
+                        <ng-template ng-header-tmp>
+                            <small class="form-text text-muted">Loaded {{customersBuffer.length}} of {{page.totalElements}}</small>
+                        </ng-template>
+                        <ng-template ng-label-tmp let-item="item">
+                          {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
                       </ng-template>
+
+                        <ng-template ng-option-tmp let-item="item"  let-index="index">
+                            {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
+                        </ng-template>
                     </ng-select>
+
+
                     <div *ngIf="submitted && f.customer.errors" class="error-text">
                       <span *ngIf="f.customer.errors.required" class="text-danger"> Customer is required</span>
 
