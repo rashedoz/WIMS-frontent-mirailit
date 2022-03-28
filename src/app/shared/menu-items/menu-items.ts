@@ -300,19 +300,44 @@ const MENUITEMS = [
       },
     ]
   },
+
   {
     label: 'none',
     permission: 'is_superuser,is_staff',
     main: [
       {
-        state: 'bill-list',
         name: 'Bills',
-        type: 'link',
-        icon: 'ti-control-forward',
+        type: 'sub',
         permission: 'is_superuser,is_staff',
-      }
+        icon: 'icofont-brand-microsoft',
+        children: [
+          {
+            state: 'bill-list',
+            name: 'Bill List',
+            type: 'link',
+            icon: 'ti-control-forward',
+            permission: 'is_superuser,is_staff',
+          },
+
+
+        ]
+      },
     ]
   },
+
+  // {
+  //   label: 'none',
+  //   permission: 'is_superuser,is_staff',
+  //   main: [
+  //     {
+  //       state: 'bill-list',
+  //       name: 'Bills',
+  //       type: 'link',
+  //       icon: 'ti-control-forward',
+  //       permission: 'is_superuser,is_staff',
+  //     }
+  //   ]
+  // },
   {
     label: 'none',
     permission: 'is_superuser,is_staff',
