@@ -1,83 +1,49 @@
 import { Component, TemplateRef, ViewChild, ElementRef, ViewEncapsulation, OnInit } from '@angular/core';
-import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
-import { DatePipe } from '@angular/common';
+import { ColumnMode,DatatableComponent } from '@swimlane/ngx-datatable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from "@angular/router";
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { Router } from '@angular/router';
 import { CommonService } from '../_services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
-import { BillStatus } from '../_models/enums';
-import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
-// import { NgxSmartModalComponent, NgxSmartModalService } from 'ngx-smart-modal';
+import { BillStatus, StockStatus } from '../_models/enums';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable';
-import * as moment from 'moment';
+import { DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-bill-list',
-  templateUrl: './bill-list.component.html',
-  styleUrls: ['./bill-list.component.css'],
+  selector: 'app-device-sales-bill-list',
+  templateUrl: './device-sales-bill-list.component.html',
   encapsulation: ViewEncapsulation.None
 })
 
-export class BillListComponent implements OnInit {
+export class DeviceSalesBillListComponent implements OnInit {
 
   entryForm: FormGroup;
-  entryFormBill: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
-  columnsWithSearch: string[] = [];
-  billStatus = BillStatus;
+
+  StockStatus = StockStatus;
   page = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
-  activeTable = 0;
-  modalTitle = 'Payment';
-  modalTitleBill = 'Generate Monthly Bill';
-  btnSaveTextBill = 'Generate';
-  btnSaveText = 'Save';
-  modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
-  modalRef: BsModalRef;
-  modalRefInv: BsModalRef;
-  @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
-  @ViewChild(DatatableComponent, { static: false }) tableSIM: DatatableComponent;
-  @ViewChild(DatatableComponent, { static: false }) tableDevice: DatatableComponent;
-  @ViewChild('pdfViewerOnDemand', { static: false }) pdfViewerOnDemand: any;
-  // @ViewChild(TemplateRef, { static: false }) tpl: TemplateRef<any>;
-  // invModal: NgxSmartModalComponent;
-  @ViewChild('htmlData', { static: false }) htmlData: ElementRef;
-
   rows = [];
   tempRows = [];
-  bilList = [];
-  subscriptionBilList = [];
-  simBilList = [];
-  deviceBilList = [];
-
-  fullPaidBilList = [];
-  unPaidBilList = [];
-  partiallyPaidBilList = [];
-
-
-
-  searchParamAll = '';
-  searchParamSubscription = '';
-  searchParamSim = '';
-  searchParamDevice = '';
-  searchParamFullyPaid = '';
-  searchParamUnPaid = '';
-  searchParamPartiallyPaid = '';
-
-  isbuttonActive = true;
-
+  columnsWithSearch : string[] = [];
   loadingIndicator = false;
+  iccidHistory:any = null;
   ColumnMode = ColumnMode;
   scrollBarHorizontal = (window.innerWidth < 1200);
+  @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
+  modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
+  modalRef: BsModalRef;
+  modalRefICCID: BsModalRef;
+  simLifecycleDetails : Array<any> = [];
+  url = 'subscription/get-unpaid-device-bill-list';
+  billStatus = BillStatus;
+  searchParam = '';
 
-  customer;
-  customerList: Array<any> = [];
-  itemList: Array<any> = [];
+
 
   newTotal: number = 0;
   subTotal: number = 0;
@@ -91,7 +57,7 @@ export class BillListComponent implements OnInit {
   isPayBalanceEnableShow = false;
   isPayBalanceEnable = false;
   pageType = null;
-
+  btnSaveText = "Save";
   fontSizes: any = {
     HeadTitleFontSize: 18,
     Head2TitleFontSize: 16,
@@ -105,465 +71,91 @@ export class BillListComponent implements OnInit {
     NormalSpacing: 12
   };
 
-
   constructor(
-    // private ngxSmartModalService : NgxSmartModalService,
-    private confirmService: ConfirmService,
-    private modalService: BsModalService,
     public formBuilder: FormBuilder,
     private _service: CommonService,
     private toastr: ToastrService,
     public datepipe: DatePipe,
-    private router: Router,
-    private route: ActivatedRoute
+    private modalService: BsModalService,
+    private router: Router
   ) {
     this.page.pageNumber = 0;
     this.page.size = 10;
-    this.pageType = this.route.snapshot.params['page_type'];
-    console.log(this.pageType);
     window.onresize = () => {
       this.scrollBarHorizontal = (window.innerWidth < 1200);
     };
-
   }
 
 
   ngOnInit() {
-
-    // this.getCustomerList();
-    this.entryFormBill = this.formBuilder.group({
-      invoice_month: [null, [Validators.required]],
-    });
+    this.getList();
+  }
 
 
-    // this.entryFormBill.get('invoice_month').disable();
-    this.entryFormBill.get('invoice_month').setValue(moment().format('MMM-YYYY'));
+  // 'Available', 'Subscribed', 'Cancelled', 'Permanently Cancelled'
 
-    if (this.pageType) {
-      switch (this.pageType) {
-        case 'fully-paid':
-          this.getFullPaidBillList();
-          break;
-        case 'partially-paid':
-          this.getPartiallypaidBillList();
-          break;
-        case 'unpaid':
-          this.getUnpaidBillList();
-          break;
-      }
-    } else {
-      this.getBillList();
+  changeTab(type,e) {
+
+    this.searchParam = '';
+    this.page.pageNumber = 0;
+    this.page.size = 10;
+
+    switch (type) {
+      case 'Fully Paid':
+        this.url = 'subscription/get-fully-paid-device-bill-list';
+        this.getList();
+        break;
+      case 'Partially Paid':
+        this.url = 'subscription/get-partially-paid-device-bill-list';
+     this.getList();
+        break;
+      case 'Unpaid':
+        this.url = 'subscription/get-unpaid-device-bill-list';
+     this.getList();
+        break;
+    default:
+      this.url = 'subscription/get-unpaid-device-bill-list';
+      this.getList();
+      break;
     }
 
-  }
+ }
 
 
-  getBillStatus(id) {
-    return this.billStatus[id];
-  }
-
-  // getCustomerList() {
-  //   this._service.get("user-list?is_customer=true").subscribe(
-  //     (res) => {
-  //       this.customerList = res;
-  //     },
-  //     (err) => {}
-  //   );
-  // }
-
-  // onCustomerChange(e){
-  //   if(e){
-  //     this.getSubscriptionBillList(e.id);
-  //   }
-  // }
-
-  setPageAll(pageInfo) {
+  setPage(pageInfo) {
     this.page.pageNumber = pageInfo.offset;
-    this.getBillList();
-  }
-  setPageSubscription(pageInfo) {
-    this.page.pageNumber = pageInfo.offset;
-    this.getSubscriptionBillList();
-  }
-  setPageSIM(pageInfo) {
-    this.page.pageNumber = pageInfo.offset;
-    this.getSIMBillList();
-  }
-  setPageDevice(pageInfo) {
-    this.page.pageNumber = pageInfo.offset;
-    this.getDeviceBillList();
-  }
-  setPageFullPaid(pageInfo) {
-    this.page.pageNumber = pageInfo.offset;
-    this.getFullPaidBillList();
-  }
-  setPageUnPaid(pageInfo) {
-    this.page.pageNumber = pageInfo.offset;
-    this.getUnpaidBillList();
-  }
-  setPagePartiallyPaid(pageInfo) {
-    this.page.pageNumber = pageInfo.offset;
-    this.getPartiallypaidBillList();
+    this.getList();
   }
 
-
-  showBillTable(id) {
-    this.isbuttonActive = false;
-    switch (id) {
-      case 0:
-        this.page.pageNumber = 0;
-        this.page.size = 10;
-        this.searchParamAll = '';
-        this.getBillList();
-        break;
-      case 1:
-        this.page.pageNumber = 0;
-        this.page.size = 10;
-        this.searchParamSubscription = '';
-        this.getSubscriptionBillList();
-        break;
-      case 2:
-        this.page.pageNumber = 0;
-        this.page.size = 10;
-        this.searchParamSim = '';
-        this.getSIMBillList();
-        break;
-      case 3:
-        this.page.pageNumber = 0;
-        this.page.size = 10;
-        this.searchParamDevice = '';
-        this.getDeviceBillList();
-        break;
-      case 4:
-        this.page.pageNumber = 0;
-        this.page.size = 10;
-        this.searchParamFullyPaid = '';
-        this.getFullPaidBillList();
-        break;
-      case 5:
-        this.page.pageNumber = 0;
-        this.page.size = 10;
-        this.searchParamUnPaid = '';
-        this.getUnpaidBillList();
-        break;
-      case 6:
-        this.page.pageNumber = 0;
-        this.page.size = 10;
-        this.searchParamPartiallyPaid = '';
-        this.getPartiallypaidBillList();
-        break;
-    }
-  }
-
-
-
-  getBillList() {
+  getList() {
     this.loadingIndicator = true;
-    let obj
-    if(this.searchParamAll){
-      obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber + 1,
-        search_param:this.searchParamAll
-      };
-    }else{
-       obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber + 1
-      };
-    }
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param:this.searchParam
+    };
+    this._service.get(this.url,obj).subscribe(res => {
 
-    this._service.get("subscription/get-bill-list",obj).subscribe(
-      (res) => {
-        this.activeTable = 0;
-       // this.tempRows = res;
-        this.bilList = res.results;
-        this.page.totalElements = res.count;
-        this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-      //  if (this.bilList.length > 0) this.columnsWithSearch = Object.keys(this.bilList[0]);
-        // this.page.totalElements = res.Total;
-        // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-        setTimeout(() => {
-          this.loadingIndicator = false;
-        }, 1000);
-        // const key = 'subscription';
-        // this.subscriptionList = [...new Map(this.itemList.map(item =>
-        //   [item[key], item])).values()];
-      },
-      (err) => {
-        this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
-        setTimeout(() => {
-          this.loadingIndicator = false;
-        }, 1000);
+      if (!res) {
+        this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+        return;
       }
+     // this.tempRows = res;
+      this.rows =  res.results;
+      this.page.totalElements = res.count;
+      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }, err => {
+      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }
     );
   }
 
-
-  getSubscriptionBillList() {
-    this.loadingIndicator = true;
-    let obj
-    if(this.searchParamSubscription){
-      obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber + 1,
-        search_param:this.searchParamSubscription
-      };
-    }else{
-       obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber + 1
-      };
-    }
-
-    this._service.get("subscription/get-subscription-bill-list",obj).subscribe(
-      (res) => {
-        this.activeTable = 1;
-      //  this.tempRows = res.filter(x => x.subscription != null);
-
-        this.subscriptionBilList = res.results; //.filter(x => x.subscription != null);
-
-        this.page.totalElements = res.count;
-        this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-
-
-        //   if (this.subscriptionBilList.length > 0) this.columnsWithSearch = Object.keys(this.subscriptionBilList[0]);
-        // this.page.totalElements = res.Total;
-        // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-        setTimeout(() => {
-          this.loadingIndicator = false;
-        }, 1000);
-        // const key = 'subscription';
-        // this.subscriptionList = [...new Map(this.itemList.map(item =>
-        //   [item[key], item])).values()];
-      },
-      (err) => {
-        this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
-        setTimeout(() => {
-          this.loadingIndicator = false;
-        }, 1000);
-      }
-    );
-  }
-
-  getSIMBillList() {
-    this.loadingIndicator = true;
-    let obj
-    if(this.searchParamSim){
-      obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber + 1,
-        search_param:this.searchParamSim
-      };
-    }else{
-       obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber + 1
-      };
-    }
-
-    this._service.get("subscription/get-sim-sales-list",obj).subscribe(
-      (res) => {
-        this.activeTable = 2;
-      //  this.tempRows = res;
-        this.simBilList = res.results;
-        this.page.totalElements = res.count;
-        this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-
-      //  if (this.simBilList.length > 0) this.columnsWithSearch = Object.keys(this.simBilList[0]);
-        setTimeout(() => {
-          this.loadingIndicator = false;
-        }, 1000);
-        // const key = 'subscription';
-        // this.subscriptionList = [...new Map(this.itemList.map(item =>
-        //   [item[key], item])).values()];
-      },
-      (err) => {
-        this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
-        setTimeout(() => {
-          this.loadingIndicator = false;
-        }, 1000);
-      }
-    );
-  }
-
-  getDeviceBillList() {
-    this.loadingIndicator = true;
-    let obj
-    if(this.searchParamDevice){
-      obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber + 1,
-        search_param:this.searchParamDevice
-      };
-    }else{
-       obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber + 1
-      };
-    }
-
-    this._service.get("subscription/get-device-sales-list",obj).subscribe(
-      (res) => {
-        this.activeTable = 3;
-      //  this.tempRows = res;
-        this.deviceBilList = res.results;
-        this.page.totalElements = res.count;
-        this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-
-      //  this.columnsWithSearch = Object.keys(this.deviceBilList[0]);
-
-        setTimeout(() => {
-          this.loadingIndicator = false;
-        }, 1000);
-        // const key = 'subscription';
-        // this.subscriptionList = [...new Map(this.itemList.map(item =>
-        //   [item[key], item])).values()];
-      },
-      (err) => {
-        this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
-        setTimeout(() => {
-          this.loadingIndicator = false;
-        }, 1000);
-      }
-    );
-  }
-
-  getFullPaidBillList() {
-    this.loadingIndicator = true;
-    let obj
-    if(this.searchParamFullyPaid){
-      obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber + 1,
-        search_param:this.searchParamFullyPaid
-      };
-    }else{
-       obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber + 1
-      };
-    }
-
-    this._service.get("subscription/get-fully-paid-bill-list",obj).subscribe(
-      (res) => {
-        this.activeTable = 4;
-      //  this.tempRows = res;
-        this.fullPaidBilList = res.results;
-        this.page.totalElements = res.count;
-        this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-       // if (this.bilList.length > 0) this.columnsWithSearch = Object.keys(this.bilList[0]);
-
-        setTimeout(() => {
-          this.loadingIndicator = false;
-        }, 1000);
-        // const key = 'subscription';
-        // this.subscriptionList = [...new Map(this.itemList.map(item =>
-        //   [item[key], item])).values()];
-      },
-      (err) => {
-        this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
-        setTimeout(() => {
-          this.loadingIndicator = false;
-        }, 1000);
-      }
-    );
-  }
-
-  getPartiallypaidBillList() {
-    this.loadingIndicator = true;
-    let obj
-    if(this.searchParamPartiallyPaid){
-      obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber + 1,
-        search_param:this.searchParamPartiallyPaid
-      };
-    }else{
-       obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber + 1
-      };
-    }
-
-    this._service.get("subscription/get-partially-paid-bill-list",obj).subscribe(
-      (res) => {
-        this.activeTable = 6;
-      //  this.tempRows = res;
-        this.partiallyPaidBilList = res.results;
-        this.page.totalElements = res.count;
-        this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-       // if (this.bilList.length > 0) this.columnsWithSearch = Object.keys(this.bilList[0]);
-
-        setTimeout(() => {
-          this.loadingIndicator = false;
-        }, 1000);
-        // const key = 'subscription';
-        // this.subscriptionList = [...new Map(this.itemList.map(item =>
-        //   [item[key], item])).values()];
-      },
-      (err) => {
-        this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
-        setTimeout(() => {
-          this.loadingIndicator = false;
-        }, 1000);
-      }
-    );
-  }
-
-  getUnpaidBillList() {
-    this.loadingIndicator = true;
-    let obj
-    if(this.searchParamUnPaid){
-      obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber + 1,
-        search_param:this.searchParamUnPaid
-      };
-    }else{
-       obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber + 1
-      };
-    }
-
-    this._service.get("subscription/get-unpaid-bill-list",obj).subscribe(
-      (res) => {
-        this.activeTable = 5;
-     //   this.tempRows = res;
-        this.unPaidBilList  =  res.results;
-        this.page.totalElements = res.count;
-        this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-
-       // if (this.bilList.length > 0) this.columnsWithSearch = Object.keys(this.bilList[0]);
-
-        setTimeout(() => {
-          this.loadingIndicator = false;
-        }, 1000);
-        // const key = 'subscription';
-        // this.subscriptionList = [...new Map(this.itemList.map(item =>
-        //   [item[key], item])).values()];
-      },
-      (err) => {
-        this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
-        setTimeout(() => {
-          this.loadingIndicator = false;
-        }, 1000);
-      }
-    );
-  }
-
-  onChangeDiscount(value) {
-    // if (parseFloat(value) > this.subTotal) {
-    //   this.discount = this.subTotal;
-    // }
-  }
-
-  onChangePaid(value) {
-    if (parseFloat(value) > this.newTotal) {
-      this.paidAmount = this.newTotal;
-    }
-  }
 
   onFormSubmit() {
     this.submitted = true;
@@ -595,7 +187,7 @@ export class BillListComponent implements OnInit {
         if (data.IsReport == "Success") {
           this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
           this.modalHide();
-          this.getBillList();
+          this.getList();
         } else if (data.IsReport == "Warning") {
           this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
         } else {
@@ -610,47 +202,23 @@ export class BillListComponent implements OnInit {
 
   }
 
-
-
-  modalHide() {
-    this.modalRef.hide();
-    this.submitted = false;
-    this.btnSaveText = 'Save';
-    this.billItem = {};
-    this.newTotal = 0;
-    this.subTotal = 0;
-    this.discount = 0;
-    this.paidAmount = 0;
-    this.tempPaidAmount = 0;
-    this.balance = 0;
-    this.remarks = null;
-    this.isPayBalanceEnableShow = false;
-    this.isPayBalanceEnable = false;
+  filterSearch(e){
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParam = e.target.value;
+      this.getList();
+    }
   }
 
-  openModal(row, template: TemplateRef<any>) {
 
-    this.subTotal = row.payable_amount;
-    this.billItem = row;
-    let so_far_paid = Number(this.billItem.so_far_paid) - Number(this.billItem.parent_refund_amount);
-    this.newTotal = Number(this.subTotal) - so_far_paid;
-    //  this.discount = row.discount;
-    this._service.get('get-customer-current-balance/' + row.customer_id).subscribe(
-      res => {
-        this.balanceObj = res;
-        this.balance = res.balance;
-        if (Number(this.balanceObj.balance) == 0) {
-          this.isPayBalanceEnableShow = false;
-        } else {
-          this.isPayBalanceEnableShow = true;
-        }
-      },
-      err => { }
-    );
-
-    this.modalRef = this.modalService.show(template, this.modalConfig);
-
+  onChangePaid(value) {
+    if (parseFloat(value) > this.newTotal) {
+      this.paidAmount = this.newTotal;
+    }
   }
+
+
 
   onChangePayBalance(e) {
     this.isPayBalanceEnable = e;
@@ -667,59 +235,6 @@ export class BillListComponent implements OnInit {
       this.tempPaidAmount = this.tempPaidAmount - net;
     }
   }
-
-
-
-  get f() {
-    return this.entryFormBill.controls;
-  }
-
-  onFormSubmitBill() {
-    this.submitted = true;
-    if (this.entryFormBill.invalid) {
-      return;
-    }
-
-    this.blockUI.start('Saving...');
-
-    const obj = {
-      invoice_month: this.entryFormBill.get('invoice_month').value
-    };
-
-    this.confirmService.confirm('Are you sure?', 'You are generating the monthly bill.')
-      .subscribe(
-        result => {
-          if (result) {
-            const request = this._service.post('subscription/generate-monthly-bill', obj);
-            request.subscribe(
-              data => {
-                this.blockUI.stop();
-                if (data.IsReport == "Success") {
-                  this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
-                  this.modalHide();
-                  this.getBillList();
-                } else if (data.IsReport == "Warning") {
-                  this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-                } else {
-                  this.toastr.error(data.Msg, 'Error!', { closeButton: true, disableTimeOut: true });
-                }
-              },
-              err => {
-                this.blockUI.stop();
-                this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
-              }
-            );
-          }
-          else {
-            this.blockUI.stop();
-          }
-        },
-
-      );
-
-
-  }
-
 
   printInv(row) {
 
@@ -982,7 +497,7 @@ export class BillListComponent implements OnInit {
         if(Number(res.discount) > 0){
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
-          doc.text('Discount', rightStartCol2 - 4,startY += 8,null, 'left' );
+          doc.text('Discount', rightStartCol2 - 4, startY += 8,null, 'left' );
 
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
@@ -1056,7 +571,7 @@ export class BillListComponent implements OnInit {
         if(Number(res.discount) > 0){
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
-          doc.text('Discount', rightStartCol2 - 5,startY += 8,null, 'left' );
+          doc.text('Discount', rightStartCol2 - 5, startY += 8,null, 'left' );
 
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
@@ -1355,165 +870,48 @@ export class BillListComponent implements OnInit {
   }
 
 
-  modalHideBill() {
-    this.entryFormBill.reset();
+  modalHide() {
     this.modalRef.hide();
     this.submitted = false;
+    this.btnSaveText = 'Save';
+    this.billItem = {};
+    this.newTotal = 0;
+    this.subTotal = 0;
+    this.discount = 0;
+    this.paidAmount = 0;
+    this.tempPaidAmount = 0;
+    this.balance = 0;
+    this.remarks = null;
+    this.isPayBalanceEnableShow = false;
+    this.isPayBalanceEnable = false;
   }
 
-  openModalBill(template: TemplateRef<any>) {
+  openModal(row, template: TemplateRef<any>) {
+
+    this.subTotal = row.payable_amount;
+    this.billItem = row;
+    let so_far_paid = Number(this.billItem.so_far_paid) - Number(this.billItem.parent_refund_amount);
+    this.newTotal = Number(this.subTotal) - so_far_paid;
+    //  this.discount = row.discount;
+    this._service.get('get-customer-current-balance/' + row.customer_id).subscribe(
+      res => {
+        this.balanceObj = res;
+        this.balance = res.balance;
+        if (Number(this.balanceObj.balance) == 0) {
+          this.isPayBalanceEnableShow = false;
+        } else {
+          this.isPayBalanceEnableShow = true;
+        }
+      },
+      err => { }
+    );
+
     this.modalRef = this.modalService.show(template, this.modalConfig);
 
   }
 
 
-  searchFilterAllBill(e) {
-
-    if(e){
-      this.page.pageNumber = 0;
-      this.page.size = 10;
-      this.searchParamAll = e.target.value;
-      this.getBillList();
-    }
-
-    // const val = event.target.value.toLowerCase();
 
 
-    // // assign filtered matches to the active datatable
-    // const temp = this.tempRows.filter(item => {
-    //   // iterate through each row's column data
-    //   for (let i = 0; i < this.columnsWithSearch.length; i++) {
-    //     var colValue = item[this.columnsWithSearch[i]];
-    //     // if no filter OR colvalue is NOT null AND contains the given filter
-    //     if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
-    //       // found match, return true to add to result set
-    //       return true;
-    //     }
-    //   }
-    // });
-
-    // // update the rows
-    // this.bilList = temp;
-    // // Whenever the filter changes, always go back to the first page
-    // this.table.offset = 0;
-  }
-
-  searchFilterSubscription(e) {
-    if(e){
-      this.page.pageNumber = 0;
-      this.page.size = 10;
-      this.searchParamSubscription  = e.target.value;
-      this.getSubscriptionBillList();
-    }
-    // const val = event.target.value.toLowerCase();
-
-
-    // // assign filtered matches to the active datatable
-    // const temp = this.tempRows.filter(item => {
-    //   // iterate through each row's column data
-    //   for (let i = 0; i < this.columnsWithSearch.length; i++) {
-    //     var colValue = item[this.columnsWithSearch[i]];
-    //     // if no filter OR colvalue is NOT null AND contains the given filter
-    //     if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
-    //       // found match, return true to add to result set
-    //       return true;
-    //     }
-    //   }
-    // });
-
-    // // update the rows
-    // this.subscriptionBilList = temp;
-    // // Whenever the filter changes, always go back to the first page
-    // this.table.offset = 0;
-  }
-
-  searchFilterSIM(e) {
-    if(e){
-      this.page.pageNumber = 0;
-      this.page.size = 10;
-      this.searchParamSim = e.target.value;
-      this.getSIMBillList();
-    }
-
-    // const val = event.target.value.toLowerCase();
-
-
-    // // assign filtered matches to the active datatable
-    // const temp = this.tempRows.filter(item => {
-    //   // iterate through each row's column data
-    //   for (let i = 0; i < this.columnsWithSearch.length; i++) {
-    //     var colValue = item[this.columnsWithSearch[i]];
-    //     // if no filter OR colvalue is NOT null AND contains the given filter
-    //     if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
-    //       // found match, return true to add to result set
-    //       return true;
-    //     }
-    //   }
-    // });
-
-    // // update the rows
-    // this.simBilList = temp;
-    // // Whenever the filter changes, always go back to the first page
-    // this.tableSIM.offset = 0;
-  }
-
-  searchFilterDevice(e) {
-
-    if(e){
-      this.page.pageNumber = 0;
-      this.page.size = 10;
-      this.searchParamDevice = e.target.value;
-      this.getDeviceBillList();
-    }
-
-    // const val = event.target.value.toLowerCase();
-
-    // // assign filtered matches to the active datatable
-    // const temp = this.tempRows.filter(item => {
-    //   // iterate through each row's column data
-    //   for (let i = 0; i < this.columnsWithSearch.length; i++) {
-    //     var colValue = item[this.columnsWithSearch[i]];
-    //     // if no filter OR colvalue is NOT null AND contains the given filter
-    //     if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
-    //       // found match, return true to add to result set
-    //       return true;
-    //     }
-    //   }
-    // });
-
-
-
-    // // update the rows
-    // this.deviceBilList = temp;
-    // // Whenever the filter changes, always go back to the first page
-    // this.tableDevice.offset = 0;
-  }
-
-  searchFilterFullyPaid(e) {
-    if(e){
-      this.page.pageNumber = 0;
-      this.page.size = 10;
-      this.searchParamFullyPaid = e.target.value;
-      this.getFullPaidBillList();
-    }
-  }
-
-  searchFilterUnPaid(e) {
-    if(e){
-      this.page.pageNumber = 0;
-      this.page.size = 10;
-      this.searchParamUnPaid = e.target.value;
-      this.getUnpaidBillList();
-    }
-  }
-
-  searchFilterPartiallyPaid(e) {
-    if(e){
-      this.page.pageNumber = 0;
-      this.page.size = 10;
-      this.searchParamPartiallyPaid = e.target.value;
-      this.getPartiallypaidBillList();
-    }
-  }
 
 }

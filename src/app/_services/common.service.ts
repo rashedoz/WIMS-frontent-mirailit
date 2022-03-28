@@ -41,6 +41,14 @@ export class CommonService {
     );
   }
 
+  patch(url, params) {
+    return this.http.patch<any>(environment.apiUrl + url, params).pipe(
+      map(res => {
+        return res;
+      })
+    );
+  }
+
   postMultipart(url, params) {
     return this.http.post<any>(environment.apiUrl + url, params, {headers: {'Content-Type': undefined }}).pipe(
       map(res => {

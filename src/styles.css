@@ -24304,3 +24304,15 @@ bs-datepicker-container { z-index: 3000; }
 .b-active {
     background-color: #007bff;
 }
+
+.text-gray{
+  color: #808080 !important;
+}
+
+.fs-26{
+  font-size: 26px !important;
+}
+
+.cursor{
+  cursor:pointer !important;
+}

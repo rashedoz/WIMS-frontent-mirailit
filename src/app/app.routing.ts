@@ -218,6 +218,11 @@ export const AppRoutes: Routes = [
         // canActivate: [AuthGuard]
       },
       {
+        path: 'receive-payment',
+        loadChildren: () => import('./receive-payment/receive-payment.module').then(m => m.ReceivePaymentModule),
+        // canActivate: [AuthGuard]
+      },
+      {
         path: 'member-list',
         loadChildren: () => import('./member-list/member-list.module').then(m => m.MemberListModule),
         // canActivate: [AuthGuard]
@@ -307,7 +312,16 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./unfreeze-sims/unfreeze-sims.module').then(m => m.UnFreezeSIMsModule),
         // canActivate: [AuthGuard]
       },
-
+      {
+        path: 'subscription-bill-list',
+        loadChildren: () => import('./subscription-bill-list/subscription-bill-list.module').then(m => m.SubscriptionBillListModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'device-sales-bill-list',
+        loadChildren: () => import('./device-sales-bill-list/device-sales-bill-list.module').then(m => m.DeviceSalesBillListModule),
+        // canActivate: [AuthGuard]
+      },
     ]
   }, {
     path: '**',

@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
 import { PaymentType } from '../_models/enums';
+import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 
 
 @Component({
@@ -48,6 +49,7 @@ export class PaymentListComponent implements OnInit {
   billItem;
   searchParam = '';
   constructor(
+    private confirmService: ConfirmService,
     private modalService: BsModalService,
     public formBuilder: FormBuilder,
     private _service: CommonService,
@@ -88,7 +90,46 @@ export class PaymentListComponent implements OnInit {
   setPage(pageInfo) {
     this.page.pageNumber = pageInfo.offset;
     this.getPaymentList();
-}
+  }
+
+  paymentCheck(row,item){
+    let txt = '';
+    let url = '';
+    if(item == 1){
+      txt = 'initially';
+      url = 'payment/check-payment-receival/';
+    }else {
+      txt = 'finally';
+      url = 'payment/check-payment-receival-finally/';
+    }
+
+     this.confirmService.confirm('Are you sure?', 'You are '+txt+' checking the payment.')
+     .subscribe(
+         result => {
+             if (result) {
+               const request = this._service.patch(url + row.id, {});
+               request.subscribe(
+                 data => {
+
+                   if (data.IsReport == "Success") {
+                     this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+                     this.getPaymentList();
+                   } else if (data.IsReport == "Warning") {
+                     this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+                   } else {
+                     this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+                   }
+                 },
+                 err => {
+
+                   this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+                 }
+               );
+             }
+         },
+
+     );
+  }
 
   getPaymentList() {
     this.loadingIndicator = true;

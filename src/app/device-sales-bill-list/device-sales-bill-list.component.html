@@ -1,0 +1,284 @@
+<block-ui>
+  <div class="row">
+
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5>Device Sales Bill List </h5>
+            </div>
+            <div class="card-block ">
+
+              <div class="row mb-4">
+                <div class="col-lg-12">
+                  <tabset [justified]="false" type="pills">
+
+                    <tab (selectTab)="changeTab('Unpaid',$event)">
+                      <ng-template tabHeading>
+                        Unpaid
+                      </ng-template>
+                    </tab>
+                    <tab (selectTab)="changeTab('Fully Paid',$event)">
+                      <ng-template tabHeading>
+                        Fully Paid
+                      </ng-template>
+                    </tab>
+                    <tab (selectTab)="changeTab('Partially Paid',$event)">
+                      <ng-template tabHeading>
+                        Partially Paid
+                      </ng-template>
+                    </tab>
+
+
+
+                  </tabset>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-7">
+                  <div class="form-group row">
+                    <div class="col-sm-12">
+                      <input type="text" [(ngModel)]="searchParam" class="form-control"
+                        placeholder="Search SIM by CID No, ICCID No, Phone Number" (keyup)="filterSearch($event)" />
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row ">
+                <div class="col-lg-12 ">
+
+
+                  <ngx-datatable #table class="material table-bordered" [scrollbarH]="true" [rows]="rows"
+                    [loadingIndicator]="loadingIndicator" [externalPaging]="true" [columnMode]="ColumnMode.force"
+                    [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [count]="page.totalElements"
+                    [offset]="page.pageNumber" [limit]="page.size" (page)="setPage($event)">
+
+
+                    <ngx-datatable-column [width]="200" name="Customer" prop="customer" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="150" name="Bill Type" prop="bill_type" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="150" name="Subscription No" prop="subscription" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value.id }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="150" name="Session" prop="session" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="120" name="Total Amount" prop="total_amount" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="150" name="One Time Charge" prop="one_time_charge"
+                      [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="100" name="Discount" prop="discount" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="150" name="Payable Amount" prop="payable_amount" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="100" name="So Far Paid" prop="so_far_paid" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="150" name="Total Refunded" prop="parent_refund_amount"
+                      [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="170" name="Status" prop="status" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span *ngIf="value == 1"> <strong class="label label-danger">{{ billStatus[value] }}</strong>
+                        </span>
+                        <span *ngIf="value == 2"><strong class="label label-warning">{{ billStatus[value] }}</strong>
+                        </span>
+                        <span *ngIf="value == 3"> <strong class="label label-success">{{ billStatus[value] }}</strong>
+                        </span>
+                        <span *ngIf="value == 4"> <strong class="label label-info">{{ billStatus[value] }}</strong>
+                        </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="170" name="Created Date" prop="created_at" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{value | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="250" name="Action" prop="id" [draggable]="false" [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <button *ngIf="row.status != 3 && row.status != 4" (click)="openModal(row ,template)"
+                          class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive
+                          Payment</button>
+                        <button (click)="printInv(row)" class="btn btn-primary btn-mini"><i
+                            class="icofont icofont-doc"></i>Show Invoice</button>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                  </ngx-datatable>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <ng-template #template>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left " id="modalTitle"> Payment : Bill No - {{billItem.id}} </h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body pb-0" *ngIf="billItem">
+      <app-card>
+        <div class="table-responsive">
+          <table class="table table-styling">
+            <thead>
+              <tr class="table-primary" *ngIf="billItem.bill_type == 'Subscription'">
+                <th>Subscription:</th>
+                <th *ngIf="billItem.subscription">{{billItem.subscription.id}}</th>
+                <th>Session:</th>
+                <th>{{billItem.session}}</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+
+        <div class="table-responsive" *ngIf="balanceObj">
+          <table class="table">
+            <thead>
+              <tr>
+                <th width="60%">{{balanceObj.first_name}} {{balanceObj.last_name}}</th>
+                <th>Balance:</th>
+                <th>{{balance - tempPaidAmount}}</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+
+
+        <table class="table table-xs ">
+          <tbody>
+            <tr>
+              <th>Sub-Total </th>
+              <th width="40%" class="text-right pr-4">{{subTotal}}</th>
+            </tr>
+            <tr>
+              <th>So Far Paid </th>
+              <th width="40%" class="text-right pr-4">{{billItem.so_far_paid}}</th>
+            </tr>
+            <tr>
+              <th>Total Refunded </th>
+              <th width="40%" class="text-right pr-4">{{billItem.parent_refund_amount}}</th>
+            </tr>
+            <!-- <tr class="table-info" style="font-size: 20px;">
+                      <th> Payable Amount </th>
+                      <th width="40%" class="text-right pr-4">{{newTotal}}</th>
+                  </tr> -->
+            <!-- <tr>
+                      <th>Discount</th>
+                      <td class="pr-1">
+                          <input [disabled]="isPayBalanceEnable" type="text" class="form-control form-control-sm text-right pr-3"
+                              numeric numericType="number" (change)="onChangeDiscount(discount)" [(ngModel)]="discount" [ngModelOptions]="{standalone: true}">
+                      </td>
+                  </tr> -->
+
+            <tr class="table-info" style="font-size: 20px;">
+              <th> Payable Amount </th>
+              <th class="text-right pr-4">{{subTotal - (billItem.so_far_paid - billItem.parent_refund_amount)}}</th>
+            </tr>
+            <tr>
+              <th>Paid Amount</th>
+              <td class="pr-1">
+                <input [disabled]="isPayBalanceEnable" type="text" class="form-control form-control-sm text-right pr-3"
+                  numeric numericType="number" (change)="onChangePaid(paidAmount)" [(ngModel)]="paidAmount"
+                  [ngModelOptions]="{standalone: true}">
+              </td>
+            </tr>
+            <tr *ngIf="isPayBalanceEnableShow">
+              <th colspan="2">
+                <div class="form-group text-left">
+                  <div class="checkbox-fade fade-in-primary">
+                    <label>
+                      <input type="checkbox" (change)="onChangePayBalance($event.target.checked)">
+                      <span class="cr">
+                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                      </span> Pay From Balance ?
+                    </label>
+                  </div>
+                </div>
+              </th>
+
+            </tr>
+          </tbody>
+        </table>
+        <div class="form-group row">
+          <label class="col-sm-4 col-form-label font-weight-bold pl-5">Remarks</label>
+          <div class="col-sm-8">
+            <textarea rows="2" type="text" [(ngModel)]="remarks" class="form-control"> </textarea>
+          </div>
+        </div>
+      </app-card>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHide()"> <i
+            class="icofont icofont-close"></i> Close</button>
+
+        <button class="btn btn-success btn-outline-success btn-sm" (click)="onFormSubmit()"><i
+            class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+      </div>
+
+    </div>
+  </ng-template>
+
+
+
+</block-ui>

@@ -318,8 +318,50 @@ const MENUITEMS = [
             icon: 'ti-control-forward',
             permission: 'is_superuser,is_staff',
           },
+          {
+            state: 'subscription-bill-list',
+            name: 'Subscription Bill List',
+            type: 'link',
+            icon: 'ti-control-forward',
+            permission: 'is_superuser,is_staff',
+          },
+          {
+            state: 'device-sales-bill-list',
+            name: 'Device Sales Bill List',
+            type: 'link',
+            icon: 'ti-control-forward',
+            permission: 'is_superuser,is_staff',
+          },
 
 
+        ]
+      },
+    ]
+  },
+  {
+    label: 'none',
+    permission: 'is_superuser,is_staff',
+    main: [
+      {
+        name: 'Payment',
+        type: 'sub',
+        permission: 'is_superuser,is_staff',
+        icon: 'icofont-brand-microsoft',
+        children: [
+          {
+            state: 'payment-list',
+            name: 'Payment List',
+            type: 'link',
+            icon: 'ti-control-forward',
+            permission: 'is_superuser,is_staff',
+          },
+          {
+            state: 'receive-payment',
+            name: 'Receive Payment ',
+            type: 'link',
+            icon: 'ti-control-forward',
+            permission: 'is_superuser,is_staff',
+          },
         ]
       },
     ]
@@ -338,19 +380,19 @@ const MENUITEMS = [
   //     }
   //   ]
   // },
-  {
-    label: 'none',
-    permission: 'is_superuser,is_staff',
-    main: [
-      {
-        state: 'payment-list',
-        name: 'Payments',
-        type: 'link',
-        icon: 'ti-control-forward',
-        permission: 'is_superuser,is_staff',
-      }
-    ]
-  },
+  // {
+  //   label: 'none',
+  //   permission: 'is_superuser,is_staff',
+  //   main: [
+  //     {
+  //       state: 'payment-list',
+  //       name: 'Payments',
+  //       type: 'link',
+  //       icon: 'ti-control-forward',
+  //       permission: 'is_superuser,is_staff',
+  //     }
+  //   ]
+  // },
   {
     label: 'Stack Holders',
     permission: 'is_superuser,is_staff',
