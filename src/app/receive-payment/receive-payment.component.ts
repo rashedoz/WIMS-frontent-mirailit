@@ -284,19 +284,18 @@ private fakeServiceCustomer(term) {
 
   getList() {
     this.loadingIndicator = true;
-    // const obj = {
-    //   limit: this.page.size,
-    //   page: this.page.pageNumber + 1,
-    //   search_param:this.searchParam
-    // };
-    this._service.get(this.url+this.selectedCustomer.id).subscribe(res => {
+    const obj = {
+      limit: this.pageTable.size,
+      page: this.pageTable.pageNumber + 1
+    };
+    this._service.get(this.url+this.selectedCustomer.id,obj).subscribe(res => {
 
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
         return;
       }
      // this.tempRows = res;
-      this.rows =  res.results;
+      this.rows =  res.results.filter(x=> x.status != 4);
       this.pageTable.totalElements = res.count;
       this.pageTable.totalPages = Math.ceil(this.pageTable.totalElements / this.pageTable.size);
       setTimeout(() => {
