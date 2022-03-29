@@ -215,15 +215,15 @@
           <tbody>
             <tr>
               <th>Sub-Total </th>
-              <th width="40%" class="text-right pr-4">{{subTotal}}</th>
+              <th width="60%" class="text-right pr-4">{{subTotal}}</th>
             </tr>
             <tr>
               <th>So Far Paid </th>
-              <th width="40%" class="text-right pr-4">{{billItem.so_far_paid}}</th>
+              <th width="60%" class="text-right pr-4">{{billItem.so_far_paid}}</th>
             </tr>
             <tr>
               <th>Total Refunded </th>
-              <th width="40%" class="text-right pr-4">{{billItem.parent_refund_amount}}</th>
+              <th width="60%" class="text-right pr-4">{{billItem.parent_refund_amount}}</th>
             </tr>
             <!-- <tr class="table-info" style="font-size: 20px;">
                       <th> Payable Amount </th>
@@ -237,7 +237,26 @@
                       </td>
                   </tr> -->
 
-            <tr class="table-info" style="font-size: 20px;">
+                  <tr class="table-info" style="font-size: 18px;">
+                    <th> Payable Amount </th>
+                    <th class="text-right pr-4">{{subTotal - (billItem.so_far_paid - billItem.parent_refund_amount)}}</th>
+                  </tr>
+                  <tr>
+                    <th>Payment Method</th>
+                    <td class="pr-1">
+                      <ng-select [(ngModel)]="selectedMethod" (change)="onChangePayBalance($event)" [clearable]="false"  [clearOnBackspace]="false" [items]="methodList" bindLabel="name"></ng-select>
+                    </td>
+                  </tr>
+                  <tr class="table-info" style="font-size: 20px;">
+                    <th>Paid Amount</th>
+                    <td class="pr-1">
+                      <input (focus)="inputFocused($event)" [disabled]="isPayBalanceEnable" type="text" class="form-control form-control-sm text-right pr-3"
+                        numeric numericType="number" (keyup)="onChangePaid(paidAmount)" [(ngModel)]="paidAmount"
+                        [ngModelOptions]="{standalone: true}">
+                    </td>
+                  </tr>
+
+            <!-- <tr class="table-info" style="font-size: 20px;">
               <th> Payable Amount </th>
               <th class="text-right pr-4">{{subTotal - (billItem.so_far_paid - billItem.parent_refund_amount)}}</th>
             </tr>
@@ -263,7 +282,8 @@
                 </div>
               </th>
 
-            </tr>
+            </tr> -->
+
           </tbody>
         </table>
         <div class="form-group row">

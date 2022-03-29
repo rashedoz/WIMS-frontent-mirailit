@@ -82,12 +82,12 @@
                                                   <span title="{{ value }}"> {{ value }} </span>
                                               </ng-template>
                                           </ngx-datatable-column>
-                                          <ngx-datatable-column [width]="180" name="Total Subscribed SIMs" prop="total_subscribed_sims"
+                                          <!-- <ngx-datatable-column [width]="180" name="Total Subscribed SIMs" prop="total_subscribed_sims"
                                               [draggable]="false" [sortable]="false">
                                               <ng-template let-value="value" ngx-datatable-cell-template>
                                                   <span title="{{ value }}"> {{ value }} </span>
                                               </ng-template>
-                                          </ngx-datatable-column>
+                                          </ngx-datatable-column> -->
                                           <ngx-datatable-column [width]="200" name="Email" prop="email"
                                               [draggable]="false" [sortable]="false">
                                               <ng-template let-value="value" ngx-datatable-cell-template>
@@ -102,22 +102,22 @@
                                               </ng-template>
                                           </ngx-datatable-column> -->
 
-                                          <ngx-datatable-column [width]="450" name="Action" prop="Id"
+                                          <ngx-datatable-column [width]="250" name="Action" prop="Id"
                                               [draggable]="false" [sortable]="false">
                                               <ng-template let-row="row" ngx-datatable-cell-template>
-                                                  <button (click)="showDetails(row,templateDetails)" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-eye"></i>Show Profile</button>
+                                                  <button [routerLink]="['/customer-details',row.id]" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-eye"></i>Show Profile</button>
 
-                                                  <button (click)="getItem(row,template)"
+                                                  <!-- <button (click)="getItem(row,template)"
                                                       class="btn btn-primary btn-mini mr-1"><i
-                                                          class="icofont icofont-edit"></i>Edit Profile</button>
+                                                          class="icofont icofont-edit"></i>Edit Profile</button> -->
                                                   <!-- <button (click)="changePassword(row,templateChangePassword)"
                                                       class="btn btn-info btn-mini mr-1"><i
                                                           class="icofont icofont-retweet"></i>Change Password</button> -->
-                                                  <button *ngIf="row.has_subscription_history"
+                                                  <!-- <button *ngIf="row.has_subscription_history"
                                                       (click)="showHistory(row)"
                                                       class="btn btn-primary btn-mini"><i
                                                           class="icofont icofont-listing-box"></i>subscription
-                                                      History</button>
+                                                      History</button> -->
 
                                               </ng-template>
                                           </ngx-datatable-column>
@@ -168,12 +168,12 @@
                                               <span title="{{ value }}"> {{ value }} </span>
                                           </ng-template>
                                       </ngx-datatable-column>
-                                      <ngx-datatable-column [width]="180" name="Total Subscribed SIMs" prop="total_subscribed_sims"
+                                      <!-- <ngx-datatable-column [width]="180" name="Total Subscribed SIMs" prop="total_subscribed_sims"
                                           [draggable]="false" [sortable]="false">
                                           <ng-template let-value="value" ngx-datatable-cell-template>
                                               <span title="{{ value }}"> {{ value }} </span>
                                           </ng-template>
-                                      </ngx-datatable-column>
+                                      </ngx-datatable-column> -->
                                           <ngx-datatable-column [width]="200" name="Email" prop="email"
                                               [draggable]="false" [sortable]="false">
                                               <ng-template let-value="value" ngx-datatable-cell-template>
@@ -189,22 +189,22 @@
                                               </ng-template>
                                           </ngx-datatable-column> -->
 
-                                          <ngx-datatable-column [width]="450" name="Action" prop="Id"
+                                          <ngx-datatable-column [width]="250" name="Action" prop="Id"
                                               [draggable]="false" [sortable]="false">
                                               <ng-template let-row="row" ngx-datatable-cell-template>
-                                                  <button (click)="showDetails(row,templateDetails)" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-eye"></i>Show Profile</button>
+                                                  <button [routerLink]="['/customer-details',row.id]" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-eye"></i>Show Profile</button>
 
-                                                  <button (click)="getItem(row,template)"
+                                                  <!-- <button (click)="getItem(row,template)"
                                                       class="btn btn-primary btn-mini mr-1"><i
-                                                          class="icofont icofont-edit"></i>Edit Profile</button>
+                                                          class="icofont icofont-edit"></i>Edit Profile</button> -->
                                                   <!-- <button (click)="changePassword(row,templateChangePassword)"
                                                       class="btn btn-info btn-mini mr-1"><i
                                                           class="icofont icofont-retweet"></i>Change Password</button> -->
-                                                  <button *ngIf="row.has_subscription_history"
+                                                  <!-- <button *ngIf="row.has_subscription_history"
                                                       (click)="showHistory(row)"
                                                       class="btn btn-primary btn-mini"><i
                                                           class="icofont icofont-listing-box"></i>Subscription
-                                                      History</button>
+                                                      History</button> -->
                                               </ng-template>
                                           </ngx-datatable-column>
                                       </ngx-datatable>
@@ -254,12 +254,12 @@
                                               <span title="{{ value }}"> {{ value }} </span>
                                           </ng-template>
                                       </ngx-datatable-column>
-                                      <ngx-datatable-column [width]="180" name="Total Subscribed SIMs" prop="total_subscribed_sims"
+                                      <!-- <ngx-datatable-column [width]="180" name="Total Subscribed SIMs" prop="total_subscribed_sims"
                                           [draggable]="false" [sortable]="false">
                                           <ng-template let-value="value" ngx-datatable-cell-template>
                                               <span title="{{ value }}"> {{ value }} </span>
                                           </ng-template>
-                                      </ngx-datatable-column>
+                                      </ngx-datatable-column> -->
                                           <ngx-datatable-column [width]="200" name="Email" prop="email"
                                               [draggable]="false" [sortable]="false">
                                               <ng-template let-value="value" ngx-datatable-cell-template>
@@ -275,22 +275,22 @@
                                               </ng-template>
                                           </ngx-datatable-column> -->
 
-                                          <ngx-datatable-column [width]="450" name="Action" prop="Id"
+                                          <ngx-datatable-column [width]="250" name="Action" prop="Id"
                                               [draggable]="false" [sortable]="false">
                                               <ng-template let-row="row" ngx-datatable-cell-template>
-                                                  <button (click)="showDetails(row,templateDetails)" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-eye"></i>Show Profile</button>
+                                                  <button [routerLink]="['/customer-details',row.id]" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-eye"></i>Show Profile</button>
 
-                                                  <button (click)="getItem(row,template)"
+                                                  <!-- <button (click)="getItem(row,template)"
                                                       class="btn btn-primary btn-mini mr-1"><i
-                                                          class="icofont icofont-edit"></i>Edit Profile</button>
+                                                          class="icofont icofont-edit"></i>Edit Profile</button> -->
                                                   <!-- <button (click)="changePassword(row,templateChangePassword)"
                                                       class="btn btn-info btn-mini mr-1"><i
                                                           class="icofont icofont-retweet"></i>Change Password</button> -->
-                                                  <button *ngIf="row.has_subscription_history"
+                                                  <!-- <button *ngIf="row.has_subscription_history"
                                                       (click)="showHistory(row)"
                                                       class="btn btn-primary btn-mini"><i
                                                           class="icofont icofont-listing-box"></i>subscription
-                                                      History</button>
+                                                      History</button> -->
 
                                               </ng-template>
                                           </ngx-datatable-column>
@@ -345,12 +345,12 @@
                                                   <span title="{{ value }}"> {{ value }} </span>
                                               </ng-template>
                                           </ngx-datatable-column>
-                                          <ngx-datatable-column [width]="180" name="Total Subscribed SIMs" prop="total_subscribed_sims"
+                                          <!-- <ngx-datatable-column [width]="180" name="Total Subscribed SIMs" prop="total_subscribed_sims"
                                               [draggable]="false" [sortable]="false">
                                               <ng-template let-value="value" ngx-datatable-cell-template>
                                                   <span title="{{ value }}"> {{ value }} </span>
                                               </ng-template>
-                                          </ngx-datatable-column>
+                                          </ngx-datatable-column> -->
                                           <ngx-datatable-column [width]="200" name="Email" prop="email"
                                               [draggable]="false" [sortable]="false">
                                               <ng-template let-value="value" ngx-datatable-cell-template>
@@ -365,22 +365,22 @@
                                               </ng-template>
                                           </ngx-datatable-column> -->
 
-                                          <ngx-datatable-column [width]="450" name="Action" prop="Id"
+                                          <ngx-datatable-column [width]="250" name="Action" prop="Id"
                                               [draggable]="false" [sortable]="false">
                                               <ng-template let-row="row" ngx-datatable-cell-template>
-                                                  <button (click)="showDetails(row,templateDetails)" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-eye"></i>Show Profile</button>
+                                                  <button [routerLink]="['/customer-details',row.id]" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-eye"></i>Show Profile</button>
 
-                                                  <button (click)="getItem(row,template)"
+                                                  <!-- <button (click)="getItem(row,template)"
                                                       class="btn btn-primary btn-mini mr-1"><i
-                                                          class="icofont icofont-edit"></i>Edit Profile</button>
+                                                          class="icofont icofont-edit"></i>Edit Profile</button> -->
                                                   <!-- <button (click)="changePassword(row,templateChangePassword)"
                                                       class="btn btn-info btn-mini mr-1"><i
                                                           class="icofont icofont-retweet"></i>Change Password</button> -->
-                                                  <button *ngIf="row.has_subscription_history"
+                                                  <!-- <button *ngIf="row.has_subscription_history"
                                                       (click)="showHistory(row)"
                                                       class="btn btn-primary btn-mini"><i
                                                           class="icofont icofont-listing-box"></i>subscription
-                                                      History</button>
+                                                      History</button> -->
 
                                               </ng-template>
                                           </ngx-datatable-column>

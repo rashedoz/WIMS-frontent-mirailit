@@ -18,12 +18,12 @@ import { Subject, Observable, of, concat } from 'rxjs';
 import { distinctUntilChanged, debounceTime, switchMap, tap, catchError, filter, map } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-receive-payment',
-  templateUrl: './receive-payment.component.html',
+  selector: 'app-customer-details',
+  templateUrl: './customer-details.component.html',
   encapsulation: ViewEncapsulation.None
 })
 
-export class ReceivePaymentComponent implements OnInit {
+export class CustomerDetailsComponent implements OnInit {
 
   entryForm: FormGroup;
   submitted = false;

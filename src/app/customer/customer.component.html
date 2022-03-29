@@ -102,10 +102,10 @@
                                                 </ng-template>
                                             </ngx-datatable-column> -->
 
-                                            <ngx-datatable-column [width]="450" name="Action" prop="Id"
+                                            <ngx-datatable-column [width]="250" name="Action" prop="id"
                                                 [draggable]="false" [sortable]="false">
                                                 <ng-template let-row="row" ngx-datatable-cell-template>
-                                                    <button (click)="showDetails(row,templateDetails)" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-eye"></i>Show Profile</button>
+                                                    <button [routerLink]="['/customer-details',row.id]" routerLinkActive="router-link-active"  class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-eye"></i>Show Profile</button>
 
                                                     <button (click)="getItem(row,template)"
                                                         class="btn btn-primary btn-mini mr-1"><i
@@ -113,11 +113,11 @@
                                                     <!-- <button (click)="changePassword(row,templateChangePassword)"
                                                         class="btn btn-info btn-mini mr-1"><i
                                                             class="icofont icofont-retweet"></i>Change Password</button> -->
-                                                    <button *ngIf="row.has_subscription_history"
+                                                    <!-- <button *ngIf="row.has_subscription_history"
                                                         (click)="showHistory(row)"
                                                         class="btn btn-primary btn-mini"><i
                                                             class="icofont icofont-listing-box"></i>subscription
-                                                        History</button>
+                                                        History</button> -->
 
                                                 </ng-template>
                                             </ngx-datatable-column>
@@ -189,10 +189,10 @@
                                                 </ng-template>
                                             </ngx-datatable-column> -->
 
-                                            <ngx-datatable-column [width]="450" name="Action" prop="Id"
+                                            <ngx-datatable-column [width]="250" name="Action" prop="Id"
                                                 [draggable]="false" [sortable]="false">
                                                 <ng-template let-row="row" ngx-datatable-cell-template>
-                                                    <button (click)="showDetails(row,templateDetails)" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-eye"></i>Show Profile</button>
+                                                    <button [routerLink]="['/customer-details',row.id]" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-eye"></i>Show Profile</button>
 
                                                     <button (click)="getItem(row,template)"
                                                         class="btn btn-primary btn-mini mr-1"><i
@@ -200,11 +200,11 @@
                                                     <!-- <button (click)="changePassword(row,templateChangePassword)"
                                                         class="btn btn-info btn-mini mr-1"><i
                                                             class="icofont icofont-retweet"></i>Change Password</button> -->
-                                                    <button *ngIf="row.has_subscription_history"
+                                                    <!-- <button *ngIf="row.has_subscription_history"
                                                         (click)="showHistory(row)"
                                                         class="btn btn-primary btn-mini"><i
                                                             class="icofont icofont-listing-box"></i>Subscription
-                                                        History</button>
+                                                        History</button> -->
                                                 </ng-template>
                                             </ngx-datatable-column>
                                         </ngx-datatable>
@@ -275,10 +275,10 @@
                                                 </ng-template>
                                             </ngx-datatable-column> -->
 
-                                            <ngx-datatable-column [width]="450" name="Action" prop="Id"
+                                            <ngx-datatable-column [width]="250" name="Action" prop="Id"
                                                 [draggable]="false" [sortable]="false">
                                                 <ng-template let-row="row" ngx-datatable-cell-template>
-                                                    <button (click)="showDetails(row,templateDetails)" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-eye"></i>Show Profile</button>
+                                                  <button [routerLink]="['/customer-details',row.id]" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-eye"></i>Show Profile</button>
 
                                                     <button (click)="getItem(row,template)"
                                                         class="btn btn-primary btn-mini mr-1"><i
@@ -286,11 +286,11 @@
                                                     <!-- <button (click)="changePassword(row,templateChangePassword)"
                                                         class="btn btn-info btn-mini mr-1"><i
                                                             class="icofont icofont-retweet"></i>Change Password</button> -->
-                                                    <button *ngIf="row.has_subscription_history"
+                                                    <!-- <button *ngIf="row.has_subscription_history"
                                                         (click)="showHistory(row)"
                                                         class="btn btn-primary btn-mini"><i
                                                             class="icofont icofont-listing-box"></i>subscription
-                                                        History</button>
+                                                        History</button> -->
 
                                                 </ng-template>
                                             </ngx-datatable-column>
@@ -365,10 +365,10 @@
                                                 </ng-template>
                                             </ngx-datatable-column> -->
 
-                                            <ngx-datatable-column [width]="450" name="Action" prop="Id"
+                                            <ngx-datatable-column [width]="250" name="Action" prop="Id"
                                                 [draggable]="false" [sortable]="false">
                                                 <ng-template let-row="row" ngx-datatable-cell-template>
-                                                    <button (click)="showDetails(row,templateDetails)" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-eye"></i>Show Profile</button>
+                                                  <button [routerLink]="['/customer-details',row.id]" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-eye"></i>Show Profile</button>
 
                                                     <button (click)="getItem(row,template)"
                                                         class="btn btn-primary btn-mini mr-1"><i
@@ -376,11 +376,11 @@
                                                     <!-- <button (click)="changePassword(row,templateChangePassword)"
                                                         class="btn btn-info btn-mini mr-1"><i
                                                             class="icofont icofont-retweet"></i>Change Password</button> -->
-                                                    <button *ngIf="row.has_subscription_history"
+                                                    <!-- <button *ngIf="row.has_subscription_history"
                                                         (click)="showHistory(row)"
                                                         class="btn btn-primary btn-mini"><i
                                                             class="icofont icofont-listing-box"></i>subscription
-                                                        History</button>
+                                                        History</button> -->
 
                                                 </ng-template>
                                             </ngx-datatable-column>

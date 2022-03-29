@@ -6,12 +6,12 @@
         <div class="col-lg-12">
           <div class="card card-border-primary">
             <div class="card-header">
-              <h5>Receive Payment </h5>
+              <h5>Customer Details </h5>
             </div>
             <div class="card-block ">
 
               <div class="row mb-4">
-                <label class="col-lg-2 col-form-label">Customer </label>
+                <label class="col-lg-2 col-form-label">Customer</label>
                 <div class="col-lg-4">
                   <ng-select  [clearable]="true" [items]="customersBuffer"
                     [virtualScroll]="true" [dropdownPosition]="'bottom'" [loading]="loading" bindLabel="first_name"
@@ -49,36 +49,6 @@
                 </tabset>
               </div>
             </div>
-              <!-- <div class="row mb-4" *ngIf="selectedCustomer">
-                <div class="col-lg-12">
-                  <tabset [justified]="false" type="pills">
-
-                    <tab (selectTab)="changeTab('Subscription Bill',$event)">
-                      <ng-template tabHeading>
-                        Subscription Bill
-                      </ng-template>
-                    </tab>
-                    <tab (selectTab)="changeTab('Device Bill',$event)">
-                      <ng-template tabHeading>
-                        Device Bill
-                      </ng-template>
-                    </tab>
-
-                  </tabset>
-                </div>
-              </div> -->
-
-              <!-- <div class="row">
-                <div class="col-lg-7">
-                  <div class="form-group row">
-                    <div class="col-sm-12">
-                      <input type="text" [(ngModel)]="searchParam" class="form-control"
-                        placeholder="Search SIM by CID No, ICCID No, Phone Number" (keyup)="filterSearch($event)" />
-
-                    </div>
-                  </div>
-                </div>
-              </div> -->
               <div class="row " *ngIf="selectedCustomer">
                 <div class="col-lg-12 ">
 

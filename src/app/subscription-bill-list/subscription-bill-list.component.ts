@@ -71,6 +71,11 @@ export class SubscriptionBillListComponent implements OnInit {
     NormalSpacing: 12
   };
 
+  paymentMethodList = [{id:1,name:'CASH'},{id:2,name:'FROM BALANCE'},{id:3,name:'CARD PAYMENT'},{id:4,name:'ONLINE BANKING'}]
+  methodList = [];
+  selectedMethod = {id:1,name:'CASH'};
+  isbalanceDeduct = false;
+
   constructor(
     public formBuilder: FormBuilder,
     private _service: CommonService,
@@ -163,7 +168,13 @@ export class SubscriptionBillListComponent implements OnInit {
 
 
     if (Number(this.paidAmount) == 0) {
-      this.toastr.warning("Paid amount can't be empty", 'Warning!', { closeButton: true, disableTimeOut: true });
+      this.toastr.warning("Paid amount can't be empty", 'Warning!', { timeOut: 4000 });
+      return;
+    }
+
+
+    if (Number(this.paidAmount) > this.newTotal) {
+      this.toastr.warning("Paid amount can't be greater then payable amount!", 'Warning!', { timeOut: 4000 });
       return;
     }
     //  this.blockUI.start('Saving...');
@@ -171,7 +182,7 @@ export class SubscriptionBillListComponent implements OnInit {
       customer: this.billItem.customer_id,
       bill: this.billItem.id,
       transaction_type: "Payment In",
-      payment_method: this.isPayBalanceEnable ? 2 : 1,
+      payment_method: this.selectedMethod.id,
       session: this.billItem.session,
       discount: 0,//Number(this.discount),
       paid_amount: Number(this.paidAmount),
@@ -212,27 +223,39 @@ export class SubscriptionBillListComponent implements OnInit {
   }
 
 
+  inputFocused(event: any){
+    event.target.select()
+  }
+
   onChangePaid(value) {
     if (parseFloat(value) > this.newTotal) {
-      this.paidAmount = this.newTotal;
+      this.toastr.warning("Paid amount can't be greater then payable amount!", 'Warning!', { timeOut: 4000 });
+      return;
     }
   }
 
 
 
   onChangePayBalance(e) {
-    this.isPayBalanceEnable = e;
+    this.isPayBalanceEnable = e.id == 2 ? true : false;
     let net = Number(this.newTotal); // - Number(this.discount);
-    if (e) {
+    if (this.isPayBalanceEnable) {
+      this.isbalanceDeduct = true;
       if (Number(this.balanceObj.balance) > net) {
         this.paidAmount = net;
         this.tempPaidAmount = net;
       } else if (Number(this.balanceObj.balance) <= net) {
+        this.tempPaidAmount = Number(this.balanceObj.balance);
         this.paidAmount = Number(this.balanceObj.balance);
       }
     } else {
       this.paidAmount = 0;
-      this.tempPaidAmount = this.tempPaidAmount - net;
+      if(this.isbalanceDeduct){
+        this.tempPaidAmount = 0;
+        this.balance = Number(this.balanceObj.balance);
+      }
+
+      this.isbalanceDeduct = false;
     }
   }
 
@@ -870,6 +893,7 @@ export class SubscriptionBillListComponent implements OnInit {
   }
 
 
+
   modalHide() {
     this.modalRef.hide();
     this.submitted = false;
@@ -882,12 +906,13 @@ export class SubscriptionBillListComponent implements OnInit {
     this.tempPaidAmount = 0;
     this.balance = 0;
     this.remarks = null;
+    this.selectedMethod = null;
     this.isPayBalanceEnableShow = false;
     this.isPayBalanceEnable = false;
   }
 
   openModal(row, template: TemplateRef<any>) {
-
+    this.selectedMethod = {id:1,name:'CASH'};
     this.subTotal = row.payable_amount;
     this.billItem = row;
     let so_far_paid = Number(this.billItem.so_far_paid) - Number(this.billItem.parent_refund_amount);
@@ -899,8 +924,9 @@ export class SubscriptionBillListComponent implements OnInit {
         this.balance = res.balance;
         if (Number(this.balanceObj.balance) == 0) {
           this.isPayBalanceEnableShow = false;
-        } else {
-          this.isPayBalanceEnableShow = true;
+          this.methodList = this.paymentMethodList.filter(x => x.id !== 2);
+        }else {
+          this.methodList = this.paymentMethodList;
         }
       },
       err => { }
