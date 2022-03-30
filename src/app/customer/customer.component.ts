@@ -334,8 +334,6 @@ setPageDue(pageInfo) {
 
   this.tableHistory.rowDetail.toggleExpandRow(row);
 
-
-
   }
 
 

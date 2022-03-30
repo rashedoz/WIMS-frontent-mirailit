@@ -1,7 +1,7 @@
 import { Component, TemplateRef, ViewChild, ElementRef, ViewEncapsulation, OnInit } from '@angular/core';
 import { ColumnMode,DatatableComponent } from '@swimlane/ngx-datatable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService } from '../_services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
@@ -11,6 +11,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 // import { jsPDF } from "jspdf";
 // import 'jspdf-autotable';
 import { DatePipe } from '@angular/common';
+import { SubscriptionStatus,SubsItemsStaus } from '../_models/enums';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
@@ -28,7 +29,7 @@ export class CustomerDetailsComponent implements OnInit {
   entryForm: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
-
+  SubscriptionStatus = SubscriptionStatus;
   StockStatus = StockStatus;
   page = new Page();
   pageTable = new Page();
@@ -45,19 +46,11 @@ export class CustomerDetailsComponent implements OnInit {
   modalRef: BsModalRef;
   modalRefICCID: BsModalRef;
   simLifecycleDetails : Array<any> = [];
-  url = 'subscription/get-subscription-type-bills-by-customerid/';
+  url = 'get-user-detail/';
   billStatus = BillStatus;
   searchParam = '';
-
-  // for customer
-  selectedCustomer = null;
-  customers = [];
-  customersBuffer = [];
-  bufferSize = 50;
-  numberOfItemsFromEndBeforeFetchingMore = 10;
-  loading = false;
-  count=1;
-  input$ = new Subject<string>();
+  customer_id;
+  customerObj = null;
 
   newTotal: number = 0;
   subTotal: number = 0;
@@ -92,6 +85,11 @@ export class CustomerDetailsComponent implements OnInit {
   isbalanceDeduct = false;
 
 
+  currentTab = 'Basic Details';
+  subscriptionHistoryList = [];
+  @ViewChild('tableSubscriptionHistory', { static: false }) tableSubscriptionHistory: any;
+  @ViewChild('tableDeviceSalesHistory', { static: false }) tableDeviceSalesHistory: any;
+
   constructor(
     public formBuilder: FormBuilder,
     private _service: CommonService,
@@ -99,7 +97,8 @@ export class CustomerDetailsComponent implements OnInit {
     public datepipe: DatePipe,
     private http: HttpClient,
     private modalService: BsModalService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
 
     this.page.pageNumber = 1;
@@ -108,6 +107,8 @@ export class CustomerDetailsComponent implements OnInit {
     this.pageTable.pageNumber = 0;
     this.pageTable.size = 10;
 
+    this.customer_id = this.route.snapshot.params['id'];
+
     window.onresize = () => {
       this.scrollBarHorizontal = (window.innerWidth < 1200);
     };
@@ -115,145 +116,26 @@ export class CustomerDetailsComponent implements OnInit {
 
 
   ngOnInit() {
-    this.getCustomer();
-    this.onSearch();
+    if(this.customer_id)this.getCustomer();
   }
 
 
-  onSearch() {
-    this.input$.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
-      switchMap(term => this.fakeServiceCustomer(term))
-    ).subscribe((data : any) => {
-      this.customers = data.results;
-      this.page.totalElements = data.count;
-      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-      this.customersBuffer = this.customers.slice(0, this.bufferSize);
-      })
-  }
 
-  onCustomerChange(e){
-    if(e){
-      this.selectedCustomer = e;
-      this.getList();
-    }else{
-      this.selectedCustomer = null;
-    }
-  }
-
-onScrollToEnd() {
-      this.fetchMore();
-  }
-
-onScroll({ end }) {
-    if (this.loading || this.customers.length <= this.customersBuffer.length) {
-        return;
-    }
-
-    if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.customersBuffer.length) {
-        this.fetchMore();
-    }
-}
-
-private fetchMore() {
-
-    let more;
-   // const len = this.customersBuffer.length;
-    if(this.count <= this.page.totalPages){
-    this.count++;
-    this.page.pageNumber = this.count;
-    let obj;
-    if(this.searchParam){
-       obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber,
-        search_param:this.searchParam
-      };
-    }else{
-       obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber
-      };
-    }
-      this._service.get("get-customer-list",obj).subscribe(
-        (res) => {
-          more = res.results;
-          //  const more = this.customers.slice(len, this.bufferSize + len);
-          this.loading = true;
-          // using timeout here to simulate backend API delay
-          setTimeout(() => {
-              this.loading = false;
-              this.customersBuffer = this.customersBuffer.concat(more);
-          }, 200)
-        },
-        (err) => {}
-      );
-    }
-
-}
 
 
 getCustomer(){
-  let obj;
-  if(this.searchParam){
-     obj = {
-      limit: this.page.size,
-      page: this.page.pageNumber,
-      search_param:this.searchParam
-    };
-  }else{
-     obj = {
-      limit: this.page.size,
-      page: this.page.pageNumber
-    };
-  }
-
-  this._service.get("get-customer-list",obj).subscribe(
+ // this.blockUI.start('Getting Data...');
+  this._service.get(this.url+this.customer_id).subscribe(
     (res) => {
-      this.customers = res.results;
-      this.page.totalElements = res.count;
-      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-      this.customersBuffer = this.customers.slice(0, this.bufferSize);
+      this.customerObj = res;
+    //  this.blockUI.stop();
     },
-    (err) => {}
-  );
-}
-
-private fakeServiceCustomer(term) {
-
-  this.page.size = 50;
-  this.page.pageNumber = 1;
-  this.searchParam = term;
-
-  let obj;
-  if(this.searchParam){
-     obj = {
-      limit: this.page.size,
-      page: this.page.pageNumber,
-      search_param:this.searchParam
-    };
-  }else{
-     obj = {
-      limit: this.page.size,
-      page: this.page.pageNumber
-    };
-  }
-
-  let params = new HttpParams();
-  if (obj) {
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        params = params.append(key, obj[key]);
-      }
+    (err) => {
+      //this.blockUI.stop();
     }
-  }
-  return this.http.get<any>(environment.apiUrl + 'get-customer-list', { params }).pipe(
-    map(res => {
-      return res;
-    })
   );
 }
+
 
 
   // 'Available', 'Subscribed', 'Cancelled', 'Permanently Cancelled'
@@ -263,23 +145,61 @@ private fakeServiceCustomer(term) {
    // this.searchParam = '';
     this.pageTable.pageNumber = 0;
     this.pageTable.size = 10;
-
+    this.currentTab = type;
     switch (type) {
-      case 'Subscription Bill':
-        this.url = 'subscription/get-subscription-type-bills-by-customerid/';
-        this.getList();
+      case 'Basic Details':
+        this.url = 'get-user-detail/';
+        this.getCustomer();
         break;
-      case 'Device Bill':
+      case 'Subscription Details':
+        this.url = 'subscription/get-subscription-list-by-customer-id/';
+     this.getList();
+        break;
+      case 'Device Sales Details':
+        this.url = 'subscription/get-device-sales-list-by-customerid/';
+     this.getList();
+        break;
+      case 'Due Details':
+        this.url = 'subscription/get-device-type-bills-by-customerid/';
+     this.getList();
+        break;
+      case 'Payment Details':
+        this.url = 'subscription/get-device-type-bills-by-customerid/';
+     this.getList();
+        break;
+      case 'Balance':
+        this.url = 'subscription/get-device-type-bills-by-customerid/';
+     this.getList();
+        break;
+      case 'Balance Loading History':
         this.url = 'subscription/get-device-type-bills-by-customerid/';
      this.getList();
         break;
       default:
-        this.url = 'subscription/get-subscription-type-bills-by-customerid/';
-        this.getList();
+        this.url = 'get-user-detail/';
+        this.getCustomer();
         break;
       }
 
  }
+
+ toggleExpandRow(row) {
+    this._service.get('subscription/get-subscription-detail/'+row.id).subscribe(res => {
+      row.details = res;
+    }, err => { });
+
+  this.tableSubscriptionHistory.rowDetail.toggleExpandRow(row);
+
+  }
+
+ toggleExpandRowDevice(row) {
+    this._service.get('get-device-sales-detail-subscriptionid/'+row.id).subscribe(res => {
+      row.details = res;
+    }, err => { });
+
+  this.tableDeviceSalesHistory.rowDetail.toggleExpandRowDevice(row);
+
+  }
 
 
   setPage(pageInfo) {
@@ -288,21 +208,22 @@ private fakeServiceCustomer(term) {
   }
 
   getList() {
+
     this.loadingIndicator = true;
-    const obj = {
-      limit: this.pageTable.size,
-      page: this.pageTable.pageNumber + 1
-    };
-    this._service.get(this.url+this.selectedCustomer.id,obj).subscribe(res => {
+    // const obj = {
+    //   limit: this.pageTable.size,
+    //   page: this.pageTable.pageNumber + 1
+    // };
+    this._service.get(this.url+this.customer_id).subscribe(res => {
 
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
         return;
       }
      // this.tempRows = res;
-      this.rows =  res.results.filter(x=> x.status != 4);
-      this.pageTable.totalElements = res.count;
-      this.pageTable.totalPages = Math.ceil(this.pageTable.totalElements / this.pageTable.size);
+      this.rows =  res;
+      // this.pageTable.totalElements = res.count;
+      // this.pageTable.totalPages = Math.ceil(this.pageTable.totalElements / this.pageTable.size);
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
