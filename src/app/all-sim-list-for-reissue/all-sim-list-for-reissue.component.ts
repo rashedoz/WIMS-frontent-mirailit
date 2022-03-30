@@ -82,7 +82,6 @@ export class AllSIMListForReissueComponent implements OnInit {
           this.url = 'stock/get-permanently-cancelled-sim-list';
           this.getList();
           break;
-
         default:
           break;
       }
