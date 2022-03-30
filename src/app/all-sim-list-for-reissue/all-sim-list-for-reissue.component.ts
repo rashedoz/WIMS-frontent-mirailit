@@ -38,7 +38,7 @@ export class AllSIMListForReissueComponent implements OnInit {
   simObj;
   simDetails : Array<any> = [];
   searchParam = '';
-  url = 'stock/get-reissued-and-subscribed-sim-list';
+  url = 'stock/get-subscribed-sim-list';
   selectedSIMType = {id:'Subscribed',name:'Subscribed'};
   SIMTypeList = [{id:'Subscribed',name:'Subscribed'},{id:'Available',name:'In-Stock(Available)'},{id:'Cancelled',name:'Cancelled'},{id:'Permanently Cancelled',name:'Permanently Cancelled'}]
 
@@ -67,19 +67,19 @@ export class AllSIMListForReissueComponent implements OnInit {
     if(e){
       switch (e.id) {
         case 'Subscribed':
-          this.url = 'stock/get-reissued-and-subscribed-sim-list';
+          this.url = 'stock/get-subscribed-sim-list';
           this.getList();
           break;
         case 'Available':
-          this.url = 'stock/get-reissued-and-available-sim-list';
+          this.url = 'stock/get-available-sim-list';
           this.getList();
           break;
         case 'Cancelled':
-          this.url = 'stock/get-reissued-and-cancelled-sim-list';
+          this.url = 'stock/get-cancelled-sim-list';
           this.getList();
           break;
         case 'Permanently Cancelled':
-          this.url = 'stock/get-reissued-and-permanently-cancelled-sim-list';
+          this.url = 'stock/get-permanently-cancelled-sim-list';
           this.getList();
           break;
 
