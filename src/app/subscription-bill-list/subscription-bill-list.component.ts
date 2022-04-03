@@ -261,7 +261,6 @@ export class SubscriptionBillListComponent implements OnInit {
 
   printInv(row) {
 
-
     this.blockUI.start('Generating invoice...');
     this._service.get("reports/generate-customer-invoice/" + row.id).subscribe(res => {
       // this.invModal = this.ngxSmartModalService.create('invModal', this.tpl);

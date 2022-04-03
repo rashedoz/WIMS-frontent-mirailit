@@ -10,6 +10,11 @@ import { Page } from '../_models/page';
 import { StockStatus,ReissuanceStatus } from '../_models/enums';
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+import { Subject, Observable, of, concat } from 'rxjs';
+import { distinctUntilChanged, debounceTime, switchMap, tap, catchError, filter, map } from 'rxjs/operators';
+
 @Component({
   selector: 'app-customer-balance-list',
   templateUrl: './customer-balance-list.component.html',
@@ -26,6 +31,7 @@ export class CustomerBalanceListComponent implements OnInit {
   StockStatus = StockStatus;
   ReissuanceStatus = ReissuanceStatus;
   page = new Page();
+  pageCustomer = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
   rows = [];
   tempRows = [];
@@ -51,14 +57,30 @@ export class CustomerBalanceListComponent implements OnInit {
   searchParamWholesaler = '';
   searchParamRetailer = '';
 
+
+  // for customer
+  selectedCustomer = null;
+  customers = [];
+  customersBuffer = [];
+  bufferSize = 50;
+  numberOfItemsFromEndBeforeFetchingMore = 10;
+  loading = false;
+  count=1;
+  searchParam = '';
+  input$ = new Subject<string>();
+
   constructor(
     private modalService: BsModalService,
     private confirmService: ConfirmService,
     public formBuilder: FormBuilder,
+    private http: HttpClient,
     private _service: CommonService,
     private toastr: ToastrService,
     private router: Router
   ) {
+    this.pageCustomer.pageNumber = 1;
+    this.pageCustomer.size = 50;
+
     this.page.pageNumber = 0;
     this.page.size = 10;
     window.onresize = () => {
@@ -72,6 +94,9 @@ export class CustomerBalanceListComponent implements OnInit {
       customer: [null, [Validators.required]],
       amount: [null, [Validators.required]]
     });
+    this.getCustomer();
+    this.onSearch();
+
     this.getList();
   }
 
@@ -94,15 +119,15 @@ export class CustomerBalanceListComponent implements OnInit {
     this.getRetailerList();
   }
 
-  customSearchFn(term: string, item: any) {
-    term = term.toLocaleLowerCase();
-    let name = item.first_name +" "+item.last_name;
-    return item.customer_code.toLocaleLowerCase().indexOf(term) > -1 ||
-           name.toLocaleLowerCase().indexOf(term) > -1 ||
-           item.first_name.toLocaleLowerCase().indexOf(term) > -1 ||
-           item.last_name.toLocaleLowerCase().indexOf(term) > -1 ||
-           item.mobile.toLocaleLowerCase().indexOf(term) > -1;
-    }
+  // customSearchFn(term: string, item: any) {
+  //   term = term.toLocaleLowerCase();
+  //   let name = item.first_name +" "+item.last_name;
+  //   return item.customer_code.toLocaleLowerCase().indexOf(term) > -1 ||
+  //          name.toLocaleLowerCase().indexOf(term) > -1 ||
+  //          item.first_name.toLocaleLowerCase().indexOf(term) > -1 ||
+  //          item.last_name.toLocaleLowerCase().indexOf(term) > -1 ||
+  //          item.mobile.toLocaleLowerCase().indexOf(term) > -1;
+  //   }
 
 
   showCustomerTable(id){
@@ -344,10 +369,12 @@ export class CustomerBalanceListComponent implements OnInit {
   }
 
   openModal(template: TemplateRef<any>) {
+    this.getCustomer();
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 
   openModalRow(item,template: TemplateRef<any>) {
+
     this.entryForm.controls['customer'].setValue(item.id);
     this.entryForm.controls['customer'].disable();
     this.modalRef = this.modalService.show(template, this.modalConfig);
@@ -357,6 +384,149 @@ export class CustomerBalanceListComponent implements OnInit {
     this.modalRef.hide();
     this.item = null;
   }
+
+
+
+
+
+
+
+
+
+
+  onSearch() {
+    this.input$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      switchMap(term => this.fakeServiceCustomer(term))
+    ).subscribe((data : any) => {
+      this.customers = data.results;
+      this.pageCustomer.totalElements = data.count;
+      this.pageCustomer.totalPages = Math.ceil(this.pageCustomer.totalElements / this.pageCustomer.size);
+      this.customersBuffer = this.customers.slice(0, this.bufferSize);
+      })
+  }
+
+  onCustomerChange(e){
+    if(e){
+      this.selectedCustomer = e;
+    }else{
+      this.selectedCustomer = null;
+    }
+  }
+
+onScrollToEnd() {
+      this.fetchMore();
+  }
+
+onScroll({ end }) {
+    if (this.loading || this.customers.length <= this.customersBuffer.length) {
+        return;
+    }
+
+    if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.customersBuffer.length) {
+        this.fetchMore();
+    }
+}
+
+private fetchMore() {
+
+    let more;
+   // const len = this.customersBuffer.length;
+    if(this.count <= this.pageCustomer.totalPages){
+    this.count++;
+    this.pageCustomer.pageNumber = this.count;
+    let obj;
+    if(this.searchParam){
+       obj = {
+        limit: this.pageCustomer.size,
+        page: this.pageCustomer.pageNumber,
+        search_param:this.searchParam
+      };
+    }else{
+       obj = {
+        limit: this.pageCustomer.size,
+        page: this.pageCustomer.pageNumber
+      };
+    }
+      this._service.get("get-customer-list",obj).subscribe(
+        (res) => {
+          more = res.results;
+          //  const more = this.customers.slice(len, this.bufferSize + len);
+          this.loading = true;
+          // using timeout here to simulate backend API delay
+          setTimeout(() => {
+              this.loading = false;
+              this.customersBuffer = this.customersBuffer.concat(more);
+          }, 200)
+        },
+        (err) => {}
+      );
+    }
+
+}
+
+
+getCustomer(){
+  let obj;
+  if(this.searchParam){
+     obj = {
+      limit: this.pageCustomer.size,
+      page: this.pageCustomer.pageNumber,
+      search_param:this.searchParam
+    };
+  }else{
+     obj = {
+      limit: this.pageCustomer.size,
+      page: this.pageCustomer.pageNumber
+    };
+  }
+
+  this._service.get("get-customer-list",obj).subscribe(
+    (res) => {
+      this.customers = res.results;
+      this.pageCustomer.totalElements = res.count;
+      this.pageCustomer.totalPages = Math.ceil(this.pageCustomer.totalElements / this.pageCustomer.size);
+      this.customersBuffer = this.customers.slice(0, this.bufferSize);
+    },
+    (err) => {}
+  );
+}
+
+private fakeServiceCustomer(term) {
+
+  this.pageCustomer.size = 50;
+  this.pageCustomer.pageNumber = 1;
+  this.searchParam = term;
+
+  let obj;
+  if(this.searchParam){
+     obj = {
+      limit: this.pageCustomer.size,
+      page: this.pageCustomer.pageNumber,
+      search_param:this.searchParam
+    };
+  }else{
+     obj = {
+      limit: this.pageCustomer.size,
+      page: this.pageCustomer.pageNumber
+    };
+  }
+
+  let params = new HttpParams();
+  if (obj) {
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        params = params.append(key, obj[key]);
+      }
+    }
+  }
+  return this.http.get<any>(environment.apiUrl + 'get-customer-list', { params }).pipe(
+    map(res => {
+      return res;
+    })
+  );
+}
 
 
 }

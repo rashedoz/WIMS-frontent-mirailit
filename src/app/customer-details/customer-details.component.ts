@@ -27,6 +27,7 @@ import { distinctUntilChanged, debounceTime, switchMap, tap, catchError, filter,
 export class CustomerDetailsComponent implements OnInit {
 
   entryForm: FormGroup;
+  balanceLoadForm: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
   SubscriptionStatus = SubscriptionStatus;
@@ -34,7 +35,7 @@ export class CustomerDetailsComponent implements OnInit {
   page = new Page();
   pageTable = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
-  rows = [];
+  rows:any[] = [];
   tempRows = [];
   columnsWithSearch : string[] = [];
   loadingIndicator = false;
@@ -87,6 +88,7 @@ export class CustomerDetailsComponent implements OnInit {
 
   currentTab = 'Basic Details';
   subscriptionHistoryList = [];
+  balanceHistoryList = [];
   @ViewChild('tableSubscriptionHistory', { static: false }) tableSubscriptionHistory: any;
   @ViewChild('tableDeviceSalesHistory', { static: false }) tableDeviceSalesHistory: any;
 
@@ -117,10 +119,15 @@ export class CustomerDetailsComponent implements OnInit {
 
   ngOnInit() {
     if(this.customer_id)this.getCustomer();
+    this.balanceLoadForm = this.formBuilder.group({
+      amount: [null, [Validators.required]]
+    });
   }
 
 
-
+  get b() {
+    return this.balanceLoadForm.controls;
+  }
 
 
 getCustomer(){
@@ -172,8 +179,8 @@ getCustomer(){
      this.getList();
         break;
       case 'Balance Loading History':
-        this.url = 'subscription/get-device-type-bills-by-customerid/';
-     this.getList();
+        this.url = 'get-customer-balance-loading-history/';
+     this.getBalanceLoadList();
         break;
       default:
         this.url = 'get-user-detail/';
@@ -206,6 +213,83 @@ getCustomer(){
     this.pageTable.pageNumber = pageInfo.offset;
     this.getList();
   }
+
+
+  getBalanceLoadList() {
+
+    this.loadingIndicator = true;
+    // const obj = {
+    //   limit: this.pageTable.size,
+    //   page: this.pageTable.pageNumber + 1
+    // };
+    this._service.get(this.url+this.customer_id).subscribe(res => {
+
+      if (!res) {
+        this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+        return;
+      }
+     // this.tempRows = res;
+      this.rows =  res.balance_history;
+      console.log(this.rows);
+      // this.pageTable.totalElements = res.count;
+      // this.pageTable.totalPages = Math.ceil(this.pageTable.totalElements / this.pageTable.size);
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }, err => {
+      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }
+    );
+  }
+
+
+  openModalBalanceLoad(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template, this.modalConfig);
+  }
+
+  modalHideBalanceLoad() {
+    this.modalRef.hide();
+    this.balanceLoadForm.reset();
+  }
+
+
+  onBalanceLoadFormSubmit() {
+    this.submitted = true;
+    if (this.balanceLoadForm.invalid) {
+      return;
+    }
+
+    this.blockUI.start('Saving...');
+    const obj = {
+      customer: this.customer_id,
+      paid_amount: Number(this.balanceLoadForm.value.amount),
+    };
+
+    this._service.post('load-customer-balance', obj).subscribe(
+      data => {
+        this.blockUI.stop();
+        if (data.IsReport == "Success") {
+          this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+          this.modalHide();
+          this.url = 'get-user-detail/';
+          this.getCustomer();
+        } else if (data.IsReport == "Warning") {
+          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+        } else {
+          this.toastr.error(data.Msg, 'Error!', { timeOut: 2000 });
+        }
+      },
+      err => {
+        this.blockUI.stop();
+        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+      }
+    );
+
+  }
+
 
   getList() {
 
