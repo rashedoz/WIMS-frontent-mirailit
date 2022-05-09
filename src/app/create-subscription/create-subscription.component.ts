@@ -499,8 +499,14 @@ private fakeServiceSIM(term) {
        item.controls["sim_iccid"].setValue(e.ICCID_no);
        item.controls["sim_iccid"].disable();
 
-       item.controls["phone_number"].setValue(e.phone_number);
-       item.controls["phone_number"].disable();
+       if (e.phone_number){
+        item.controls["phone_number"].setValue(e.phone_number);
+        item.controls["phone_number"].disable();
+       }else{
+        item.controls["phone_number"].setValue(null);
+        item.controls["phone_number"].enable();
+       }
+
       }else {
         item.controls["sim_iccid"].setValue(null);
         item.controls["sim_iccid"].enable();
