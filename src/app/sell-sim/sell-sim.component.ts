@@ -169,7 +169,7 @@ export class SellSIMComponent implements OnInit {
 
     let more;
     // const len = this.customersBuffer.length;
-    if (this.count <= this.page.totalPages) {
+    if (this.count < this.page.totalPages) {
       this.count++;
       this.page.pageNumber = this.count;
       let obj;
@@ -194,7 +194,7 @@ export class SellSIMComponent implements OnInit {
           setTimeout(() => {
             this.loading = false;
             this.customersBuffer = this.customersBuffer.concat(more);
-          }, 200)
+          }, 100)
         },
         (err) => { }
       );
@@ -298,7 +298,7 @@ export class SellSIMComponent implements OnInit {
 
     let more;
 
-    if (this.simsCount <= this.pageSIM.totalPages) {
+    if (this.simsCount < this.pageSIM.totalPages) {
       this.count++;
       this.pageSIM.pageNumber = this.simsCount;
       let obj;
@@ -323,7 +323,7 @@ export class SellSIMComponent implements OnInit {
           setTimeout(() => {
             this.loadingSIM = false;
             this.simsBuffer = this.simsBuffer.concat(more);
-          }, 200)
+          }, 100)
         },
         (err) => { }
       );

@@ -125,7 +125,7 @@ export class SellDeviceComponent implements OnInit {
     this.entryForm = this.formBuilder.group({
       id: [null],
       customer: [null, [Validators.required]],
-      subscription: [null, [Validators.required]],
+      subscription: [null],
       itemHistory: this.formBuilder.array([this.initItemHistory()]),
     });
     this.itemHistoryList = this.entryForm.get("itemHistory") as FormArray;
@@ -176,7 +176,7 @@ export class SellDeviceComponent implements OnInit {
 
     let more;
     // const len = this.customersBuffer.length;
-    if (this.count <= this.page.totalPages) {
+    if (this.count < this.page.totalPages) {
       this.count++;
       this.page.pageNumber = this.count;
       let obj;
@@ -201,7 +201,7 @@ export class SellDeviceComponent implements OnInit {
           setTimeout(() => {
             this.loading = false;
             this.customersBuffer = this.customersBuffer.concat(more);
-          }, 200)
+          }, 100)
         },
         (err) => { }
       );
@@ -305,7 +305,7 @@ export class SellDeviceComponent implements OnInit {
 
     let more;
 
-    if (this.devicesCount <= this.pageDevice.totalPages) {
+    if (this.devicesCount < this.pageDevice.totalPages) {
       this.devicesCount++;
       this.pageDevice.pageNumber = this.devicesCount;
       let obj;
@@ -330,7 +330,7 @@ export class SellDeviceComponent implements OnInit {
           setTimeout(() => {
             this.loadingDevice = false;
             this.devicesBuffer = this.devicesBuffer.concat(more);
-          }, 200)
+          }, 100)
         },
         (err) => { }
       );
@@ -514,13 +514,19 @@ export class SellDeviceComponent implements OnInit {
   // }
 
   onDeviceChange(e, item) {
-    if (e.IMEI){
-       item.controls["IMEI"].setValue(e.IMEI);
-       item.controls["IMEI"].disable();
-      }else {
-        item.controls["IMEI"].setValue(null);
-        item.controls["IMEI"].enable();
-      }
+    if(e){
+      if (e.IMEI){
+        item.controls["IMEI"].setValue(e.IMEI);
+        item.controls["IMEI"].disable();
+       }else {
+         item.controls["IMEI"].setValue(null);
+         item.controls["IMEI"].enable();
+       }
+    }else{
+      item.controls["IMEI"].setValue(null);
+      item.controls["IMEI"].disable();
+    }
+
   }
 
 

@@ -433,7 +433,7 @@ private fetchMore() {
 
     let more;
    // const len = this.customersBuffer.length;
-    if(this.count <= this.pageCustomer.totalPages){
+    if(this.count < this.pageCustomer.totalPages){
     this.count++;
     this.pageCustomer.pageNumber = this.count;
     let obj;
@@ -458,7 +458,7 @@ private fetchMore() {
           setTimeout(() => {
               this.loading = false;
               this.customersBuffer = this.customersBuffer.concat(more);
-          }, 200)
+          }, 100)
         },
         (err) => {}
       );

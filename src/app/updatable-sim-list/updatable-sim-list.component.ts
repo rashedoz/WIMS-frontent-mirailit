@@ -123,7 +123,7 @@ export class UpdatableSIMListComponent implements OnInit {
 
     let more;
     // const len = this.suppliersBuffer.length;
-    if (this.count <= this.pageSupplier.totalPages) {
+    if (this.count < this.pageSupplier.totalPages) {
       this.count++;
       this.pageSupplier.pageNumber = this.count;
       let obj;

@@ -93,7 +93,7 @@ export class HomeComponent implements OnInit {
 //     setTimeout(() => {
 //         this.loading = false;
 //         this.photosBuffer = this.photosBuffer.concat(more);
-//     }, 200)
+//     }, 100)
 // }
 
 

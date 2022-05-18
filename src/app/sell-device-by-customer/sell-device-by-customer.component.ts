@@ -126,7 +126,7 @@ export class SellDeviceByCustomerComponent implements OnInit {
     this.entryForm = this.formBuilder.group({
       id: [null],
       customer: [null],
-      subscription: [null, [Validators.required]],
+      subscription: [null],
       itemHistory: this.formBuilder.array([this.initItemHistory()]),
     });
     this.itemHistoryList = this.entryForm.get("itemHistory") as FormArray;
@@ -194,7 +194,7 @@ export class SellDeviceByCustomerComponent implements OnInit {
 
     let more;
 
-    if (this.devicesCount <= this.pageDevice.totalPages) {
+    if (this.devicesCount < this.pageDevice.totalPages) {
       this.count++;
       this.pageDevice.pageNumber = this.devicesCount;
       let obj;
@@ -219,7 +219,7 @@ export class SellDeviceByCustomerComponent implements OnInit {
           setTimeout(() => {
             this.loadingDevice = false;
             this.devicesBuffer = this.devicesBuffer.concat(more);
-          }, 200)
+          }, 100)
         },
         (err) => { }
       );
@@ -403,13 +403,18 @@ export class SellDeviceByCustomerComponent implements OnInit {
   // }
 
   onDeviceChange(e, item) {
-    if (e.IMEI){
-       item.controls["IMEI"].setValue(e.IMEI);
-       item.controls["IMEI"].disable();
-      }else {
-        item.controls["IMEI"].setValue(null);
-        item.controls["IMEI"].enable();
-      }
+    if(e){
+      if (e.IMEI){
+        item.controls["IMEI"].setValue(e.IMEI);
+        item.controls["IMEI"].disable();
+       }else {
+         item.controls["IMEI"].setValue(null);
+         item.controls["IMEI"].enable();
+       }
+    }else{
+      item.controls["IMEI"].setValue(null);
+      item.controls["IMEI"].disable();
+    }
   }
 
 

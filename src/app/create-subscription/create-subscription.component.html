@@ -150,7 +150,7 @@
                         <tr  [formGroupName]="i">
                             <th>
 
-                              <ng-select [clearable]="false" appendTo="body" (change)="onSIMChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}" formControlName="sim" [clearOnBackspace]="false"
+                              <ng-select [clearable]="true" appendTo="body" (change)="onSIMChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}" formControlName="sim" [clearOnBackspace]="false"
                               [items]="simsBuffer"
                               [virtualScroll]="true"
                               [dropdownPosition]="'bottom'"

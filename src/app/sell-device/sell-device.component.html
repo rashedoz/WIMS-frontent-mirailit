@@ -82,7 +82,7 @@
                 </div>
               </div>
 
-              <div class="col-lg-6">
+              <!-- <div class="col-lg-6">
                 <div class="form-group row">
                   <label class="col-sm-4 col-form-label">Subscription </label>
                   <div class="col-sm-8">
@@ -106,7 +106,6 @@
                                     class="label label-warning">{{ SubscriptionStatus[item.status] }}</strong></span>
                               </div>
                             </div>
-                            <!-- <p class="card-text"> Id : {{item.alias}}</p> -->
                           </div>
                         </div>
                       </ng-template>
@@ -119,7 +118,9 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
+
+
 
             </div>
           </div>
@@ -153,7 +154,7 @@
                               <!-- <ng-select [clearable]="false" appendTo="body" (change)="onDeviceChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('device').errors}" formControlName="device" [clearOnBackspace]="false" [items]="deviceList"
                               bindLabel="id" placeholder="Select a device"> -->
 
-                              <ng-select [clearable]="false" appendTo="body" (change)="onDeviceChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('device').errors}" formControlName="device" [clearOnBackspace]="false"
+                              <ng-select [clearable]="true" appendTo="body" (change)="onDeviceChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('device').errors}" formControlName="device" [clearOnBackspace]="false"
                               [items]="devicesBuffer"
                               [virtualScroll]="true"
                               [dropdownPosition]="'bottom'"
@@ -161,7 +162,7 @@
                               [typeahead]="devicesInput$"
                               (scroll)="onScrollDevice($event)"
                               (scrollToEnd)="onScrollToEndDevice()"
-                              bindLabel="CID_no" placeholder="Select a device">
+                              bindLabel="CID_no" placeholder="Search by device imei">
                               <ng-template ng-header-tmp>
                                 <small class="form-text text-muted">Loaded {{devicesBuffer.length}} of {{pageDevice.totalElements}}</small>
                             </ng-template>

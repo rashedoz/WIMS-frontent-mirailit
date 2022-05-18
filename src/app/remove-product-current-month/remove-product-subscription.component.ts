@@ -151,7 +151,7 @@ export class RemoveProductSubscriptionComponent implements OnInit {
 
     let more;
     // const len = this.customersBuffer.length;
-    if (this.count <= this.page.totalPages) {
+    if (this.count < this.page.totalPages) {
       this.count++;
       this.page.pageNumber = this.count;
       let obj;
@@ -176,7 +176,7 @@ export class RemoveProductSubscriptionComponent implements OnInit {
           setTimeout(() => {
             this.loading = false;
             this.customersBuffer = this.customersBuffer.concat(more);
-          }, 200)
+          }, 100)
         },
         (err) => { }
       );
@@ -318,8 +318,8 @@ export class RemoveProductSubscriptionComponent implements OnInit {
   onItemRefundChange(e,item) {
 
     if(Number(item.get('refund_amount').value) > 0 ){
-      if(Number(item.get('refund_amount').value) >= Number(item.get('amount').value)){
-        this.toastr.warning('Refund amount can\'t be greater then actual amount', 'Warning!',  { timeOut: 4000 });
+      if(Number(item.get('refund_amount').value) > Number(item.get('amount').value)){
+        this.toastr.warning('Refund amount can\'t be greater than actual amount', 'Warning!',  { timeOut: 4000 });
         item.controls["refund_amount"].setValue(0);
       }else{
         item.controls["refund_amount"].setValue(Number(item.get('refund_amount').value));

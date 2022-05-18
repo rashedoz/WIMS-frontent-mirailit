@@ -133,6 +133,7 @@
                                 <p class="card-text font-weight-bold" *ngIf="item.ICCID_no">  {{item.CID_no}} ({{item.ICCID_no}})</p>
                             </ng-template>
                             </ng-select>
+
                               <div *ngIf="submitted && item_his.controls[i].get('sim').errors" class="error-text">
                                 <small *ngIf="item_his.controls[i].get('sim').errors.required" class="text-danger"> SIM
                                   is required</small>

@@ -121,13 +121,13 @@ const MENUITEMS = [
             icon: 'ti-control-forward',
             permission: 'is_superuser,is_staff',
           },
-          {
-            state: 'sold-sim-list',
-            name: 'Sold SIM List',
-            type: 'link',
-            icon: 'ti-control-forward',
-            permission: 'is_superuser,is_staff',
-          },
+          // {
+          //   state: 'sold-sim-list',
+          //   name: 'Sold SIM List',
+          //   type: 'link',
+          //   icon: 'ti-control-forward',
+          //   permission: 'is_superuser,is_staff',
+          // },
           {
             state: 'cancelled-sim-list',
             name: 'Cancelled SIM List',
@@ -141,7 +141,23 @@ const MENUITEMS = [
             type: 'link',
             icon: 'ti-control-forward',
             permission: 'is_superuser,is_staff',
-          },
+          }
+
+        ]
+      },
+    ]
+  },
+  {
+    label: 'none',
+    permission: 'is_superuser,is_staff',
+    main: [
+      {
+        name: 'SIM Holding',
+        type: 'sub',
+        permission: 'is_superuser,is_staff',
+        icon: 'icofont-brand-microsoft',
+        children: [
+
           {
             state: 'freeze-sim',
             name: 'Freeze SIM',
@@ -162,7 +178,6 @@ const MENUITEMS = [
       },
     ]
   },
-
   {
     label: 'none',
     permission: 'is_superuser,is_staff',

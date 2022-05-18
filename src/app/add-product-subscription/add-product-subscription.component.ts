@@ -133,6 +133,7 @@ export class AddProductSubscriptionComponent implements OnInit {
     this.getSIM();
     this.onSearch();
     this.getPlanList();
+    this.onSearchSIM();
   }
 
 
@@ -180,7 +181,7 @@ export class AddProductSubscriptionComponent implements OnInit {
 
     let more;
     // const len = this.customersBuffer.length;
-    if (this.count <= this.page.totalPages) {
+    if (this.count < this.page.totalPages) {
       this.count++;
       this.page.pageNumber = this.count;
       let obj;
@@ -205,7 +206,7 @@ export class AddProductSubscriptionComponent implements OnInit {
           setTimeout(() => {
             this.loading = false;
             this.customersBuffer = this.customersBuffer.concat(more);
-          }, 200)
+          }, 100)
         },
         (err) => { }
       );
@@ -309,8 +310,8 @@ export class AddProductSubscriptionComponent implements OnInit {
 
     let more;
 
-    if (this.simsCount <= this.pageSIM.totalPages) {
-      this.simsCount++;
+    if (this.simsCount < this.pageSIM.totalPages) {
+      this.count++;
       this.pageSIM.pageNumber = this.simsCount;
       let obj;
       if (this.simsSearchParam) {
@@ -334,7 +335,7 @@ export class AddProductSubscriptionComponent implements OnInit {
           setTimeout(() => {
             this.loadingSIM = false;
             this.simsBuffer = this.simsBuffer.concat(more);
-          }, 200)
+          }, 100)
         },
         (err) => { }
       );
@@ -403,7 +404,6 @@ export class AddProductSubscriptionComponent implements OnInit {
       })
     );
   }
-
 
 
 

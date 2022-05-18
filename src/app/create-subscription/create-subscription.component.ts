@@ -190,7 +190,7 @@ private fetchMore() {
 
     let more;
    // const len = this.customersBuffer.length;
-    if(this.count <= this.page.totalPages){
+    if(this.count < this.page.totalPages){
     this.count++;
     this.page.pageNumber = this.count;
     let obj;
@@ -215,7 +215,7 @@ private fetchMore() {
           setTimeout(() => {
               this.loading = false;
               this.customersBuffer = this.customersBuffer.concat(more);
-          }, 200)
+          }, 100)
         },
         (err) => {}
       );
@@ -319,7 +319,7 @@ private fetchMoreSIM() {
 
     let more;
 
-    if(this.simsCount <= this.pageSIM.totalPages){
+    if(this.simsCount < this.pageSIM.totalPages){
     this.simsCount++;
     this.pageSIM.pageNumber = this.simsCount;
     let obj;
@@ -345,7 +345,7 @@ private fetchMoreSIM() {
           setTimeout(() => {
               this.loadingSIM = false;
               this.simsBuffer = this.simsBuffer.concat(more);
-          }, 200)
+          }, 100)
         },
         (err) => {}
       );
@@ -494,26 +494,34 @@ private fakeServiceSIM(term) {
   }
 
   onSIMChange(e, item) {
+    if(e){
+      if (e.ICCID_no){
+        item.controls["sim_iccid"].setValue(e.ICCID_no);
+        item.controls["sim_iccid"].disable();
 
-    if (e.ICCID_no){
-       item.controls["sim_iccid"].setValue(e.ICCID_no);
-       item.controls["sim_iccid"].disable();
+        if (e.phone_number){
+         item.controls["phone_number"].setValue(e.phone_number);
+         item.controls["phone_number"].disable();
+        }else{
+         item.controls["phone_number"].setValue(null);
+         item.controls["phone_number"].enable();
+        }
 
-       if (e.phone_number){
-        item.controls["phone_number"].setValue(e.phone_number);
-        item.controls["phone_number"].disable();
-       }else{
-        item.controls["phone_number"].setValue(null);
-        item.controls["phone_number"].enable();
+       }else {
+         item.controls["sim_iccid"].setValue(null);
+         item.controls["sim_iccid"].enable();
+
+         item.controls["phone_number"].setValue(null);
+         item.controls["phone_number"].enable();
        }
+    }else{
+      item.controls["sim_iccid"].setValue(null);
+      item.controls["phone_number"].setValue(null);
+      item.controls["sim_iccid"].disable();
+      item.controls["phone_number"].disable();
+    }
 
-      }else {
-        item.controls["sim_iccid"].setValue(null);
-        item.controls["sim_iccid"].enable();
 
-        item.controls["phone_number"].setValue(null);
-        item.controls["phone_number"].enable();
-      }
   }
 
   onPlanChange(e, item) {
