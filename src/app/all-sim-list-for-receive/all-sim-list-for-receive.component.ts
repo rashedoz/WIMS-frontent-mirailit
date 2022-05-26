@@ -42,6 +42,8 @@ export class AllSIMListForReceiveComponent implements OnInit {
   selectedSIMType = {id:'Subscribed',name:'Subscribed'};
   SIMTypeList = [{id:'Subscribed',name:'Subscribed'},{id:'Available',name:'In-Stock(Available)'},{id:'Cancelled',name:'Cancelled'},{id:'Permanently Cancelled',name:'Permanently Cancelled'}]
 
+  total_receivable = 0;
+
   constructor(
     private modalService: BsModalService,
     private confirmService: ConfirmService,
@@ -61,8 +63,22 @@ export class AllSIMListForReceiveComponent implements OnInit {
   ngOnInit() {
 
     this.getList();
+    this.getSIMHistory();
   }
 
+
+  getSIMHistory() {
+    this._service.get('stock/get-current-sim-stock-history').subscribe(res => {
+      if (!res) {
+        this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+        return;
+      }
+      this.total_receivable = res.total_receivable;
+    }, err => {
+      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+    }
+    );
+  }
 
   onSIMTypeChange(e){
     if(e){

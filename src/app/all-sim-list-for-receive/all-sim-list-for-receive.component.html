@@ -6,7 +6,10 @@
                 <div class="col-lg-12">
                     <div class="card card-border-primary">
                         <div class="card-header">
-                            <h5>Reissued SIM list for receive </h5>
+                            <!-- <h5>Reissued SIM list for receive </h5> -->
+                            <button type="button"  class="btn btn-warning waves-effect waves-light btn-round btn-mini" style="font-size: 16px;">Total Receivable SIM <span class="badge text-success">{{total_receivable}}</span>
+                            </button>
+
                             <div class="float-right" style="width: 300px;">
                               <ng-select [(ngModel)]="selectedSIMType" (change)="onSIMTypeChange($event)" [clearable]="false" appendTo="body"  [clearOnBackspace]="false" [items]="SIMTypeList"
                               bindLabel="id"></ng-select>

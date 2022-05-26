@@ -1,21 +1,33 @@
 <block-ui>
-    <div class="row">
+  <div class="row">
 
+    <div class="col-lg-12">
+      <div class="row">
         <div class="col-lg-12">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card card-border-primary">
-                        <div class="card-header">
-                            <h5>Reissued SIM List </h5>
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <!-- <h3 class="text-inverse m-t-25 text-left">Don't have an account? <a href=""> Register </a> here for free!</h3>
+              <h5>Total <span class="text-right text-success">30</span> SIM Sent For Reissuance</h5> -->
+
+              <button type="button"  class="btn btn-warning waves-effect waves-light btn-round btn-mini" style="font-size: 16px;">Total SIM Sent For Reissuance <span class="badge text-success">{{total_sent_for_reissuance}}</span>
+            </button>
+
+              <div class="float-right" style="width: 300px;">
+                <ng-select [(ngModel)]="selectedSIMType" (change)="onSIMTypeChange($event)" [clearable]="false"
+                  appendTo="body" [clearOnBackspace]="false" [items]="SIMTypeList" bindLabel="id"></ng-select>
+              </div>
+            </div>
+            <!-- <div class="card-header">
+                            <h5>Reissued SIM List </h5><span class="label label-success">NEW</span>
 
                             <div class="float-right" style="width: 300px;">
                               <ng-select [(ngModel)]="selectedSIMType" (change)="onSIMTypeChange($event)" [clearable]="false" appendTo="body"  [clearOnBackspace]="false" [items]="SIMTypeList"
                               bindLabel="id"></ng-select>
                           </div>
 
-                        </div>
-                        <div class="card-block ">
-                          <!-- <div class="row">
+                        </div> -->
+            <div class="card-block ">
+              <!-- <div class="row">
                             <div class="col-lg-6">
                               <div class="form-group row">
                                 <div class="col-sm-8">
@@ -25,133 +37,144 @@
                               </div>
                             </div>
                           </div> -->
-                            <div class="row ">
-                                <div class="col-lg-12 ">
-                                  <ngx-datatable #table class="material table-bordered" [scrollbarH]="true" [rows]="rows" [loadingIndicator]="loadingIndicator"
-                                  [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
-                                  rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
-                                  (page)="setPage($event)">
+              <div class="row ">
+                <div class="col-lg-12 ">
+                  <ngx-datatable #table class="material table-bordered" [scrollbarH]="true" [rows]="rows"
+                    [loadingIndicator]="loadingIndicator" [externalPaging]="true" [columnMode]="ColumnMode.force"
+                    [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [count]="page.totalElements"
+                    [offset]="page.pageNumber" [limit]="page.size" (page)="setPage($event)">
 
-                                  <ngx-datatable-column [width]="100" name="SIM CID No" prop="CID_no" [draggable]="false" [sortable]="false">
-                                    <ng-template let-value="value" ngx-datatable-cell-template>
-                                        <span > {{ value }} </span>
-                                    </ng-template>
-                                    </ngx-datatable-column>
-                                    <ngx-datatable-column [width]="100" name="Phone Number" prop="phone_number" [draggable]="false" [sortable]="false">
-                                      <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span > {{ value }} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
+                    <ngx-datatable-column [width]="100" name="SIM CID No" prop="CID_no" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="100" name="Phone Number" prop="phone_number" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
 
-                                  <!-- <ngx-datatable-column [width]="200" name="SIM Alias" prop="sim_auto_serial_no" [draggable]="false" [sortable]="false">
+                    <!-- <ngx-datatable-column [width]="200" name="SIM Alias" prop="sim_auto_serial_no" [draggable]="false" [sortable]="false">
                                       <ng-template let-row="row" ngx-datatable-cell-template>
                                           <span > {{ row.sim_auto_serial_no }} </span>
                                       </ng-template>
                                   </ngx-datatable-column> -->
 
-                                  <ngx-datatable-column [width]="100" name="SIM ICCID No" prop="ICCID_no" [draggable]="false"
-                                      [sortable]="false">
-                                      <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
+                    <ngx-datatable-column [width]="100" name="SIM ICCID No" prop="ICCID_no" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="80" name="Status" prop="status" [draggable]="false"
-                                      [sortable]="false">
-                                      <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span *ngIf="value === 1" > <strong class="label label-success">{{ StockStatus[value] }}</strong> </span>
-                                          <span *ngIf="value === 2" > <strong class="label label-info">{{ StockStatus[value] }}</strong> </span>
-                                          <span *ngIf="value === 3" > <strong class="label label-secondary">{{ StockStatus[value] }}</strong> </span>
-                                          <span *ngIf="value === 4" > <strong class="label label-danger">{{ StockStatus[value] }}</strong> </span>
-                                          <span *ngIf="value === 5" > <strong class="label label-danger">{{ StockStatus[value] }}</strong> </span>
-                                          <span *ngIf="value === 6" > <strong class="label label-primary">{{ StockStatus[value] }}</strong> </span>
-                                          <span *ngIf="value === 7" > <strong class="label label-warning">{{ StockStatus[value] }}</strong> </span>
-                                          <span *ngIf="value === 8" > <strong class="label label-danger">{{ StockStatus[value] }}</strong> </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
+                    <ngx-datatable-column [width]="80" name="Status" prop="status" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span *ngIf="value === 1"> <strong class="label label-success">{{ StockStatus[value] }}</strong>
+                        </span>
+                        <span *ngIf="value === 2"> <strong class="label label-info">{{ StockStatus[value] }}</strong>
+                        </span>
+                        <span *ngIf="value === 3"> <strong
+                            class="label label-secondary">{{ StockStatus[value] }}</strong> </span>
+                        <span *ngIf="value === 4"> <strong class="label label-danger">{{ StockStatus[value] }}</strong>
+                        </span>
+                        <span *ngIf="value === 5"> <strong class="label label-danger">{{ StockStatus[value] }}</strong>
+                        </span>
+                        <span *ngIf="value === 6"> <strong class="label label-primary">{{ StockStatus[value] }}</strong>
+                        </span>
+                        <span *ngIf="value === 7"> <strong class="label label-warning">{{ StockStatus[value] }}</strong>
+                        </span>
+                        <span *ngIf="value === 8"> <strong class="label label-danger">{{ StockStatus[value] }}</strong>
+                        </span>
+                      </ng-template>
+                    </ngx-datatable-column>
 
-                                  <ngx-datatable-column [width]="120" name="Last Reissue Date" prop="last_reissued_at" [draggable]="false"
-                                  [sortable]="false">
-                                  <ng-template let-value="value" ngx-datatable-cell-template>
-                                      <span *ngIf="value">  {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
-                                      <span *ngIf="!value">  --- </span>
-                                  </ng-template>
-                              </ngx-datatable-column>
+                    <ngx-datatable-column [width]="120" name="Last Reissue Date" prop="last_reissued_at"
+                      [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span *ngIf="value"> {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
+                        <span *ngIf="!value"> --- </span>
+                      </ng-template>
+                    </ngx-datatable-column>
 
-                                 <ngx-datatable-column [width]="80" name="Action" prop="id" [draggable]="false"
-                                  [sortable]="false">
-                                  <ng-template let-row="row" ngx-datatable-cell-template>
-                                    <button class="btn btn-info btn-mini" (click)="openModal(row, template)">
-                                      Details
-                                    </button>
-                                  </ng-template>
-                              </ngx-datatable-column>
+                    <ngx-datatable-column [width]="80" name="Action" prop="id" [draggable]="false" [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <button class="btn btn-info btn-mini" (click)="openModal(row, template)">
+                          Details
+                        </button>
+                      </ng-template>
+                    </ngx-datatable-column>
 
-                              </ngx-datatable>
+                  </ngx-datatable>
 
-                                </div>
-                            </div>
-                        </div>
-                        <!-- <div class="card-footer">
+                </div>
+              </div>
+            </div>
+            <!-- <div class="card-footer">
                           <button class="btn btn-success col-sm-2 btn-sm btn-outline-success float-right" (click)="onFormSubmit()">
                             <i class="icofont-save"></i> Receive
                         </button>
                       </div> -->
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
-
+      </div>
     </div>
 
-    <ng-template #template>
-      <div class="modal-header ">
-        <h4 class="modal-title pull-left " id="modalTitle" *ngIf="simObj">SIM CID No: {{simObj.CID_no}}, SIM ICCID : {{simObj.ICCID_no}}, Phone Number : {{simObj.phone_number}} </h4>
-          <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
-              <i class="icofont icofont-close"></i>
-          </button>
-      </div>
-      <div class="modal-body pb-0">
-          <app-card>
+  </div>
+
+  <ng-template #template>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left " id="modalTitle" *ngIf="simObj">SIM CID No: {{simObj.CID_no}}, SIM ICCID :
+        {{simObj.ICCID_no}}, Phone Number : {{simObj.phone_number}} </h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body pb-0">
+      <app-card>
+        <div class="row">
+
+          <div class="col-md-12">
             <div class="row">
-
               <div class="col-md-12">
-                <div class="row">
-                  <div class="col-md-12">
-                  <div class="table-responsive">
-                      <table class="table table-xs table-hover table-bordered table-striped">
-                          <thead>
-                              <tr>
-                                  <th width="40%" scope="col">Reissued Date</th>
-                                  <th width="60%" scope="col">Received From Mother Company</th>
-                              </tr>
-                          </thead>
+                <div class="table-responsive">
+                  <table class="table table-xs table-hover table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th width="40%" scope="col">Reissued Date</th>
+                        <th width="60%" scope="col">Received From Mother Company</th>
+                      </tr>
+                    </thead>
 
-                          <tbody>
-                              <tr *ngFor="let item of simDetails; let i=index">
-                                  <th *ngIf="item.reissued_at">{{item.reissued_at | amDateFormat:'DD-MMM-YYYY'}}</th>
-                                  <th *ngIf="!item.reissued_at">---</th>
-                                  <th *ngIf="item.received_from_mcompany_at" >{{ item.received_from_mcompany_at | amDateFormat:'DD-MMM-YYYY'}}</th>
-                                  <th *ngIf="!item.received_from_mcompany_at" >---</th>
-                              </tr>
-                          </tbody>
-                      </table>
-                      </div>
-                  </div>
-
+                    <tbody>
+                      <tr *ngFor="let item of simDetails; let i=index">
+                        <th *ngIf="item.reissued_at">{{item.reissued_at | amDateFormat:'DD-MMM-YYYY'}}</th>
+                        <th *ngIf="!item.reissued_at">---</th>
+                        <th *ngIf="item.received_from_mcompany_at">
+                          {{ item.received_from_mcompany_at | amDateFormat:'DD-MMM-YYYY'}}</th>
+                        <th *ngIf="!item.received_from_mcompany_at">---</th>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-              </div>
-          </div>
 
-          </app-card>
-      </div>
-      <div class="modal-footer">
-          <div class="pr-4">
-              <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHide()"> <i
-                      class="icofont icofont-close"></i> Close</button>
+            </div>
           </div>
+        </div>
 
+      </app-card>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHide()"> <i
+            class="icofont icofont-close"></i> Close</button>
       </div>
+
+    </div>
   </ng-template>
 
 </block-ui>

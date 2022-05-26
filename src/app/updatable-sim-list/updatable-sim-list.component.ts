@@ -76,7 +76,7 @@ export class UpdatableSIMListComponent implements OnInit {
 
   ngOnInit() {
     this.getSupplier();
-  //  this.getList();
+    this.onSearch();
   }
 
 

@@ -42,6 +42,8 @@ export class ReissuedSIMListComponent implements OnInit {
   selectedSIMType = { id: 'Subscribed', name: 'Subscribed' };
   SIMTypeList = [{ id: 'Subscribed', name: 'Subscribed' }, { id: 'Available', name: 'In-Stock(Available)' }, { id: 'Cancelled', name: 'Cancelled' }, { id: 'Permanently Cancelled', name: 'Permanently Cancelled' }]
 
+  total_sent_for_reissuance = 0;
+
   constructor(
     private modalService: BsModalService,
     private confirmService: ConfirmService,
@@ -96,13 +98,16 @@ export class ReissuedSIMListComponent implements OnInit {
     this.getList();
   }
 
+
+
+
   getSIMHistory() {
     this._service.get('stock/get-current-sim-stock-history').subscribe(res => {
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
         return;
       }
-      console.log(res);
+      this.total_sent_for_reissuance = res.total_sent_for_reissuance;
     }, err => {
       this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
     }

@@ -303,6 +303,7 @@ export class RemoveProductSubscriptionComponent implements OnInit {
               sim_iccid: new FormControl({ value: element.sim_iccid, disabled: true }, Validators.required),
               sim_phone_number: new FormControl({ value: element.sim_phone_number, disabled: true }, Validators.required),
               plan: new FormControl({ value: element.plan, disabled: true }, Validators.required),
+              plan_id: new FormControl({ value: element.plan_id }),
               amount: new FormControl({ value: element.amount, disabled: true }, Validators.required),
               refund_amount: new FormControl({ value: 0, disabled: true }),
               is_removed: new FormControl(null)
@@ -400,6 +401,7 @@ export class RemoveProductSubscriptionComponent implements OnInit {
       removal_items.push({
         id: element.id,
         sim: element.sim,
+        plan_id: element.plan_id.value,
         refund_amount: Number(element.refund_amount)
       });
 
@@ -417,6 +419,8 @@ export class RemoveProductSubscriptionComponent implements OnInit {
       removal_items: removal_items
     };
 
+    // console.log(obj);
+    // return;
 
     this.confirmService.confirm('Are you sure?', 'You are removing items from current month subscription.')
       .subscribe(
