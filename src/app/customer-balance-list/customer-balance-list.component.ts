@@ -261,6 +261,7 @@ export class CustomerBalanceListComponent implements OnInit {
     const obj = {
       customer: this.entryForm.controls['customer'].value,
       paid_amount: Number(this.entryForm.value.amount),
+      payment_method:1
     };
 
     this._service.post('load-customer-balance', obj).subscribe(

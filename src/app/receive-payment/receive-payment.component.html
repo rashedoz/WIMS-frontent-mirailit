@@ -226,7 +226,7 @@
             <thead>
               <tr>
                 <th width="60%">{{balanceObj.first_name}} {{balanceObj.last_name}}</th>
-                <th>Balance:</th>
+                <th> {{isbalanceDeduct ? 'Remaining Balance:':'Balance:'}} </th>
                 <th>{{balance - tempPaidAmount}}</th>
               </tr>
             </thead>

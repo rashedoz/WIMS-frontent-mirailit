@@ -105,7 +105,7 @@
                                             <ngx-datatable-column [width]="250" name="Action" prop="id"
                                                 [draggable]="false" [sortable]="false">
                                                 <ng-template let-row="row" ngx-datatable-cell-template>
-                                                    <button [routerLink]="['/customer-details',row.id]" routerLinkActive="router-link-active"  class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-eye"></i>Show Profile</button>
+                                                    <button [routerLink]="['/customer-details',row.id]" routerLinkActive="router-link-active"  class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-eye"></i>See Details</button>
 
                                                     <button (click)="getItem(row,template)"
                                                         class="btn btn-primary btn-mini mr-1"><i

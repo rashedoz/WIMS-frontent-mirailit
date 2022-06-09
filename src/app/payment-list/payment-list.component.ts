@@ -67,7 +67,6 @@ export class PaymentListComponent implements OnInit {
 
 
   ngOnInit() {
-
    this.getPaymentList();
   }
 
@@ -87,6 +86,7 @@ export class PaymentListComponent implements OnInit {
   //     this.getBillListByCustomer(e.id);
   //   }
   // }
+
   setPage(pageInfo) {
     this.page.pageNumber = pageInfo.offset;
     this.getPaymentList();

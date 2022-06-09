@@ -92,6 +92,8 @@ export class CustomerDetailsComponent implements OnInit {
   @ViewChild('tableSubscriptionHistory', { static: false }) tableSubscriptionHistory: any;
   @ViewChild('tableDeviceSalesHistory', { static: false }) tableDeviceSalesHistory: any;
 
+  rowItems = [];
+
   constructor(
     public formBuilder: FormBuilder,
     private _service: CommonService,
@@ -153,6 +155,7 @@ getCustomer(){
     this.pageTable.pageNumber = 0;
     this.pageTable.size = 10;
     this.currentTab = type;
+    this.rowItems = [];
     switch (type) {
       case 'Basic Details':
         this.url = 'get-user-detail/';
@@ -164,11 +167,11 @@ getCustomer(){
         break;
       case 'Device Sales Details':
         this.url = 'subscription/get-device-sales-list-by-customerid/';
-     this.getList();
+     this.getListWithPagination();
         break;
       case 'Due Details':
         this.url = 'subscription/get-device-type-bills-by-customerid/';
-     this.getList();
+     this.getListWithPagination();
         break;
       case 'Payment Details':
         this.url = 'subscription/get-device-type-bills-by-customerid/';
@@ -199,6 +202,12 @@ getCustomer(){
 
   }
 
+  loadItems(row) {
+    this._service.get('subscription/get-subscription-detail/'+row.id).subscribe(res => {
+      this.rowItems = res;
+    }, err => { });
+  }
+
  toggleExpandRowDevice(row) {
     this._service.get('get-device-sales-detail-subscriptionid/'+row.id).subscribe(res => {
       row.details = res;
@@ -212,6 +221,35 @@ getCustomer(){
   setPage(pageInfo) {
     this.pageTable.pageNumber = pageInfo.offset;
     this.getList();
+  }
+
+
+  getListWithPagination() {
+
+    this.loadingIndicator = true;
+    const obj = {
+      limit: this.pageTable.size,
+      page: this.pageTable.pageNumber + 1
+    };
+    this._service.get(this.url+this.customer_id).subscribe(res => {
+
+      if (!res) {
+        this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+        return;
+      }
+      this.rows =  res.results;
+      this.pageTable.totalElements = res.count;
+      this.pageTable.totalPages = Math.ceil(this.pageTable.totalElements / this.pageTable.size);
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }, err => {
+      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }
+    );
   }
 
 

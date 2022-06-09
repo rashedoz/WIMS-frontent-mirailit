@@ -26,8 +26,9 @@
                             <div class="row">
                                 <div class="col-lg-12 ">
                                  <ngx-datatable #table class="material table-bordered" [rows]="paymentList" [loadingIndicator]="loadingIndicator"
-                                  [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                                  [rowHeight]="'auto'" [limit]="10">
+                                  [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"  [externalPaging]="true"
+                                  rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                                  (page)="setPage($event)">
 
                                   <ngx-datatable-column [width]="100" name="Payment No" prop="id" [draggable]="false" [sortable]="false">
                                     <ng-template let-value="value" ngx-datatable-cell-template>
