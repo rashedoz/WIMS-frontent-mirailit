@@ -149,9 +149,9 @@ export class ReactivateHeldSubscriptionComponent implements OnInit {
 
   // onSubscriptionChange(e){
   //   if(e){
-   
+
   //    this.subscriptionItemList = e.subscribed_items;
-     
+
   //    if (this.subscriptionItemList.length > 0) {
   //     let itemHistoryControl = <FormArray>(
   //       this.entryForm.controls.itemHistory
@@ -177,11 +177,11 @@ export class ReactivateHeldSubscriptionComponent implements OnInit {
 
   onSubscriptionChange(e){
     if(e){
-   
+
       this.simList = [];
       this.planList = [];
        this._service.get('subscription/get-subscription-detail/'+e.id).subscribe(res => {
-        
+
          res.forEach(element => {
            this.simList.push({
              CID_no: element.sim.CID_no,
@@ -189,12 +189,12 @@ export class ReactivateHeldSubscriptionComponent implements OnInit {
              id: element.sim.id,
              phone_number: element.sim.phone_number
            });
-           this.planList.push({           
+           this.planList.push({
              id: element.plan.id,
              plan: element.plan.plan
            });
          });
- 
+
        if(res.length > 0){
          this.subscriptionItemList = res;
          if (this.subscriptionItemList.length > 0) {
@@ -286,7 +286,7 @@ export class ReactivateHeldSubscriptionComponent implements OnInit {
   getPlanList() {
     this._service.get("subscription/get-data-plan-list").subscribe(
       (res) => {
-        this.planList = res;
+        this.planList = res.results;
       },
       (err) => {}
     );
@@ -376,7 +376,7 @@ export class ReactivateHeldSubscriptionComponent implements OnInit {
 
     };
 
- 
+
     this.confirmService.confirm('Are you sure?', 'You are reactivating this subscription.')
     .subscribe(
         result => {

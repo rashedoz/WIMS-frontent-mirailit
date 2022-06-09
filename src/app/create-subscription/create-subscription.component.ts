@@ -487,7 +487,7 @@ private fakeServiceSIM(term) {
   getPlanList() {
     this._service.get("subscription/get-data-plan-list").subscribe(
       (res) => {
-        this.planList = res;
+        this.planList = res.results;
       },
       (err) => {}
     );

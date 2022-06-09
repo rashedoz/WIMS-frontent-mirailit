@@ -118,8 +118,8 @@ export class RemoveProductNextMonthComponent implements OnInit {
            item.mobile.toLocaleLowerCase().indexOf(term) > -1;
     }
 
-    
-  onCustomerChange(e){  
+
+  onCustomerChange(e){
     this.entryForm.controls['subscription'].setValue(null);
     let itemHistoryControl = <FormArray>(
       this.entryForm.controls.itemHistory
@@ -176,7 +176,7 @@ export class RemoveProductNextMonthComponent implements OnInit {
   }
 
   getItemList(customerId) {
-    
+
     this._service.get("subscription/get-active-subscription-list?customer="+customerId).subscribe(
       (res) => {
       //  this.itemList = res;
@@ -235,7 +235,7 @@ export class RemoveProductNextMonthComponent implements OnInit {
   getPlanList() {
     this._service.get("subscription/get-data-plan-list").subscribe(
       (res) => {
-        this.planList = res;
+        this.planList = res.results;
       },
       (err) => {}
     );

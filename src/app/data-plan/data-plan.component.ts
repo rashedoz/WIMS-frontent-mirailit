@@ -105,7 +105,7 @@ export class DataPlanComponent implements OnInit {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
         return;
       }
-      this.rows = res;
+      this.rows = res.results;
       // this.page.totalElements = res.Total;
       // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {

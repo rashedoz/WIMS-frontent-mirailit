@@ -148,7 +148,7 @@ export class HoldEntireSubNextMonthComponent implements OnInit {
       this.simList = [];
       this.planList = [];
        this._service.get('subscription/get-subscription-detail/'+e.id).subscribe(res => {
-        
+
          res.forEach(element => {
            this.simList.push({
              CID_no: element.sim.CID_no,
@@ -156,12 +156,12 @@ export class HoldEntireSubNextMonthComponent implements OnInit {
              id: element.sim.id,
              phone_number: element.sim.phone_number
            });
-           this.planList.push({           
+           this.planList.push({
              id: element.plan.id,
              plan: element.plan.plan
            });
          });
- 
+
        if(res.length > 0){
          this.subscriptionItemList = res;
          if (this.subscriptionItemList.length > 0) {
@@ -246,7 +246,7 @@ export class HoldEntireSubNextMonthComponent implements OnInit {
   getPlanList() {
     this._service.get("subscription/get-data-plan-list").subscribe(
       (res) => {
-        this.planList = res;
+        this.planList = res.results;
       },
       (err) => {}
     );

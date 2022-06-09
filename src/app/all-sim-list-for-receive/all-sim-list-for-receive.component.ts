@@ -42,7 +42,7 @@ export class AllSIMListForReceiveComponent implements OnInit {
   selectedSIMType = {id:'Subscribed',name:'Subscribed'};
   SIMTypeList = [{id:'Subscribed',name:'Subscribed'},{id:'Available',name:'In-Stock(Available)'},{id:'Cancelled',name:'Cancelled'},{id:'Permanently Cancelled',name:'Permanently Cancelled'}]
 
-  total_receivable = 0;
+  reissued_qty = 0;
 
   constructor(
     private modalService: BsModalService,
@@ -73,7 +73,7 @@ export class AllSIMListForReceiveComponent implements OnInit {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
         return;
       }
-      this.total_receivable = res.total_receivable;
+      this.reissued_qty = res.reissued_qty;
     }, err => {
       this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
     }

@@ -326,13 +326,13 @@ const MENUITEMS = [
         permission: 'is_superuser,is_staff',
         icon: 'icofont-brand-microsoft',
         children: [
-          {
-            state: 'bill-list',
-            name: 'Bill List',
-            type: 'link',
-            icon: 'ti-control-forward',
-            permission: 'is_superuser,is_staff',
-          },
+          // {
+          //   state: 'bill-list',
+          //   name: 'Bill List',
+          //   type: 'link',
+          //   icon: 'ti-control-forward',
+          //   permission: 'is_superuser,is_staff',
+          // },
           {
             state: 'subscription-bill-list',
             name: 'Subscription Bill List',

@@ -85,7 +85,7 @@ export class AddProductSubscriptionComponent implements OnInit {
   // for sim
   sims = [];
   simsBuffer = [];
-  simsBufferSize = 50;
+  simsBufferSize = 10;
   loadingSIM = false;
   simsCount = 1;
   simsSearchParam = '';
@@ -106,7 +106,7 @@ export class AddProductSubscriptionComponent implements OnInit {
     this.page.size = 50;
 
     this.pageSIM.pageNumber = 1;
-    this.pageSIM.size = 50;
+    this.pageSIM.size = 10;
 
     window.onresize = () => {
       this.scrollBarHorizontal = window.innerWidth < 1200;
@@ -278,133 +278,133 @@ export class AddProductSubscriptionComponent implements OnInit {
 
 
 
-  /// for SIM
-  onSearchSIM() {
-    this.simsInput$.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
-      switchMap(term => this.fakeServiceSIM(term))
-    ).subscribe((data: any) => {
-      this.sims = data.results;
-      this.pageSIM.totalElements = data.count;
-      this.pageSIM.totalPages = Math.ceil(this.pageSIM.totalElements / this.pageSIM.size);
-      this.simsBuffer = this.sims.slice(0, this.simsBufferSize);
+/// for SIM
+onSearchSIM() {
+  this.simsInput$.pipe(
+    debounceTime(200),
+    distinctUntilChanged(),
+    switchMap(term => this.fakeServiceSIM(term))
+  ).subscribe((data : any) => {
+    this.sims = data.results;
+    this.pageSIM.totalElements = data.count;
+    this.pageSIM.totalPages = Math.ceil(this.pageSIM.totalElements / this.pageSIM.size);
+    this.simsBuffer = this.sims.slice(0, this.simsBufferSize);
     })
-  }
+}
 
-  onScrollToEndSIM() {
+onScrollToEndSIM() {
     this.fetchMoreSIM();
-  }
+}
 
-  onScrollSIM({ end }) {
-    if (this.loadingSIM || this.sims.length <= this.simsBuffer.length) {
+onScrollSIM({ end }) {
+  if (this.loadingSIM || this.sims.length <= this.simsBuffer.length) {
       return;
-    }
-
-    if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.simsBuffer.length) {
-      this.fetchMoreSIM();
-    }
   }
 
-  private fetchMoreSIM() {
+  if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.simsBuffer.length) {
+      this.fetchMoreSIM();
+  }
+}
 
-    let more;
+private fetchMoreSIM() {
 
-    if (this.simsCount < this.pageSIM.totalPages) {
-      this.count++;
-      this.pageSIM.pageNumber = this.simsCount;
-      let obj;
-      if (this.simsSearchParam) {
-        obj = {
-          limit: this.pageSIM.size,
-          page: this.pageSIM.pageNumber,
-          search_param: this.simsSearchParam
-        };
-      } else {
-        obj = {
-          limit: this.pageSIM.size,
-          page: this.pageSIM.pageNumber
-        };
-      }
-      this._service.get("stock/get-subscriptable-sim-list", obj).subscribe(
-        (res) => {
-          more = res.results;
-          //  const more = this.customers.slice(len, this.bufferSize + len);
-          this.loadingSIM = true;
-          // using timeout here to simulate backend API delay
-          setTimeout(() => {
+  let more;
+
+  if(this.simsCount < this.pageSIM.totalPages){
+  this.simsCount++;
+  this.pageSIM.pageNumber = this.simsCount;
+  let obj;
+  if(this.simsSearchParam){
+     obj = {
+      limit: this.pageSIM.size,
+      page: this.pageSIM.pageNumber,
+      search_param:this.simsSearchParam
+    };
+  }else{
+     obj = {
+      limit: this.pageSIM.size,
+      page: this.pageSIM.pageNumber
+    };
+  }
+    this._service.get("stock/get-subscriptable-sim-list",obj).subscribe(
+      (res) => {
+        console.log(res);
+        more = res.results;
+        //  const more = this.customers.slice(len, this.bufferSize + len);
+        this.loadingSIM = true;
+        // using timeout here to simulate backend API delay
+        setTimeout(() => {
             this.loadingSIM = false;
             this.simsBuffer = this.simsBuffer.concat(more);
-          }, 100)
-        },
-        (err) => { }
-      );
-    }
-
-  }
-
-
-  getSIM() {
-    let obj;
-    if (this.simsSearchParam) {
-      obj = {
-        limit: this.pageSIM.size,
-        page: this.pageSIM.pageNumber,
-        search_param: this.simsSearchParam
-      };
-    } else {
-      obj = {
-        limit: this.pageSIM.size,
-        page: this.pageSIM.pageNumber
-      };
-    }
-
-    this._service.get("stock/get-subscriptable-sim-list", obj).subscribe(
-      (res) => {
-        this.sims = res.results;
-        this.pageSIM.totalElements = res.count;
-        this.pageSIM.totalPages = Math.ceil(this.pageSIM.totalElements / this.pageSIM.size);
-        this.simsBuffer = this.sims.slice(0, this.simsBufferSize);
+        }, 100)
       },
-      (err) => { }
+      (err) => {}
     );
   }
 
-  private fakeServiceSIM(term) {
+}
 
-    this.pageSIM.size = 50;
-    this.pageSIM.pageNumber = 1;
-    this.simsSearchParam = term;
 
-    let obj;
-    if (this.simsSearchParam) {
-      obj = {
-        limit: this.pageSIM.size,
-        page: this.pageSIM.pageNumber,
-        search_param: this.simsSearchParam
-      };
-    } else {
-      obj = {
-        limit: this.pageSIM.size,
-        page: this.pageSIM.pageNumber
-      };
+getSIM(){
+let obj;
+if(this.simsSearchParam){
+   obj = {
+    limit: this.pageSIM.size,
+    page: this.pageSIM.pageNumber,
+    search_param:this.simsSearchParam
+  };
+}else{
+   obj = {
+    limit: this.pageSIM.size,
+    page: this.pageSIM.pageNumber
+  };
+}
+
+this._service.get("stock/get-subscriptable-sim-list",obj).subscribe(
+  (res) => {
+    this.sims = res.results;
+    this.pageSIM.totalElements = res.count;
+    this.pageSIM.totalPages = Math.ceil(this.pageSIM.totalElements / this.pageSIM.size);
+    this.simsBuffer = this.sims.slice(0, this.simsBufferSize);
+  },
+  (err) => {}
+);
+}
+
+private fakeServiceSIM(term) {
+
+this.pageSIM.size = 10;
+this.pageSIM.pageNumber = 1;
+this.simsSearchParam = term;
+
+let obj;
+if(this.simsSearchParam){
+   obj = {
+    limit: this.pageSIM.size,
+    page: this.pageSIM.pageNumber,
+    search_param:this.simsSearchParam
+  };
+}else{
+   obj = {
+    limit: this.pageSIM.size,
+    page: this.pageSIM.pageNumber
+  };
+}
+
+let params = new HttpParams();
+if (obj) {
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      params = params.append(key, obj[key]);
     }
-
-    let params = new HttpParams();
-    if (obj) {
-      for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          params = params.append(key, obj[key]);
-        }
-      }
-    }
-    return this.http.get<any>(environment.apiUrl + 'stock/get-subscriptable-sim-list', { params }).pipe(
-      map(res => {
-        return res;
-      })
-    );
   }
-
+}
+return this.http.get<any>(environment.apiUrl + 'stock/get-subscriptable-sim-list', { params }).pipe(
+  map(res => {
+    return res;
+  })
+);
+}
 
 
 
@@ -528,7 +528,7 @@ export class AddProductSubscriptionComponent implements OnInit {
   getPlanList() {
     this._service.get("subscription/get-data-plan-list").subscribe(
       (res) => {
-        this.planList = res;
+        this.planList = res.results;
       },
       (err) => { }
     );

@@ -148,7 +148,7 @@
                     </thead>
                     <tbody formArrayName="itemHistory" *ngFor="let item of itemFormArray; let i = index;">
                         <tr  [formGroupName]="i">
-                            <th>
+                            <th class="p-2">
 
                               <ng-select [clearable]="true" appendTo="body" (change)="onSIMChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}" formControlName="sim" [clearOnBackspace]="false"
                               [items]="simsBuffer"
@@ -174,38 +174,38 @@
 
                               </div>
                             </th>
-                            <th>
+                            <th class="p-2">
                               <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim_iccid').errors}" formControlName="sim_iccid"  />
                               <div *ngIf="submitted && item_his.controls[i].get('sim_iccid').errors" class="error-text">
                                 <small *ngIf="item_his.controls[i].get('sim_iccid').errors.required" class="text-danger"> SIM ICCID is required</small>
 
                               </div>
                             </th>
-                            <th>
+                            <th class="p-2">
                               <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('phone_number').errors}" formControlName="phone_number"  />
                               <div *ngIf="submitted && item_his.controls[i].get('phone_number').errors" class="error-text">
                                 <small *ngIf="item_his.controls[i].get('phone_number').errors.required" class="text-danger"> Phone number is required</small>
 
                               </div>
                             </th>
-                            <th>
-                              <ng-select [clearable]="false" appendTo="body" (change)="onPlanChange($event, item)"  [clearOnBackspace]="false" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('plan').errors}" formControlName="plan"  [items]="planList"
+                            <th class="p-2">
+                              <ng-select *ngIf="planList.length > 0" [clearable]="false" appendTo="body" (change)="onPlanChange($event, item)"  [clearOnBackspace]="false" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('plan').errors}" formControlName="plan"  [items]="planList"
                             bindLabel="plan" bindValue="id" placeholder="Select a plan"></ng-select>
                             <div *ngIf="submitted && item_his.controls[i].get('plan').errors" class="error-text">
                               <small *ngIf="item_his.controls[i].get('plan').errors.required" class="text-danger"> Plan is required</small>
 
                             </div>
                             </th>
-                            <th>
+                            <th class="p-2">
                               <input type="text"  class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('actual_amount').errors}" formControlName="actual_amount"  />
                             <div *ngIf="submitted && item_his.controls[i].get('actual_amount').errors" class="error-text">
                               <small *ngIf="item_his.controls[i].get('actual_amount').errors.required" class="text-danger"> Amount is required</small>
                             </div>
                             </th>
-                            <th>
+                            <th class="p-2">
                               <input type="text" numeric numericType="number" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('discount').errors}" formControlName="discount" (keyup)="onItemDiscountChange($event,item)" (focus)="inputFocused($event)" />
                             </th>
-                            <th>
+                            <th class="p-2">
                               <button class="btn btn-success btn-mini pull-right mr-3" title="Add new item"
                                 (click)="addItemHistory()"><i class="icofont-plus "></i> Add More</button>
                               <button *ngIf="itemFormArray.length > 1" class="btn btn-danger mr-1 btn-mini pull-right"

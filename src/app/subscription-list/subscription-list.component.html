@@ -146,12 +146,12 @@
                                         <span *ngIf="!value" >  --- </span>
                                       </ng-template>
                                   </ngx-datatable-column>
-                                  <ngx-datatable-column [width]="150" name="Held Date" prop="held_date" [draggable]="false" [sortable]="false">
+                                  <!-- <ngx-datatable-column [width]="150" name="Held Date" prop="held_date" [draggable]="false" [sortable]="false">
                                     <ng-template let-value="value" ngx-datatable-cell-template>
                                       <span *ngIf="value" >  {{ value | amDateFormat:'DD-MMM-YYYY'}} </span>
                                       <span *ngIf="!value" >  --- </span>
                                     </ng-template>
-                                </ngx-datatable-column>
+                                </ngx-datatable-column> -->
                                 <ngx-datatable-column [width]="200" name="Subscription Status" prop="status" [draggable]="false" [sortable]="false">
                                     <ng-template let-value="value" ngx-datatable-cell-template>
                                       <span *ngIf="value == 1" > <strong class="label label-success">{{ SubscriptionStatus[value] }}</strong> </span>
@@ -259,12 +259,12 @@
                                           <span *ngIf="!value" >  --- </span>
                                         </ng-template>
                                     </ngx-datatable-column>
-                                    <ngx-datatable-column [width]="150" name="Held Date" prop="held_date" [draggable]="false" [sortable]="false">
+                                    <!-- <ngx-datatable-column [width]="150" name="Held Date" prop="held_date" [draggable]="false" [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
                                           <span *ngIf="value" >  {{ value | amDateFormat:'DD-MMM-YYYY'}} </span>
                                           <span *ngIf="!value" >  --- </span>
                                         </ng-template>
-                                    </ngx-datatable-column>
+                                    </ngx-datatable-column> -->
                                     <ngx-datatable-column [width]="100" name="Subscription Status" prop="status" [draggable]="false" [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
                                           <span *ngIf="value == 1" > <strong class="label label-success">{{ SubscriptionStatus[value] }}</strong> </span>
@@ -365,12 +365,12 @@
                                           <span *ngIf="!value" >  --- </span>
                                         </ng-template>
                                     </ngx-datatable-column>
-                                    <ngx-datatable-column [width]="150" name="Held Date" prop="held_date" [draggable]="false" [sortable]="false">
+                                    <!-- <ngx-datatable-column [width]="150" name="Held Date" prop="held_date" [draggable]="false" [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
                                         <span *ngIf="value" >  {{ value | amDateFormat:'DD-MMM-YYYY'}} </span>
                                         <span *ngIf="!value" >  --- </span>
                                       </ng-template>
-                                  </ngx-datatable-column>
+                                  </ngx-datatable-column> -->
                                   <ngx-datatable-column [width]="100" name="Subscription Status" prop="status" [draggable]="false" [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
                                         <span *ngIf="value == 1" > <strong class="label label-success">{{ SubscriptionStatus[value] }}</strong> </span>

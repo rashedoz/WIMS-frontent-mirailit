@@ -213,7 +213,7 @@ export class UpdatableSIMListComponent implements OnInit {
     }
     return this.http.get<any>(environment.apiUrl + 'supplier/get-supplier-list', { params }).pipe(
       map(res => {
-        return res;
+        return res.results;
       })
     );
   }

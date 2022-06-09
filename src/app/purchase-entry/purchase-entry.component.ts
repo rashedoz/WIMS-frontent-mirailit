@@ -86,7 +86,7 @@ export class PurchaseEntryComponent implements OnInit {
 
   getSupplierList(){
     this._service.get('supplier/get-supplier-list').subscribe(res=> {
-      this.supplierList = res;
+      this.supplierList = res.results;
     }, err => { }
     );
   }

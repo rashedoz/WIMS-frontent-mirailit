@@ -42,7 +42,7 @@ export class ReissuedSIMListComponent implements OnInit {
   selectedSIMType = { id: 'Subscribed', name: 'Subscribed' };
   SIMTypeList = [{ id: 'Subscribed', name: 'Subscribed' }, { id: 'Available', name: 'In-Stock(Available)' }, { id: 'Cancelled', name: 'Cancelled' }, { id: 'Permanently Cancelled', name: 'Permanently Cancelled' }]
 
-  total_sent_for_reissuance = 0;
+  reissued_qty = 0;
 
   constructor(
     private modalService: BsModalService,
@@ -107,7 +107,7 @@ export class ReissuedSIMListComponent implements OnInit {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
         return;
       }
-      this.total_sent_for_reissuance = res.total_sent_for_reissuance;
+      this.reissued_qty = res.reissued_qty;
     }, err => {
       this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
     }
