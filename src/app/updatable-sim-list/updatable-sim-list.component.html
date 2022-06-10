@@ -179,21 +179,21 @@
                             </ng-template>
                         </ngx-datatable-column>     -->
 
-                        <ngx-datatable-column [width]="100" name="SIM CID No" prop="Id" [draggable]="false"
+                        <ngx-datatable-column [width]="100" name="SIM CID No" prop="CID_no" [draggable]="false"
                             [sortable]="false">
                             <ng-template let-row="row" ngx-datatable-cell-template>
                                 <input type="text"class="form-control mt-2" [(ngModel)]="row.CID_no"  required />
                             </ng-template>
                         </ngx-datatable-column>
 
-                        <ngx-datatable-column [width]="120" name="ICCID No" prop="Id" [draggable]="false"
+                        <ngx-datatable-column [width]="120" name="ICCID No" prop="ICCID_no" [draggable]="false"
                             [sortable]="false">
                             <ng-template let-row="row" ngx-datatable-cell-template>
                                 <input type="text"class="form-control mt-2" [(ngModel)]="row.iccid"  required />
                             </ng-template>
                         </ngx-datatable-column>
 
-                        <ngx-datatable-column [width]="120" name="Phone No" prop="Id" [draggable]="false"
+                        <ngx-datatable-column [width]="120" name="Phone No" prop="phone_number" [draggable]="false"
                         [sortable]="false">
                         <ng-template let-row="row" ngx-datatable-cell-template>
                             <input type="text"class="form-control mt-2" [(ngModel)]="row.phone_number"  required />
