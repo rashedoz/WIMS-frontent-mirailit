@@ -94,6 +94,7 @@ export class CustomerDetailsComponent implements OnInit {
   balanceHistoryList = [];
   @ViewChild('tablePaymentDetailsList', { static: false }) tablePaymentDetailsList: any;
   @ViewChild('tableDeviceSalesHistory', { static: false }) tableDeviceSalesHistory: any;
+  @ViewChild('billDetailTabs', { static: false }) billDetailTabs: any;
 
   rowItems = [];
   methodListWithoutFrom = [{"id":1,"name":"CASH"},{"id":3,"name":"CARD_PAYMENT"},{"id":4,"name":"ONLINE_BANKING"}]
@@ -185,8 +186,9 @@ selectTab(tabId: number) {
      this.getListWithPagination();
         break;
       case 'Bills Details':
-        // this.url = 'payment/get-payment-list-by-customerid/';
-        // this.getListWithPagination();
+        this.url = 'subscription/get-subscription-type-bills-by-customerid/';
+       this.getListWithPagination();
+       this.billDetailTabs.tabs[0].active = true;
         break;
       case 'Payment Details':
         this.url = 'payment/get-payment-list-by-customerid/';
@@ -205,8 +207,30 @@ selectTab(tabId: number) {
         this.getCustomer();
         break;
       }
-
  }
+
+ changeTabBill(type,e) {
+
+  // this.searchParam = '';
+   this.pageTable.pageNumber = 0;
+   this.pageTable.size = 10;
+
+   switch (type) {
+     case 'Subscription Bill':
+       this.url = 'subscription/get-subscription-type-bills-by-customerid/';
+       this.getListWithPagination();
+       break;
+     case 'Device Bill':
+       this.url = 'subscription/get-device-type-bills-by-customerid/';
+    this.getListWithPagination();
+       break;
+     default:
+       this.url = 'subscription/get-subscription-type-bills-by-customerid/';
+       this.getListWithPagination();
+       break;
+     }
+
+}
 
 //  toggleExpandRow(row) {
 //     this._service.get('subscription/get-subscription-detail/'+row.id).subscribe(res => {
@@ -455,7 +479,6 @@ selectTab(tabId: number) {
 
   onFormSubmit() {
     this.submitted = true;
-
 
 
     if (Number(this.paidAmount) == 0) {

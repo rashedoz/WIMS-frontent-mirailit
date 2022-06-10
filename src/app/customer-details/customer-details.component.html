@@ -131,59 +131,63 @@
 
                         <div class="col-md-7" style="border-right: 1px #9f9f9f dashed;">
                           <div class="card card-border-primary">
-                              <div class="card-header">
-                                <h5> Subscriptions </h5>
-                              </div>
-                              <div class="card-block">
+                            <div class="card-header">
+                              <h5> Subscriptions </h5>
+                            </div>
+                            <div class="card-block">
 
-                                <div class="row" *ngIf="subscriptionHistoryList.length > 0">
-                                  <div class="col-md-6" *ngFor="let row of subscriptionHistoryList">
-                                    <div class="card card-border-primary">
-                                        <div class="card-header">
-                                            <h5>Subscription No:  {{ row.id }} <i *ngIf="row.future_state_type == 'Will_Hold' "
-                                              title="Undo Held Subscription"
-                                              class=" mt-1 ml-2 icofont-ui-reply icofont-flip-horizontal text-warning icofont-2x"></i>
-                                          <em *ngIf="row.future_state && row.status === 1">
-                                              <small>--{{row.future_state}}</small></em>
-                                            </h5>
-                                        </div>
-                                        <div class="card-block">
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <ul class="list list-unstyled">
-                                                        <li><b>Activation Date: </b><span class="text-semibold">{{row.activation_date | amDateFormat:'DD-MMM-YYYY'}}</span></li>
-                                                        <li><b>Cancellation Date: </b>
-                                                          <span *ngIf="!row.cancellation_date" class="text-semibold">{{row.cancellation_date | amDateFormat:'DD-MMM-YYYY'}}</span>
-                                                          <span *ngIf="!row.cancellation_date" >  --- </span>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card-footer">
-                                            <div class="task-list-table">
-                                                <p class="task-due"><strong> Status : </strong>
-                                                  <span *ngIf="row.status == 1"> <strong
-                                                    class="label label-success">{{ SubscriptionStatus[row.status] }}</strong> </span>
-                                                <span *ngIf="row.status == 2"><strong
-                                                    class="label label-danger">{{ SubscriptionStatus[row.status] }}</strong> </span>
-                                                <span *ngIf="row.status == 3"><strong
-                                                    class="label label-warning">{{ SubscriptionStatus[row.status] }}</strong> </span>
-                                                </p>
-                                            </div>
-                                            <div class="task-board m-0">
-                                              <button (click)="loadItems(row)"
-                                              class="btn btn-primary btn-mini"><i class="icofont icofont-eye-alt m-0"></i> See Items </button>
-                                                <!-- end of seconadary -->
-                                            </div>
-                                            <!-- end of pull-right class -->
-                                        </div>
-                                        <!-- end of card-footer -->
+                              <div class="row" *ngIf="subscriptionHistoryList.length > 0">
+                                <div class="col-md-6" *ngFor="let row of subscriptionHistoryList">
+                                  <div class="card card-border-primary">
+                                    <div class="card-header">
+                                      <h5>Subscription No: {{ row.id }} <i *ngIf="row.future_state_type == 'Will_Hold' "
+                                          title="Undo Held Subscription"
+                                          class=" mt-1 ml-2 icofont-ui-reply icofont-flip-horizontal text-warning icofont-2x"></i>
+                                        <em *ngIf="row.future_state && row.status === 1">
+                                          <small>--{{row.future_state}}</small></em>
+                                      </h5>
                                     </div>
+                                    <div class="card-block">
+                                      <div class="row">
+                                        <div class="col-sm-12">
+                                          <ul class="list list-unstyled">
+                                            <li><b>Activation Date: </b><span
+                                                class="text-semibold">{{row.activation_date |
+                                                amDateFormat:'DD-MMM-YYYY'}}</span></li>
+                                            <li><b>Cancellation Date: </b>
+                                              <span *ngIf="!row.cancellation_date"
+                                                class="text-semibold">{{row.cancellation_date |
+                                                amDateFormat:'DD-MMM-YYYY'}}</span>
+                                              <span *ngIf="!row.cancellation_date"> --- </span>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="card-footer">
+                                      <div class="task-list-table">
+                                        <p class="task-due"><strong> Status : </strong>
+                                          <span *ngIf="row.status == 1"> <strong class="label label-success">{{
+                                              SubscriptionStatus[row.status] }}</strong> </span>
+                                          <span *ngIf="row.status == 2"><strong class="label label-danger">{{
+                                              SubscriptionStatus[row.status] }}</strong> </span>
+                                          <span *ngIf="row.status == 3"><strong class="label label-warning">{{
+                                              SubscriptionStatus[row.status] }}</strong> </span>
+                                        </p>
+                                      </div>
+                                      <div class="task-board m-0">
+                                        <button (click)="loadItems(row)" class="btn btn-primary btn-mini"><i
+                                            class="icofont icofont-eye-alt m-0"></i> See Items </button>
+                                        <!-- end of seconadary -->
+                                      </div>
+                                      <!-- end of pull-right class -->
+                                    </div>
+                                    <!-- end of card-footer -->
+                                  </div>
                                 </div>
-                                </div>
-
                               </div>
+
+                            </div>
                           </div>
                         </div>
                         <div class="col-md-5">
@@ -193,27 +197,26 @@
                               <h5> Subscription Items</h5>
                             </div>
                             <div class="card-block table-responsive">
-                              <table
-                              class="table table-xs table-hover table-bordered table-striped">
-                              <thead>
-                                <tr>
+                              <table class="table table-xs table-hover table-bordered table-striped">
+                                <thead>
+                                  <tr>
                                     <th class="p-2" width="20%" scope="col">SIM CID No</th>
                                     <th class="p-2" width="20%" scope="col">SIM ICCID No</th>
                                     <th class="p-2" width="20%" scope="col">Phone Number</th>
                                     <th class="p-2" width="20%" scope="col">Plan</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let item of rowItems">
-                                  <th class="p-2"> {{item.sim.CID_no}}</th>
-                                  <th class="p-2"> {{item.sim.ICCID_no}} </th>
-                                  <th class="p-2"> {{item.sim.phone_number}} </th>
-                                  <th class="p-2"> {{item.plan.plan}} </th>
-                                </tr>
-                            </tbody>
-                          </table>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let item of rowItems">
+                                    <th class="p-2"> {{item.sim.CID_no}}</th>
+                                    <th class="p-2"> {{item.sim.ICCID_no}} </th>
+                                    <th class="p-2"> {{item.sim.phone_number}} </th>
+                                    <th class="p-2"> {{item.plan.plan}} </th>
+                                  </tr>
+                                </tbody>
+                              </table>
                             </div>
-                            </div>
+                          </div>
 
                         </div>
 
@@ -228,9 +231,10 @@
                         <div class="col-md-12" *ngIf="rows.length > 0">
 
                           <ngx-datatable #tableDeviceSalesHistory class="material table-bordered" [rows]="rows"
-                          [loadingIndicator]="loadingIndicator" [externalPaging]="true" [columnMode]="ColumnMode.force"
-                          [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [count]="pageTable.totalElements"
-                          [offset]="pageTable.pageNumber" [limit]="pageTable.size" (page)="setPage($event)">
+                            [loadingIndicator]="loadingIndicator" [externalPaging]="true"
+                            [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" rowHeight="auto"
+                            [count]="pageTable.totalElements" [offset]="pageTable.pageNumber" [limit]="pageTable.size"
+                            (page)="setPage($event)">
 
                             <ngx-datatable-column [width]="120" name="Bill No" prop="id" [draggable]="false"
                               [sortable]="false">
@@ -285,14 +289,14 @@
                             <ngx-datatable-column [width]="150" name="Status" prop="status" [draggable]="false"
                               [sortable]="false">
                               <ng-template let-value="value" ngx-datatable-cell-template>
-                                <span *ngIf="value == 1"> <strong
-                                    class="label label-danger">{{ billStatus[value] }}</strong> </span>
-                                <span *ngIf="value == 2"><strong
-                                    class="label label-warning">{{ billStatus[value] }}</strong> </span>
-                                <span *ngIf="value == 3"> <strong
-                                    class="label label-success">{{ billStatus[value] }}</strong> </span>
-                                <span *ngIf="value == 4"> <strong
-                                    class="label label-info">{{ billStatus[value] }}</strong> </span>
+                                <span *ngIf="value == 1"> <strong class="label label-danger">{{ billStatus[value]
+                                    }}</strong> </span>
+                                <span *ngIf="value == 2"><strong class="label label-warning">{{ billStatus[value]
+                                    }}</strong> </span>
+                                <span *ngIf="value == 3"> <strong class="label label-success">{{ billStatus[value]
+                                    }}</strong> </span>
+                                <span *ngIf="value == 4"> <strong class="label label-info">{{ billStatus[value]
+                                    }}</strong> </span>
                               </ng-template>
                             </ngx-datatable-column>
 
@@ -340,12 +344,13 @@
                           <div class="row m-t-10">
                             <div class="col-md-8">
                               <h5 class="m-r-5">Due Amount : <span class="text-danger product-price">
-                                {{customerObj.total_due}}
-                              </span></h5>
+                                  {{customerObj.total_due}}
+                                </span></h5>
 
                             </div>
                             <div class="col-md-4 text-right">
-                              <button *ngIf="customerObj.total_due > 0" class="btn btn-primary btn-mini mr-2" (click)="selectTab(4)">
+                              <button *ngIf="customerObj.total_due > 0" class="btn btn-primary btn-mini mr-2"
+                                (click)="selectTab(4)">
                                 <i class="icofont icofont-plus"></i>
                                 Receive Payment </button>
                             </div>
@@ -360,21 +365,28 @@
                       </ng-template>
                       <hr>
                       <div class="row">
+                        <div class="col-lg-4 mb-4">
+                          <tabset [justified]="false" type="pills" #billDetailTabs>
+
+                            <tab (selectTab)="changeTabBill('Subscription Bill',$event)">
+                              <ng-template tabHeading>
+                                Subscription Bill
+                              </ng-template>
+                            </tab>
+                            <tab (selectTab)="changeTabBill('Device Bill',$event)">
+                              <ng-template tabHeading>
+                                Device Bill
+                              </ng-template>
+                            </tab>
+
+                          </tabset>
+                        </div>
+
                         <div class="col-lg-12 ">
-
-
-                          <!-- <ngx-datatable class="material table-bordered" [scrollbarH]="true" [rows]="rows"
+                          <ngx-datatable class="material table-bordered" [scrollbarH]="true" [rows]="paymentDetailList"
                             [loadingIndicator]="loadingIndicator" [externalPaging]="true" [columnMode]="ColumnMode.force"
                             [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [count]="pageTable.totalElements"
-                            [offset]="pageTable.pageNumber" [limit]="page.size" (page)="setPage($event)">
-
-
-                            <ngx-datatable-column [width]="200" name="Customer" prop="customer" [draggable]="false"
-                              [sortable]="false">
-                              <ng-template let-value="value" ngx-datatable-cell-template>
-                                <span> {{ value }} </span>
-                              </ng-template>
-                            </ngx-datatable-column>
+                            [offset]="pageTable.pageNumber" [limit]="page.size" (page)="setPageWithPagination($event)">
 
                             <ngx-datatable-column [width]="150" name="Bill Type" prop="bill_type" [draggable]="false"
                               [sortable]="false">
@@ -467,7 +479,8 @@
                             </ngx-datatable-column>
 
                           </ngx-datatable>
-         -->
+
+
                         </div>
                       </div>
 
@@ -479,79 +492,94 @@
                       <hr>
                       <div class="row">
                         <div class="col-lg-12 ">
-                         <ngx-datatable #tablePaymentDetailsList class="material table-bordered" [rows]="paymentDetailList" [loadingIndicator]="loadingIndicator"
-                          [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"  [externalPaging]="true"
-                          rowHeight="auto" [count]="pageTable.totalElements" [offset]="pageTable.pageNumber" [limit]="pageTable.size"
-                          (page)="setPageWithPagination($event)">
+                          <ngx-datatable #tablePaymentDetailsList class="material table-bordered"
+                            [rows]="paymentDetailList" [loadingIndicator]="loadingIndicator"
+                            [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
+                            [externalPaging]="true" rowHeight="auto" [count]="pageTable.totalElements"
+                            [offset]="pageTable.pageNumber" [limit]="pageTable.size"
+                            (page)="setPageWithPagination($event)">
 
-                          <ngx-datatable-column [width]="100" name="Payment No" prop="id" [draggable]="false" [sortable]="false">
-                            <ng-template let-value="value" ngx-datatable-cell-template>
-                                <span > {{ value }} </span>
-                            </ng-template>
-                        </ngx-datatable-column>
-                          <ngx-datatable-column [width]="100" name="Bill No" prop="bill" [draggable]="false" [sortable]="false">
-                            <ng-template let-value="value" ngx-datatable-cell-template>
-                                <span > {{ value }} </span>
-                            </ng-template>
-                        </ngx-datatable-column>
-                          <ngx-datatable-column [width]="100" name="Session" prop="session" [draggable]="false" [sortable]="false">
-                              <ng-template let-value="value" ngx-datatable-cell-template>
-                                  <span > {{ value }} </span>
-                              </ng-template>
-                          </ngx-datatable-column>
-
-                          <ngx-datatable-column [width]="100" name="Discount" prop="discount" [draggable]="false" [sortable]="false">
-                              <ng-template let-value="value" ngx-datatable-cell-template>
-                                  <span > {{ value }} </span>
-                              </ng-template>
-                          </ngx-datatable-column>
-
-                          <ngx-datatable-column [width]="150" name="Paid Amount" prop="paid_amount" [draggable]="false" [sortable]="false">
-                              <ng-template let-value="value" ngx-datatable-cell-template>
-                                  <span > {{ value }} </span>
-                              </ng-template>
-                          </ngx-datatable-column>
-
-
-                          <ngx-datatable-column [width]="150" name="Payment Method" prop="payment_method" [draggable]="false" [sortable]="false">
-                              <ng-template let-value="value" ngx-datatable-cell-template>
-                                  <span> <strong class="label label-info">{{ PaymentType[value] }} </strong></span>
-                              </ng-template>
-                          </ngx-datatable-column>
-
-                          <ngx-datatable-column [width]="150" name="Remarks" prop="remarks" [draggable]="false" [sortable]="false">
-                              <ng-template let-value="value" ngx-datatable-cell-template>
-                                  <span > {{ value }} </span>
-                              </ng-template>
-                          </ngx-datatable-column>
-
-                          <ngx-datatable-column [cellClass]="'text-center '" [width]="160" name="Payment Checked" [draggable]="false"
-                          [sortable]="false">
-                          <ng-template let-row="row" ngx-datatable-cell-template>
-                            <span (click)="paymentCheck(row,1)" *ngIf="!row.is_payment_checked" class="cursor"> <i class="icofont icofont-checked text-gray fs-26 "></i> </span>
-                            <span *ngIf="row.is_payment_checked"> <i class="icofont icofont-checked text-success fs-26 "></i> </span>
-                          </ng-template>
-                          </ngx-datatable-column>
-
-                          <ngx-datatable-column [cellClass]="'text-center '" [width]="210" name="Payment Finally Checked" [draggable]="false"
-                          [sortable]="false">
-                          <ng-template let-row="row" ngx-datatable-cell-template>
-                            <span  *ngIf="!row.is_payment_checked && !row.is_payment_checked_finally" > <i class="icofont icofont-checked text-gray fs-26"></i> </span>
-                            <span (click)="paymentCheck(row,2)" *ngIf="row.is_payment_checked && !row.is_payment_checked_finally" class="cursor"> <i class="icofont icofont-checked text-gray fs-26"></i> </span>
-                            <span *ngIf="row.is_payment_checked_finally"> <i class="icofont icofont-checked text-success fs-26"></i> </span>
-                          </ng-template>
-                          </ngx-datatable-column>
-
-                          <ngx-datatable-column [width]="170" name="Paid On" prop="created_at" [draggable]="false"
+                            <ngx-datatable-column [width]="100" name="Payment No" prop="id" [draggable]="false"
                               [sortable]="false">
                               <ng-template let-value="value" ngx-datatable-cell-template>
-                                  <span >   {{value | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}} </span>
+                                <span> {{ value }} </span>
                               </ng-template>
-                          </ngx-datatable-column>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column [width]="100" name="Bill No" prop="bill" [draggable]="false"
+                              [sortable]="false">
+                              <ng-template let-value="value" ngx-datatable-cell-template>
+                                <span> {{ value }} </span>
+                              </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column [width]="100" name="Session" prop="session" [draggable]="false"
+                              [sortable]="false">
+                              <ng-template let-value="value" ngx-datatable-cell-template>
+                                <span> {{ value }} </span>
+                              </ng-template>
+                            </ngx-datatable-column>
 
-                      </ngx-datatable>
+                            <ngx-datatable-column [width]="100" name="Discount" prop="discount" [draggable]="false"
+                              [sortable]="false">
+                              <ng-template let-value="value" ngx-datatable-cell-template>
+                                <span> {{ value }} </span>
+                              </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column [width]="150" name="Paid Amount" prop="paid_amount"
+                              [draggable]="false" [sortable]="false">
+                              <ng-template let-value="value" ngx-datatable-cell-template>
+                                <span> {{ value }} </span>
+                              </ng-template>
+                            </ngx-datatable-column>
+
+
+                            <ngx-datatable-column [width]="150" name="Payment Method" prop="payment_method"
+                              [draggable]="false" [sortable]="false">
+                              <ng-template let-value="value" ngx-datatable-cell-template>
+                                <span> <strong class="label label-info">{{ PaymentType[value] }} </strong></span>
+                              </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column [width]="150" name="Remarks" prop="remarks" [draggable]="false"
+                              [sortable]="false">
+                              <ng-template let-value="value" ngx-datatable-cell-template>
+                                <span> {{ value }} </span>
+                              </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column [cellClass]="'text-center '" [width]="160" name="Payment Checked"
+                              [draggable]="false" [sortable]="false">
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span (click)="paymentCheck(row,1)" *ngIf="!row.is_payment_checked" class="cursor"> <i
+                                    class="icofont icofont-checked text-gray fs-26 "></i> </span>
+                                <span *ngIf="row.is_payment_checked"> <i
+                                    class="icofont icofont-checked text-success fs-26 "></i> </span>
+                              </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column [cellClass]="'text-center '" [width]="210"
+                              name="Payment Finally Checked" [draggable]="false" [sortable]="false">
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span *ngIf="!row.is_payment_checked && !row.is_payment_checked_finally"> <i
+                                    class="icofont icofont-checked text-gray fs-26"></i> </span>
+                                <span (click)="paymentCheck(row,2)"
+                                  *ngIf="row.is_payment_checked && !row.is_payment_checked_finally" class="cursor"> <i
+                                    class="icofont icofont-checked text-gray fs-26"></i> </span>
+                                <span *ngIf="row.is_payment_checked_finally"> <i
+                                    class="icofont icofont-checked text-success fs-26"></i> </span>
+                              </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column [width]="170" name="Paid On" prop="created_at" [draggable]="false"
+                              [sortable]="false">
+                              <ng-template let-value="value" ngx-datatable-cell-template>
+                                <span> {{value | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}} </span>
+                              </ng-template>
+                            </ngx-datatable-column>
+
+                          </ngx-datatable>
                         </div>
-                    </div>
+                      </div>
                     </tab>
                     <tab (selectTab)="changeTab('Balance',$event)">
                       <ng-template tabHeading>
@@ -563,14 +591,15 @@
                           <div class="row m-t-10">
                             <div class="col-md-9">
                               <h5 class="m-r-5">Current Balance : <span class="text-primary product-price">
-                                {{customerObj.balance}}
-                              </span></h5>
+                                  {{customerObj.balance}}
+                                </span></h5>
 
                             </div>
                             <div class="col-md-3 text-right">
-                              <button class="btn btn-primary btn-mini mr-2" (click)="openModalLoadBalance(templateBalanceLoad,'Balance')">
+                              <button class="btn btn-primary btn-mini mr-2"
+                                (click)="openModalLoadBalance(templateBalanceLoad,'Balance')">
                                 <i class=" icofont icofont-plus "></i>
-                                 Load Balance </button>
+                                Load Balance </button>
                             </div>
                           </div>
 
@@ -584,7 +613,9 @@
                       <hr>
                       <div class="row mt-3">
                         <div class="col-md-12">
-                          <button (click)="openModalLoadBalance(templateBalanceLoad,'BalanceHistory')" class="btn btn-primary btn-sm float-right mb-2"><i class=" icofont icofont-plus"></i> Load Balance</button>
+                          <button (click)="openModalLoadBalance(templateBalanceLoad,'BalanceHistory')"
+                            class="btn btn-primary btn-sm float-right mb-2"><i class=" icofont icofont-plus"></i> Load
+                            Balance</button>
                         </div>
                         <div class="col-md-12">
                           <ngx-datatable class="material table-bordered" [rows]="balanceHistoryList"
@@ -599,15 +630,15 @@
                               </ng-template>
                             </ngx-datatable-column>
 
-                            <ngx-datatable-column width="120" name="Amount Loaded" prop="paid_amount" [draggable]="false"
-                              [sortable]="false">
+                            <ngx-datatable-column width="120" name="Amount Loaded" prop="paid_amount"
+                              [draggable]="false" [sortable]="false">
                               <ng-template let-value="value" ngx-datatable-cell-template>
                                 <span> {{ value }} </span>
                               </ng-template>
                             </ngx-datatable-column>
 
-                            <ngx-datatable-column width="120" name="Payment Method" prop="payment_method" [draggable]="false"
-                              [sortable]="false">
+                            <ngx-datatable-column width="120" name="Payment Method" prop="payment_method"
+                              [draggable]="false" [sortable]="false">
                               <ng-template let-value="value" ngx-datatable-cell-template>
                                 <span> {{ PaymentType[value] }} </span>
                               </ng-template>
@@ -761,61 +792,61 @@
 
   <ng-template #templateBalanceLoad>
     <div class="modal-header ">
-        <h4 class="modal-title pull-left " id="modalTitle">Load Balance</h4>
-        <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideLoadBalance()">
-            <i class="icofont icofont-close"></i>
-        </button>
+      <h4 class="modal-title pull-left " id="modalTitle">Load Balance</h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideLoadBalance()">
+        <i class="icofont icofont-close"></i>
+      </button>
     </div>
     <div class="modal-body ">
-        <app-card>
-            <form [formGroup]="balanceLoadForm" class="col-sm-12">
-                <div class="form-group row">
-                    <label class="col-sm-5 col-form-label">Customer Name </label>
-                    <div class="col-sm-7">
-                      <h5 *ngIf="customerObj">{{customerObj.first_name}} {{customerObj.last_name}}</h5>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-5 col-form-label">Payment Method </label>
-                    <div class="col-sm-7">
-                      <ng-select placeholder="Select a payment method" formControlName="payment_method"  [clearable]="false"  [clearOnBackspace]="false" [items]="methodListWithoutFrom" bindValue="id" bindLabel="name"></ng-select>
+      <app-card>
+        <form [formGroup]="balanceLoadForm" class="col-sm-12">
+          <div class="form-group row">
+            <label class="col-sm-5 col-form-label">Customer Name </label>
+            <div class="col-sm-7">
+              <h5 *ngIf="customerObj">{{customerObj.first_name}} {{customerObj.last_name}}</h5>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-5 col-form-label">Payment Method </label>
+            <div class="col-sm-7">
+              <ng-select placeholder="Select a payment method" formControlName="payment_method" [clearable]="false"
+                [clearOnBackspace]="false" [items]="methodListWithoutFrom" bindValue="id" bindLabel="name"></ng-select>
 
-                        <div *ngIf="submitted && b.payment_method.errors" class="error-text">
-                            <span *ngIf="b.payment_method.errors.required" class="text-danger"> Payment Method is required</span>
+              <div *ngIf="submitted && b.payment_method.errors" class="error-text">
+                <span *ngIf="b.payment_method.errors.required" class="text-danger"> Payment Method is required</span>
 
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-5 col-form-label">Amount </label>
-                    <div class="col-sm-7">
-                        <input numeric numericType="decimal" type="text" formControlName="amount"
-                            [ngClass]="{ 'is-invalid': submitted && b.amount.errors }" type="text"
-                            class="form-control" />
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-5 col-form-label">Amount </label>
+            <div class="col-sm-7">
+              <input numeric numericType="decimal" type="text" formControlName="amount"
+                [ngClass]="{ 'is-invalid': submitted && b.amount.errors }" type="text" class="form-control" />
 
-                        <div *ngIf="submitted && b.amount.errors" class="error-text">
-                            <span *ngIf="b.amount.errors.required" class="text-danger"> Amount is required</span>
+              <div *ngIf="submitted && b.amount.errors" class="error-text">
+                <span *ngIf="b.amount.errors.required" class="text-danger"> Amount is required</span>
 
-                        </div>
-                    </div>
-                </div>
+              </div>
+            </div>
+          </div>
 
-            </form>
-        </app-card>
+        </form>
+      </app-card>
     </div>
     <div class="modal-footer">
-        <div class="pr-4">
+      <div class="pr-4">
 
-            <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideLoadBalance()"> <i
-                    class="icofont icofont-close"></i> Close</button>
+        <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideLoadBalance()"> <i
+            class="icofont icofont-close"></i> Close</button>
 
-            <button class="btn btn-success btn-sm btn-outline-success" (click)="onBalanceLoadFormSubmit()"><i
-                    class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+        <button class="btn btn-success btn-sm btn-outline-success" (click)="onBalanceLoadFormSubmit()"><i
+            class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
 
-        </div>
+      </div>
 
     </div>
-</ng-template>
+  </ng-template>
 
 
 
