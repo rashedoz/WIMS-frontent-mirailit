@@ -7,7 +7,7 @@ import { CommonService } from '../_services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
-import { StockStatus,ReissuanceStatus } from '../_models/enums';
+import { StockStatus,ReissuanceStatus,PaymentType } from '../_models/enums';
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
@@ -30,6 +30,7 @@ export class CustomerBalanceListComponent implements OnInit {
   btnSaveText = 'Save';
   StockStatus = StockStatus;
   ReissuanceStatus = ReissuanceStatus;
+  PaymentType = PaymentType;
   page = new Page();
   pageCustomer = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
@@ -69,6 +70,8 @@ export class CustomerBalanceListComponent implements OnInit {
   searchParam = '';
   input$ = new Subject<string>();
 
+  paymentMethodList = [{"id":1,"name":"CASH"},{"id":3,"name":"CARD_PAYMENT"},{"id":4,"name":"ONLINE_BANKING"}]
+
   constructor(
     private modalService: BsModalService,
     private confirmService: ConfirmService,
@@ -92,7 +95,9 @@ export class CustomerBalanceListComponent implements OnInit {
   ngOnInit() {
     this.entryForm = this.formBuilder.group({
       customer: [null, [Validators.required]],
-      amount: [null, [Validators.required]]
+      amount: [null, [Validators.required]],
+      payment_method: [null, [Validators.required]]
+
     });
     this.getCustomer();
     this.onSearch();
@@ -261,7 +266,7 @@ export class CustomerBalanceListComponent implements OnInit {
     const obj = {
       customer: this.entryForm.controls['customer'].value,
       paid_amount: Number(this.entryForm.value.amount),
-      payment_method:1
+      payment_method: this.entryForm.controls['payment_method'].value
     };
 
     this._service.post('load-customer-balance', obj).subscribe(

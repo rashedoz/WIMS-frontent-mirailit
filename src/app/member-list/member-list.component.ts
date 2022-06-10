@@ -43,6 +43,7 @@ export class MemberListComponent implements OnInit {
   scrollBarHorizontal = (window.innerWidth < 1200);
   details;
   user;
+  searchParam = '';
   constructor(
     private modalService: BsModalService,
     public formBuilder: FormBuilder,
@@ -56,8 +57,8 @@ export class MemberListComponent implements OnInit {
       dateInputFormat: 'DD-MMM-YYYY',
       adaptivePosition: true
     });
-    // this.page.pageNumber = 0;
-    // this.page.size = 10;
+    this.page.pageNumber = 0;
+    this.page.size = 10;
     window.onresize = () => {
       this.scrollBarHorizontal = (window.innerWidth < 1200);
     };
@@ -112,20 +113,27 @@ get p() {
   return this.RegistrerFormChangePassword.controls;
 }
 
-// setPage(pageInfo) {
-//  // this.page.pageNumber = pageInfo.offset;
-//   this.getList();
-// }
+setPage(pageInfo) {
+  this.page.pageNumber = pageInfo.offset;
+  this.getList();
+}
 
 getList() {
   this.loadingIndicator = true;
-  this._service.get('user-list?is_staff=true').subscribe(res => {
+  const obj = {
+    limit: this.page.size,
+    page: this.page.pageNumber + 1,
+    search_param:this.searchParam
+  };
+  this._service.get('get-member-list',obj).subscribe(res => {
     if (!res) {
       this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
       return;
     }
-    this.tempRows = res;
-    this.memberList = res;
+
+    this.memberList =res.results;
+    this.page.totalElements = res.count;
+    this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
     // this.page.totalElements = res.Total;
     // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
     setTimeout(() => {
@@ -366,7 +374,14 @@ modalHideChangePassword() {
   this.btnSaveText = 'Save';
 }
 
-
+filterSearch(e){
+  if(e){
+    this.page.pageNumber = 0;
+    this.page.size = 10;
+    this.searchParam = e.target.value;
+    this.getList();
+  }
+}
 
 updateFilter(event) {
   const val = event.target.value.toLowerCase();

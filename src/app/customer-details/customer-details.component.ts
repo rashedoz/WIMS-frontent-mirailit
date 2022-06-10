@@ -11,7 +11,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 // import { jsPDF } from "jspdf";
 // import 'jspdf-autotable';
 import { DatePipe } from '@angular/common';
-import { SubscriptionStatus,SubsItemsStaus } from '../_models/enums';
+import { SubscriptionStatus,SubsItemsStaus,PaymentType } from '../_models/enums';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
@@ -32,6 +32,7 @@ export class CustomerDetailsComponent implements OnInit {
   @BlockUI() blockUI: NgBlockUI;
   SubscriptionStatus = SubscriptionStatus;
   StockStatus = StockStatus;
+  PaymentType = PaymentType;
   page = new Page();
   pageTable = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
@@ -93,6 +94,7 @@ export class CustomerDetailsComponent implements OnInit {
   @ViewChild('tableDeviceSalesHistory', { static: false }) tableDeviceSalesHistory: any;
 
   rowItems = [];
+  methodListWithoutFrom = [{"id":1,"name":"CASH"},{"id":3,"name":"CARD_PAYMENT"},{"id":4,"name":"ONLINE_BANKING"}]
 
   constructor(
     public formBuilder: FormBuilder,
@@ -122,8 +124,10 @@ export class CustomerDetailsComponent implements OnInit {
   ngOnInit() {
     if(this.customer_id)this.getCustomer();
     this.balanceLoadForm = this.formBuilder.group({
-      amount: [null, [Validators.required]]
+      amount: [null, [Validators.required]],
+      payment_method: [null, [Validators.required]]
     });
+
   }
 
 
@@ -178,8 +182,8 @@ getCustomer(){
      this.getList();
         break;
       case 'Balance':
-        this.url = 'subscription/get-device-type-bills-by-customerid/';
-     this.getList();
+        this.url = 'get-user-detail/';
+        this.getCustomer();
         break;
       case 'Balance Loading History':
         this.url = 'get-customer-balance-loading-history/';
@@ -284,14 +288,14 @@ getCustomer(){
   }
 
 
-  openModalBalanceLoad(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template, this.modalConfig);
-  }
+  // openModalBalanceLoad(template: TemplateRef<any>) {
+  //   this.modalRef = this.modalService.show(template, this.modalConfig);
+  // }
 
-  modalHideBalanceLoad() {
-    this.modalRef.hide();
-    this.balanceLoadForm.reset();
-  }
+  // modalHideBalanceLoad() {
+  //   this.modalRef.hide();
+  //   this.balanceLoadForm.reset();
+  // }
 
 
   onBalanceLoadFormSubmit() {
@@ -304,6 +308,7 @@ getCustomer(){
     const obj = {
       customer: this.customer_id,
       paid_amount: Number(this.balanceLoadForm.value.amount),
+      payment_method: this.balanceLoadForm.value.payment_method
     };
 
     this._service.post('load-customer-balance', obj).subscribe(
@@ -501,6 +506,15 @@ getCustomer(){
   }
 
 
+  modalHideLoadBalance() {
+    this.modalRef.hide();
+    this.balanceLoadForm.reset();
+    this.submitted = false;
+  }
+
+  openModalLoadBalance(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template, this.modalConfig);
+  }
 
 
 
