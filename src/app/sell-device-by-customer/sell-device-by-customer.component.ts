@@ -343,7 +343,7 @@ export class SellDeviceByCustomerComponent implements OnInit {
         (res) => {
         //  this.itemList = res;
 
-          this.subscriptionList = res;
+          this.subscriptionList = res.results;
           // const key = 'subscription';
           // this.subscriptionList = [...new Map(this.itemList.map(item =>
           //   [item[key], item])).values()];

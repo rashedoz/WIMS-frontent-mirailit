@@ -183,7 +183,7 @@ export class RemoveProductNextMonthComponent implements OnInit {
         if(res.length === 0){
           this.toastr.warning('This customer does not have any active subscription', 'Warning!', { closeButton: true, disableTimeOut: false });
         }
-        this.subscriptionList = res;
+        this.subscriptionList = res.results;
         // const key = 'subscription';
         // this.subscriptionList = [...new Map(this.itemList.map(item =>
         //   [item[key], item])).values()];

@@ -155,7 +155,6 @@
                       <div>
                           <h4 class="m-b-10 text-primary">{{selectedSupplier.name}} <span *ngIf="selectedSupplier.email"> || <i class="icofont icofont-envelope-open"></i> {{selectedSupplier.email}}</span> <span class="text-normal" style="font-size: 14px;"> || <i class="icofont icofont-phone"></i> {{selectedSupplier.mobile}}</span></h4>
 
-
                       </div>
                   </div>
               </div>
@@ -189,7 +188,7 @@
                         <ngx-datatable-column [width]="120" name="ICCID No" prop="ICCID_no" [draggable]="false"
                             [sortable]="false">
                             <ng-template let-row="row" ngx-datatable-cell-template>
-                                <input type="text"class="form-control mt-2" [(ngModel)]="row.iccid"  required />
+                                <input type="text"class="form-control mt-2" [(ngModel)]="row.ICCID_no   "  required />
                             </ng-template>
                         </ngx-datatable-column>
 
@@ -215,7 +214,7 @@
                           <tbody>
                               <tr *ngFor="let item of SIMItemList; let i=index">
                                   <th>{{item.CID_no}}</th>
-                                  <th><input type="text"class="form-control" [(ngModel)]="item.iccid"  required /></th>
+                                  <th><input type="text"class="form-control" [(ngModel)]="item.ICCID_no   "  required /></th>
                                   <th><input type="text"class="form-control" [(ngModel)]="item.phone_number"  required /></th>
 
 

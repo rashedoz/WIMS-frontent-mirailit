@@ -325,7 +325,7 @@ export class UnFreezeSIMsComponent implements OnInit {
   getItemList(code) {
     this._service.get("subscription/get-active-subscription-list?search_param=" + code).subscribe(
       (res) => {
-        this.subscriptionList = res;
+        this.subscriptionList = res.results;
       },
       (err) => { }
     );

@@ -12,7 +12,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 // import 'jspdf-autotable';
 import { DatePipe } from '@angular/common';
 import { SubscriptionStatus,SubsItemsStaus,PaymentType } from '../_models/enums';
-
+import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Subject, Observable, of, concat } from 'rxjs';
@@ -45,6 +45,7 @@ export class CustomerDetailsComponent implements OnInit {
   ColumnMode = ColumnMode;
   scrollBarHorizontal = (window.innerWidth < 1200);
   @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
+  @ViewChild('profileTabs', { static: false }) profileTabs?: TabsetComponent;
   modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
   modalRef: BsModalRef;
   modalRefICCID: BsModalRef;
@@ -151,7 +152,11 @@ getCustomer(){
   );
 }
 
-
+selectTab(tabId: number) {
+  if (this.profileTabs?.tabs[tabId]) {
+    this.profileTabs.tabs[tabId].active = true;
+  }
+}
 
   // 'Available', 'Subscribed', 'Cancelled', 'Permanently Cancelled'
 
@@ -178,6 +183,10 @@ getCustomer(){
       case 'Due Details':
         this.url = 'subscription/get-device-type-bills-by-customerid/';
      this.getListWithPagination();
+        break;
+      case 'Bills Details':
+        // this.url = 'payment/get-payment-list-by-customerid/';
+        // this.getListWithPagination();
         break;
       case 'Payment Details':
         this.url = 'payment/get-payment-list-by-customerid/';
