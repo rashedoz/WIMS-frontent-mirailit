@@ -1,56 +1,14 @@
 <block-ui>
 
-  <div class="container">
-    <div class="card" *ngIf="details">
-      <!-- <div class="row invoice-contact">
-        <div class="col-md-8">
-          <div class="invoice-box row">
-            <div class="col-sm-12">
-              <table class="table table-responsive invoice-table table-borderless">
-                <tbody>
-                  <tr>
-                    <td><img src="assets/images/logo-blue.png" class="m-b-10" alt=""></td>
-                  </tr>
-                  <tr>
-                    <td>Phoenixcoded</td>
-                  </tr>
-                  <tr>
-                    <td>208, Paris Point, Varachha Road,
-                      Surat. (1234) - 567891</td>
-                  </tr>
-                  <tr>
-                    <td><a href="http://html.phoenixcoded.net/cdn-cgi/l/email-protection#d8bcbdb5b798bfb5b9b1b4f6bbb7b5"
-                        target="_top"><span class="__cf_email__"
-                          data-cfemail="c4a0a1a9ab84a3a9a5ada8eaa7aba9">[email&#160;protected]</span></a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>+91 919-91-91-919</td>
-                  </tr>
-
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="row text-center">
-            <div class="col-sm-12 invoice-btn-group">
-              <button type="button" class="btn btn-primary btn-print-invoice waves-effect waves-light m-r-20"> <i class="icofont icofont-printer"></i> Print
-                Invoice
-              </button>
-              <button type="button" (click)="location.back()" class="btn btn-info waves-effect waves-light"> <i class="icofont icofont-arrow-left"></i> Back
-              </button>
-            </div>
-          </div>
-        </div>
-      </div> -->
+  <div class="card container">
       <div class="card-block">
-        <div class="row invoive-info mb-0">
+        <div class="row invoive-info mb-0" *ngIf="details">
           <div class="col-md-4 col-xs-12 invoice-client-info mb-5" *ngIf="customerObj">
             <h6>Customer Information :</h6>
             <h5 class="m-0">{{customerObj.first_name}} {{customerObj.last_name}}</h5>
-            <h6 class="text-primary font-weight-bold pt-2">Balance : {{balance - tempPaidAmount}} </h6>
+            <h5 *ngIf="customerObj.email" class="m-0">{{customerObj.email}}</h5>
+            <h5 *ngIf="customerObj.mobile" class="m-0">{{customerObj.mobile}}</h5>
+            <h6 class="mt-3">{{isbalanceDeduct ? 'Remaining Balance:':'Balance:'}} <span class="text-primary font-weight-bold pt-2">{{balance - tempPaidAmount}}</span> </h6>
           </div>
           <div class="col-md-4 col-xs-12 offset-md-4">
             <div class="row float-right mr-1">
@@ -81,6 +39,7 @@
 
         </div>
 
+        <div *ngIf="details">
         <div class="row" *ngIf="details.bill.bill_type == 'Subscription'">
           <div class="col-sm-12">
             <div class="table-responsive">
@@ -137,7 +96,9 @@
           </div>
         </div>
 
-        <div class="row">
+        </div>
+
+        <div class="row" *ngIf="details">
           <div class="col-sm-12">
             <table class="table table-responsive invoice-table invoice-total">
               <tbody>
@@ -164,7 +125,7 @@
                   </td>
                 </tr>
 
-                <tr *ngIf="isPayBalanceEnableShow">
+                <!-- <tr *ngIf="isPayBalanceEnableShow">
                   <th colspan="2">
                     <div class="form-group text-right mt-2">
                       <div class="checkbox-fade fade-in-primary">
@@ -177,6 +138,12 @@
                       </div>
                     </div>
                   </th>
+                </tr> -->
+                <tr class="text-info" *ngIf="isPayBalanceEnableShow">
+                  <th> <h6 class="font-weight-bold pt-2">Payment Method :</h6> </th>
+                  <td class="pr-1">
+                    <ng-select  [(ngModel)]="selectedMethod" (change)="onChangePayBalance($event)" [clearable]="false"  [clearOnBackspace]="false" [items]="methodList" bindLabel="name"></ng-select>
+                  </td>
                 </tr>
 
                 <tr class="text-success">
@@ -200,11 +167,11 @@
                 </tr>
 
                 <tr>
-                  <th colspan="2">
+                  <th colspan="2" *ngIf="details.bill.payable_amount">
                     <div class="row float-right mt-3">
                       <button type="button" (click)="location.back()" class="btn btn-info waves-effect waves-light mr-2"> <i class="icofont icofont-arrow-left"></i> Back
                       </button>
-                        <button (click)="onFormSubmitBill()" type="button" class="btn btn-primary btn-print-invoice waves-effect waves-light m-r-20">  Receive Payment
+                        <button *ngIf="details.bill.status == 1 || details.bill.status == 2" (click)="onFormSubmitBill()" type="button" class="btn btn-primary btn-print-invoice waves-effect waves-light m-r-20">  Receive Payment
                         </button>
 
 
@@ -217,56 +184,7 @@
             </table>
           </div>
         </div>
-
-        <!-- <div class="row">
-          <div class="col-sm-12">
-            <h6>Terms And Condition :</h6>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing
-              elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam, quis
-              nostrud exercitation ullamco laboris nisi ut aliquip
-              ex ea commodo consequat. Duis aute irure dolor </p>
-          </div>
-        </div> -->
       </div>
     </div>
-  </div>
-  <!-- <ng-template #templateGenerateBill>
-        <div class="modal-header ">
-            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
-            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
-                <i class="icofont icofont-close"></i>
-            </button>
-        </div>
-        <div class="modal-body pb-0">
-            <app-card>
-                <form [formGroup]="entryFormBill">
-
-                    <div class="form-group row">
-                      <label class="col-sm-4 col-form-label">Invoice Month </label>
-                      <div class="col-sm-8">
-                        <input type="text" formControlName="invoice_month" class="form-control"  [ngClass]="{ 'is-invalid': submitted && f.invoice_month.errors }" placeholder="Type invoice month">
-                        <div *ngIf="submitted && f.invoice_month.errors" class="error-text">
-                          <span *ngIf="f.invoice_month.errors.required" class="text-danger"> Invoice month is required</span>
-
-                      </div>
-                      </div>
-                    </div>
-
-                  </form>
-
-            </app-card>
-        </div>
-        <div class="modal-footer">
-            <div class="pr-4">
-                <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHide()"> <i
-                        class="icofont icofont-close"></i> Close</button>
-
-                <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmitBill()"><i
-                        class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
-            </div>
-
-        </div>
-    </ng-template> -->
 
 </block-ui>

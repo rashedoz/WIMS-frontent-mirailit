@@ -303,8 +303,8 @@ export const AppRoutes: Routes = [
         // canActivate: [AuthGuard]
       },
       {
-        path: 'invoice/:id',
-        loadChildren: () => import('./invoice/invoice.module').then(m => m.InvoiceModule),
+        path: 'payment-collection/:id',
+        loadChildren: () => import('./payment-collection/payment-collection.module').then(m => m.PaymentCollectionModule),
         // canActivate: [AuthGuard]
       },
       {

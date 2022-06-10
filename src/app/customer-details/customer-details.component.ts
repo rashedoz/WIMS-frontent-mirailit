@@ -17,6 +17,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Subject, Observable, of, concat } from 'rxjs';
 import { distinctUntilChanged, debounceTime, switchMap, tap, catchError, filter, map } from 'rxjs/operators';
+import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 
 @Component({
   selector: 'app-customer-details',
@@ -90,13 +91,14 @@ export class CustomerDetailsComponent implements OnInit {
   currentTab = 'Basic Details';
   subscriptionHistoryList = [];
   balanceHistoryList = [];
-  @ViewChild('tableSubscriptionHistory', { static: false }) tableSubscriptionHistory: any;
+  @ViewChild('tablePaymentDetailsList', { static: false }) tablePaymentDetailsList: any;
   @ViewChild('tableDeviceSalesHistory', { static: false }) tableDeviceSalesHistory: any;
 
   rowItems = [];
   methodListWithoutFrom = [{"id":1,"name":"CASH"},{"id":3,"name":"CARD_PAYMENT"},{"id":4,"name":"ONLINE_BANKING"}]
-
+  paymentDetailList = [];
   constructor(
+    private confirmService: ConfirmService,
     public formBuilder: FormBuilder,
     private _service: CommonService,
     private toastr: ToastrService,
@@ -167,7 +169,7 @@ getCustomer(){
         break;
       case 'Subscription Details':
         this.url = 'subscription/get-subscription-list-by-customer-id/';
-     this.getList();
+     this.getSubscriptionList();
         break;
       case 'Device Sales Details':
         this.url = 'subscription/get-device-sales-list-by-customerid/';
@@ -178,8 +180,8 @@ getCustomer(){
      this.getListWithPagination();
         break;
       case 'Payment Details':
-        this.url = 'subscription/get-device-type-bills-by-customerid/';
-     this.getList();
+        this.url = 'payment/get-payment-list-by-customerid/';
+     this.getListWithPagination();
         break;
       case 'Balance':
         this.url = 'get-user-detail/';
@@ -197,14 +199,14 @@ getCustomer(){
 
  }
 
- toggleExpandRow(row) {
-    this._service.get('subscription/get-subscription-detail/'+row.id).subscribe(res => {
-      row.details = res;
-    }, err => { });
+//  toggleExpandRow(row) {
+//     this._service.get('subscription/get-subscription-detail/'+row.id).subscribe(res => {
+//       row.details = res;
+//     }, err => { });
 
-  this.tableSubscriptionHistory.rowDetail.toggleExpandRow(row);
+//   this.tableSubscriptionHistory.rowDetail.toggleExpandRow(row);
 
-  }
+//   }
 
   loadItems(row) {
     this._service.get('subscription/get-subscription-detail/'+row.id).subscribe(res => {
@@ -227,6 +229,49 @@ getCustomer(){
     this.getList();
   }
 
+  setPageWithPagination(pageInfo) {
+    this.pageTable.pageNumber = pageInfo.offset;
+    this.getListWithPagination();
+  }
+
+  paymentCheck(row,item){
+    let txt = '';
+    let url = '';
+    if(item == 1){
+      txt = 'initially';
+      url = 'payment/check-payment-receival/';
+    }else {
+      txt = 'finally';
+      url = 'payment/check-payment-receival-finally/';
+    }
+
+     this.confirmService.confirm('Are you sure?', 'You are '+txt+' checking the payment.')
+     .subscribe(
+         result => {
+             if (result) {
+               const request = this._service.patch(url + row.id, {});
+               request.subscribe(
+                 data => {
+
+                   if (data.IsReport == "Success") {
+                     this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+                     this.getListWithPagination();
+                   } else if (data.IsReport == "Warning") {
+                     this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+                   } else {
+                     this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+                   }
+                 },
+                 err => {
+
+                   this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+                 }
+               );
+             }
+         },
+
+     );
+  }
 
   getListWithPagination() {
 
@@ -235,14 +280,14 @@ getCustomer(){
       limit: this.pageTable.size,
       page: this.pageTable.pageNumber + 1
     };
-    this._service.get(this.url+this.customer_id).subscribe(res => {
+    this._service.get(this.url+this.customer_id,obj).subscribe(res => {
 
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
         return;
       }
-      this.rows =  res.results;
-      this.pageTable.totalElements = res.count;
+      this.paymentDetailList = res.results;
+        this.pageTable.totalElements = res.count;
       this.pageTable.totalPages = Math.ceil(this.pageTable.totalElements / this.pageTable.size);
       setTimeout(() => {
         this.loadingIndicator = false;
@@ -271,8 +316,7 @@ getCustomer(){
         return;
       }
      // this.tempRows = res;
-      this.rows =  res.balance_history;
-      console.log(this.rows);
+      this.balanceHistoryList =  res.balance_history;
       // this.pageTable.totalElements = res.count;
       // this.pageTable.totalPages = Math.ceil(this.pageTable.totalElements / this.pageTable.size);
       setTimeout(() => {
@@ -316,9 +360,15 @@ getCustomer(){
         this.blockUI.stop();
         if (data.IsReport == "Success") {
           this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
-          this.modalHide();
-          this.url = 'get-user-detail/';
-          this.getCustomer();
+          this.modalHideLoadBalance();
+          if(this.pageType == 'Balance'){
+            this.url = 'get-user-detail/';
+            this.getCustomer();
+          }else if(this.pageType == 'BalanceHistory'){
+            this.url = 'get-customer-balance-loading-history/';
+            this.getBalanceLoadList();
+          }
+
         } else if (data.IsReport == "Warning") {
           this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
         } else {
@@ -331,6 +381,36 @@ getCustomer(){
       }
     );
 
+  }
+
+
+  getSubscriptionList() {
+
+    this.loadingIndicator = true;
+    // const obj = {
+    //   limit: this.pageTable.size,
+    //   page: this.pageTable.pageNumber + 1
+    // };
+    this._service.get(this.url+this.customer_id).subscribe(res => {
+
+      if (!res) {
+        this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+        return;
+      }
+     // this.tempRows = res;
+      this.subscriptionHistoryList =  res;
+      // this.pageTable.totalElements = res.count;
+      // this.pageTable.totalPages = Math.ceil(this.pageTable.totalElements / this.pageTable.size);
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }, err => {
+      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }
+    );
   }
 
 
@@ -507,12 +587,13 @@ getCustomer(){
 
 
   modalHideLoadBalance() {
-    this.modalRef.hide();
     this.balanceLoadForm.reset();
+    this.modalRef.hide();
     this.submitted = false;
   }
 
-  openModalLoadBalance(template: TemplateRef<any>) {
+  openModalLoadBalance(template: TemplateRef<any>,type) {
+    this.pageType = type;
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 

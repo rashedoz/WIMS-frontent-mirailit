@@ -170,13 +170,13 @@
 
 
                             <ng-template ng-option-tmp let-item="item" let-index="index">
-                              <p class="card-text font-weight-bold" *ngIf="!item.IMEI">  {{item.id}} </p>
-                              <p class="card-text font-weight-bold" *ngIf="item.IMEI">  {{item.id}} ({{item.IMEI}})</p>
+                              <p class="card-text font-weight-bold" *ngIf="!item.IMEI">  {{item.DID_no}} </p>
+                              <p class="card-text font-weight-bold" *ngIf="item.IMEI">  {{item.DID_no}} ({{item.IMEI}})</p>
                           </ng-template>
 
                           <ng-template ng-label-tmp let-item="item">
-                            <p class="card-text font-weight-bold" *ngIf="!item.IMEI">  {{item.id}} </p>
-                            <p class="card-text font-weight-bold" *ngIf="item.IMEI">  {{item.id}} ({{item.IMEI}})</p>
+                            <p class="card-text font-weight-bold" *ngIf="!item.IMEI">  {{item.DID_no}} </p>
+                            <p class="card-text font-weight-bold" *ngIf="item.IMEI">  {{item.DID_no}} ({{item.IMEI}})</p>
                           </ng-template>
 
 

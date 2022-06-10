@@ -10,15 +10,16 @@ import { Page } from '../_models/page';
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 import * as moment from 'moment';
 import { Location } from '@angular/common';
+import { BillStatus } from "./../_models/enums";
 
 @Component({
-  selector: 'app-invoice',
-  templateUrl: './invoice.component.html',
-  styleUrls: ['./invoice.component.css'],
+  selector: 'app-payment-collection',
+  templateUrl: './payment-collection.component.html',
+  styleUrls: ['./payment-collection.component.css'],
   encapsulation: ViewEncapsulation.None
 })
 
-export class InvoiceComponent implements OnInit {
+export class PaymentCollectionComponent implements OnInit {
 
   entryFormBill: FormGroup;
   submitted = false;
@@ -26,14 +27,17 @@ export class InvoiceComponent implements OnInit {
   bill_id:any = null;
   details:any = null;
   customerObj:any = null;
-
+  BillStatus = BillStatus;
   balance = 0;
   isPayBalanceEnableShow = false;
   isPayBalanceEnable = false;
   remarks = null;
-
+  isbalanceDeduct = false;
   paidAmount: number = 0;
   tempPaidAmount: number = 0;
+  paymentMethodList = [{id:1,name:'CASH'},{id:2,name:'FROM BALANCE'},{id:3,name:'CARD PAYMENT'},{id:4,name:'ONLINE BANKING'}]
+  methodList = [];
+  selectedMethod = {id:1,name:'CASH'};
 
   constructor(
     private confirmService: ConfirmService,
@@ -82,11 +86,20 @@ export class InvoiceComponent implements OnInit {
           res => {
             this.customerObj = res;
             this.balance = res.balance;
+            // if (Number(this.customerObj.balance) == 0) {
+            //   this.isPayBalanceEnableShow = false;
+            // } else {
+            //   this.isPayBalanceEnableShow = true;
+            // }
+
             if (Number(this.customerObj.balance) == 0) {
               this.isPayBalanceEnableShow = false;
-            } else {
+              this.methodList = this.paymentMethodList.filter(x => x.id !== 2);
+            }else {
               this.isPayBalanceEnableShow = true;
+              this.methodList = this.paymentMethodList;
             }
+
           },
           err => { }
         );
@@ -102,19 +115,42 @@ export class InvoiceComponent implements OnInit {
   }
 
 
+  // onChangePayBalance(e) {
+  //   this.isPayBalanceEnable = e;
+  //   let net = Number(this.details.bill.payable_amount); // - Number(this.discount);
+  //   if (e) {
+  //     if (Number(this.customerObj.balance) > net) {
+  //       this.paidAmount = net;
+  //       this.tempPaidAmount = net;
+  //     } else if (Number(this.customerObj.balance) <= net) {
+  //       this.paidAmount = Number(this.customerObj.balance);
+  //     }
+  //   }else {
+  //     this.paidAmount = 0;
+  //     this.tempPaidAmount = this.tempPaidAmount - net;
+  //   }
+  // }
+
   onChangePayBalance(e) {
-    this.isPayBalanceEnable = e;
+    this.isPayBalanceEnable = e.id == 2 ? true : false;
     let net = Number(this.details.bill.payable_amount); // - Number(this.discount);
-    if (e) {
+    if (this.isPayBalanceEnable) {
+      this.isbalanceDeduct = true;
       if (Number(this.customerObj.balance) > net) {
         this.paidAmount = net;
         this.tempPaidAmount = net;
       } else if (Number(this.customerObj.balance) <= net) {
+        this.tempPaidAmount = Number(this.customerObj.balance);
         this.paidAmount = Number(this.customerObj.balance);
       }
-    }else {
+    } else {
       this.paidAmount = 0;
-      this.tempPaidAmount = this.tempPaidAmount - net;
+      if(this.isbalanceDeduct){
+        this.tempPaidAmount = 0;
+        this.balance = Number(this.customerObj.balance);
+      }
+
+      this.isbalanceDeduct = false;
     }
   }
 
@@ -139,7 +175,7 @@ export class InvoiceComponent implements OnInit {
       customer: this.details.bill.customer,
       bill: this.details.bill.id,
       transaction_type: "Payment In",
-      payment_method: this.isPayBalanceEnable ? 2 : 1,
+      payment_method: this.selectedMethod.id,
       session: this.details.bill.session,
       discount: 0,//Number(this.discount),
       paid_amount: Number(this.paidAmount),
@@ -155,8 +191,11 @@ export class InvoiceComponent implements OnInit {
         if (data.IsReport == "Success") {
           this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
           // this.modalHide();
-          // this.getBillList();
-          this.router.navigate([]).then(result => { window.open('/bill-list', '_blank'); });
+          //this.getBillDetails();
+
+          // this.router.navigate([]).then(result => { window.open('/bill-list', '_blank'); });
+          this.router.navigate(['bill-list/']);
+
         } else if (data.IsReport == "Warning") {
           this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
         } else {

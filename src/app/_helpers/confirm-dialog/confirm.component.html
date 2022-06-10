@@ -3,6 +3,6 @@
 <div matDialogContent class="mb-3">{{message}}</div>
 <div matDialogActions fxLayoutAlign="space-around center" style="float:right">
 
-  <button matDialogClose mat-button class="btn btn-light" *ngIf="!disableCloseButton" (click)="dialogRef.close(false) ">Cancel</button>
+  <button matDialogClose mat-button class="btn btn-light" *ngIf="!disableCloseButton" (click)="dialogRef.close(false) ">{{closeButtonText}}</button>
   <button matDialogClose mat-button class="btn btn-success mar-left-10" (click)="dialogRef.close(true)">{{confirmButtonText}}</button>
 </div>

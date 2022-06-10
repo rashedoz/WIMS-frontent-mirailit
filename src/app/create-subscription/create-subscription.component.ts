@@ -638,13 +638,15 @@ private fakeServiceSIM(term) {
                       this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
                       const customer_id = this.entryForm.value.customer;
                       this.formReset();
+                      this.router.navigate([]).then(result => { window.open('/payment-collection/'+ data.bill_id, '_blank'); });
                       this.entryForm.get('session').disable();
                       this.entryForm.get('session').setValue(moment().format('MMM-YYYY'));
-                      this.confirmService.confirm('Do you want to sell device?', '','Yes')
+                      this.confirmService.confirm('Collect Payment Now | Sell Device?', '','Receive Payment','Sell Device')
                       .subscribe(
                           result => {
                               if (result) {
-                                this.router.navigate(['sell-device-by-customer/'+customer_id]);
+                                this.router.navigate([]).then(result => { window.open('/sell-device-by-customer/'+customer_id, '_blank'); });
+                              //  this.router.navigate(['sell-device-by-customer/'+customer_id]);
                               }
                           },
                       );

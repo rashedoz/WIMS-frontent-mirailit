@@ -368,7 +368,7 @@ export class RemoveProductSubscriptionComponent implements OnInit {
   getItemList(code) {
     this._service.get("subscription/get-active-subscription-list?search_param=" + code).subscribe(
       (res) => {
-        this.subscriptionList = res;
+        this.subscriptionList = res.results;
       },
       (err) => { }
     );
@@ -432,6 +432,15 @@ export class RemoveProductSubscriptionComponent implements OnInit {
                 if (data.IsReport == "Success") {
                   this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
                   this.formReset();
+                  this.confirmService.confirm('Collect Payment Now?', '','No','Yes')
+                  .subscribe(
+                      result => {
+                        if (result) {
+                          this.router.navigate([]).then(result => { window.open('/payment-collection/'+ data.bill_id, '_blank'); });
+                          //this.router.navigate(['payment-collection/'+ data.bill_id]);
+                        }
+                      },
+                  );
                 } else if (data.IsReport == "Warning") {
                   this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
                 } else {
