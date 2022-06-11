@@ -14,6 +14,7 @@ import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable';
 import * as moment from 'moment';
+import { PrintService } from '../_services/print.service';
 
 @Component({
   selector: 'app-bill-list',
@@ -120,7 +121,8 @@ export class BillListComponent implements OnInit {
     private toastr: ToastrService,
     public datepipe: DatePipe,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public printService: PrintService
   ) {
     this.page.pageNumber = 0;
     this.page.size = 10;
@@ -698,6 +700,10 @@ export class BillListComponent implements OnInit {
 
   get f() {
     return this.entryFormBill.controls;
+  }
+
+  newPrint(row){
+    this.printService.printInv(row.id);
   }
 
   onFormSubmitBill() {

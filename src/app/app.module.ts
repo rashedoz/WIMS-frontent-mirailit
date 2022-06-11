@@ -19,6 +19,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { ConfirmService } from './_helpers/confirm-dialog/confirm.service';
 import { ConfirmComponent } from './_helpers/confirm-dialog/confirm.component';
 import { DatePipe } from '@angular/common';
+import { PrintService } from './_services/print.service';
 import { AuthorizationService } from './_services/authorization.service';
 import { AuthorizeDirective } from './_services/authorize.directive';
 
@@ -49,6 +50,7 @@ import { AuthorizeDirective } from './_services/authorize.directive';
     { provide: LocationStrategy, useClass: PathLocationStrategy },
     ConfirmService,
     AuthorizationService,
+    PrintService,
     DatePipe
   ],
   bootstrap: [AppComponent]

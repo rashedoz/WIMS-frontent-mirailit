@@ -11,6 +11,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable';
 import { DatePipe } from '@angular/common';
+import { PrintService } from '../_services/print.service';
 
 @Component({
   selector: 'app-device-sales-bill-list',
@@ -83,7 +84,8 @@ export class DeviceSalesBillListComponent implements OnInit {
     private toastr: ToastrService,
     public datepipe: DatePipe,
     private modalService: BsModalService,
-    private router: Router
+    private router: Router,
+    public printService: PrintService
   ) {
     this.page.pageNumber = 0;
     this.page.size = 10;
@@ -97,6 +99,9 @@ export class DeviceSalesBillListComponent implements OnInit {
     this.getList();
   }
 
+  newPrint(row){
+    this.printService.printInv(row.id);
+  }
 
   // 'Available', 'Subscribed', 'Cancelled', 'Permanently Cancelled'
 

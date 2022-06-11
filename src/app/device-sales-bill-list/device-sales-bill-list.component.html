@@ -64,6 +64,13 @@
                       </ng-template>
                     </ngx-datatable-column>
 
+                    <ngx-datatable-column [width]="100" name="Bill No" prop="id" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
                     <ngx-datatable-column [width]="150" name="Bill Type" prop="bill_type" [draggable]="false"
                       [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
@@ -77,12 +84,7 @@
                         <span> {{ value.id }} </span>
                       </ng-template>
                     </ngx-datatable-column> -->
-                    <ngx-datatable-column [width]="150" name="Session" prop="session" [draggable]="false"
-                      [sortable]="false">
-                      <ng-template let-value="value" ngx-datatable-cell-template>
-                        <span> {{ value }} </span>
-                      </ng-template>
-                    </ngx-datatable-column>
+
                     <ngx-datatable-column [width]="120" name="Total Amount" prop="total_amount" [draggable]="false"
                       [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
@@ -118,12 +120,6 @@
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="150" name="Total Refunded" prop="parent_refund_amount"
-                      [draggable]="false" [sortable]="false">
-                      <ng-template let-value="value" ngx-datatable-cell-template>
-                        <span> {{ value }} </span>
-                      </ng-template>
-                    </ngx-datatable-column>
 
                     <ngx-datatable-column [width]="170" name="Status" prop="status" [draggable]="false"
                       [sortable]="false">
@@ -151,7 +147,7 @@
                         <button *ngIf="row.status != 3 && row.status != 4" (click)="openModal(row ,template)"
                           class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive
                           Payment</button>
-                        <button (click)="printInv(row)" class="btn btn-primary btn-mini"><i
+                        <button (click)="newPrint(row)" class="btn btn-primary btn-mini"><i
                             class="icofont icofont-doc"></i>Show Invoice</button>
                       </ng-template>
                     </ngx-datatable-column>

@@ -39,6 +39,9 @@ export class PaymentCollectionComponent implements OnInit {
   methodList = [];
   selectedMethod = {id:1,name:'CASH'};
 
+  grand_total = 0;
+  refund_amount = 0;
+  due = 0;
   constructor(
     private confirmService: ConfirmService,
     public formBuilder: FormBuilder,
@@ -80,11 +83,16 @@ export class PaymentCollectionComponent implements OnInit {
         return;
       }
       this.details = res;
-      console.log(this.details);
+      this.grand_total = Number(this.details.bill.total_amount) - Number(this.details.bill.discount);
+      this.refund_amount = Number(this.details.bill.parent_refund_amount);
+      this.due = Number(this.details.bill.payable_amount) -  Number(this.details.bill.so_far_paid) - this.refund_amount;
       if(this.details){
         this._service.get('get-customer-current-balance/' + this.details.bill.customer).subscribe(
           res => {
             this.customerObj = res;
+
+
+
             this.balance = res.balance;
             // if (Number(this.customerObj.balance) == 0) {
             //   this.isPayBalanceEnableShow = false;

@@ -11,17 +11,19 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 // import { jsPDF } from "jspdf";
 // import 'jspdf-autotable';
 import { DatePipe } from '@angular/common';
-import { SubscriptionStatus,SubsItemsStaus,PaymentType } from '../_models/enums';
+import { SubscriptionStatus,SubsItemsStaus,PaymentType,StatusTypes } from '../_models/enums';
 import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Subject, Observable, of, concat } from 'rxjs';
 import { distinctUntilChanged, debounceTime, switchMap, tap, catchError, filter, map } from 'rxjs/operators';
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
+import { PrintService } from '../_services/print.service';
 
 @Component({
   selector: 'app-customer-details',
   templateUrl: './customer-details.component.html',
+  styleUrls: ['./customer-details.component.css'],
   encapsulation: ViewEncapsulation.None
 })
 
@@ -32,6 +34,7 @@ export class CustomerDetailsComponent implements OnInit {
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
   SubscriptionStatus = SubscriptionStatus;
+  StatusTypes = StatusTypes;
   StockStatus = StockStatus;
   PaymentType = PaymentType;
   page = new Page();
@@ -99,6 +102,12 @@ export class CustomerDetailsComponent implements OnInit {
   rowItems = [];
   methodListWithoutFrom = [{"id":1,"name":"CASH"},{"id":3,"name":"CARD_PAYMENT"},{"id":4,"name":"ONLINE_BANKING"}]
   paymentDetailList = [];
+  deviceSalesList = [];
+
+  activeDeviceCount = 0;
+
+  billType = '';
+
   constructor(
     private confirmService: ConfirmService,
     public formBuilder: FormBuilder,
@@ -108,7 +117,8 @@ export class CustomerDetailsComponent implements OnInit {
     private http: HttpClient,
     private modalService: BsModalService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public printService: PrintService
   ) {
 
     this.page.pageNumber = 1;
@@ -125,6 +135,7 @@ export class CustomerDetailsComponent implements OnInit {
   }
 
 
+
   ngOnInit() {
     if(this.customer_id)this.getCustomer();
     this.balanceLoadForm = this.formBuilder.group({
@@ -139,6 +150,9 @@ export class CustomerDetailsComponent implements OnInit {
     return this.balanceLoadForm.controls;
   }
 
+    newPrint(row){
+    this.printService.printInv(row.id);
+  }
 
 getCustomer(){
  // this.blockUI.start('Getting Data...');
@@ -167,6 +181,7 @@ selectTab(tabId: number) {
     this.pageTable.pageNumber = 0;
     this.pageTable.size = 10;
     this.currentTab = type;
+    this.searchParam = '';
     this.rowItems = [];
     switch (type) {
       case 'Basic Details':
@@ -178,16 +193,17 @@ selectTab(tabId: number) {
      this.getSubscriptionList();
         break;
       case 'Device Sales Details':
-        this.url = 'subscription/get-device-sales-list-by-customerid/';
-     this.getListWithPagination();
+        this.url = 'subscription/get-customer-current-device-history/';
+     this.getDeviceSalesList();
         break;
       case 'Due Details':
-        this.url = 'subscription/get-device-type-bills-by-customerid/';
-     this.getListWithPagination();
+        this.url = 'get-user-detail/';
+        this.getCustomer();
         break;
       case 'Bills Details':
         this.url = 'subscription/get-subscription-type-bills-by-customerid/';
        this.getListWithPagination();
+       this.billType = 'Subscription Bill';
        this.billDetailTabs.tabs[0].active = true;
         break;
       case 'Payment Details':
@@ -219,14 +235,17 @@ selectTab(tabId: number) {
      case 'Subscription Bill':
        this.url = 'subscription/get-subscription-type-bills-by-customerid/';
        this.getListWithPagination();
+       this.billType = type;
        break;
      case 'Device Bill':
        this.url = 'subscription/get-device-type-bills-by-customerid/';
     this.getListWithPagination();
+    this.billType = type;
        break;
      default:
        this.url = 'subscription/get-subscription-type-bills-by-customerid/';
        this.getListWithPagination();
+       this.billType = type;
        break;
      }
 
@@ -311,7 +330,8 @@ selectTab(tabId: number) {
     this.loadingIndicator = true;
     const obj = {
       limit: this.pageTable.size,
-      page: this.pageTable.pageNumber + 1
+      page: this.pageTable.pageNumber + 1,
+      search_param: this.searchParam
     };
     this._service.get(this.url+this.customer_id,obj).subscribe(res => {
 
@@ -446,6 +466,30 @@ selectTab(tabId: number) {
     );
   }
 
+  getDeviceSalesList() {
+    this.activeDeviceCount = 0;
+    this._service.get(this.url+this.customer_id).subscribe(res => {
+
+      if (!res) {
+        this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+        return;
+      }
+      this.deviceSalesList =  res.results;
+      res.results.forEach(element => {
+        if(element.status == 1){
+          this.activeDeviceCount += 1;
+        }
+      });
+
+    }, err => {
+      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }
+    );
+  }
+
 
   getList() {
 
@@ -528,14 +572,15 @@ selectTab(tabId: number) {
 
   }
 
-  // filterSearch(e){
-  //   if(e){
-  //     this.pageTable.pageNumber = 0;
-  //     this.pageTable.size = 10;
-  //     this.searchParam = e.target.value;
-  //     this.getList();
-  //   }
-  // }
+  filterSearchPaymentDetails(e){
+    if(e){
+      this.pageTable.pageNumber = 0;
+      this.pageTable.size = 10;
+      this.searchParam = e.target.value;
+      this.url = 'payment/get-payment-list-by-customerid/';
+      this.getListWithPagination();
+    }
+  }
 
   inputFocused(event: any){
     event.target.select()

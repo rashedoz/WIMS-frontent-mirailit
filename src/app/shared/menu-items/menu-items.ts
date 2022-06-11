@@ -60,13 +60,13 @@ const MENUITEMS = [
         icon: 'ti-control-forward',
         permission: 'is_superuser,is_staff',
       },
-      {
-        state: 'sell-device',
-        name: 'Sell Device',
-        type: 'link',
-        icon: 'ti-control-forward',
-        permission: 'is_superuser,is_staff',
-      },
+      // {
+      //   state: 'sell-device',
+      //   name: 'Sell Device',
+      //   type: 'link',
+      //   icon: 'ti-control-forward',
+      //   permission: 'is_superuser,is_staff',
+      // },
       {
         state: 'actions',
         name: 'Common Actions',

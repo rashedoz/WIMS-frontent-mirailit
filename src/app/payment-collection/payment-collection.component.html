@@ -107,21 +107,40 @@
                   <td>{{details.bill.one_time_charge}}</td>
                 </tr>
                 <tr>
-                  <th>Sub Total :</th>
+                  <th>Total :</th>
                   <td>{{details.bill.total_amount}}</td>
                 </tr>
                 <tr>
                   <th>Discount (-):</th>
                   <td>{{details.bill.discount}}</td>
                 </tr>
+                <tr>
+                  <th><h6 class="font-weight-bold">Grand Total:</h6></th>
+                  <td> <h6 class="font-weight-bold">{{grand_total}}</h6></td>
+                </tr>
                 <tr class="text-info">
                   <td>
-                    <hr />
-                    <h6 class="font-weight-bold">Payable Amount :</h6>
+                    <h6 class="font-weight-bold">Paid :</h6>
                   </td>
                   <td>
-                    <hr />
-                    <h6 class="font-weight-bold">{{details.bill.payable_amount}}</h6>
+                    <h6 class="font-weight-bold">{{details.bill.so_far_paid}}</h6>
+                  </td>
+                </tr>
+                <tr *ngIf="refund_amount > 0" class="text-info">
+                  <td>
+                    <h6 class="font-weight-bold">Refund :</h6>
+                  </td>
+                  <td>
+                    <h6 class="font-weight-bold">{{refund_amount}}</h6>
+                  </td>
+                </tr>
+
+                <tr *ngIf="due > 0" class="text-info">
+                  <td>
+                    <h6 class="font-weight-bold">Due :</h6>
+                  </td>
+                  <td>
+                    <h6 class="font-weight-bold">{{due}}</h6>
                   </td>
                 </tr>
 
