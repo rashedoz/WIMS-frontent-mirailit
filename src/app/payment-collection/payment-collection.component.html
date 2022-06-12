@@ -158,7 +158,7 @@
                     </div>
                   </th>
                 </tr> -->
-                <tr class="text-info" *ngIf="isPayBalanceEnableShow">
+                <tr class="text-info">
                   <th> <h6 class="font-weight-bold pt-2">Payment Method :</h6> </th>
                   <td class="pr-1">
                     <ng-select  [(ngModel)]="selectedMethod" (change)="onChangePayBalance($event)" [clearable]="false"  [clearOnBackspace]="false" [items]="methodList" bindLabel="name"></ng-select>
