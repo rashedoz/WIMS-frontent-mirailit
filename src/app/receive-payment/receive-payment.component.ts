@@ -85,7 +85,7 @@ export class ReceivePaymentComponent implements OnInit {
   //   NormalSpacing: 12
   // };
 
-
+  billType ='';
   paymentMethodList = [{id:1,name:'CASH'},{id:2,name:'FROM BALANCE'},{id:3,name:'CARD PAYMENT'},{id:4,name:'ONLINE BANKING'}]
   methodList = [];
   selectedMethod = {id:1,name:'CASH'};
@@ -137,6 +137,7 @@ export class ReceivePaymentComponent implements OnInit {
     if(e){
       this.selectedCustomer = e;
       this.getList();
+      this.billType = 'Subscription Bill';
     }else{
       this.selectedCustomer = null;
     }
@@ -268,14 +269,17 @@ private fakeServiceCustomer(term) {
       case 'Subscription Bill':
         this.url = 'subscription/get-subscription-type-bills-by-customerid/';
         this.getList();
+        this.billType = type;
         break;
       case 'Device Bill':
         this.url = 'subscription/get-device-type-bills-by-customerid/';
      this.getList();
+     this.billType = type;
         break;
       default:
         this.url = 'subscription/get-subscription-type-bills-by-customerid/';
         this.getList();
+        this.billType = type;
         break;
       }
 

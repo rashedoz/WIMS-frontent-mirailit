@@ -544,6 +544,9 @@ private fakeServiceSIM(term) {
         item.controls["amount"].setValue(discountedAmount);
         item.controls["discount"].setValue(Number(item.get('discount').value));
       }
+    }else if(item.get('discount').value == ''){
+      item.controls["discount"].setValue(0);
+      item.controls["amount"].setValue(item.get('actual_amount').value);
     }
 
     let dis = 0;
@@ -623,7 +626,6 @@ private fakeServiceSIM(term) {
       subscribed_relocation_items:subscribed_relocation_items
 
     };
-
 
     this.confirmService.confirm('Are you sure?', 'You are creating a new subscription.')
     .subscribe(

@@ -23,6 +23,7 @@ export class AllSIMListComponent implements OnInit {
 
   StockStatus = StockStatus;
   page = new Page();
+  pageLifeCycle = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
   rows = [];
   tempRows = [];
@@ -47,6 +48,8 @@ export class AllSIMListComponent implements OnInit {
   ) {
     this.page.pageNumber = 0;
     this.page.size = 10;
+    this.pageLifeCycle.pageNumber = 0;
+    this.pageLifeCycle.size = 10;
     window.onresize = () => {
       this.scrollBarHorizontal = (window.innerWidth < 1200);
     };
@@ -66,23 +69,26 @@ export class AllSIMListComponent implements OnInit {
     this.page.pageNumber = 0;
     this.page.size = 10;
 
+    this.pageLifeCycle.pageNumber = 0;
+    this.pageLifeCycle.size = 10;
+
     switch (type) {
       case 'Available':
         this.url = 'stock/get-available-sim-list';
         this.getList();
-        break;      
+        break;
       case 'Subscribed':
         this.url = 'stock/get-subscribed-sim-list';
      this.getList();
-        break;      
+        break;
       case 'Cancelled':
         this.url = 'stock/get-cancelled-sim-list';
      this.getList();
-        break;      
+        break;
       case 'Permanently Cancelled':
         this.url = 'stock/get-permanently-cancelled-sim-list';
      this.getList();
-        break;      
+        break;
       default:
         this.url = 'stock/get-available-sim-list';
         this.getList();
@@ -166,15 +172,47 @@ export class AllSIMListComponent implements OnInit {
 
   openModal(item, template: TemplateRef<any>) {
 
-    this._service.get('stock/get-sim-lifecycle/'+item.id).subscribe(res => {
-      if(res.length){
-        this.simLifecycleDetails = res;
-        this.modalRef = this.modalService.show(template, this.modalConfig);
-      } else {
-        this.toastr.warning('No Details Found.', 'Warning!', { closeButton: true, disableTimeOut: false });
+    this.pageLifeCycle.pageNumber = 0;
+    this.pageLifeCycle.size = 10;
+
+    this.loadingIndicator = true;
+    const obj = {
+      limit: this.pageLifeCycle.size,
+      page: this.pageLifeCycle.pageNumber + 1,
+      search_param:this.searchParam
+    };
+    this._service.get('stock/get-sim-lifecycle-history/'+item.id,obj).subscribe(res => {
+
+      if (!res) {
+        this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+        return;
       }
-    }, err => { }
+     // this.tempRows = res;
+      this.simLifecycleDetails =  res.results.reverse();
+      this.pageLifeCycle.totalElements = res.count;
+      this.pageLifeCycle.totalPages = Math.ceil(this.pageLifeCycle.totalElements / this.pageLifeCycle.size);
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+      this.modalRef = this.modalService.show(template, this.modalConfig);
+    }, err => {
+      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }
     );
+
+
+    // this._service.get('stock/get-sim-lifecycle-history/'+item.id).subscribe(res => {
+    //   if(res.length){
+    //     this.simLifecycleDetails = res.reverse();
+    //     this.modalRef = this.modalService.show(template, this.modalConfig);
+    //   } else {
+    //     this.toastr.warning('No Details Found.', 'Warning!', { closeButton: true, disableTimeOut: false });
+    //   }
+    // }, err => { }
+    // );
   }
 
   modalHideICCID() {

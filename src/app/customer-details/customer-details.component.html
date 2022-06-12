@@ -330,7 +330,7 @@
                             [count]="pageTable.totalElements" [offset]="pageTable.pageNumber" [limit]="page.size"
                             (page)="setPageWithPagination($event)">
 
-                            <ngx-datatable-column [width]="100" name="Bill Id" prop="id" [draggable]="false"
+                            <ngx-datatable-column [width]="100" name="Bill No" prop="id" [draggable]="false"
                             [sortable]="false">
                             <ng-template let-value="value" ngx-datatable-cell-template>
                               <span> {{ value }} </span>
@@ -439,7 +439,7 @@
                             [count]="pageTable.totalElements" [offset]="pageTable.pageNumber" [limit]="page.size"
                             (page)="setPageWithPagination($event)">
 
-                            <ngx-datatable-column [width]="100" name="Bill Id" prop="id" [draggable]="false"
+                            <ngx-datatable-column [width]="100" name="Bill No" prop="id" [draggable]="false"
                               [sortable]="false">
                               <ng-template let-value="value" ngx-datatable-cell-template>
                                 <span> {{ value }} </span>
