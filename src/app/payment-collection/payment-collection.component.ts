@@ -145,8 +145,14 @@ export class PaymentCollectionComponent implements OnInit {
     if (this.isPayBalanceEnable) {
       this.isbalanceDeduct = true;
       if (Number(this.customerObj.balance) > net) {
-        this.paidAmount = net;
-        this.tempPaidAmount = net;
+        if(this.due > 0){
+        this.paidAmount = this.due;
+        this.tempPaidAmount = this.due;
+        }else{
+          this.paidAmount = net;
+          this.tempPaidAmount = net;
+        }
+
       } else if (Number(this.customerObj.balance) <= net) {
         this.tempPaidAmount = Number(this.customerObj.balance);
         this.paidAmount = Number(this.customerObj.balance);
