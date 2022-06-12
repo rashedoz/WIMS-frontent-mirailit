@@ -183,6 +183,8 @@
                         <button *ngIf="row.status != 3 && row.status != 4" [routerLink]="['/payment-collection',row.id]"
                           class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive
                           Payment</button>
+                          <button (click)="newPrint(row)" class="btn btn-primary btn-mini"><i
+                            class="icofont icofont-doc"></i>Invoice</button>
                       </ng-template>
                     </ngx-datatable-column>
 
@@ -283,6 +285,8 @@
                         <button *ngIf="row.status != 3 && row.status != 4" [routerLink]="['/payment-collection',row.id]"
                           class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive
                           Payment</button>
+                          <button (click)="newPrint(row)" class="btn btn-primary btn-mini"><i
+                            class="icofont icofont-doc"></i>Invoice</button>
                       </ng-template>
                     </ngx-datatable-column>
 

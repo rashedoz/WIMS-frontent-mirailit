@@ -16,6 +16,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Subject, Observable, of, concat } from 'rxjs';
 import { distinctUntilChanged, debounceTime, switchMap, tap, catchError, filter, map } from 'rxjs/operators';
+import { PrintService } from '../_services/print.service';
 
 @Component({
   selector: 'app-receive-payment',
@@ -99,7 +100,8 @@ export class ReceivePaymentComponent implements OnInit {
     public datepipe: DatePipe,
     private http: HttpClient,
     private modalService: BsModalService,
-    private router: Router
+    private router: Router,
+    public printService: PrintService
   ) {
 
     this.page.pageNumber = 1;
@@ -117,6 +119,11 @@ export class ReceivePaymentComponent implements OnInit {
   ngOnInit() {
     this.getCustomer();
     this.onSearch();
+  }
+
+
+  newPrint(row){
+    this.printService.printInv(row.id);
   }
 
 
@@ -304,7 +311,7 @@ private fakeServiceCustomer(term) {
         return;
       }
      // this.tempRows = res;
-      this.rows =  res.results.filter(x=> x.status != 4);
+      this.rows =  res.results;
       this.pageTable.totalElements = res.count;
       this.pageTable.totalPages = Math.ceil(this.pageTable.totalElements / this.pageTable.size);
       setTimeout(() => {
