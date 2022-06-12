@@ -151,7 +151,7 @@
                                       <ngx-datatable-column [width]="250" name="Action" prop="id" [draggable]="false"
                                           [sortable]="false">
                                           <ng-template let-row="row" ngx-datatable-cell-template>
-                                              <button  *ngIf="row.status != 3 && row.status != 4" (click)="openModal(row ,template)" class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive Payment</button>
+                                              <button  *ngIf="row.status != 3 && row.status != 4"  [routerLink]="['/payment-collection',row.id]" class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive Payment</button>
                                               <button (click)="newPrint(row)" class="btn btn-primary btn-mini"><i class="icofont icofont-doc"></i>Show Invoice</button>
 
                                             </ng-template>
@@ -259,7 +259,7 @@
                                       <ngx-datatable-column [width]="250" name="Action" prop="id" [draggable]="false"
                                           [sortable]="false">
                                           <ng-template let-row="row" ngx-datatable-cell-template>
-                                              <button  *ngIf="row.status != 3 && row.status != 4" (click)="openModal(row ,template)" class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive Payment</button>
+                                              <button  *ngIf="row.status != 3 && row.status != 4"  [routerLink]="['/payment-collection',row.id]" class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive Payment</button>
                                               <button (click)="newPrint(row)" class="btn btn-primary btn-mini"><i class="icofont icofont-doc"></i>Show Invoice</button>
                                             </ng-template>
                                       </ngx-datatable-column>
@@ -372,7 +372,7 @@
                                       <ngx-datatable-column [width]="250" name="Action" prop="id" [draggable]="false"
                                           [sortable]="false">
                                           <ng-template let-row="row" ngx-datatable-cell-template>
-                                            <button  *ngIf="row.status != 3 && row.status != 4" (click)="openModal(row ,template)" class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive Payment</button>
+                                            <button  *ngIf="row.status != 3 && row.status != 4"  [routerLink]="['/payment-collection',row.id]" class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive Payment</button>
                                             <button (click)="newPrint(row)" class="btn btn-primary btn-mini"><i class="icofont icofont-doc"></i>Show Invoice</button>                                          </ng-template>
                                       </ngx-datatable-column>
 
@@ -477,7 +477,7 @@
                                       <ngx-datatable-column [width]="250" name="Action" prop="id" [draggable]="false"
                                           [sortable]="false">
                                           <ng-template let-row="row" ngx-datatable-cell-template>
-                                            <button  *ngIf="row.status != 3 && row.status != 4" (click)="openModal(row ,template)" class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive Payment</button>
+                                            <button  *ngIf="row.status != 3 && row.status != 4"  [routerLink]="['/payment-collection',row.id]" class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive Payment</button>
                                             <button (click)="newPrint(row)" class="btn btn-primary btn-mini"><i class="icofont icofont-doc"></i>Show Invoice</button>
                                        </ng-template>
 
@@ -587,7 +587,7 @@
                                       <ngx-datatable-column [width]="250" name="Action" prop="id" [draggable]="false"
                                           [sortable]="false">
                                           <ng-template let-row="row" ngx-datatable-cell-template>
-                                              <button  *ngIf="row.status != 3 && row.status != 4" (click)="openModal(row ,template)" class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive Payment</button>
+                                              <button  *ngIf="row.status != 3 && row.status != 4"  [routerLink]="['/payment-collection',row.id]" class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive Payment</button>
                                               <button (click)="newPrint(row)" class="btn btn-primary btn-mini"><i class="icofont icofont-doc"></i>Show Invoice</button>
 
                                             </ng-template>
@@ -696,7 +696,7 @@
                                     <ngx-datatable-column [width]="250" name="Action" prop="id" [draggable]="false"
                                         [sortable]="false">
                                         <ng-template let-row="row" ngx-datatable-cell-template>
-                                            <button  *ngIf="row.status != 3 && row.status != 4" (click)="openModal(row ,template)" class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive Payment</button>
+                                            <button  *ngIf="row.status != 3 && row.status != 4"  [routerLink]="['/payment-collection',row.id]" class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive Payment</button>
                                             <button (click)="newPrint(row)" class="btn btn-primary btn-mini"><i class="icofont icofont-doc"></i>Show Invoice</button>
 
                                             </ng-template>
@@ -806,7 +806,7 @@
                                     <ngx-datatable-column [width]="250" name="Action" prop="id" [draggable]="false"
                                         [sortable]="false">
                                         <ng-template let-row="row" ngx-datatable-cell-template>
-                                            <button  *ngIf="row.status != 3 && row.status != 4" (click)="openModal(row ,template)" class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive Payment</button>
+                                            <button  *ngIf="row.status != 3 && row.status != 4"  [routerLink]="['/payment-collection',row.id]" class="btn btn-info btn-mini mr-2"><i class="icofont icofont-checked"></i>Receive Payment</button>
                                             <button (click)="newPrint(row)" class="btn btn-primary btn-mini"><i class="icofont icofont-doc"></i>Show Invoice</button>
 
                                             </ng-template>

@@ -6,7 +6,7 @@ export const PaymentCollectionRoutes: Routes = [{
   path: '',
   component: PaymentCollectionComponent,
   data: {
-    breadcrumb: 'PaymentCollection',
+    breadcrumb: 'Payment Collection',
     icon: 'icofont-home bg-c-blue',
     status: false
   }
