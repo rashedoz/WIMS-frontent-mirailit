@@ -193,6 +193,8 @@ export class PaymentCollectionComponent implements OnInit {
       remarks: this.remarks
     };
 
+
+
     this._service.post('payment/save-payment', obj).subscribe(
       data => {
         this.blockUI.stop();
@@ -202,7 +204,7 @@ export class PaymentCollectionComponent implements OnInit {
           //this.getBillDetails();
 
           // this.router.navigate([]).then(result => { window.open('/bill-list', '_blank'); });
-          this.router.navigate(['bill-list/']);
+          this.router.navigate(['customer-details/'+this.details.bill.customer]);
 
         } else if (data.IsReport == "Warning") {
           this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });

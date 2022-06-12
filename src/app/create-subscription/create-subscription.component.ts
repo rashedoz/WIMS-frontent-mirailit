@@ -643,7 +643,7 @@ private fakeServiceSIM(term) {
                       this.router.navigate([]).then(result => { window.open('/payment-collection/'+ data.bill_id, '_blank'); });
                       this.entryForm.get('session').disable();
                       this.entryForm.get('session').setValue(moment().format('MMM-YYYY'));
-                      this.confirmService.confirm('Collect Payment Now | Sell Device?', '','Receive Payment','Sell Device')
+                      this.confirmService.confirm('Do You Want To Sell Device?', '','Close','Sell Device')
                       .subscribe(
                           result => {
                               if (result) {
