@@ -5,10 +5,13 @@
         <div class="row invoive-info mb-0" *ngIf="details">
           <div class="col-md-4 col-xs-12 invoice-client-info mb-5" *ngIf="customerObj">
             <h6>Customer Information :</h6>
-            <h5 class="m-0">{{customerObj.first_name}} {{customerObj.last_name}}</h5>
-            <h5 *ngIf="customerObj.email" class="m-0">{{customerObj.email}}</h5>
-            <h5 *ngIf="customerObj.mobile" class="m-0">{{customerObj.mobile}}</h5>
-            <h6 class="mt-3">{{isbalanceDeduct ? 'Remaining Balance:':'Balance:'}} <span class="text-primary font-weight-bold pt-2">{{balance - tempPaidAmount}}</span> </h6>
+            <p class="fs-14 mb-0"><b>{{customerObj.first_name}} {{customerObj.last_name}}</b></p>
+            <p class="fs-14 mb-0" *ngIf="customerObj.email"><b>{{customerObj.email}}</b></p>
+            <p class="fs-14 mb-0" *ngIf="customerObj.mobile"><b>{{customerObj.mobile}} </b></p>
+            <p class="fs-14 mb-0"><b>{{isbalanceDeduct ? 'Remaining Balance :':'Balance :'}} <span class="text-primary font-weight-bold">{{balance - tempPaidAmount}}</span></b></p>
+
+
+
           </div>
           <div class="col-md-4 col-xs-12 offset-md-4">
             <div class="row float-right mr-1">

@@ -24316,3 +24316,6 @@ bs-datepicker-container { z-index: 3000; }
 .cursor{
   cursor:pointer !important;
 }
+.fs-14{
+  font-size: 14px !important;
+}
