@@ -5,9 +5,9 @@
         <div class="row invoive-info mb-0" *ngIf="details">
           <div class="col-md-4 col-xs-12 invoice-client-info mb-5" *ngIf="customerObj">
             <h6>Customer Information :</h6>
-            <p class="fs-14 mb-0"><b>{{customerObj.first_name}} {{customerObj.last_name}}</b></p>
-            <p class="fs-14 mb-0" *ngIf="customerObj.email"><b>{{customerObj.email}}</b></p>
-            <p class="fs-14 mb-0" *ngIf="customerObj.mobile"><b>{{customerObj.mobile}} </b></p>
+            <p class="fs-14 mb-0"><b>Customer Name : {{customerObj.first_name}} {{customerObj.last_name}}</b></p>
+            <p class="fs-14 mb-0" *ngIf="customerObj.email"><b>Email : {{customerObj.email}}</b></p>
+            <p class="fs-14 mb-0" *ngIf="customerObj.mobile"><b>Mobile :{{customerObj.mobile}} </b></p>
             <p class="fs-14 mb-0"><b>{{isbalanceDeduct ? 'Remaining Balance :':'Balance :'}} <span class="text-primary font-weight-bold">{{balance - tempPaidAmount}}</span></b></p>
 
           </div>
@@ -22,7 +22,7 @@
                     </tr>
                     <tr *ngIf="details.bill.bill_type == 'Subscription'">
                       <th>Session :</th>
-                      <td>{{details.bill.session}}</td>
+                      <th>{{details.bill.session}}</th>
                     </tr>
                     <!-- <tr>
                       <th>Status :</th>

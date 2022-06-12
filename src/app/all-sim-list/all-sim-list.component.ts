@@ -6,8 +6,9 @@ import { CommonService } from '../_services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
-import { StockStatus } from '../_models/enums';
+import { StockStatus,SubscriptionStatus } from '../_models/enums';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+
 
 @Component({
   selector: 'app-all-sim-list',
@@ -22,6 +23,7 @@ export class AllSIMListComponent implements OnInit {
   @BlockUI() blockUI: NgBlockUI;
 
   StockStatus = StockStatus;
+  SubscriptionStatus = SubscriptionStatus;
   page = new Page();
   pageLifeCycle = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
@@ -33,7 +35,7 @@ export class AllSIMListComponent implements OnInit {
   ColumnMode = ColumnMode;
   scrollBarHorizontal = (window.innerWidth < 1200);
   @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
-  modalConfig: any = { class: 'gray modal-lg', backdrop: 'static' };
+  modalConfig: any = { class: 'gray modal-xl', backdrop: 'static' };
   modalRef: BsModalRef;
   modalRefICCID: BsModalRef;
   simLifecycleDetails : Array<any> = [];

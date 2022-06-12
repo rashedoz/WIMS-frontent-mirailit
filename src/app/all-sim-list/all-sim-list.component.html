@@ -216,10 +216,17 @@
                         </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="80" name="Status" prop="id" [draggable]="false" [sortable]="false">
+                    <ngx-datatable-column [width]="80" name="Status" prop="status" [draggable]="false" [sortable]="false">
+                        <ng-template let-value="value" ngx-datatable-cell-template>
+                            <span > {{SubscriptionStatus[value]}} </span>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="80" name="Returned Physically" prop="id" [draggable]="false" [sortable]="false">
                         <ng-template let-row="row" ngx-datatable-cell-template>
-                            <span *ngIf="!row.is_physically_sim_returned"> Assigned </span>
-                            <span *ngIf="row.is_physically_sim_returned"> Returned </span>
+                            <span *ngIf="row.status == 1"> -- </span>
+                            <span *ngIf="row.status == 2"> {{ row.is_physically_sim_returned == true ? "Yes" : "No"  }} </span>
+
                         </ng-template>
                     </ngx-datatable-column>
 
