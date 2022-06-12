@@ -10,7 +10,7 @@ import { Page } from '../_models/page';
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 import * as moment from 'moment';
 import { Location } from '@angular/common';
-import { BillStatus } from "./../_models/enums";
+import { BillStatus,PaymentType } from "./../_models/enums";
 
 @Component({
   selector: 'app-payment-collection',
@@ -28,6 +28,7 @@ export class PaymentCollectionComponent implements OnInit {
   details:any = null;
   customerObj:any = null;
   BillStatus = BillStatus;
+  PaymentType = PaymentType;
   balance = 0;
   isPayBalanceEnableShow = false;
   isPayBalanceEnable = false;

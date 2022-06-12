@@ -6,7 +6,7 @@ import { CommonService } from '../_services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
-import { SubscriptionStatus,SubsItemsStaus } from '../_models/enums';
+import { SubscriptionStatus,SubsItemsStaus,StockStatus } from '../_models/enums';
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 @Component({
   selector: 'app-subscription-list',
@@ -40,6 +40,7 @@ export class SubscriptionListComponent implements OnInit {
   scrollBarHorizontal = (window.innerWidth < 1200);
   SubscriptionStatus = SubscriptionStatus;
   SubsItemsStaus = SubsItemsStaus;
+  StockStatus = StockStatus;
 
   searchParamAll = '';
   searchParamWholesaler = '';

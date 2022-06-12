@@ -6,8 +6,14 @@
           <div class="col-md-4 col-xs-12 invoice-client-info mb-5" *ngIf="customerObj">
             <h6>Customer Information :</h6>
             <p class="fs-14 mb-0"><b>Customer Name : {{customerObj.first_name}} {{customerObj.last_name}}</b></p>
+            <p class="fs-14 mb-0" *ngIf="customerObj.acc_number"><b>Account Number : {{customerObj.acc_number}}</b></p>
             <p class="fs-14 mb-0" *ngIf="customerObj.email"><b>Email : {{customerObj.email}}</b></p>
-            <p class="fs-14 mb-0" *ngIf="customerObj.mobile"><b>Mobile :{{customerObj.mobile}} </b></p>
+            <p class="fs-14 mb-0" *ngIf="customerObj.mobile"><b>Mobile : {{customerObj.mobile}} </b></p>
+            <p class="fs-14 mb-0" *ngIf="customerObj.telephone"><b>Telephone : {{customerObj.telephone}} </b></p>
+            <p class="fs-14 mb-0" *ngIf="customerObj.gender"><b>Gender : {{customerObj.gender == 1 ? "Male" : "Female"}} </b></p>
+            <p class="fs-14 mb-0" *ngIf="customerObj.address_one"><b>Address : {{customerObj.address_one}} {{customerObj.address_two}}</b></p>
+            <p class="fs-14 mb-0" ><b>Wholesaler : <i *ngIf="customerObj.is_wholesaler" class='icofont icofont-ui-check text-success'></i> <i *ngIf="!customerObj.is_wholesaler" class='icofont icofont-ui-close text-danger'></i> </b></p>
+            <p class="fs-14 mb-0" *ngIf="customerObj.preferred_payment_method"><b>Preferred Payment Method : {{PaymentType[customerObj.preferred_payment_method]}}</b></p>
             <p class="fs-14 mb-0"><b>{{isbalanceDeduct ? 'Remaining Balance :':'Balance :'}} <span class="text-primary font-weight-bold">{{balance - tempPaidAmount}}</span></b></p>
 
           </div>
@@ -15,24 +21,8 @@
             <div class="row float-right mr-1">
               <div class="col-12">
                 <h6>Bill Information :</h6>
-                <table class="table table-responsive invoice-table invoice-order table-borderless">
-                  <tbody>
-                    <tr>
-                      <th>Bill Id : {{details.bill.id}}</th>
-                    </tr>
-                    <tr *ngIf="details.bill.bill_type == 'Subscription'">
-                      <th>Session :</th>
-                      <th>{{details.bill.session}}</th>
-                    </tr>
-                    <!-- <tr>
-                      <th>Status :</th>
-                      <td>
-                        <span class="label label-warning">Pending</span>
-                      </td>
-                    </tr> -->
-
-                  </tbody>
-                </table>
+                <p class="fs-14 mb-0"><b>Bill Id : {{details.bill.id}}</b></p>
+                <p class="fs-14 mb-0"><b>Session : {{details.bill.session}}</b></p>
               </div>
             </div>
 

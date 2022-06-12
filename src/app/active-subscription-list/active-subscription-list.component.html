@@ -16,35 +16,6 @@
                         <div class="card-block ">
 
 
-                          <!-- <div class="row">
-                            <div class="col-md-12">
-                              <div class="btn-group float-right" dropdown placement="bottom right">
-                                <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
-                                        aria-controls="dropdown-basic">
-                                  Subscription <span class="caret"></span>
-                                </button>
-
-                                <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu dropdown-menu-right"
-                                    role="menu" aria-labelledby="button-animated">
-                                  <li role="menuitem"><a class="dropdown-item" [routerLink]="['/create-subscription']" routerLinkActive="router-link-active" > Create Subscription</a></li>
-                                  <li role="menuitem"><a class="dropdown-item" [routerLink]="['/add-product-to-subscription']" routerLinkActive="router-link-active" >Add Product To Subscription </a></li>
-                                  <li role="menuitem"><a class="dropdown-item" [routerLink]="['/subscription-list']" routerLinkActive="router-link-active" >All Subscription List</a></li>
-                                  <li role="menuitem"><a class="dropdown-item" [routerLink]="['/wholesaler-subscription-list']" routerLinkActive="router-link-active" > Wholesaler Subscription List</a></li>
-                                  <li role="menuitem"><a class="dropdown-item" [routerLink]="['/retailer-subscription-list']" routerLinkActive="router-link-active" > Retailer Subscription List</a></li>
-                                  <hr>
-                                  <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-current-month-subscription']" routerLinkActive="router-link-active" >Change Current Month Subscription </a></li>
-                                  <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-current-month']" routerLinkActive="router-link-active" >Remove Product From Current Month </a></li>
-                                  <li role="menuitem"><a class="dropdown-item" [routerLink]="['/cancel-entrie-subscription-from-current-month']" routerLinkActive="router-link-active" >Cancel Entrie Subscription From Current Month </a></li>
-                                  <hr>
-                                  <li role="menuitem"><a class="dropdown-item" [routerLink]="['/change-next-month-subscription']" routerLinkActive="router-link-active" >Change Next Month Subscription </a></li>
-                                  <li role="menuitem"><a class="dropdown-item" [routerLink]="['/remove-product-from-next-month']" routerLinkActive="router-link-active" >Remove Product From Next Month </a></li>
-                                  <li role="menuitem"><a class="dropdown-item" [routerLink]="['/cancel-entrie-subscription-from-next-month']" routerLinkActive="router-link-active" >Cancel Entrie Subscription From Next Month </a></li>
-
-                                </ul>
-                              </div>
-                            </div>
-                          </div>
-                          <hr> -->
 
 
                           <div *ngIf="activeTable == 1">
@@ -79,6 +50,7 @@
                                                               <th width="20%" scope="col">SIM ICCID No</th>
                                                               <th width="20%" scope="col">Phone Number</th>
                                                               <th width="20%" scope="col">Plan</th>
+                                                              <th width="20%" scope="col">Status</th>
                                                           </tr>
                                                       </thead>
                                                       <tbody>
@@ -87,9 +59,8 @@
                                                             <th> {{item.sim.ICCID_no}} </th>
                                                             <th> {{item.sim.phone_number}} </th>
                                                             <th> {{item.plan.plan}} </th>
-                                                              <!-- <th>
-                                                                  {{SubsItemsStaus[item.status]}}
-                                                                </th> -->
+                                                            <th> {{SubscriptionStatus[item.status]}} </th>
+                                                            <!-- <th> {{SubsItemsStaus[item.status]}} </th> -->
                                                           </tr>
                                                       </tbody>
                                                   </table>
@@ -186,6 +157,7 @@
                                                             <th width="20%" scope="col">SIM ICCID No</th>
                                                             <th width="20%" scope="col">Phone Number</th>
                                                             <th width="20%" scope="col">Plan</th>
+                                                            <th width="20%" scope="col">Status</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -194,6 +166,7 @@
                                                           <th> {{item.sim.ICCID_no}} </th>
                                                           <th> {{item.sim.phone_number}} </th>
                                                           <th> {{item.plan.plan}} </th>
+                                                          <th> {{SubscriptionStatus[item.status]}} </th>
                                                             <!-- <th>
                                                                 {{SubsItemsStaus[item.status]}}
                                                               </th> -->

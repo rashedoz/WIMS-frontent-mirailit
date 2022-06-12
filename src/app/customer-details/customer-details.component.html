@@ -208,18 +208,20 @@
                               <table class="table table-xs table-hover table-bordered table-striped">
                                 <thead>
                                   <tr>
-                                    <th class="p-2" width="20%" scope="col">SIM CID No</th>
-                                    <th class="p-2" width="20%" scope="col">SIM ICCID No</th>
-                                    <th class="p-2" width="20%" scope="col">Phone Number</th>
-                                    <th class="p-2" width="20%" scope="col">Plan</th>
+                                    <th class="p-1" width="20%" scope="col">SIM CID No</th>
+                                    <th class="p-1" width="20%" scope="col">SIM ICCID No</th>
+                                    <th class="p-1" width="20%" scope="col">Phone Number</th>
+                                    <th class="p-1" width="20%" scope="col">Plan</th>
+                                    <th class="p-1" width="20%" scope="col">Status</th>
                                   </tr>
                                 </thead>
                                 <tbody>
                                   <tr *ngFor="let item of rowItems">
-                                    <th class="p-2"> {{item.sim.CID_no}}</th>
-                                    <th class="p-2"> {{item.sim.ICCID_no}} </th>
-                                    <th class="p-2"> {{item.sim.phone_number}} </th>
-                                    <th class="p-2"> {{item.plan.plan}} </th>
+                                    <th class="p-1"> {{item.sim.CID_no}}</th>
+                                    <th class="p-1"> {{item.sim.ICCID_no}} </th>
+                                    <th class="p-1"> {{item.sim.phone_number}} </th>
+                                    <th class="p-1"> {{item.plan.plan}} </th>
+                                    <th class="p-1"> {{SubscriptionStatus[item.status]}} </th>
                                   </tr>
                                 </tbody>
                               </table>
