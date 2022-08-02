@@ -327,6 +327,11 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./device-sales-bill-list/device-sales-bill-list.module').then(m => m.DeviceSalesBillListModule),
         canActivate: [AuthGuard]
       },
+      {
+        path: 'sell-product',
+        loadChildren: () => import('./sell-product/sell-product.module').then(m => m.SellProductModule),
+        canActivate: [AuthGuard]
+      },
     ]
   }, {
     path: '**',

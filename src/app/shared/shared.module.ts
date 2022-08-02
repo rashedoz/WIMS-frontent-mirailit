@@ -46,6 +46,8 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 // import { NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 import { NgxMatMomentModule } from '@angular-material-components/moment-adapter';
 
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+
 
 @NgModule({
   imports: [
@@ -77,7 +79,8 @@ import { NgxMatMomentModule } from '@angular-material-components/moment-adapter'
     //   MatRadioModule,
     //   MatSelectModule,
       NgxMatMomentModule,
-      MatButtonModule, MatDialogModule, MatListModule, MatProgressBarModule
+      MatButtonModule, MatDialogModule, MatListModule, MatProgressBarModule,
+      TooltipModule.forRoot()
   ],
   declarations: [
       AccordionAnchorDirective,
@@ -133,7 +136,8 @@ import { NgxMatMomentModule } from '@angular-material-components/moment-adapter'
     //   MatSelectModule,
       NgxMatMomentModule,
 
-      MatButtonModule, MatDialogModule, MatListModule, MatProgressBarModule
+      MatButtonModule, MatDialogModule, MatListModule, MatProgressBarModule,
+      TooltipModule
 
   ],
   providers: [

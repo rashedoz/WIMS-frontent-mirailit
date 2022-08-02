@@ -24316,8 +24316,14 @@ bs-datepicker-container { z-index: 3000; }
 .cursor{
   cursor:pointer !important;
 }
+.fs-18{
+  font-size: 18px !important;
+}
 .fs-14{
   font-size: 14px !important;
+}
+.fs-12{
+  font-size: 12px !important;
 }
 
 .has-success{

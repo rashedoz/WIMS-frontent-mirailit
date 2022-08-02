@@ -1,0 +1,481 @@
+<block-ui>
+  <form [formGroup]="entryForm">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card card-border-default">
+          <div class="card-block ">
+            <div class="row mt-2">
+              <div class="col-lg-7">
+                <div class="row">
+                  <label class="col-sm-4 col-form-label">Customer </label>
+                  <div class="col-sm-8">
+
+
+                    <div class="d-flex flex-row">
+
+                      <ng-select formControlName="customer" [clearable]="true" [items]="customersBuffer"
+                        [virtualScroll]="true" [dropdownPosition]="'bottom'" [loading]="loading" bindLabel="first_name"
+                        bindValue="id" placeholder="Select a customer" appendTo="body"
+                        (change)="onCustomerChange($event)" [typeahead]="input$" (scroll)="onScroll($event)"
+                        (scrollToEnd)="onScrollToEnd()" #select>
+                        <ng-template ng-header-tmp>
+                          <small class="form-text text-muted">Loaded {{customersBuffer.length}} of
+                            {{page.totalElements}}</small>
+                        </ng-template>
+                        <ng-template ng-label-tmp let-item="item">
+                          {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
+                        </ng-template>
+
+                        <ng-template ng-option-tmp let-item="item" let-index="index">
+                          {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}}
+                        </ng-template>
+                      </ng-select>
+
+                      <button type="button" class="btn btn-success btn-mini" title="Add new customer"
+                        (click)="openModalCustomer(templateCustomer)">
+                        <i class="icofont-plus"></i>
+                      </button>
+                    </div>
+                    <div *ngIf="submitted && f.customer.errors" class="error-text">
+                      <span *ngIf="f.customer.errors.required" class="text-danger"> Customer is required</span>
+                    </div>
+
+
+                    <div class="row blog-big-user m-t-10" *ngIf="selectedCustomer">
+                      <div class="col-sm-10">
+                        <div>
+                          <h4 class="m-b-10 text-primary">{{selectedCustomer.first_name}} {{selectedCustomer.last_name}}
+                          </h4>
+                          <h6 class="m-b-5"><i class="icofont icofont-envelope-open"></i> {{selectedCustomer.email}}
+                          </h6>
+                          <p class="m-b-5"><i class="icofont icofont-phone"></i> {{selectedCustomer.mobile}}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+
+              </div>
+              <div class="col-lg-5">
+                <div class="form-group row">
+                  <label class="col-sm-4 col-form-label">Session </label>
+                  <div class="col-sm-8">
+                    <input type="text" formControlName="session" class="form-control"
+                      [ngClass]="{ 'is-invalid': submitted && f.session.errors }" placeholder="Type session">
+                    <div *ngIf="submitted && f.session.errors" class="error-text">
+                      <span *ngIf="f.session.errors.required" class="text-danger"> Session is required</span>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card card-border-default">
+          <div class="card-header">
+            <h5></h5>
+          </div>
+          <div class="card-block ">
+            <div class="row ">
+              <div class="col-lg-12">
+                <div class="table-responsive">
+                  <table class="table table-xs table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th style="padding: 0.rem 2rem;" width="1%" scope="col">Sl</th>
+                        <th width="61%" scope="col">Product</th>
+                        <th width="8%" scope="col">Amount</th>
+                        <th width="10%" scope="col">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody formArrayName="itemHistory" *ngFor="let item of itemFormArray; let i = index;">
+                      <tr [formGroupName]="i">
+                        <td class="p-2" style="vertical-align: inherit;text-align: center;">
+                          <label for="package_name" class="fs-12 text-center font-weight-bold ">{{i + 1}}</label>
+                        </td>
+
+                        <td class="p-2">
+                          <div class="row">
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label for="package_name" class="font-weight-bold">Package Name</label>
+                              <div class="d-flex flex-row">
+                                  <ng-select *ngIf="packageList.length > 0" [clearable]="false" appendTo="body"
+                                    (change)="onPackageChange($event, item)" [clearOnBackspace]="false"
+                                    [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('package').errors}"
+                                    formControlName="package" [items]="packageList" bindLabel="pckg_offer_name" bindValue="id"
+                                    placeholder="Select a package"></ng-select>
+                                    <ng-template #tolTemplate>
+                                      <p>Device Deposite : {{item_his.controls[i].get('package_item').value.device_deposit}}</p>
+                                      <p>Initial Package Fee : {{item_his.controls[i].get('package_item').value.pckg_initial_fee}}</p>
+                                      <!-- <p>Shipping Charge : {{item_his.controls[i].get('package_item').value.pckg_shipping_charge}}</p> -->
+                                      <p>Price : {{item_his.controls[i].get('package_item').value.pckg_price}}</p>
+                                      <p>Initial Discount : {{item_his.controls[i].get('package_item').value.pckg_initial_discount}}</p>
+                                      <p>First Bill Amount : {{item_his.controls[i].get('package_item').value.pckg_first_bill_amount}}</p>
+                                      <p>Recurring Bill Amount : {{item_his.controls[i].get('package_item').value.pckg_recurring_bill_amount}}</p>
+                                     
+                                    </ng-template>
+                                  <button *ngIf="item_his.controls[i].get('package_item').value" type="button" class="btn btn-primary btn-mini" [tooltip]="tolTemplate" >
+                                  <i class="icofont-question"></i>
+                                </button>
+
+                                </div>
+                               
+                              <div *ngIf="submitted && item_his.controls[i].get('package').errors" class="error-text">
+                                <small *ngIf="item_his.controls[i].get('package').errors.required" class="text-danger"> Package
+                                  is required</small>
+                              </div>  
+                            </div>
+                          </div>
+                          <div class="col-md-5">
+                            <div class="form-group">
+                              <label class="font-weight-bold">Package Description</label>                       
+                              <textarea formControlName="package_des" readonly class="form-control-plaintext fs-12" ></textarea>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <div class="form-group">
+                              <label class="font-weight-bold">Sell Platform</label>                          
+                              <ng-select *ngIf="platformList.length > 0" [clearable]="false" appendTo="body"   [clearOnBackspace]="false" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('platform').errors}" formControlName="platform"  [items]="platformList"
+                                bindLabel="selling_platform" bindValue="id" placeholder="Select a platform"></ng-select>
+                             
+
+                                <div *ngIf="submitted && item_his.controls[i].get('platform').errors" class="error-text">
+                                  <small *ngIf="item_his.controls[i].get('platform').errors.required" class="text-danger"> Platform
+                                    is required</small>
+                                </div>
+
+                            </div>
+                          </div>
+                          </div>
+                          <div class="row" *ngIf="item_his.controls[i].get('package').value">
+                            <div class="col-md-2">
+                              <div class="form-group">
+                                <label class="font-weight-bold">SIM CID No</label>                       
+                               
+                                <ng-select [clearable]="true" appendTo="body" (change)="onSIMChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}" formControlName="sim" [clearOnBackspace]="false"
+                                [items]="simsBuffer"
+                                [virtualScroll]="true"
+                                [dropdownPosition]="'bottom'"
+                                [loading]="loadingSIM"
+                                [typeahead]="simsInput$"
+                                (scroll)="onScrollSIM($event)"
+                                (scrollToEnd)="onScrollToEndSIM()"
+                                bindLabel="CID_no" placeholder="Search..">
+                                <ng-template ng-header-tmp>
+                                  <small class="form-text text-muted">Loaded {{simsBuffer.length}} of {{pageSIM.totalElements}}</small>
+                              </ng-template>
+  
+                                <ng-template ng-option-tmp let-item="item" let-index="index">
+                                  <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no">  {{item.CID_no}} </p>
+                                  <p class="card-text font-weight-bold" *ngIf="item.ICCID_no">  {{item.CID_no}} ({{item.ICCID_no}})</p>
+                              </ng-template>
+                            </ng-select>
+                                <div *ngIf="submitted && item_his.controls[i].get('sim').errors" class="error-text">
+                                  <small *ngIf="item_his.controls[i].get('sim').errors.required" class="text-danger"> SIM
+                                    is required</small>  
+                                </div>
+
+                              </div>
+                            </div>
+                            <div class="col-md-3">
+                              <div class="form-group">
+                                <label class="font-weight-bold">SIM ICCID No</label>                       
+                                <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim_iccid').errors}" formControlName="sim_iccid"  />
+                                <div *ngIf="submitted && item_his.controls[i].get('sim_iccid').errors" class="error-text">
+                                  <small *ngIf="item_his.controls[i].get('sim_iccid').errors.required" class="text-danger"> SIM ICCID is required</small>
+  
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-2">
+                              <div class="form-group">
+                                <label class="font-weight-bold">Phone Number</label>                       
+                                <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('phone_number').errors}" formControlName="phone_number"  />
+                                <div *ngIf="submitted && item_his.controls[i].get('phone_number').errors" class="error-text">
+                                  <small *ngIf="item_his.controls[i].get('phone_number').errors.required" class="text-danger"> Phone number is required</small>
+  
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-md-2" *ngIf="item_his.controls[i].get('has_device_dependency').value">
+                              <div class="form-group">
+                                <label class="font-weight-bold">Device DID No</label>                       
+                            
+                                <ng-select [clearable]="true" appendTo="body" (change)="onDeviceChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('device').errors}" formControlName="device" [clearOnBackspace]="false"
+                                [items]="devicesBuffer"
+                                [virtualScroll]="true"
+                                [dropdownPosition]="'bottom'"
+                                [loading]="loadingDevice"
+                                [typeahead]="devicesInput$"
+                                (scroll)="onScrollDevice($event)"
+                                (scrollToEnd)="onScrollToEndDevice()"
+                                bindLabel="DID_no" placeholder="Search..">
+                                <ng-template ng-header-tmp>
+                                  <small class="form-text text-muted">Loaded {{devicesBuffer.length}} of {{pageDevice.totalElements}}</small>
+                              </ng-template>
+  
+  
+  
+                              <ng-template ng-option-tmp let-item="item" let-index="index">
+                                <p class="card-text font-weight-bold" *ngIf="!item.IMEI">  {{item.DID_no}} </p>
+                                <p class="card-text font-weight-bold" *ngIf="item.IMEI">  {{item.DID_no}} ({{item.IMEI}})</p>
+                            </ng-template>
+  
+                            <ng-template ng-label-tmp let-item="item">
+                              <p class="card-text" *ngIf="!item.IMEI">  {{item.DID_no}} </p>
+                              <p class="card-text" *ngIf="item.IMEI">  {{item.DID_no}} ({{item.IMEI}})</p>
+                            </ng-template>
+  
+  
+                              </ng-select>
+                                <div *ngIf="submitted && item_his.controls[i].get('device').errors" class="error-text">
+                                  <small *ngIf="item_his.controls[i].get('device').errors.required" class="text-danger"> Device is required</small>  
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-3" *ngIf="item_his.controls[i].get('has_device_dependency').value">
+                              <div class="form-group">
+                                <label class="font-weight-bold">Device IMEI</label>                       
+                                <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('IMEI').errors}" formControlName="IMEI"  />
+                              <div *ngIf="submitted && item_his.controls[i].get('IMEI').errors" class="error-text">
+                                <small *ngIf="item_his.controls[i].get('IMEI').errors.required" class="text-danger"> Device IMEI is required</small>
+
+                              </div>
+                              </div>
+                            </div>
+
+
+                          </div>
+                          
+
+                        </td>
+
+                        <!-- <th class="p-2">
+                              <ng-select [clearable]="true" appendTo="body" (change)="onSIMChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}" formControlName="sim" [clearOnBackspace]="false"
+                              [items]="simsBuffer"
+                              [virtualScroll]="true"
+                              [dropdownPosition]="'bottom'"
+                              [loading]="loadingSIM"
+                              [typeahead]="simsInput$"
+                              (scroll)="onScrollSIM($event)"
+                              (scrollToEnd)="onScrollToEndSIM()"
+                              bindLabel="CID_no" placeholder="Search by sim cid">
+                              <ng-template ng-header-tmp>
+                                <small class="form-text text-muted">Loaded {{simsBuffer.length}} of {{pageSIM.totalElements}}</small>
+                            </ng-template>
+
+                              <ng-template ng-option-tmp let-item="item" let-index="index">
+                                <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no">  {{item.CID_no}} </p>
+                                <p class="card-text font-weight-bold" *ngIf="item.ICCID_no">  {{item.CID_no}} ({{item.ICCID_no}})</p>
+                            </ng-template>
+                          </ng-select>
+                              <div *ngIf="submitted && item_his.controls[i].get('sim').errors" class="error-text">
+                                <small *ngIf="item_his.controls[i].get('sim').errors.required" class="text-danger"> SIM
+                                  is required</small>
+
+                              </div>
+                            </th>
+                            <th class="p-2">
+                              <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim_iccid').errors}" formControlName="sim_iccid"  />
+                              <div *ngIf="submitted && item_his.controls[i].get('sim_iccid').errors" class="error-text">
+                                <small *ngIf="item_his.controls[i].get('sim_iccid').errors.required" class="text-danger"> SIM ICCID is required</small>
+
+                              </div>
+                            </th>
+                            <th class="p-2">
+                              <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('phone_number').errors}" formControlName="phone_number"  />
+                              <div *ngIf="submitted && item_his.controls[i].get('phone_number').errors" class="error-text">
+                                <small *ngIf="item_his.controls[i].get('phone_number').errors.required" class="text-danger"> Phone number is required</small>
+
+                              </div>
+                            </th>
+                            <th class="p-2">
+                              <ng-select *ngIf="planList.length > 0" [clearable]="false" appendTo="body" (change)="onPlanChange($event, item)"  [clearOnBackspace]="false" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('plan').errors}" formControlName="plan"  [items]="planList"
+                            bindLabel="plan" bindValue="id" placeholder="Select a plan"></ng-select>
+                            <div *ngIf="submitted && item_his.controls[i].get('plan').errors" class="error-text">
+                              <small *ngIf="item_his.controls[i].get('plan').errors.required" class="text-danger"> Plan is required</small>
+                            </div>
+                            </th>
+                            <th class="p-2">
+                              <input type="text"  class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('actual_amount').errors}" formControlName="actual_amount"  />
+                            <div *ngIf="submitted && item_his.controls[i].get('actual_amount').errors" class="error-text">
+                              <small *ngIf="item_his.controls[i].get('actual_amount').errors.required" class="text-danger"> Amount is required</small>
+                            </div>
+                            </th>
+                            <th class="p-2">
+                              <input type="text" numeric numericType="number" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('discount').errors}" formControlName="discount" (keyup)="onItemDiscountChange($event,item)" (focus)="inputFocused($event)" />
+                            </th> -->                   
+                        <td class="p-2" style="vertical-align: inherit;text-align: center;">
+                          <input type="text" readonly class="form-control-plaintext fs-28 text-center font-weight-bold " formControlName="amount">
+                        </td>
+                        <td class="p-2"  style="vertical-align: inherit;text-align: center;">
+                          <button class="btn btn-success btn-mini pull-right mr-3" title="Add new item"
+                            (click)="addItemHistory()"><i class="icofont-plus "></i> Add More</button>
+                          <button *ngIf="itemFormArray.length > 1" class="btn btn-danger mr-1 btn-mini pull-right"
+                            title="Delete this item" (click)="removeItemHistory(i)"> <i class="icofont-ui-delete"></i>
+                          </button>
+
+                        </td>
+
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="col-lg-4 offset-lg-8">
+                <table class="table table-xs table-hover table-striped">
+                  <tbody>
+                    <tr>
+                      <th>Total {{itemTotal()}}</th>
+                      <th class="text-right pr-4">{{subTotal}}</th>
+                    </tr>
+                    <tr>
+                      <th>Discount</th>
+                      <th class="text-right pr-1">
+                        <input  type="text" class="form-control form-control-sm text-right pr-3"
+                        numeric numericType="number" (keyup)="onChangeDiscount(discount)" [(ngModel)]="discount" [ngModelOptions]="{standalone: true}"></th>                      
+                    </tr>
+                    <tr class="table-info" style="font-size: 20px;">
+                      <th>Grand Total</th>
+                      <th class="text-right pr-4">{{subTotal - discount}}</th>
+                    </tr>
+
+                    <tr>
+                      <th>Remarks</th>
+                      <th class="text-right pr-1">
+                        <textarea  type="text" class="form-control form-control-sm text-right pr-3"  [(ngModel)]="remarks" [ngModelOptions]="{standalone: true}"></textarea>
+
+                        </th>
+                  
+                    </tr>
+
+                  </tbody>
+                </table>
+
+                <button class="btn btn-success btn-sm btn-outline-success w-50 float-right" (click)="onFormSubmit()">
+                  <i class="icofont-save"></i> {{btnSaveText}}
+                </button>
+              </div>
+
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+
+
+  <ng-template #templateCustomer>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left "> Add Customer</h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideCustomer()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+      <app-card>
+        <form [formGroup]="RegistrerForm" class="col-sm-12">
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">First Name </label>
+            <div class="col-sm-8">
+              <input type="text" formControlName="firstName"
+                [ngClass]="{ 'is-invalid': submittedCustomer && c.firstName.errors }" type="text"
+                class="form-control" />
+
+              <div *ngIf="submittedCustomer && c.firstName.errors" class="error-text">
+                <span *ngIf="c.firstName.errors.required" class="text-danger"> Customer first name is required</span>
+
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Last Name </label>
+            <div class="col-sm-8">
+              <input type="text" formControlName="lastName"
+                [ngClass]="{ 'is-invalid': submittedCustomer && c.lastName.errors }" type="text" class="form-control" />
+
+              <div *ngIf="submittedCustomer && c.lastName.errors" class="error-text">
+                <span *ngIf="c.lastName.errors.required" class="text-danger"> Customer last name is required</span>
+
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Email </label>
+            <div class="col-sm-8">
+              <input type="text" formControlName="email"
+                [ngClass]="{ 'is-invalid': submittedCustomer && c.email.errors }" type="text" class="form-control" />
+
+              <div *ngIf="submittedCustomer && c.email.errors" class="error-text">
+                <span *ngIf="c.email.errors.required" class="text-danger"> Email is required</span>
+
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Mobile </label>
+            <div class="col-sm-8">
+              <input type="text" formControlName="mobile"
+                [ngClass]="{ 'is-invalid': submittedCustomer && c.mobile.errors }" type="text" class="form-control" />
+
+              <div *ngIf="submittedCustomer && c.mobile.errors" class="error-text">
+                <span *ngIf="c.mobile.errors.required" class="text-danger"> Mobile number is required</span>
+
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Customer Type </label>
+            <div class="col-sm-8">
+
+              <div class="form-radio pt-1">
+                <div class="radio radio-inverse radio-inline">
+                  <label class="pt-1">
+                    <input formControlName="customerType" type="radio" name="customerType" value="Wholesaler">
+                    <i class="helper"></i>Wholesaler
+                  </label>
+                </div>
+                <div class="radio radio-inverse radio-inline">
+                  <label class="pt-1">
+                    <input formControlName="customerType" type="radio" name="customerType" value="Retailer">
+                    <i class="helper"></i>Retailer
+                  </label>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+        </form>
+      </app-card>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+
+        <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideCustomer()"> <i
+            class="icofont icofont-close"></i> Close</button>
+
+        <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmitCustomer()"><i
+            class="icofont icofont-check-circled"></i> Add Customer</button>
+
+      </div>
+
+    </div>
+  </ng-template>
+
+</block-ui>

@@ -47,6 +47,13 @@ const MENUITEMS = [
     permission: 'is_superuser,is_staff',
     main: [
       {
+        state: 'sell-product',
+        name: 'Sell Product',
+        type: 'link',
+        icon: 'ti-control-forward',
+        permission: 'is_superuser,is_staff',
+      },
+      {
         state: 'create-subscription',
         name: 'Create Subscription',
         type: 'link',
