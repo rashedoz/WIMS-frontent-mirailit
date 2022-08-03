@@ -97,14 +97,14 @@
                             [count]="pageTable.totalElements" [offset]="pageTable.pageNumber" [limit]="page.size"
                             (page)="setPageWithPagination($event)">
 
-                            <ngx-datatable-column [width]="100" name="SIM CID No" prop="id" [draggable]="false"
+                            <ngx-datatable-column [width]="100" name="SIM CID No" prop="CID_no" [draggable]="false"
                             [sortable]="false">
                             <ng-template let-value="value" ngx-datatable-cell-template>
                               <span> {{ value }} </span>
                             </ng-template>
                           </ngx-datatable-column>
 
-                            <ngx-datatable-column [width]="150" name="Bill Type" prop="bill_type" [draggable]="false"
+                            <ngx-datatable-column [width]="150" name="IMEI" prop="IMEI" [draggable]="false"
                               [sortable]="false">
                               <ng-template let-value="value" ngx-datatable-cell-template>
                                 <span> {{ value }} </span>
