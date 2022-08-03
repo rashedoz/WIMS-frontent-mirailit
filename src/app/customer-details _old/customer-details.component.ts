@@ -19,7 +19,6 @@ import { Subject, Observable, of, concat } from 'rxjs';
 import { distinctUntilChanged, debounceTime, switchMap, tap, catchError, filter, map } from 'rxjs/operators';
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 import { PrintService } from '../_services/print.service';
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-customer-details',
@@ -59,7 +58,6 @@ export class CustomerDetailsComponent implements OnInit {
   searchParam = '';
   customer_id;
   customerObj = null;
-  customerSIMDeviceCount = null;
 
   newTotal: number = 0;
   subTotal: number = 0;
@@ -94,23 +92,21 @@ export class CustomerDetailsComponent implements OnInit {
   isbalanceDeduct = false;
 
 
-  currentTab = 'Bills Items';
+  currentTab = 'Basic Details';
   subscriptionHistoryList = [];
   balanceHistoryList = [];
   @ViewChild('tablePaymentDetailsList', { static: false }) tablePaymentDetailsList: any;
   @ViewChild('tableDeviceSalesHistory', { static: false }) tableDeviceSalesHistory: any;
-  @ViewChild('billItemsDetailTabs', { static: false }) billItemsDetailTabs: any;
+  @ViewChild('billDetailTabs', { static: false }) billDetailTabs: any;
 
   rowItems = [];
   methodListWithoutFrom = [{"id":1,"name":"CASH"},{"id":3,"name":"CARD_PAYMENT"},{"id":4,"name":"ONLINE_BANKING"}]
-  billItemDetailList = [];
   paymentDetailList = [];
   deviceSalesList = [];
 
   activeDeviceCount = 0;
 
   billType = '';
-  billItemType = '';
 
   constructor(
     private confirmService: ConfirmService,
@@ -141,14 +137,7 @@ export class CustomerDetailsComponent implements OnInit {
 
 
   ngOnInit() {
-    if(this.customer_id){
-      this.getCustomer();
-      this.getCustomerSIMDeviceCount();
-    }
-
-    this.url = 'bill/customer-billing-items';       
-    this.getBillItemListWithPagination(null);
-
+    if(this.customer_id)this.getCustomer();
     this.balanceLoadForm = this.formBuilder.group({
       amount: [null, [Validators.required]],
       payment_method: [null, [Validators.required]]
@@ -178,19 +167,6 @@ getCustomer(){
   );
 }
 
-getCustomerSIMDeviceCount(){
- // this.blockUI.start('Getting Data...');
-  this._service.get('bill/customer-sim-and-device-counts/'+this.customer_id).subscribe(
-    (res) => {
-      this.customerSIMDeviceCount = res;
-    //  this.blockUI.stop();
-    },
-    (err) => {
-      //this.blockUI.stop();
-    }
-  );
-}
-
 selectTab(tabId: number) {
   if (this.profileTabs?.tabs[tabId]) {
     this.profileTabs.tabs[tabId].active = true;
@@ -208,32 +184,27 @@ selectTab(tabId: number) {
     this.searchParam = '';
     this.rowItems = [];
     switch (type) {
-    //   case 'Basic Details':
-    //     this.url = 'get-user-detail/';
-    //     this.getCustomer();
-    //     break;
-    //   case 'Subscription Details':
-    //     this.url = 'subscription/get-subscription-list-by-customer-id/';
-    //  this.getSubscriptionList();
-    //     break;
-    //   case 'Device Sales Details':
-    //     this.url = 'subscription/get-customer-current-device-history/';
-    //  this.getDeviceSalesList();
-    //     break;
-    //   case 'Due Details':
-    //     this.url = 'get-user-detail/';
-    //     this.getCustomer();
-    //     break;
-      case 'Bills Items':  
-      this.url = 'bill/customer-billing-items';   
-      this.getBillItemListWithPagination(null);
-      this.billItemType = 'All Items';
-       this.billItemsDetailTabs.tabs[0].active = true;
+      case 'Basic Details':
+        this.url = 'get-user-detail/';
+        this.getCustomer();
+        break;
+      case 'Subscription Details':
+        this.url = 'subscription/get-subscription-list-by-customer-id/';
+     this.getSubscriptionList();
+        break;
+      case 'Device Sales Details':
+        this.url = 'subscription/get-customer-current-device-history/';
+     this.getDeviceSalesList();
+        break;
+      case 'Due Details':
+        this.url = 'get-user-detail/';
+        this.getCustomer();
         break;
       case 'Bills Details':
         this.url = 'subscription/get-subscription-type-bills-by-customerid/';
        this.getListWithPagination();
-     //  this.billDetailTabs.tabs[0].active = true;
+       this.billType = 'Subscription Bill';
+       this.billDetailTabs.tabs[0].active = true;
         break;
       case 'Payment Details':
         this.url = 'payment/get-payment-list-by-customerid/';
@@ -247,10 +218,6 @@ selectTab(tabId: number) {
         this.url = 'get-customer-balance-loading-history/';
      this.getBalanceLoadList();
         break;
-      case 'Basic Details':
-          this.url = 'get-user-detail/';
-          this.getCustomer();
-          break;
       default:
         this.url = 'get-user-detail/';
         this.getCustomer();
@@ -258,41 +225,27 @@ selectTab(tabId: number) {
       }
  }
 
- changeTabBillItem(type,e) {
+ changeTabBill(type,e) {
 
   // this.searchParam = '';
    this.pageTable.pageNumber = 0;
    this.pageTable.size = 10;
 
    switch (type) {
-     case 'All Items':
-       this.url = 'bill/customer-billing-items';       
-       this.getBillItemListWithPagination(null);
-       this.billItemType = type;
+     case 'Subscription Bill':
+       this.url = 'subscription/get-subscription-type-bills-by-customerid/';
+       this.getListWithPagination();
+       this.billType = type;
        break;
-     case 'Frozen SIMs':
-       this.url = 'bill/customer-billing-items';
-       
-       this.getBillItemListWithPagination(2);
-       this.billItemType = type;
+     case 'Device Bill':
+       this.url = 'subscription/get-device-type-bills-by-customerid/';
+    this.getListWithPagination();
+    this.billType = type;
        break;
-     case 'Cancelled SIMs':
-      this.url = 'bill/customer-billing-items';
-      
-       this.getBillItemListWithPagination(4);
-       this.billItemType = type;
-       break;
-     case 'Reissued SIMs':
-      this.url = 'bill/customer-billing-items';   
-      this.getBillItemListWithPagination(6);
-      this.billItemType = type;
-       break;
-     case 'Unsettled Devices':
-       
-       this.billItemType = type;
-       break;
-     default:      
-       this.billItemType = type;
+     default:
+       this.url = 'subscription/get-subscription-type-bills-by-customerid/';
+       this.getListWithPagination();
+       this.billType = type;
        break;
      }
 
@@ -401,47 +354,6 @@ selectTab(tabId: number) {
     );
   }
 
-  getBillItemListWithPagination(sim_status) {
-
-
-    const date = new Date();
-    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-
-    this.loadingIndicator = true; 
-    const obj:any ={   
-    customer_id : this.customer_id,
-    billing_start_date : moment(firstDay).format('YYYY-MM-D'),
-    billing_end_date : moment(lastDay).format('YYYY-MM-D'),
-    limit : this.pageTable.size,
-    page : this.pageTable.pageNumber + 1,
-    search_param : this.searchParam    
-    }
-    if(sim_status){
-      obj.sim_status = sim_status;
-    }
- 
-    this._service.get(this.url,obj).subscribe(res => {
-
-      if (!res) {
-        this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
-        return;
-      }
-      this.billItemDetailList = res.results;
-        this.pageTable.totalElements = res.count;
-      this.pageTable.totalPages = Math.ceil(this.pageTable.totalElements / this.pageTable.size);
-      setTimeout(() => {
-        this.loadingIndicator = false;
-      }, 1000);
-    }, err => {
-      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
-      setTimeout(() => {
-        this.loadingIndicator = false;
-      }, 1000);
-    }
-    );
-  }
-
 
   getBalanceLoadList() {
 
@@ -525,6 +437,58 @@ selectTab(tabId: number) {
   }
 
 
+  getSubscriptionList() {
+
+    this.loadingIndicator = true;
+    // const obj = {
+    //   limit: this.pageTable.size,
+    //   page: this.pageTable.pageNumber + 1
+    // };
+    this._service.get(this.url+this.customer_id).subscribe(res => {
+
+      if (!res) {
+        this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+        return;
+      }
+     // this.tempRows = res;
+      this.subscriptionHistoryList =  res;
+      // this.pageTable.totalElements = res.count;
+      // this.pageTable.totalPages = Math.ceil(this.pageTable.totalElements / this.pageTable.size);
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }, err => {
+      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }
+    );
+  }
+
+  getDeviceSalesList() {
+    this.activeDeviceCount = 0;
+    this._service.get(this.url+this.customer_id).subscribe(res => {
+
+      if (!res) {
+        this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+        return;
+      }
+      this.deviceSalesList =  res.results;
+      res.results.forEach(element => {
+        if(element.status == 1){
+          this.activeDeviceCount += 1;
+        }
+      });
+
+    }, err => {
+      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }
+    );
+  }
 
 
   getList() {

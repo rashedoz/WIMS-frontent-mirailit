@@ -10,7 +10,7 @@ import { Page } from '../_models/page';
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 import * as moment from 'moment';
 import { Location } from '@angular/common';
-import { BillStatus,PaymentType } from "./../_models/enums";
+import { BillStatus, PaymentType } from "./../_models/enums";
 
 @Component({
   selector: 'app-payment-collection',
@@ -24,9 +24,9 @@ export class PaymentCollectionComponent implements OnInit {
   entryFormBill: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
-  bill_id:any = null;
-  details:any = null;
-  customerObj:any = null;
+  bill_id: any = null;
+  details: any = null;
+  customerObj: any = null;
   BillStatus = BillStatus;
   PaymentType = PaymentType;
   balance = 0;
@@ -36,9 +36,9 @@ export class PaymentCollectionComponent implements OnInit {
   isbalanceDeduct = false;
   paidAmount: number = 0;
   tempPaidAmount: number = 0;
-  paymentMethodList = [{id:1,name:'CASH'},{id:2,name:'FROM BALANCE'},{id:3,name:'CARD PAYMENT'},{id:4,name:'ONLINE BANKING'}]
+  paymentMethodList = [{ id: 1, name: 'CASH' }, { id: 2, name: 'FROM BALANCE' }, { id: 3, name: 'CARD PAYMENT' }, { id: 4, name: 'ONLINE BANKING' }]
   methodList = [];
-  selectedMethod = {id:1,name:'CASH'};
+  selectedMethod = { id: 1, name: 'CASH' };
 
   grand_total = 0;
   refund_amount = 0;
@@ -54,7 +54,7 @@ export class PaymentCollectionComponent implements OnInit {
     private route: ActivatedRoute
   ) {
     this.bill_id = this.route.snapshot.params['id'];
-    if(this.bill_id) this.getBillDetails();
+    if (this.bill_id) this.getBillDetails();
   }
 
 
@@ -75,51 +75,63 @@ export class PaymentCollectionComponent implements OnInit {
   //   this._location.back();
   // }
 
-  getBillDetails(){
+  getBillDetails() {
     this.blockUI.start('Getting data...');
-    this._service.get('subscription/get-bill-detail/' + this.bill_id).subscribe(res => {
+    this._service.get('bill/generate-customer-invoice/' + this.bill_id).subscribe(res => {
       this.blockUI.stop();
       if (!res) {
         this.toastr.error(res.Msg, 'Error!', { timeOut: 2000 });
         return;
       }
       this.details = res;
-      this.grand_total = Number(this.details.bill.total_amount) - Number(this.details.bill.discount);
-      this.refund_amount = Number(this.details.bill.parent_refund_amount);
-      this.due = Number(this.details.bill.payable_amount) -  Number(this.details.bill.so_far_paid) - this.refund_amount;
-      if(this.details){
-        this._service.get('get-customer-current-balance/' + this.details.bill.customer).subscribe(
-          res => {
-            this.customerObj = res;
-
-
-
-            this.balance = res.balance;
-            // if (Number(this.customerObj.balance) == 0) {
-            //   this.isPayBalanceEnableShow = false;
-            // } else {
-            //   this.isPayBalanceEnableShow = true;
-            // }
-
-            if (Number(this.customerObj.balance) == 0) {
-              this.isPayBalanceEnableShow = false;
-              this.methodList = this.paymentMethodList.filter(x => x.id !== 2);
-            }else {
-              this.isPayBalanceEnableShow = true;
-              this.methodList = this.paymentMethodList;
-            }
-
-          },
-          err => { }
-        );
+      console.log(this.details);
+      this.balance = res.customer_balance;
+      if (Number(this.details.customer_balance) == 0) {
+        this.isPayBalanceEnableShow = false;
+        this.methodList = this.paymentMethodList.filter(x => x.id !== 2);
+      } else {
+        this.isPayBalanceEnableShow = true;
+        this.methodList = this.paymentMethodList;
       }
+
+
+      this.grand_total = Number(this.details.grand_total);
+      this.due = Number(this.details.due);
+
+
+      // if(this.details){
+      //   this._service.get('get-customer-current-balance/' + this.details.bill.customer).subscribe(
+      //     res => {
+      //       this.customerObj = res;
+
+
+
+      //       this.balance = res.balance;
+      //       // if (Number(this.customerObj.balance) == 0) {
+      //       //   this.isPayBalanceEnableShow = false;
+      //       // } else {
+      //       //   this.isPayBalanceEnableShow = true;
+      //       // }
+
+      //       if (Number(this.customerObj.balance) == 0) {
+      //         this.isPayBalanceEnableShow = false;
+      //         this.methodList = this.paymentMethodList.filter(x => x.id !== 2);
+      //       }else {
+      //         this.isPayBalanceEnableShow = true;
+      //         this.methodList = this.paymentMethodList;
+      //       }
+
+      //     },
+      //     err => { }
+      //   );
+      // }
     }, err => {
       this.blockUI.stop();
       this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
     });
   }
 
-  inputFocused(event: any){
+  inputFocused(event: any) {
     event.target.select()
   }
 
@@ -142,27 +154,27 @@ export class PaymentCollectionComponent implements OnInit {
 
   onChangePayBalance(e) {
     this.isPayBalanceEnable = e.id == 2 ? true : false;
-    let net = Number(this.details.bill.payable_amount); // - Number(this.discount);
+    let net = Number(this.details.grand_total); // - Number(this.discount);
     if (this.isPayBalanceEnable) {
       this.isbalanceDeduct = true;
-      if (Number(this.customerObj.balance) > net) {
-        if(this.due > 0){
-        this.paidAmount = this.due;
-        this.tempPaidAmount = this.due;
-        }else{
+      if (Number(this.balance) > net) {
+        if (this.due > 0) {
+          this.paidAmount = this.due;
+          this.tempPaidAmount = this.due;
+        } else {
           this.paidAmount = net;
           this.tempPaidAmount = net;
         }
 
-      } else if (Number(this.customerObj.balance) <= net) {
-        this.tempPaidAmount = Number(this.customerObj.balance);
-        this.paidAmount = Number(this.customerObj.balance);
+      } else if (Number(this.balance) <= net) {
+        this.tempPaidAmount = Number(this.balance);
+        this.paidAmount = Number(this.balance);
       }
     } else {
       this.paidAmount = 0;
-      if(this.isbalanceDeduct){
+      if (this.isbalanceDeduct) {
         this.tempPaidAmount = 0;
-        this.balance = Number(this.customerObj.balance);
+        this.balance = Number(this.balance);
       }
 
       this.isbalanceDeduct = false;
@@ -170,9 +182,9 @@ export class PaymentCollectionComponent implements OnInit {
   }
 
   onChangePaid(value) {
-    if (parseFloat(value) > this.details.bill.payable_amount) {
-      this.paidAmount = this.details.bill.payable_amount;
-      this.toastr.warning("Paid amount can't be larger then Payable Amount", 'Warning!', { timeOut: 2000 });
+    if (parseFloat(value) > this.details.due) {
+      this.paidAmount = this.details.due;
+      this.toastr.warning("Paid amount can't be greater than Due Amount", 'Warning!', { timeOut: 2000 });
     }
   }
 
@@ -187,43 +199,46 @@ export class PaymentCollectionComponent implements OnInit {
     }
     this.blockUI.start('Saving...');
     const obj = {
-      customer: this.details.bill.customer,
-      bill: this.details.bill.id,
-      transaction_type: "Payment In",
+    
+      bill: this.details.id,     
       payment_method: this.selectedMethod.id,
-      session: this.details.bill.session,
-      discount: 0,//Number(this.discount),
-      paid_amount: Number(this.paidAmount),
-      refund_amount: 0,
-      due: 0,
-      balance: 0,
-      remarks: this.remarks
+      amount_paid: Number(this.paidAmount),      
+      payment_remarks: this.remarks
     };
 
 
-
-    this._service.post('payment/save-payment', obj).subscribe(
-      data => {
-        this.blockUI.stop();
-        if (data.IsReport == "Success") {
-          this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
-          // this.modalHide();
-          //this.getBillDetails();
-
-          // this.router.navigate([]).then(result => { window.open('/bill-list', '_blank'); });
-          this.router.navigate(['customer-details/'+this.details.bill.customer]);
-
-        } else if (data.IsReport == "Warning") {
-          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-        } else {
-          this.toastr.error(data.Msg, 'Error!', { closeButton: true, disableTimeOut: true });
-        }
-      },
-      err => {
-        this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
-      }
+    this.confirmService.confirm('Do you want to collect payment now?', '','No','Yes')
+    .subscribe(
+        result => {
+            if (result) {                               
+              this._service.post('payment/save-payment', obj).subscribe(
+                data => {
+                  this.blockUI.stop();
+                  if (data.IsReport == "Success") {
+                    this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
+                
+                    this.router.navigate(['customer-details/' + this.details.customer]);
+          
+                  } else if (data.IsReport == "Warning") {
+                    this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+                  } else {
+                    this.toastr.error(data.Msg, 'Error!', { closeButton: true, disableTimeOut: true });
+                  }
+                },
+                err => {
+                  this.blockUI.stop();
+                  this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+                }
+              );
+            }
+            else{
+              this.blockUI.stop();
+          }
+        },
     );
+
+
+
 
   }
 

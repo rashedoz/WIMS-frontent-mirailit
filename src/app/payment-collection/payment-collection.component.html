@@ -1,28 +1,38 @@
 <block-ui>
 
-  <div class="card container">
+  <div class="card">
       <div class="card-block">
         <div class="row invoive-info mb-0" *ngIf="details">
-          <div class="col-md-4 col-xs-12 invoice-client-info mb-5" *ngIf="customerObj">
+          <div class="col-md-4 col-xs-12 invoice-client-info mb-5">
             <h6>Customer Information :</h6>
-            <p class="fs-14 mb-0"><b>Customer Name : {{customerObj.first_name}} {{customerObj.last_name}}</b></p>
-            <p class="fs-14 mb-0" *ngIf="customerObj.acc_number"><b>Account Number : {{customerObj.acc_number}}</b></p>
-            <p class="fs-14 mb-0" *ngIf="customerObj.email"><b>Email : {{customerObj.email}}</b></p>
-            <p class="fs-14 mb-0" *ngIf="customerObj.mobile"><b>Mobile : {{customerObj.mobile}} </b></p>
-            <p class="fs-14 mb-0" *ngIf="customerObj.telephone"><b>Telephone : {{customerObj.telephone}} </b></p>
-            <p class="fs-14 mb-0" *ngIf="customerObj.gender"><b>Gender : {{customerObj.gender == 1 ? "Male" : "Female"}} </b></p>
-            <p class="fs-14 mb-0" *ngIf="customerObj.address_one"><b>Address : {{customerObj.address_one}} {{customerObj.address_two}}</b></p>
-            <p class="fs-14 mb-0" ><b>Wholesaler : <i *ngIf="customerObj.is_wholesaler" class='icofont icofont-ui-check text-success'></i> <i *ngIf="!customerObj.is_wholesaler" class='icofont icofont-ui-close text-danger'></i> </b></p>
-            <p class="fs-14 mb-0" *ngIf="customerObj.preferred_payment_method"><b>Preferred Payment Method : {{PaymentType[customerObj.preferred_payment_method]}}</b></p>
+            <p class="fs-14 mb-0"><b>Customer Name : {{details.customer_full_name}}</b></p>
+            <p class="fs-14 mb-0" *ngIf="details.customer_acc_number"><b>Account Number : {{details.customer_acc_number}}</b></p>
+            <p class="fs-14 mb-0" *ngIf="details.customer_email"><b>Email : {{details.customer_email}}</b></p>
+            <p class="fs-14 mb-0" *ngIf="details.customer_mobile"><b>Mobile : {{details.customer_mobile}} </b></p>
+            <p class="fs-14 mb-0" *ngIf="details.customer_telephone"><b>Telephone : {{details.customer_telephone}} </b></p>
+            <p class="fs-14 mb-0" *ngIf="details.customer_gender"><b>Gender : {{details.customer_gender == 1 ? "Male" : "Female"}} </b></p>
+            <p class="fs-14 mb-0" *ngIf="details.customer_address_one"><b>Address : {{details.customer_address_one}} {{details.customer_address_two}}</b></p>
+            <p class="fs-14 mb-0" ><b>Wholesaler : <i *ngIf="details.customer_is_wholesaler" class='icofont icofont-ui-check text-success'></i> <i *ngIf="!details.customer_is_wholesaler" class='icofont icofont-ui-close text-danger'></i> </b></p>
+            <!-- <p class="fs-14 mb-0" *ngIf="details.preferred_payment_method"><b>Preferred Payment Method : {{PaymentType[details.preferred_payment_method]}}</b></p> -->
             <p class="fs-14 mb-0"><b>{{isbalanceDeduct ? 'Remaining Balance :':'Balance :'}} <span class="text-primary font-weight-bold">{{balance - tempPaidAmount}}</span></b></p>
 
           </div>
-          <div class="col-md-4 col-xs-12 offset-md-4">
+          <div class="col-md-4 col-xs-12">
+            <div class="row mr-1 d-flex justify-content-center text-center">
+              <div class="col-12">
+                <h6>Invoice No:</h6>
+                <p class="fs-14 mb-0"><b>{{details.bill_no}}</b></p>
+              
+              </div>
+            </div>
+
+          </div>
+          <div class="col-md-4 col-xs-12">
             <div class="row float-right mr-1">
               <div class="col-12">
-                <h6>Bill Information :</h6>
-                <p class="fs-14 mb-0"><b>Bill Id : {{details.bill.id}}</b></p>
-                <p class="fs-14 mb-0"><b>Session : {{details.bill.session}}</b></p>
+                <h6>Invoice Session :</h6>
+                <p class="fs-14 mb-0"><b>{{details.billing_month | date:'MMMM, y'}}</b></p>
+                
               </div>
             </div>
 
@@ -31,55 +41,37 @@
         </div>
 
         <div *ngIf="details">
-        <div class="row" *ngIf="details.bill.bill_type == 'Subscription'">
+        <div class="row" >
           <div class="col-sm-12">
             <div class="table-responsive">
               <table class="table  invoice-detail-table">
                 <thead>
                   <tr class="thead-default">
-                    <th width="5%">#SL</th>
+                    <th width="1%">#SL</th>
                     <th width="15%">SIM CID No</th>
                     <th width="20%">SIM ICCID No</th>
                     <th width="15%">Phone Number</th>
-                    <th width="15%">Plan</th>
+                    <th width="15%">IMEI</th>
+                    <th width="17%">Package Name</th>
+                    <th width="17%">Package Des.</th>
+                    <th width="15%">Sale Platform</th>
                     <th width="15%">Amount</th>
-                    <th width="15%">Discount</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr *ngFor="let item of details.bill_items; let i = index">
                     <td>{{i+1}}</td>
-                    <td>{{item.sim.CID_no}}</td>
-                    <td>{{item.sim.ICCID_no}}</td>
-                    <td>{{item.sim.phone_number}}</td>
-                    <td>{{item.plan.plan}}</td>
-                    <td>{{item.plan.plan_unit_price}}</td>
-                    <td>{{item.plan.plan_unit_price - item.amount}}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <div class="row" *ngIf="details.bill.bill_type == 'Device Sales'">
-          <div class="col-sm-12">
-            <div class="table-responsive">
-              <table class="table  invoice-detail-table">
-                <thead>
-                  <tr class="thead-default">
-                    <th width="5%">#SL</th>
-                    <th width="15%">DID No</th>
-                    <th width="25%">IMEI</th>
-                    <th width="20%" class="text-right">Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let item of details.bill_items; let i = index">
-                    <td>{{i+1}}</td>
-                    <td>{{item.device.DID_no}}</td>
-                    <td>{{item.device.IMEI}}</td>
-                    <td class="text-right">{{item.device_cost}}</td>
+                    <td>{{item.CID_no}}</td>
+                    <td>{{item.ICCID_no}}</td>
+                    <td>{{item.phone_number}}</td>
+                    <td>
+                      <span *ngIf="item.IMEI"> {{item.IMEI}}</span>
+                      <span *ngIf="!item.IMEI"> N/A </span>
+                    </td>
+                    <td>{{item.pckg_offer_name}}</td>
+                    <td>{{item.pckg_name}}</td>
+                    <td>{{item.selling_platform}}</td>
+                    <td>{{item.pckg_first_bill_amount}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -89,49 +81,57 @@
 
         </div>
 
-        <div class="row" *ngIf="details">
-          <div class="col-sm-12">
+        <div class="row mb-5" *ngIf="details">
+          <div class="col-sm-6">
+            
+            <div class="row mt-5 pt-5">
+              <div *ngIf="due > 0"  class="col-sm-12">
+                <h5 class="text-dark">NOTE</h5>
+                <p class="text-dark">You are collecting payment for the month of {{details.billing_month | date:'MMMM, y'}} </p>
+              </div>
+              <div class="col-sm-12 mt-2">
+                <h5 class="text-dark">PAYMENT STATUS</h5>
+                <p  class="text-dark" *ngIf="details.payment_status == 1"> NOT PAID </p>
+                <p  class="text-dark" *ngIf="details.payment_status == 2"> PARTIALLY PAID </p>
+                <p class="text-dark" *ngIf="details.payment_status == 3"> PAID </p>
+                <p class="text-dark" *ngIf="details.payment_status == 4"> FULLY PAID WITH REFUND </p>
+              </div>
+            </div>
+           
+
+
+          </div>
+          <div class="col-sm-6">
             <table class="table table-responsive invoice-table invoice-total">
               <tbody>
-                <tr *ngIf="details.bill.bill_type == 'Device Sales'">
-                  <th>One Time Charge :</th>
-                  <td>{{details.bill.one_time_charge}}</td>
-                </tr>
+               
                 <tr>
                   <th>Total :</th>
-                  <td>{{details.bill.total_amount}}</td>
+                  <td>{{details.total_amount}}</td>
                 </tr>
                 <tr>
                   <th>Discount (-):</th>
-                  <td>{{details.bill.discount}}</td>
+                  <td>{{details.overall_discount}}</td>
                 </tr>
                 <tr>
                   <th><h6 class="font-weight-bold">Grand Total:</h6></th>
-                  <td> <h6 class="font-weight-bold">{{grand_total}}</h6></td>
+                  <td> <h6 class="font-weight-bold">{{details.grand_total}}</h6></td>
                 </tr>
-                <tr class="text-info">
+                <tr>
                   <td>
-                    <h6 class="font-weight-bold">Paid :</h6>
+                    <h6 class="font-weight-bold">Already Paid :</h6>
                   </td>
                   <td>
-                    <h6 class="font-weight-bold">{{details.bill.so_far_paid}}</h6>
-                  </td>
-                </tr>
-                <tr *ngIf="refund_amount > 0" class="text-info">
-                  <td>
-                    <h6 class="font-weight-bold">Refund :</h6>
-                  </td>
-                  <td>
-                    <h6 class="font-weight-bold">{{refund_amount}}</h6>
+                    <h6 class="font-weight-bold">{{details.already_paid}}</h6>
                   </td>
                 </tr>
 
-                <tr *ngIf="due > 0" class="text-info">
+                <tr *ngIf="due > 0" class="text-danger">
                   <td>
                     <h6 class="font-weight-bold">Due :</h6>
                   </td>
                   <td>
-                    <h6 class="font-weight-bold">{{due}}</h6>
+                    <h6 class="font-weight-bold">{{details.due}}</h6>
                   </td>
                 </tr>
 
@@ -177,11 +177,12 @@
                 </tr>
 
                 <tr>
-                  <th colspan="2" *ngIf="details.bill.payable_amount">
+                  <th colspan="2" >
                     <div class="row float-right mt-3">
                       <button type="button" (click)="location.back()" class="btn btn-info waves-effect waves-light mr-2"> <i class="icofont icofont-arrow-left"></i> Back
                       </button>
-                        <button *ngIf="details.bill.status == 1 || details.bill.status == 2" (click)="onFormSubmitBill()" type="button" class="btn btn-primary btn-print-invoice waves-effect waves-light m-r-20">  Receive Payment
+                        <button *ngIf="due > 0" (click)="onFormSubmitBill()" type="button" class="btn btn-primary btn-print-invoice waves-effect waves-light m-r-20">  
+                          CONFIRM & SUBMIT
                         </button>
 
 

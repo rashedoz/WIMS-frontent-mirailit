@@ -253,68 +253,9 @@
                               </div>
                               </div>
                             </div>
+                          </div>                         
 
-
-                          </div>
-                          
-
-                        </td>
-
-                        <!-- <th class="p-2">
-                              <ng-select [clearable]="true" appendTo="body" (change)="onSIMChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim').errors}" formControlName="sim" [clearOnBackspace]="false"
-                              [items]="simsBuffer"
-                              [virtualScroll]="true"
-                              [dropdownPosition]="'bottom'"
-                              [loading]="loadingSIM"
-                              [typeahead]="simsInput$"
-                              (scroll)="onScrollSIM($event)"
-                              (scrollToEnd)="onScrollToEndSIM()"
-                              bindLabel="CID_no" placeholder="Search by sim cid">
-                              <ng-template ng-header-tmp>
-                                <small class="form-text text-muted">Loaded {{simsBuffer.length}} of {{pageSIM.totalElements}}</small>
-                            </ng-template>
-
-                              <ng-template ng-option-tmp let-item="item" let-index="index">
-                                <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no">  {{item.CID_no}} </p>
-                                <p class="card-text font-weight-bold" *ngIf="item.ICCID_no">  {{item.CID_no}} ({{item.ICCID_no}})</p>
-                            </ng-template>
-                          </ng-select>
-                              <div *ngIf="submitted && item_his.controls[i].get('sim').errors" class="error-text">
-                                <small *ngIf="item_his.controls[i].get('sim').errors.required" class="text-danger"> SIM
-                                  is required</small>
-
-                              </div>
-                            </th>
-                            <th class="p-2">
-                              <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('sim_iccid').errors}" formControlName="sim_iccid"  />
-                              <div *ngIf="submitted && item_his.controls[i].get('sim_iccid').errors" class="error-text">
-                                <small *ngIf="item_his.controls[i].get('sim_iccid').errors.required" class="text-danger"> SIM ICCID is required</small>
-
-                              </div>
-                            </th>
-                            <th class="p-2">
-                              <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('phone_number').errors}" formControlName="phone_number"  />
-                              <div *ngIf="submitted && item_his.controls[i].get('phone_number').errors" class="error-text">
-                                <small *ngIf="item_his.controls[i].get('phone_number').errors.required" class="text-danger"> Phone number is required</small>
-
-                              </div>
-                            </th>
-                            <th class="p-2">
-                              <ng-select *ngIf="planList.length > 0" [clearable]="false" appendTo="body" (change)="onPlanChange($event, item)"  [clearOnBackspace]="false" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('plan').errors}" formControlName="plan"  [items]="planList"
-                            bindLabel="plan" bindValue="id" placeholder="Select a plan"></ng-select>
-                            <div *ngIf="submitted && item_his.controls[i].get('plan').errors" class="error-text">
-                              <small *ngIf="item_his.controls[i].get('plan').errors.required" class="text-danger"> Plan is required</small>
-                            </div>
-                            </th>
-                            <th class="p-2">
-                              <input type="text"  class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('actual_amount').errors}" formControlName="actual_amount"  />
-                            <div *ngIf="submitted && item_his.controls[i].get('actual_amount').errors" class="error-text">
-                              <small *ngIf="item_his.controls[i].get('actual_amount').errors.required" class="text-danger"> Amount is required</small>
-                            </div>
-                            </th>
-                            <th class="p-2">
-                              <input type="text" numeric numericType="number" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('discount').errors}" formControlName="discount" (keyup)="onItemDiscountChange($event,item)" (focus)="inputFocused($event)" />
-                            </th> -->                   
+                        </td>                
                         <td class="p-2" style="vertical-align: inherit;text-align: center;">
                           <input type="text" readonly class="form-control-plaintext fs-28 text-center font-weight-bold " formControlName="amount">
                         </td>
@@ -333,7 +274,13 @@
                 </div>
               </div>
 
-              <div class="col-lg-4 offset-lg-8">
+              <div class="col-lg-8">
+                
+                <h5>NOTE</h5>
+                <p>You are creating an invoice for the month of {{ entryForm.get('session').value }}</p>
+                
+              </div>
+              <div class="col-lg-4">
                 <table class="table table-xs table-hover table-striped">
                   <tbody>
                     <tr>

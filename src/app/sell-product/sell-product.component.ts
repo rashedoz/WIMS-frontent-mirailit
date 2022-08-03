@@ -30,6 +30,8 @@ import { environment } from '../../environments/environment';
 import { Subject, Observable, of, concat } from 'rxjs';
 import { distinctUntilChanged, debounceTime, switchMap, tap, catchError, filter, map } from 'rxjs/operators';
 
+import { PrintService } from '../_services/print.service';
+
 @Component({
   selector: "app-sell-product",
   templateUrl: "./sell-product.component.html",
@@ -110,7 +112,8 @@ export class SellProductComponent implements OnInit {
     private _service: CommonService,
     private toastr: ToastrService,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    public printService: PrintService
   ) {
     this.page.pageNumber = 1;
     this.page.size = 50;
@@ -167,6 +170,10 @@ export class SellProductComponent implements OnInit {
     this.onSearchDevice();
 
   }
+
+
+   
+  
 
 onSearch() {
     this.input$.pipe(
@@ -787,8 +794,7 @@ private fakeServiceSIM(term) {
             pckg_recurring_bill_amount:element.package_item.pckg_recurring_bill_amount,
             pckg_cancellation_fee:element.package_item.pckg_cancellation_fee,
             pckg_refundable_deposit:element.package_item.pckg_refundable_deposit,
-            selling_platform:element.platform,
-            pckg_expiry:element.package_item.pckg_expiry ? element.package_item.pckg_expiry : null
+            selling_platform:element.platform
       });
       sim_assigned++;
       if(element.device != null) device_assigned++;
@@ -819,7 +825,21 @@ private fakeServiceSIM(term) {
                       this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
                       const customer_id = this.entryForm.value.customer;
                       this.formReset();
-                      this.router.navigate([]).then(result => { window.open('/payment-collection/'+ data.bill_id, '_blank'); });
+                      this.printService.printInv(data.bill_id);
+
+                      this.confirmService.confirm('Do you want to collect payment now?', '','NOT NOW','Yes')
+                      .subscribe(
+                          result => {
+                              if (result) {                               
+                               this.router.navigate(['/payment-collection/'+data.bill_id]);
+                              }else{
+                                this.router.navigate(['/customer-details/'+customer_id]);
+                              }
+                          },
+                      );
+
+
+                      // this.router.navigate([]).then(result => { window.open('/payment-collection/'+ data.bill_id, '_blank'); });                     
                       // this.entryForm.get('session').disable();
                       // this.entryForm.get('session').setValue(moment().format('MMM-YYYY'));
                       // this.confirmService.confirm('Do You Want To Sell Device?', '','Close','Sell Device')
