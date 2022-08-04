@@ -47,3 +47,14 @@ export enum StatusTypes {
     OK = 1,
     REISSUED = 2
   }
+
+  export enum SIMAndDeviceStatus{
+    ACTIVE = 1,
+    FROZEN = 2,
+    CANCELLED_IN_ADVANCE = 3,
+    CANCELLED = 4,
+    RETURNED = 5,
+    SENT_FOR_REISSUANCE = 6,
+    RECEIVED_FROM_MC = 7,
+    UNSETTLED = 8
+  }

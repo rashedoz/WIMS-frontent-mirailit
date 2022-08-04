@@ -34,7 +34,7 @@ export class PrintService {
 
   printInv(id) {
     this.blockUI.start('Generating invoice...');
-    this._service.get("reports/generate-customer-invoice/" + id).subscribe(res => {
+    this._service.get("bill/get-customer-invoice-detail/" + id).subscribe(res => {
 
       const doc = new jsPDF('p', 'mm', 'a4');
       //Dimension of A4 in mm: 210 × 297

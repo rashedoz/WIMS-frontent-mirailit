@@ -77,7 +77,7 @@ export class PaymentCollectionComponent implements OnInit {
 
   getBillDetails() {
     this.blockUI.start('Getting data...');
-    this._service.get('bill/generate-customer-invoice/' + this.bill_id).subscribe(res => {
+    this._service.get('bill/get-customer-invoice-detail/' + this.bill_id).subscribe(res => {
       this.blockUI.stop();
       if (!res) {
         this.toastr.error(res.Msg, 'Error!', { timeOut: 2000 });

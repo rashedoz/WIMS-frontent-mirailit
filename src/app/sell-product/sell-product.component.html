@@ -290,7 +290,7 @@
                     <tr>
                       <th>Discount</th>
                       <th class="text-right pr-1">
-                        <input  type="text" class="form-control form-control-sm text-right pr-3"
+                        <input  type="text" class="form-control form-control-sm text-right pr-3" (focus)="inputFocused($event)"
                         numeric numericType="number" (keyup)="onChangeDiscount(discount)" [(ngModel)]="discount" [ngModelOptions]="{standalone: true}"></th>                      
                     </tr>
                     <tr class="table-info" style="font-size: 20px;">

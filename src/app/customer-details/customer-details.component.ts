@@ -11,7 +11,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 // import { jsPDF } from "jspdf";
 // import 'jspdf-autotable';
 import { DatePipe } from '@angular/common';
-import { SubscriptionStatus,SubsItemsStaus,PaymentType,StatusTypes } from '../_models/enums';
+import { SubscriptionStatus,SubsItemsStaus,PaymentType,StatusTypes,SIMAndDeviceStatus } from '../_models/enums';
 import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
@@ -31,12 +31,14 @@ import * as moment from 'moment';
 export class CustomerDetailsComponent implements OnInit {
 
   entryForm: FormGroup;
+  receiveSIMForm: FormGroup;
   balanceLoadForm: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
   SubscriptionStatus = SubscriptionStatus;
   StatusTypes = StatusTypes;
   StockStatus = StockStatus;
+  SIMAndDeviceStatus = SIMAndDeviceStatus;
   PaymentType = PaymentType;
   page = new Page();
   pageTable = new Page();
@@ -100,17 +102,22 @@ export class CustomerDetailsComponent implements OnInit {
   @ViewChild('tablePaymentDetailsList', { static: false }) tablePaymentDetailsList: any;
   @ViewChild('tableDeviceSalesHistory', { static: false }) tableDeviceSalesHistory: any;
   @ViewChild('billItemsDetailTabs', { static: false }) billItemsDetailTabs: any;
+  @ViewChild('billDetailTabs', { static: false }) billDetailTabs: any;
 
   rowItems = [];
   methodListWithoutFrom = [{"id":1,"name":"CASH"},{"id":3,"name":"CARD_PAYMENT"},{"id":4,"name":"ONLINE_BANKING"}]
   billItemDetailList = [];
+  billDetailList = [];
   paymentDetailList = [];
   deviceSalesList = [];
 
   activeDeviceCount = 0;
 
-  billType = '';
-  billItemType = '';
+  billType = 'Unpaid';
+  billItemType = 'All Items';
+  simBillItemStatus = null;
+  deviceBillItemStatus = null;
+  simObj = null;
 
   constructor(
     private confirmService: ConfirmService,
@@ -147,16 +154,23 @@ export class CustomerDetailsComponent implements OnInit {
     }
 
     this.url = 'bill/customer-billing-items';       
-    this.getBillItemListWithPagination(null);
+    this.getBillItemListWithPagination();
 
     this.balanceLoadForm = this.formBuilder.group({
       amount: [null, [Validators.required]],
       payment_method: [null, [Validators.required]]
     });
 
+    this.receiveSIMForm = this.formBuilder.group({
+      id: [null, [Validators.required]],    
+      ICCID_no: [null, [Validators.required]],    
+    });
+
   }
 
-
+  get rs() {
+    return this.receiveSIMForm.controls;
+  }
   get b() {
     return this.balanceLoadForm.controls;
   }
@@ -208,35 +222,20 @@ selectTab(tabId: number) {
     this.searchParam = '';
     this.rowItems = [];
     switch (type) {
-    //   case 'Basic Details':
-    //     this.url = 'get-user-detail/';
-    //     this.getCustomer();
-    //     break;
-    //   case 'Subscription Details':
-    //     this.url = 'subscription/get-subscription-list-by-customer-id/';
-    //  this.getSubscriptionList();
-    //     break;
-    //   case 'Device Sales Details':
-    //     this.url = 'subscription/get-customer-current-device-history/';
-    //  this.getDeviceSalesList();
-    //     break;
-    //   case 'Due Details':
-    //     this.url = 'get-user-detail/';
-    //     this.getCustomer();
-    //     break;
       case 'Bills Items':  
       this.url = 'bill/customer-billing-items';   
-      this.getBillItemListWithPagination(null);
-      this.billItemType = 'All Items';
+      this.getBillItemListWithPagination();
+       this.billItemType = 'All Items';
        this.billItemsDetailTabs.tabs[0].active = true;
         break;
       case 'Bills Details':
-        this.url = 'subscription/get-subscription-type-bills-by-customerid/';
-       this.getListWithPagination();
-     //  this.billDetailTabs.tabs[0].active = true;
+        this.url = 'bill/get-bill-list';
+        this.getBillDetailsListWithPagination();
+        this.billType = 'Unpaid';
+        this.billDetailTabs.tabs[0].active = true;
         break;
       case 'Payment Details':
-        this.url = 'payment/get-payment-list-by-customerid/';
+        this.url = 'payment/get-payment-list';
      this.getListWithPagination();
         break;
       case 'Balance':
@@ -258,37 +257,76 @@ selectTab(tabId: number) {
       }
  }
 
- changeTabBillItem(type,e) {
+ changeTabBillDetailsItem(type,e) {
 
   // this.searchParam = '';
    this.pageTable.pageNumber = 0;
    this.pageTable.size = 10;
 
    switch (type) {
+     case 'Unpaid':
+       this.url = 'bill/get-bill-list'; 
+       this.billType = type;    
+       this.getBillDetailsListWithPagination();
+      
+       break;
+     case 'Partially Paid':
+       this.url = 'bill/get-bill-list';
+       this.billType = type;
+       this.getBillDetailsListWithPagination();
+      
+       break;
+     case 'Fully Paid':
+      this.url = 'bill/get-bill-list';
+      this.billType = type;
+       this.getBillDetailsListWithPagination();
+       
+       break;
+    
+     default:      
+       this.billType = type;
+       break;
+     }
+
+}
+
+
+ changeTabBillItem(type,e) {
+
+  // this.searchParam = '';
+   this.pageTable.pageNumber = 0;
+   this.pageTable.size = 10;
+   this.simBillItemStatus = null; 
+   this.deviceBillItemStatus = null; 
+
+   switch (type) {
      case 'All Items':
-       this.url = 'bill/customer-billing-items';       
-       this.getBillItemListWithPagination(null);
+       this.url = 'bill/customer-billing-items';     
+       this.getBillItemListWithPagination();
        this.billItemType = type;
        break;
      case 'Frozen SIMs':
        this.url = 'bill/customer-billing-items';
-       
-       this.getBillItemListWithPagination(2);
+       this.simBillItemStatus = 2;
+       this.getBillItemListWithPagination();
        this.billItemType = type;
        break;
      case 'Cancelled SIMs':
       this.url = 'bill/customer-billing-items';
-      
-       this.getBillItemListWithPagination(4);
+       this.simBillItemStatus = 4;
+       this.getBillItemListWithPagination();
        this.billItemType = type;
        break;
      case 'Reissued SIMs':
-      this.url = 'bill/customer-billing-items';   
-      this.getBillItemListWithPagination(6);
+      this.url = 'bill/customer-billing-items';
+      this.simBillItemStatus = 6;   
+      this.getBillItemListWithPagination();
       this.billItemType = type;
        break;
-     case 'Unsettled Devices':
-       
+     case 'Cancelled Devices':
+      this.deviceBillItemStatus = 4; 
+      this.url = 'bill/customer-billing-items';
+      this.getBillItemListWithPagination();
        this.billItemType = type;
        break;
      default:      
@@ -333,22 +371,23 @@ selectTab(tabId: number) {
     this.getListWithPagination();
   }
 
-  paymentCheck(row,item){
-    let txt = '';
-    let url = '';
-    if(item == 1){
-      txt = 'initially';
-      url = 'payment/check-payment-receival/';
-    }else {
-      txt = 'finally';
-      url = 'payment/check-payment-receival-finally/';
-    }
+  setBillItemPageWithPagination(pageInfo) {
+    this.pageTable.pageNumber = pageInfo.offset;
+    this.getBillItemListWithPagination();
+  }
 
-     this.confirmService.confirm('Are you sure?', 'You are '+txt+' checking the payment.')
+  setBillDetailsPageWithPagination(pageInfo) {
+    this.pageTable.pageNumber = pageInfo.offset;
+    this.getBillDetailsListWithPagination();
+  }
+
+  paymentCheck(row){
+
+     this.confirmService.confirm('Are you sure?', 'You are confirming the payment.')
      .subscribe(
          result => {
              if (result) {
-               const request = this._service.patch(url + row.id, {});
+               const request = this._service.patch('payment/confirm-payment-receival/' + row.id, {});
                request.subscribe(
                  data => {
 
@@ -368,7 +407,6 @@ selectTab(tabId: number) {
                );
              }
          },
-
      );
   }
 
@@ -376,11 +414,12 @@ selectTab(tabId: number) {
 
     this.loadingIndicator = true;
     const obj = {
+      customer_id : this.customer_id,
       limit: this.pageTable.size,
       page: this.pageTable.pageNumber + 1,
       search_param: this.searchParam
     };
-    this._service.get(this.url+this.customer_id,obj).subscribe(res => {
+    this._service.get(this.url,obj).subscribe(res => {
 
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
@@ -401,24 +440,27 @@ selectTab(tabId: number) {
     );
   }
 
-  getBillItemListWithPagination(sim_status) {
+  getBillItemListWithPagination() {
 
-
-    const date = new Date();
-    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    // const date = new Date();
+    // const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    // const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
     this.loadingIndicator = true; 
     const obj:any ={   
     customer_id : this.customer_id,
-    billing_start_date : moment(firstDay).format('YYYY-MM-D'),
-    billing_end_date : moment(lastDay).format('YYYY-MM-D'),
+    // billing_start_date : moment(firstDay).format('YYYY-MM-D'),
+    // billing_end_date : moment(lastDay).format('YYYY-MM-D'),
     limit : this.pageTable.size,
     page : this.pageTable.pageNumber + 1,
     search_param : this.searchParam    
     }
-    if(sim_status){
-      obj.sim_status = sim_status;
+    if(this.simBillItemStatus){
+      obj.sim_status = this.simBillItemStatus;
+    }
+
+    if(this.deviceBillItemStatus){
+      obj.device_status = this.deviceBillItemStatus;
     }
  
     this._service.get(this.url,obj).subscribe(res => {
@@ -428,6 +470,63 @@ selectTab(tabId: number) {
         return;
       }
       this.billItemDetailList = res.results;
+        this.pageTable.totalElements = res.count;
+      this.pageTable.totalPages = Math.ceil(this.pageTable.totalElements / this.pageTable.size);
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }, err => {
+      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }
+    );
+  }
+
+  getBillDetailsListWithPagination() {
+
+    // const date = new Date();
+    // const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    // const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    
+    let status = null;
+    switch (this.billType) {
+      case 'Unpaid':
+        status = 1;
+        break;
+
+      case 'Partially Paid':
+        status = 2;
+        break;
+
+      case 'Fully Paid':
+        status = 3;
+        break;
+    
+      default:
+        break;
+    }
+
+    this.loadingIndicator = true;  
+    const obj:any ={   
+    customer_id : this.customer_id,
+    payment_status : status,
+    // billing_start_date : moment(firstDay).format('YYYY-MM-D'),
+    // billing_end_date : moment(lastDay).format('YYYY-MM-D'),
+    limit : this.pageTable.size,
+    page : this.pageTable.pageNumber + 1,
+    search_param : this.searchParam    
+    }
+    
+ 
+    this._service.get(this.url,obj).subscribe(res => {
+
+      if (!res) {
+        this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+        return;
+      }
+      this.billDetailList = res.results;
         this.pageTable.totalElements = res.count;
       this.pageTable.totalPages = Math.ceil(this.pageTable.totalElements / this.pageTable.size);
       setTimeout(() => {
@@ -523,8 +622,6 @@ selectTab(tabId: number) {
     );
 
   }
-
-
 
 
   getList() {
@@ -630,7 +727,6 @@ selectTab(tabId: number) {
   }
 
 
-
   onChangePayBalance(e) {
     this.isPayBalanceEnable = e.id == 2 ? true : false;
     let net = Number(this.newTotal); // - Number(this.discount);
@@ -653,7 +749,6 @@ selectTab(tabId: number) {
       this.isbalanceDeduct = false;
     }
   }
-
 
 
   modalHide() {
@@ -695,8 +790,138 @@ selectTab(tabId: number) {
     );
 
     this.modalRef = this.modalService.show(template, this.modalConfig);
-
   }
+
+  modalHideSIMRecieve() {
+    this.modalRef.hide();
+    this.simObj = null;
+    this.submitted = false;
+    this.receiveSIMForm.reset();
+  }
+
+  openModalSIMRecieve(item, template: TemplateRef<any>) {
+    this.simObj = item;
+    this.receiveSIMForm.controls['id'].setValue(item.id);
+    this.modalRef = this.modalService.show(template, this.modalConfig);
+  }
+
+
+  onSubmitSIMReceive(){  
+    this.submitted = true;
+    if (this.receiveSIMForm.invalid) {
+      return;
+    }
+    const obj = {      
+      ICCID_no:this.receiveSIMForm.value.ICCID_no.trim()
+    };
+
+    this.confirmService.confirm('Are you sure?', 'You are receiving this sim from mother company.')
+    .subscribe(
+        result => {
+            if (result) { 
+              this.blockUI.start('Saving...');   
+              const request = this._service.patch('bill/receive-sim-from-mother-company/'+this.receiveSIMForm.value.id, obj);
+              request.subscribe(
+                data => {
+                  this.blockUI.stop();
+                  if (data.IsReport == "Success") {
+                    this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+                    this.modalHideSIMRecieve();
+                    this.getBillItemListWithPagination();
+                  } else if (data.IsReport == "Warning") {
+                    this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+                  } else {
+                    this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+                  }
+                },
+                err => {
+                  this.blockUI.stop();
+                  this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+                }
+              );
+            }
+        },
+    );
+  }
+
+
+  onSubmitAction(type,action,row){    
+    let url = '';
+    let txt = '';
+    if(type == 'sim'){
+      switch (action) {
+        case 'freeze':
+          url = 'bill/freeze-unfreeze-billing-item/'+row.id;
+          txt = 'You are going to freeze this sim.';
+          break;
+        case 'unfreeze':
+          url = 'bill/freeze-unfreeze-billing-item/'+row.id;
+          txt = 'You are going to unfreeze this sim.';
+          break;
+        case 'advance-cacellation':
+          url = 'bill/cancel-billing-items-in-advance/'+row.id;
+          txt = 'You are going to cancel this sim in advance. The sim will not appear next month.';
+          break;
+        case 'undo-cacellation':
+          url = 'bill/undo-billing-items-cacellation/'+row.id;
+          txt = 'You are reverting your decision.';
+          break;
+        case 'return':
+          url = 'bill/return-sim-to-stock/'+row.id;
+          txt = 'The sim will be added to your stock.';
+          break;
+        case 'reissue':
+          url = 'bill/send-sim-for-reissuance/'+row.id;
+          txt = 'You are sending this sim for reissuance.';
+          break;
+        case 'receive':         
+          url = 'bill/receive-sim-from-mother-company/'+row.id;
+          txt = 'You are receiving this sim from mother company.';
+          break;
+      
+        default:
+          break;
+      }
+    }else{
+      switch (action) {
+        case 'return':
+          url = 'bill/return-device-to-stock/'+row.id;
+          txt = 'This device will be added to your stock.';
+          break;
+      
+        default:
+          break;
+      }
+    }
+    
+    this.blockUI.start('Saving...');
+    this.confirmService.confirm('Are you sure?', txt)
+    .subscribe(
+        result => {
+            if (result) {    
+              const request = this._service.patch(url, {});
+              request.subscribe(
+                data => {
+                  this.blockUI.stop();
+                  if (data.IsReport == "Success") {
+                    this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+                    this.getBillItemListWithPagination();
+                  } else if (data.IsReport == "Warning") {
+                    this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+                  } else {
+                    this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+                  }
+                },
+                err => {
+                  this.blockUI.stop();
+                  this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+                }
+              );
+            }
+        },
+    );
+  }
+
 
 
   modalHideLoadBalance() {
