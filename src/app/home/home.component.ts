@@ -59,7 +59,9 @@ export class HomeComponent implements OnInit {
     this.getSIMCount();
     this.getDeviceCount();
     this.getBillCount();
-    this.getCustomerDueList();
+   // this.getCustomerDueList();
+
+   
     // this.getCourseEnrollmentCount();
 
     // this.http.get<any[]>('https://jsonplaceholder.typicode.com/photos').subscribe(photos => {

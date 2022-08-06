@@ -53,7 +53,7 @@
                     <th width="15%">Phone Number</th>
                     <th width="15%">IMEI</th>
                     <th width="17%">Package Name</th>
-                    <th width="17%">Package Des.</th>
+                    <th width="17%">Note(s)</th>
                     <th width="15%">Sale Platform</th>
                     <th width="15%">Amount</th>
                   </tr>
@@ -68,8 +68,11 @@
                       <span *ngIf="item.IMEI"> {{item.IMEI}}</span>
                       <span *ngIf="!item.IMEI"> N/A </span>
                     </td>
-                    <td>{{item.pckg_offer_name}}</td>
                     <td>{{item.pckg_name}}</td>
+                    <td>
+                      <span *ngIf="item.pckg_advance_pmnt_desc && item.pckg_first_bill_amount == 0"> {{item.pckg_advance_pmnt_desc}}</span>
+                      <span *ngIf="!item.pckg_advance_pmnt_desc"> -- </span>
+                    </td>
                     <td>{{item.selling_platform}}</td>
                     <td>{{item.pckg_first_bill_amount}}</td>
                   </tr>

@@ -56,6 +56,7 @@ export class SellProductComponent implements OnInit {
   btnSaveText = "CONFIRM & CREATE INVOICE";
 
   modalConfig: any = { class: "gray modal-md", backdrop: "static" };
+  modalConfigLg: any = { class: "gray modal-lg", backdrop: "static" };
   modalRef: BsModalRef;
 
   page = new Page();
@@ -73,6 +74,8 @@ export class SellProductComponent implements OnInit {
   deviceList: Array<any> = [];
   platformList: Array<any> = [];
   remarks = '';
+
+  packageObj = null;
 
 // for customer
   selectedCustomer = null;
@@ -595,7 +598,6 @@ private fakeServiceSIM(term) {
   initItemHistory() {
     return this.formBuilder.group({
       package: [null, [Validators.required]],
-      package_des: [null],
       package_item: [null],
       has_device_dependency : [true],
       platform: [null, [Validators.required]],
@@ -721,7 +723,6 @@ private fakeServiceSIM(term) {
       console.log(e);
       
        item.controls["package_item"].setValue(e);      
-       item.controls["package_des"].setValue(e.pckg_name);
        item.controls["plan"].setValue(e.plan);
        item.controls["has_device_dependency"].setValue(e.has_device_dependency);
        if(e.has_device_dependency){
@@ -750,8 +751,7 @@ private fakeServiceSIM(term) {
     }else if(value == ''){
       this.discount = 0;
     }else {
-      this.discount = Number(value);
-      this.grandTotal = this.subTotal - this.discount;
+      this.discount = Number(value);     
     }
   }
 
@@ -800,7 +800,7 @@ private fakeServiceSIM(term) {
       if(element.device != null) device_assigned++;
     });
 
-
+    this.grandTotal = this.subTotal - this.discount;
     const obj = {
       customer:this.entryForm.value.customer,
       total_sim_assigned:sim_assigned,
@@ -966,6 +966,16 @@ private fakeServiceSIM(term) {
   openModalCustomer(template: TemplateRef<any>) {
     this.RegistrerForm.controls['customerType'].setValue('Wholesaler');
     this.modalRef = this.modalService.show(template, this.modalConfig);
+  }
+
+  modalHidePackageDetails() {
+    this.modalRef.hide();
+    this.packageObj = null;
+  }
+
+  openModalPackageDetails(template: TemplateRef<any>,row) {
+    this.packageObj = row;
+    this.modalRef = this.modalService.show(template, this.modalConfigLg);
   }
 
 

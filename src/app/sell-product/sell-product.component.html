@@ -91,41 +91,47 @@
                     <thead>
                       <tr>
                         <th style="padding: 0.rem 2rem;" width="1%" scope="col">Sl</th>
-                        <th width="61%" scope="col">Product</th>
+                        <th width="66%" scope="col">Product</th>
                         <th width="8%" scope="col">Amount</th>
-                        <th width="10%" scope="col">Action</th>
+                        <th width="5%" scope="col">Action</th>
                       </tr>
                     </thead>
                     <tbody formArrayName="itemHistory" *ngFor="let item of itemFormArray; let i = index;">
-                      <tr [formGroupName]="i">
+                      <tr [formGroupName]="i" class="tr-border-bottom">
                         <td class="p-2" style="vertical-align: inherit;text-align: center;">
                           <label for="package_name" class="fs-12 text-center font-weight-bold ">{{i + 1}}</label>
                         </td>
 
                         <td class="p-2">
                           <div class="row">
-                          <div class="col-md-4">
+                          <div class="col-md-6">
                             <div class="form-group">
                               <label for="package_name" class="font-weight-bold">Package Name</label>
-                              <div class="d-flex flex-row">
-                                  <ng-select *ngIf="packageList.length > 0" [clearable]="false" appendTo="body"
+                              <div class="row">
+                                <div class="col-sm-11  pr-0">
+                                  <ng-select [dropdownPosition]="'bottom'" *ngIf="packageList.length > 0" [clearable]="false" appendTo="body"
                                     (change)="onPackageChange($event, item)" [clearOnBackspace]="false"
                                     [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('package').errors}"
-                                    formControlName="package" [items]="packageList" bindLabel="pckg_offer_name" bindValue="id"
+                                    formControlName="package" [items]="packageList" bindLabel="pckg_name" bindValue="id"
                                     placeholder="Select a package"></ng-select>
-                                    <ng-template #tolTemplate>
+                                    <!-- <ng-template #tolTemplate>
                                       <p>Device Deposite : {{item_his.controls[i].get('package_item').value.device_deposit}}</p>
                                       <p>Initial Package Fee : {{item_his.controls[i].get('package_item').value.pckg_initial_fee}}</p>
-                                      <!-- <p>Shipping Charge : {{item_his.controls[i].get('package_item').value.pckg_shipping_charge}}</p> -->
+                                      <p>Shipping Charge : {{item_his.controls[i].get('package_item').value.pckg_shipping_charge}}</p>
                                       <p>Price : {{item_his.controls[i].get('package_item').value.pckg_price}}</p>
                                       <p>Initial Discount : {{item_his.controls[i].get('package_item').value.pckg_initial_discount}}</p>
                                       <p>First Bill Amount : {{item_his.controls[i].get('package_item').value.pckg_first_bill_amount}}</p>
                                       <p>Recurring Bill Amount : {{item_his.controls[i].get('package_item').value.pckg_recurring_bill_amount}}</p>
                                      
-                                    </ng-template>
-                                  <button *ngIf="item_his.controls[i].get('package_item').value" type="button" class="btn btn-primary btn-mini" [tooltip]="tolTemplate" >
-                                  <i class="icofont-question"></i>
-                                </button>
+                                    </ng-template> -->
+                                </div>
+                                <div class="col-sm-1 pl-0">
+                                  <button (click)="openModalPackageDetails(templatePackageDetails,item_his.controls[i].get('package_item').value)" *ngIf="item_his.controls[i].get('package_item').value" type="button" class="btn btn-primary btn-sm" >
+                                    <i class="icofont-question"></i>
+                                  </button>
+                                </div>
+                                
+                                  
 
                                 </div>
                                
@@ -135,29 +141,58 @@
                               </div>  
                             </div>
                           </div>
-                          <div class="col-md-5">
+                    
+                          <div class="col-md-3" *ngIf="item_his.controls[i].get('has_device_dependency').value && item_his.controls[i].get('package').value">
                             <div class="form-group">
-                              <label class="font-weight-bold">Package Description</label>                       
-                              <textarea formControlName="package_des" readonly class="form-control-plaintext fs-12" ></textarea>
+                              <label class="font-weight-bold">Device DID No</label>                       
+                          
+                              <ng-select [clearable]="true" appendTo="body" (change)="onDeviceChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('device').errors}" formControlName="device" [clearOnBackspace]="false"
+                              [items]="devicesBuffer"
+                              [virtualScroll]="true"
+                              [dropdownPosition]="'bottom'"
+                              [loading]="loadingDevice"
+                              [typeahead]="devicesInput$"
+                              (scroll)="onScrollDevice($event)"
+                              (scrollToEnd)="onScrollToEndDevice()"
+                              bindLabel="DID_no" placeholder="Search..">
+                              <ng-template ng-header-tmp>
+                                <small class="form-text text-muted">Loaded {{devicesBuffer.length}} of {{pageDevice.totalElements}}</small>
+                            </ng-template>
+
+
+
+                            <ng-template ng-option-tmp let-item="item" let-index="index">
+                              <p class="card-text font-weight-bold" *ngIf="!item.IMEI">  {{item.DID_no}} </p>
+                              <p class="card-text font-weight-bold" *ngIf="item.IMEI">  {{item.DID_no}} ({{item.IMEI}})</p>
+                          </ng-template>
+
+                          <ng-template ng-label-tmp let-item="item">
+                            <p class="card-text" *ngIf="!item.IMEI">  {{item.DID_no}} </p>
+                            <p class="card-text" *ngIf="item.IMEI">  {{item.DID_no}} ({{item.IMEI}})</p>
+                          </ng-template>
+
+
+                            </ng-select>
+                              <div *ngIf="submitted && item_his.controls[i].get('device').errors" class="error-text">
+                                <small *ngIf="item_his.controls[i].get('device').errors.required" class="text-danger"> Device is required</small>  
+                              </div>
                             </div>
                           </div>
-                          <div class="col-md-3">
+                          <div class="col-md-3" *ngIf="item_his.controls[i].get('has_device_dependency').value && item_his.controls[i].get('package').value">
                             <div class="form-group">
-                              <label class="font-weight-bold">Sell Platform</label>                          
-                              <ng-select *ngIf="platformList.length > 0" [clearable]="false" appendTo="body"   [clearOnBackspace]="false" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('platform').errors}" formControlName="platform"  [items]="platformList"
-                                bindLabel="selling_platform" bindValue="id" placeholder="Select a platform"></ng-select>
-                             
-
-                                <div *ngIf="submitted && item_his.controls[i].get('platform').errors" class="error-text">
-                                  <small *ngIf="item_his.controls[i].get('platform').errors.required" class="text-danger"> Platform
-                                    is required</small>
-                                </div>
+                              <label class="font-weight-bold">Device IMEI</label>                       
+                              <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('IMEI').errors}" formControlName="IMEI"  />
+                            <div *ngIf="submitted && item_his.controls[i].get('IMEI').errors" class="error-text">
+                              <small *ngIf="item_his.controls[i].get('IMEI').errors.required" class="text-danger"> Device IMEI is required</small>
 
                             </div>
+                            </div>
                           </div>
+
+                      
                           </div>
                           <div class="row" *ngIf="item_his.controls[i].get('package').value">
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                               <div class="form-group">
                                 <label class="font-weight-bold">SIM CID No</label>                       
                                
@@ -196,7 +231,7 @@
                                 </div>
                               </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                               <div class="form-group">
                                 <label class="font-weight-bold">Phone Number</label>                       
                                 <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('phone_number').errors}" formControlName="phone_number"  />
@@ -207,52 +242,21 @@
                               </div>
                             </div>
 
-                            <div class="col-md-2" *ngIf="item_his.controls[i].get('has_device_dependency').value">
+                            <div class="col-md-3">
                               <div class="form-group">
-                                <label class="font-weight-bold">Device DID No</label>                       
-                            
-                                <ng-select [clearable]="true" appendTo="body" (change)="onDeviceChange($event, item)" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('device').errors}" formControlName="device" [clearOnBackspace]="false"
-                                [items]="devicesBuffer"
-                                [virtualScroll]="true"
-                                [dropdownPosition]="'bottom'"
-                                [loading]="loadingDevice"
-                                [typeahead]="devicesInput$"
-                                (scroll)="onScrollDevice($event)"
-                                (scrollToEnd)="onScrollToEndDevice()"
-                                bindLabel="DID_no" placeholder="Search..">
-                                <ng-template ng-header-tmp>
-                                  <small class="form-text text-muted">Loaded {{devicesBuffer.length}} of {{pageDevice.totalElements}}</small>
-                              </ng-template>
+                                <label class="font-weight-bold">Sell Platform</label>                          
+                                <ng-select *ngIf="platformList.length > 0" [clearable]="false" appendTo="body"   [clearOnBackspace]="false" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('platform').errors}" formControlName="platform"  [items]="platformList"
+                                  bindLabel="selling_platform" bindValue="id" placeholder="Select a platform"></ng-select>
+                               
   
+                                  <div *ngIf="submitted && item_his.controls[i].get('platform').errors" class="error-text">
+                                    <small *ngIf="item_his.controls[i].get('platform').errors.required" class="text-danger"> Platform
+                                      is required</small>
+                                  </div>
   
-  
-                              <ng-template ng-option-tmp let-item="item" let-index="index">
-                                <p class="card-text font-weight-bold" *ngIf="!item.IMEI">  {{item.DID_no}} </p>
-                                <p class="card-text font-weight-bold" *ngIf="item.IMEI">  {{item.DID_no}} ({{item.IMEI}})</p>
-                            </ng-template>
-  
-                            <ng-template ng-label-tmp let-item="item">
-                              <p class="card-text" *ngIf="!item.IMEI">  {{item.DID_no}} </p>
-                              <p class="card-text" *ngIf="item.IMEI">  {{item.DID_no}} ({{item.IMEI}})</p>
-                            </ng-template>
-  
-  
-                              </ng-select>
-                                <div *ngIf="submitted && item_his.controls[i].get('device').errors" class="error-text">
-                                  <small *ngIf="item_his.controls[i].get('device').errors.required" class="text-danger"> Device is required</small>  
-                                </div>
                               </div>
                             </div>
-                            <div class="col-md-3" *ngIf="item_his.controls[i].get('has_device_dependency').value">
-                              <div class="form-group">
-                                <label class="font-weight-bold">Device IMEI</label>                       
-                                <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('IMEI').errors}" formControlName="IMEI"  />
-                              <div *ngIf="submitted && item_his.controls[i].get('IMEI').errors" class="error-text">
-                                <small *ngIf="item_his.controls[i].get('IMEI').errors.required" class="text-danger"> Device IMEI is required</small>
-
-                              </div>
-                              </div>
-                            </div>
+                        
                           </div>                         
 
                         </td>                
@@ -260,8 +264,8 @@
                           <input type="text" readonly class="form-control-plaintext fs-28 text-center font-weight-bold " formControlName="amount">
                         </td>
                         <td class="p-2"  style="vertical-align: inherit;text-align: center;">
-                          <button class="btn btn-success btn-mini pull-right mr-3" title="Add new item"
-                            (click)="addItemHistory()"><i class="icofont-plus "></i> Add More</button>
+                          <button class="btn btn-success btn-mini pull-right mr-2" title="Add new item"
+                            (click)="addItemHistory()"><i class="icofont-plus "></i></button>
                           <button *ngIf="itemFormArray.length > 1" class="btn btn-danger mr-1 btn-mini pull-right"
                             title="Delete this item" (click)="removeItemHistory(i)"> <i class="icofont-ui-delete"></i>
                           </button>
@@ -420,6 +424,92 @@
         <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmitCustomer()"><i
             class="icofont icofont-check-circled"></i> Add Customer</button>
 
+      </div>
+
+    </div>
+  </ng-template>
+
+  <ng-template #templatePackageDetails>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left"> Package Details</h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHidePackageDetails()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+      <app-card>
+        <div class="table-responsive">
+          <table class="table table-sm" *ngIf="packageObj">
+            <tbody>
+              <tr>
+                <th scope="row">Package Name</th>
+                <td>{{packageObj.pckg_name}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Offer Type</th>
+                <td>{{packageObj.pckg_offer_name}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Plan</th>
+                <td>{{packageObj.plan}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Comes with Device</th>
+                <td>
+                  <span *ngIf="packageObj.has_device_dependency" >Yes</span>
+                  <span *ngIf="!packageObj.has_device_dependency" >No</span>
+                </td>
+              </tr>
+              <tr *ngIf="packageObj.has_device_dependency">
+                <th scope="row">Device Charge / Deposit</th>
+                <td>{{packageObj.device_deposit}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Initial Fee</th>
+                <td>{{packageObj.pckg_initial_fee}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Shipping Charge</th>
+                <td>{{packageObj.pckg_shipping_charge}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Price</th>
+                <td>{{packageObj.pckg_price}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Inital Discount</th>
+                <td>{{packageObj.pckg_initial_discount}}</td>
+              </tr>
+              <tr>
+                <th scope="row">1st Bill Amount</th>
+                <td>{{packageObj.pckg_first_bill_amount}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Recurring Bill Amount </th>
+                <td>{{packageObj.pckg_recurring_bill_amount}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Cancellation Fee </th>
+                <td>{{packageObj.pckg_cancellation_fee}}</td>
+              </tr>
+              <tr *ngIf="packageObj.has_device_dependency">
+                <th scope="row">Refundable Deposit </th>
+                <td>{{packageObj.pckg_refundable_deposit}}</td>
+              </tr>
+              <tr *ngIf="packageObj.has_device_dependency">
+                <th scope="row">Duration </th>
+                <td>{{packageObj.pckg_duration_name}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </app-card>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+
+        <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHidePackageDetails()"> <i
+            class="icofont icofont-close"></i> Close</button>
       </div>
 
     </div>

@@ -136,37 +136,19 @@ export class PaymentCollectionComponent implements OnInit {
   }
 
 
-  // onChangePayBalance(e) {
-  //   this.isPayBalanceEnable = e;
-  //   let net = Number(this.details.bill.payable_amount); // - Number(this.discount);
-  //   if (e) {
-  //     if (Number(this.customerObj.balance) > net) {
-  //       this.paidAmount = net;
-  //       this.tempPaidAmount = net;
-  //     } else if (Number(this.customerObj.balance) <= net) {
-  //       this.paidAmount = Number(this.customerObj.balance);
-  //     }
-  //   }else {
-  //     this.paidAmount = 0;
-  //     this.tempPaidAmount = this.tempPaidAmount - net;
-  //   }
-  // }
 
   onChangePayBalance(e) {
     this.isPayBalanceEnable = e.id == 2 ? true : false;
-    let net = Number(this.details.grand_total); // - Number(this.discount);
+  //  let net = Number(this.details.grand_total); // - Number(this.discount);
     if (this.isPayBalanceEnable) {
       this.isbalanceDeduct = true;
-      if (Number(this.balance) > net) {
+      if (Number(this.balance) > this.due) {
         if (this.due > 0) {
           this.paidAmount = this.due;
           this.tempPaidAmount = this.due;
-        } else {
-          this.paidAmount = net;
-          this.tempPaidAmount = net;
-        }
+        } 
 
-      } else if (Number(this.balance) <= net) {
+      } else if (Number(this.balance) <= this.due) {
         this.tempPaidAmount = Number(this.balance);
         this.paidAmount = Number(this.balance);
       }
@@ -180,6 +162,35 @@ export class PaymentCollectionComponent implements OnInit {
       this.isbalanceDeduct = false;
     }
   }
+
+  // onChangePayBalance(e) {
+  //   this.isPayBalanceEnable = e.id == 2 ? true : false;
+  //   let net = Number(this.details.grand_total); // - Number(this.discount);
+  //   if (this.isPayBalanceEnable) {
+  //     this.isbalanceDeduct = true;
+  //     if (Number(this.balance) > net) {
+  //       if (this.due > 0) {
+  //         this.paidAmount = this.due;
+  //         this.tempPaidAmount = this.due;
+  //       } else {
+  //         this.paidAmount = net;
+  //         this.tempPaidAmount = net;
+  //       }
+
+  //     } else if (Number(this.balance) <= net) {
+  //       this.tempPaidAmount = Number(this.balance);
+  //       this.paidAmount = Number(this.balance);
+  //     }
+  //   } else {
+  //     this.paidAmount = 0;
+  //     if (this.isbalanceDeduct) {
+  //       this.tempPaidAmount = 0;
+  //       this.balance = Number(this.balance);
+  //     }
+
+  //     this.isbalanceDeduct = false;
+  //   }
+  // }
 
   onChangePaid(value) {
     if (parseFloat(value) > this.details.due) {

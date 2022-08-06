@@ -20,6 +20,7 @@ import { distinctUntilChanged, debounceTime, switchMap, tap, catchError, filter,
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 import { PrintService } from '../_services/print.service';
 import * as moment from 'moment';
+import { BsDatepickerConfig, BsDaterangepickerConfig } from "ngx-bootstrap/datepicker";
 
 @Component({
   selector: 'app-customer-details',
@@ -62,7 +63,7 @@ export class CustomerDetailsComponent implements OnInit {
   customer_id;
   customerObj = null;
   customerSIMDeviceCount = null;
-
+  bsConfig: Partial<BsDaterangepickerConfig>;
   newTotal: number = 0;
   subTotal: number = 0;
   discount: number = 0;
@@ -89,7 +90,7 @@ export class CustomerDetailsComponent implements OnInit {
   //   NormalSpacing: 12
   // };
 
-
+ 
   paymentMethodList = [{id:1,name:'CASH'},{id:2,name:'FROM BALANCE'},{id:3,name:'CARD PAYMENT'},{id:4,name:'ONLINE BANKING'}]
   methodList = [];
   selectedMethod = {id:1,name:'CASH'};
@@ -118,6 +119,13 @@ export class CustomerDetailsComponent implements OnInit {
   simBillItemStatus = null;
   deviceBillItemStatus = null;
   simObj = null;
+  bsRangeValue: Date[];
+  bsPaymentRangeValue: Date[];
+  date = new Date();
+  firstDay = new Date(this.date.getFullYear(), this.date.getMonth(), 1);
+  lastDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0);
+ 
+
 
   constructor(
     private confirmService: ConfirmService,
@@ -131,7 +139,7 @@ export class CustomerDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     public printService: PrintService
   ) {
-
+     
     this.page.pageNumber = 1;
     this.page.size = 50;
 
@@ -143,6 +151,19 @@ export class CustomerDetailsComponent implements OnInit {
     window.onresize = () => {
       this.scrollBarHorizontal = (window.innerWidth < 1200);
     };
+
+    this.bsConfig = Object.assign(      
+      {
+        rangeInputFormat: 'DD/MM/YYYY',
+        adaptivePosition: true,
+        showClearButton: true, 
+        clearPosition: 'right',
+        minMode : 'day'
+      }
+    );
+    // this.bsRangeValue = [this.firstDay,this.lastDay];
+    // this.bsPaymentRangeValue = [this.firstDay,this.lastDay];
+
   }
 
 
@@ -175,8 +196,8 @@ export class CustomerDetailsComponent implements OnInit {
     return this.balanceLoadForm.controls;
   }
 
-  newPrint(row){
-    this.printService.printInv(row.id);
+  newPrint(id){
+    this.printService.printInv(id);
   }
 
 getCustomer(){
@@ -215,6 +236,9 @@ selectTab(tabId: number) {
 
   changeTab(type,e) {
 
+
+
+
    // this.searchParam = '';
     this.pageTable.pageNumber = 0;
     this.pageTable.size = 10;
@@ -223,16 +247,16 @@ selectTab(tabId: number) {
     this.rowItems = [];
     switch (type) {
       case 'Bills Items':  
-      this.url = 'bill/customer-billing-items';   
+      this.url = 'bill/customer-billing-items';       
+      this.billItemType = 'All Items';  
       this.getBillItemListWithPagination();
-       this.billItemType = 'All Items';
        this.billItemsDetailTabs.tabs[0].active = true;
         break;
       case 'Bills Details':
-        this.url = 'bill/get-bill-list';
+        this.url = 'bill/get-bill-list';  
+        this.billType = 'Unpaid';        
         this.getBillDetailsListWithPagination();
-        this.billType = 'Unpaid';
-        this.billDetailTabs.tabs[0].active = true;
+        this.billDetailTabs.tabs[0].active = true;   
         break;
       case 'Payment Details':
         this.url = 'payment/get-payment-list';
@@ -259,10 +283,9 @@ selectTab(tabId: number) {
 
  changeTabBillDetailsItem(type,e) {
 
-  // this.searchParam = '';
+   this.searchParam = '';
    this.pageTable.pageNumber = 0;
    this.pageTable.size = 10;
-
    switch (type) {
      case 'Unpaid':
        this.url = 'bill/get-bill-list'; 
@@ -360,6 +383,20 @@ selectTab(tabId: number) {
 
   }
 
+  onBillDetailsDateValueChange(e){
+    if(e){
+      this.bsRangeValue = [e[0],e[1]];
+      this.getBillDetailsListWithPagination();
+    }
+  }
+
+  onPaymentDetailsDateValueChange(e){
+    if(e){
+      this.bsPaymentRangeValue = [e[0],e[1]];
+      this.getListWithPagination();
+    }
+  }
+
 
   setPage(pageInfo) {
     this.pageTable.pageNumber = pageInfo.offset;
@@ -379,6 +416,24 @@ selectTab(tabId: number) {
   setBillDetailsPageWithPagination(pageInfo) {
     this.pageTable.pageNumber = pageInfo.offset;
     this.getBillDetailsListWithPagination();
+  }
+
+  filterSearch(e){
+    if(e){
+      this.pageTable.pageNumber = 0;
+      this.pageTable.size = 10;
+      this.searchParam = e.target.value;
+      this.getBillItemListWithPagination();
+    }
+  }
+
+    filterBillDetailsSearch(e){
+    if(e){
+      this.pageTable.pageNumber = 0;
+      this.pageTable.size = 10;
+      this.searchParam = e.target.value;
+      this.getBillDetailsListWithPagination();
+    }
   }
 
   paymentCheck(row){
@@ -413,12 +468,19 @@ selectTab(tabId: number) {
   getListWithPagination() {
 
     this.loadingIndicator = true;
-    const obj = {
+    const obj:any = {
       customer_id : this.customer_id,
       limit: this.pageTable.size,
       page: this.pageTable.pageNumber + 1,
       search_param: this.searchParam
     };
+
+    if(this.bsPaymentRangeValue){
+      obj.payment_entry_start_date = moment(this.bsPaymentRangeValue[0]).format('YYYY-MM-DD'),
+      obj.payment_entry_end_date = moment(this.bsPaymentRangeValue[1]).format('YYYY-MM-DD')
+    }
+      
+
     this._service.get(this.url,obj).subscribe(res => {
 
       if (!res) {
@@ -511,17 +573,18 @@ selectTab(tabId: number) {
     this.loadingIndicator = true;  
     const obj:any ={   
     customer_id : this.customer_id,
-    payment_status : status,
-    // billing_start_date : moment(firstDay).format('YYYY-MM-D'),
-    // billing_end_date : moment(lastDay).format('YYYY-MM-D'),
+    payment_status : status,    
     limit : this.pageTable.size,
     page : this.pageTable.pageNumber + 1,
     search_param : this.searchParam    
     }
-    
- 
-    this._service.get(this.url,obj).subscribe(res => {
 
+    if(this.bsRangeValue){
+      obj.billing_start_date = moment(this.bsRangeValue[0]).format('YYYY-MM-DD'),
+      obj.billing_end_date = moment(this.bsRangeValue[1]).format('YYYY-MM-DD')
+    }
+      
+    this._service.get(this.url,obj).subscribe(res => {
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
         return;
@@ -710,7 +773,7 @@ selectTab(tabId: number) {
       this.pageTable.pageNumber = 0;
       this.pageTable.size = 10;
       this.searchParam = e.target.value;
-      this.url = 'payment/get-payment-list-by-customerid/';
+      this.url = 'payment/get-payment-list';
       this.getListWithPagination();
     }
   }

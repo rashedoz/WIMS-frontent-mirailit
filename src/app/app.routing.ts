@@ -208,6 +208,11 @@ export const AppRoutes: Routes = [
         canActivate: [AuthGuard]
       },
       {
+        path: 'bill',
+        loadChildren: () => import('./bill/bill.module').then(m => m.BillModule),
+        canActivate: [AuthGuard]
+      },
+      {
         path: 'bill-list',
         loadChildren: () => import('./bill-list/bill-list.module').then(m => m.BillListModule),
         canActivate: [AuthGuard]
