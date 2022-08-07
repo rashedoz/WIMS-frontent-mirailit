@@ -77,6 +77,7 @@ export class CustomerDetailsComponent implements OnInit {
   isPayBalanceEnable = false;
   pageType = null;
   btnSaveText = "Save";
+
   // fontSizes: any = {
   //   HeadTitleFontSize: 18,
   //   Head2TitleFontSize: 16,
@@ -90,7 +91,10 @@ export class CustomerDetailsComponent implements OnInit {
   //   NormalSpacing: 12
   // };
 
- 
+  date = new Date();
+  firstDay = new Date(this.date.getFullYear(), this.date.getMonth(), 1);
+  lastDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0);
+
   paymentMethodList = [{id:1,name:'CASH'},{id:2,name:'FROM BALANCE'},{id:3,name:'CARD PAYMENT'},{id:4,name:'ONLINE BANKING'}]
   methodList = [];
   selectedMethod = {id:1,name:'CASH'};
@@ -119,12 +123,11 @@ export class CustomerDetailsComponent implements OnInit {
   simBillItemStatus = null;
   deviceBillItemStatus = null;
   simObj = null;
-  bsRangeValue: Date[];
+  bsBillItemRangeValue: Date[];
+  bsBillDetailsRangeValue: Date[];
   bsPaymentRangeValue: Date[];
-  date = new Date();
-  firstDay = new Date(this.date.getFullYear(), this.date.getMonth(), 1);
-  lastDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0);
- 
+
+
 
 
   constructor(
@@ -139,7 +142,7 @@ export class CustomerDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     public printService: PrintService
   ) {
-     
+
     this.page.pageNumber = 1;
     this.page.size = 50;
 
@@ -151,30 +154,33 @@ export class CustomerDetailsComponent implements OnInit {
     window.onresize = () => {
       this.scrollBarHorizontal = (window.innerWidth < 1200);
     };
-
-    this.bsConfig = Object.assign(      
-      {
-        rangeInputFormat: 'DD/MM/YYYY',
-        adaptivePosition: true,
-        showClearButton: true, 
-        clearPosition: 'right',
-        minMode : 'day'
-      }
-    );
-    // this.bsRangeValue = [this.firstDay,this.lastDay];
-    // this.bsPaymentRangeValue = [this.firstDay,this.lastDay];
-
+    // this.bsPaymentRangeValue = [];
+     // console.log([this.firstDay,this.lastDay]);
   }
 
 
 
   ngOnInit() {
+
+    this.bsConfig = Object.assign(
+
+      {
+
+        rangeInputFormat: 'DD/MM/YYYY',
+        adaptivePosition: true,
+        showClearButton: true,
+        clearPosition: 'right'
+      }
+    );
+
+    this.bsBillItemRangeValue = [this.firstDay,this.lastDay];
+
     if(this.customer_id){
       this.getCustomer();
       this.getCustomerSIMDeviceCount();
     }
 
-    this.url = 'bill/customer-billing-items';       
+    this.url = 'bill/customer-billing-items';
     this.getBillItemListWithPagination();
 
     this.balanceLoadForm = this.formBuilder.group({
@@ -183,8 +189,8 @@ export class CustomerDetailsComponent implements OnInit {
     });
 
     this.receiveSIMForm = this.formBuilder.group({
-      id: [null, [Validators.required]],    
-      ICCID_no: [null, [Validators.required]],    
+      id: [null, [Validators.required]],
+      ICCID_no: [null, [Validators.required]],
     });
 
   }
@@ -237,8 +243,8 @@ selectTab(tabId: number) {
   changeTab(type,e) {
 
 
-
-
+    this.bsBillDetailsRangeValue = [this.firstDay,this.lastDay];
+    this.bsPaymentRangeValue = [this.firstDay,this.lastDay];
    // this.searchParam = '';
     this.pageTable.pageNumber = 0;
     this.pageTable.size = 10;
@@ -246,29 +252,29 @@ selectTab(tabId: number) {
     this.searchParam = '';
     this.rowItems = [];
     switch (type) {
-      case 'Bills Items':  
-      this.url = 'bill/customer-billing-items';       
-      this.billItemType = 'All Items';  
+      case 'Bills Items':
+      this.url = 'bill/customer-billing-items';
+      this.billItemType = 'All Items';
       this.getBillItemListWithPagination();
        this.billItemsDetailTabs.tabs[0].active = true;
         break;
       case 'Bills Details':
-        this.url = 'bill/get-bill-list';  
-        this.billType = 'Unpaid';        
+        this.url = 'bill/get-bill-list';
+        this.billType = 'Unpaid';
         this.getBillDetailsListWithPagination();
-        this.billDetailTabs.tabs[0].active = true;   
+        this.billDetailTabs.tabs[0].active = true;
         break;
       case 'Payment Details':
         this.url = 'payment/get-payment-list';
      this.getListWithPagination();
         break;
+      // case 'Balance':
+      //   this.url = 'get-user-detail/';
+      //   this.getCustomer();
+      //   break;
       case 'Balance':
-        this.url = 'get-user-detail/';
-        this.getCustomer();
-        break;
-      case 'Balance Loading History':
         this.url = 'get-customer-balance-loading-history/';
-     this.getBalanceLoadList();
+        this.getBalanceLoadList();
         break;
       case 'Basic Details':
           this.url = 'get-user-detail/';
@@ -282,31 +288,31 @@ selectTab(tabId: number) {
  }
 
  changeTabBillDetailsItem(type,e) {
-
+  this.bsBillDetailsRangeValue = [this.firstDay,this.lastDay];
    this.searchParam = '';
    this.pageTable.pageNumber = 0;
    this.pageTable.size = 10;
    switch (type) {
      case 'Unpaid':
-       this.url = 'bill/get-bill-list'; 
-       this.billType = type;    
+       this.url = 'bill/get-bill-list';
+       this.billType = type;
        this.getBillDetailsListWithPagination();
-      
+
        break;
      case 'Partially Paid':
        this.url = 'bill/get-bill-list';
        this.billType = type;
        this.getBillDetailsListWithPagination();
-      
+
        break;
      case 'Fully Paid':
       this.url = 'bill/get-bill-list';
       this.billType = type;
        this.getBillDetailsListWithPagination();
-       
+
        break;
-    
-     default:      
+
+     default:
        this.billType = type;
        break;
      }
@@ -316,15 +322,16 @@ selectTab(tabId: number) {
 
  changeTabBillItem(type,e) {
 
-  // this.searchParam = '';
+  this.bsBillItemRangeValue = [this.firstDay,this.lastDay];
+   this.searchParam = '';
    this.pageTable.pageNumber = 0;
    this.pageTable.size = 10;
-   this.simBillItemStatus = null; 
-   this.deviceBillItemStatus = null; 
+   this.simBillItemStatus = null;
+   this.deviceBillItemStatus = null;
 
    switch (type) {
      case 'All Items':
-       this.url = 'bill/customer-billing-items';     
+       this.url = 'bill/customer-billing-items';
        this.getBillItemListWithPagination();
        this.billItemType = type;
        break;
@@ -342,17 +349,17 @@ selectTab(tabId: number) {
        break;
      case 'Reissued SIMs':
       this.url = 'bill/customer-billing-items';
-      this.simBillItemStatus = 6;   
+      this.simBillItemStatus = 6;
       this.getBillItemListWithPagination();
       this.billItemType = type;
        break;
      case 'Cancelled Devices':
-      this.deviceBillItemStatus = 4; 
+      this.deviceBillItemStatus = 4;
       this.url = 'bill/customer-billing-items';
       this.getBillItemListWithPagination();
        this.billItemType = type;
        break;
-     default:      
+     default:
        this.billItemType = type;
        break;
      }
@@ -383,18 +390,32 @@ selectTab(tabId: number) {
 
   }
 
+  onBillItemDateValueChange(e){
+    if(e){
+      this.bsBillItemRangeValue = [e[0],e[1]];
+    }else{
+      this.bsBillItemRangeValue = null
+    }
+    this.getBillItemListWithPagination();
+  }
+
   onBillDetailsDateValueChange(e){
     if(e){
-      this.bsRangeValue = [e[0],e[1]];
-      this.getBillDetailsListWithPagination();
+      this.bsBillDetailsRangeValue = [e[0],e[1]];
+    }else{
+      this.bsBillDetailsRangeValue = null
     }
+    this.getBillDetailsListWithPagination();
   }
 
   onPaymentDetailsDateValueChange(e){
     if(e){
       this.bsPaymentRangeValue = [e[0],e[1]];
-      this.getListWithPagination();
+    }else{
+      this.bsPaymentRangeValue = null;
     }
+      this.getListWithPagination();
+
   }
 
 
@@ -479,7 +500,7 @@ selectTab(tabId: number) {
       obj.payment_entry_start_date = moment(this.bsPaymentRangeValue[0]).format('YYYY-MM-DD'),
       obj.payment_entry_end_date = moment(this.bsPaymentRangeValue[1]).format('YYYY-MM-DD')
     }
-      
+
 
     this._service.get(this.url,obj).subscribe(res => {
 
@@ -508,14 +529,14 @@ selectTab(tabId: number) {
     // const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
     // const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
-    this.loadingIndicator = true; 
-    const obj:any ={   
+    this.loadingIndicator = true;
+    const obj:any ={
     customer_id : this.customer_id,
     // billing_start_date : moment(firstDay).format('YYYY-MM-D'),
     // billing_end_date : moment(lastDay).format('YYYY-MM-D'),
     limit : this.pageTable.size,
     page : this.pageTable.pageNumber + 1,
-    search_param : this.searchParam    
+    search_param : this.searchParam
     }
     if(this.simBillItemStatus){
       obj.sim_status = this.simBillItemStatus;
@@ -524,7 +545,13 @@ selectTab(tabId: number) {
     if(this.deviceBillItemStatus){
       obj.device_status = this.deviceBillItemStatus;
     }
- 
+
+    if(this.bsBillItemRangeValue){
+      obj.billing_start_date = moment(this.bsBillItemRangeValue[0]).format('YYYY-MM-DD'),
+      obj.billing_end_date = moment(this.bsBillItemRangeValue[1]).format('YYYY-MM-DD')
+    }
+
+
     this._service.get(this.url,obj).subscribe(res => {
 
       if (!res) {
@@ -551,7 +578,7 @@ selectTab(tabId: number) {
     // const date = new Date();
     // const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
     // const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-    
+
     let status = null;
     switch (this.billType) {
       case 'Unpaid':
@@ -565,25 +592,25 @@ selectTab(tabId: number) {
       case 'Fully Paid':
         status = 3;
         break;
-    
+
       default:
         break;
     }
 
-    this.loadingIndicator = true;  
-    const obj:any ={   
+    this.loadingIndicator = true;
+    const obj:any ={
     customer_id : this.customer_id,
-    payment_status : status,    
+    payment_status : status,
     limit : this.pageTable.size,
     page : this.pageTable.pageNumber + 1,
-    search_param : this.searchParam    
+    search_param : this.searchParam
     }
 
-    if(this.bsRangeValue){
-      obj.billing_start_date = moment(this.bsRangeValue[0]).format('YYYY-MM-DD'),
-      obj.billing_end_date = moment(this.bsRangeValue[1]).format('YYYY-MM-DD')
+    if(this.bsBillDetailsRangeValue){
+      obj.billing_start_date = moment(this.bsBillDetailsRangeValue[0]).format('YYYY-MM-DD'),
+      obj.billing_end_date = moment(this.bsBillDetailsRangeValue[1]).format('YYYY-MM-DD')
     }
-      
+
     this._service.get(this.url,obj).subscribe(res => {
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
@@ -664,13 +691,22 @@ selectTab(tabId: number) {
         if (data.IsReport == "Success") {
           this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
           this.modalHideLoadBalance();
-          if(this.pageType == 'Balance'){
+
+          // if(this.pageType == 'Balance'){
+          //   this.url = 'get-user-detail/';
+          //   this.getCustomer();
+          // }else if(this.pageType == 'BalanceHistory'){
+          //   this.url = 'get-customer-balance-loading-history/';
+          //   this.getBalanceLoadList();
+          // }
+
+          this.url = 'get-customer-balance-loading-history/';
+          this.getBalanceLoadList();
+
+          setTimeout(() => {
             this.url = 'get-user-detail/';
             this.getCustomer();
-          }else if(this.pageType == 'BalanceHistory'){
-            this.url = 'get-customer-balance-loading-history/';
-            this.getBalanceLoadList();
-          }
+          }, 500);
 
         } else if (data.IsReport == "Warning") {
           this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
@@ -869,20 +905,20 @@ selectTab(tabId: number) {
   }
 
 
-  onSubmitSIMReceive(){  
+  onSubmitSIMReceive(){
     this.submitted = true;
     if (this.receiveSIMForm.invalid) {
       return;
     }
-    const obj = {      
+    const obj = {
       ICCID_no:this.receiveSIMForm.value.ICCID_no.trim()
     };
 
     this.confirmService.confirm('Are you sure?', 'You are receiving this sim from mother company.')
     .subscribe(
         result => {
-            if (result) { 
-              this.blockUI.start('Saving...');   
+            if (result) {
+              this.blockUI.start('Saving...');
               const request = this._service.patch('bill/receive-sim-from-mother-company/'+this.receiveSIMForm.value.id, obj);
               request.subscribe(
                 data => {
@@ -908,7 +944,7 @@ selectTab(tabId: number) {
   }
 
 
-  onSubmitAction(type,action,row){    
+  onSubmitAction(type,action,row){
     let url = '';
     let txt = '';
     if(type == 'sim'){
@@ -937,11 +973,11 @@ selectTab(tabId: number) {
           url = 'bill/send-sim-for-reissuance/'+row.id;
           txt = 'You are sending this sim for reissuance.';
           break;
-        case 'receive':         
+        case 'receive':
           url = 'bill/receive-sim-from-mother-company/'+row.id;
           txt = 'You are receiving this sim from mother company.';
           break;
-      
+
         default:
           break;
       }
@@ -951,17 +987,17 @@ selectTab(tabId: number) {
           url = 'bill/return-device-to-stock/'+row.id;
           txt = 'This device will be added to your stock.';
           break;
-      
+
         default:
           break;
       }
     }
-    
+
     this.blockUI.start('Saving...');
     this.confirmService.confirm('Are you sure?', txt)
     .subscribe(
         result => {
-            if (result) {    
+            if (result) {
               const request = this._service.patch(url, {});
               request.subscribe(
                 data => {
