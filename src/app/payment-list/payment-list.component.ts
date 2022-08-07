@@ -9,7 +9,9 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
 import { PaymentType } from '../_models/enums';
 import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
-
+import { PrintService } from '../_services/print.service';
+import * as moment from 'moment';
+import { BsDatepickerConfig, BsDaterangepickerConfig } from "ngx-bootstrap/datepicker";
 
 @Component({
   selector: 'app-payment-list',
@@ -39,28 +41,54 @@ export class PaymentListComponent implements OnInit {
   ColumnMode = ColumnMode;
   scrollBarHorizontal = (window.innerWidth < 1200);
 
+  bsConfig: Partial<BsDaterangepickerConfig>;
   customer;
   customerList: Array<any> = [];
   itemList: Array<any> = [];
+
+  date = new Date();
+  firstDay = new Date(this.date.getFullYear(), this.date.getMonth(), 1);
+  lastDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0);
+
+  paymentMethodList = [{id:1,name:'CASH'},{id:2,name:'FROM BALANCE'},{id:3,name:'CARD PAYMENT'},{id:4,name:'ONLINE BANKING'}]
 
   subTotal:number =0;
   discount:number=0;
   paidAmount:number=0;
   billItem;
   searchParam = '';
+
+  bsPaymentRangeValue: Date[];
+  selectedPaymentMethod = null;
+  customerType = 'null';
+
   constructor(
     private confirmService: ConfirmService,
     private modalService: BsModalService,
     public formBuilder: FormBuilder,
     private _service: CommonService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    public printService: PrintService
   ) {
     this.page.pageNumber = 0;
     this.page.size = 10;
     window.onresize = () => {
       this.scrollBarHorizontal = (window.innerWidth < 1200);
     };
+
+    this.bsConfig = Object.assign(
+
+      {
+
+        rangeInputFormat: 'DD/MM/YYYY',
+        adaptivePosition: true,
+        showClearButton: true,
+        clearPosition: 'right'
+      }
+    );
+
+    this.bsPaymentRangeValue = [this.firstDay,this.lastDay];
 
 
   }
@@ -70,99 +98,69 @@ export class PaymentListComponent implements OnInit {
    this.getPaymentList();
   }
 
+  newPrint(id){
+    this.printService.printInv(id);
+  }
 
-
-  // getCustomerList() {
-  //   this._service.get("user-list?is_customer=true").subscribe(
-  //     (res) => {
-  //       this.customerList = res;
-  //     },
-  //     (err) => {}
-  //   );
-  // }
-
-  // onCustomerChange(e){
-  //   if(e){
-  //     this.getBillListByCustomer(e.id);
-  //   }
-  // }
 
   setPage(pageInfo) {
     this.page.pageNumber = pageInfo.offset;
     this.getPaymentList();
   }
 
-  paymentCheck(row,item){
-    let txt = '';
-    let url = '';
-    if(item == 1){
-      txt = 'initially';
-      url = 'payment/check-payment-receival/';
-    }else {
-      txt = 'finally';
-      url = 'payment/check-payment-receival-finally/';
-    }
+  paymentCheck(row){
 
-     this.confirmService.confirm('Are you sure?', 'You are '+txt+' checking the payment.')
-     .subscribe(
-         result => {
-             if (result) {
-               const request = this._service.patch(url + row.id, {});
-               request.subscribe(
-                 data => {
+    this.confirmService.confirm('Are you sure?', 'You are confirming the payment.')
+    .subscribe(
+        result => {
+            if (result) {
+              const request = this._service.patch('payment/confirm-payment-receival/' + row.id, {});
+              request.subscribe(
+                data => {
 
-                   if (data.IsReport == "Success") {
-                     this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
-                     this.getPaymentList();
-                   } else if (data.IsReport == "Warning") {
-                     this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-                   } else {
-                     this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
-                   }
-                 },
-                 err => {
+                  if (data.IsReport == "Success") {
+                    this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+                    this.getPaymentList();
+                  } else if (data.IsReport == "Warning") {
+                    this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+                  } else {
+                    this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+                  }
+                },
+                err => {
 
-                   this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
-                 }
-               );
-             }
-         },
-
-     );
-  }
+                  this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+                }
+              );
+            }
+        },
+    );
+ }
 
   getPaymentList() {
     this.loadingIndicator = true;
-    let obj;
-    if(this.searchParam){
-      obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber + 1,
-        search_param:this.searchParam
-      };
-    }else {
-      obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber + 1
-      };
-    }
+    const obj:any = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1,
+      search_param: this.searchParam
+    };
 
+    if(this.bsPaymentRangeValue){
+      obj.payment_entry_start_date = moment(this.bsPaymentRangeValue[0]).format('YYYY-MM-DD'),
+      obj.payment_entry_end_date = moment(this.bsPaymentRangeValue[1]).format('YYYY-MM-DD')
+    }
+    if(this.selectedPaymentMethod){
+      obj.payment_method = this.selectedPaymentMethod;
+    }
     this._service.get("payment/get-payment-list",obj).subscribe(
       (res) => {
-       // this.tempRows = res;
+
         this.paymentList = res.results;
         this.page.totalElements = res.count;
         this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-       // if(this.paymentList.length > 0) this.columnsWithSearch = Object.keys(this.paymentList[0]);
-
-        // this.page.totalElements = res.Total;
-        // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
         setTimeout(() => {
           this.loadingIndicator = false;
         }, 1000);
-        // const key = 'subscription';
-        // this.subscriptionList = [...new Map(this.itemList.map(item =>
-        //   [item[key], item])).values()];
       },
       (err) => {
         this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
@@ -173,28 +171,6 @@ export class PaymentListComponent implements OnInit {
     );
   }
 
-  // updateFilter(event) {
-  //   const val = event.target.value.toLowerCase();
-
-  //     // assign filtered matches to the active datatable
-  //     const temp = this.tempRows.filter(item => {
-  //       // iterate through each row's column data
-  //       for (let i = 0; i < this.columnsWithSearch.length; i++){
-  //         var colValue = item[this.columnsWithSearch[i]] ;
-  //         // if no filter OR colvalue is NOT null AND contains the given filter
-  //         if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
-  //           // found match, return true to add to result set
-  //           return true;
-  //         }
-  //       }
-  //     });
-
-  //   // update the rows
-  //   this.paymentList = temp;
-  //   // Whenever the filter changes, always go back to the first page
-  //   this.table.offset = 0;
-  // }
-
   filterSearch(e){
     if(e){
       this.page.pageNumber = 0;
@@ -202,6 +178,24 @@ export class PaymentListComponent implements OnInit {
       this.searchParam = e.target.value;
       this.getPaymentList();
     }
+  }
+
+  onPaymentDetailsDateValueChange(e){
+    if(e){
+      this.bsPaymentRangeValue = [e[0],e[1]];
+    }else{
+      this.bsPaymentRangeValue = null;
+    }
+      this.getPaymentList();
+  }
+
+  onPaymentMethodChange(e){
+    if(e){
+      this.selectedPaymentMethod = e.id;
+    }else{
+      this.selectedPaymentMethod = null;
+    }
+    this.getPaymentList()
   }
 
 

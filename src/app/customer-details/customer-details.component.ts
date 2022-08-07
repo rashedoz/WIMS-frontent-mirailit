@@ -126,7 +126,7 @@ export class CustomerDetailsComponent implements OnInit {
   bsBillItemRangeValue: Date[];
   bsBillDetailsRangeValue: Date[];
   bsPaymentRangeValue: Date[];
-
+  selectedPaymentMethod = null;
 
 
 
@@ -217,6 +217,15 @@ getCustomer(){
       //this.blockUI.stop();
     }
   );
+}
+
+onPaymentMethodChange(e){
+  if(e){
+    this.selectedPaymentMethod = e.id;
+  }else{
+    this.selectedPaymentMethod = null;
+  }
+  this.getListWithPagination()
 }
 
 getCustomerSIMDeviceCount(){
@@ -415,7 +424,6 @@ selectTab(tabId: number) {
       this.bsPaymentRangeValue = null;
     }
       this.getListWithPagination();
-
   }
 
 
@@ -500,6 +508,9 @@ selectTab(tabId: number) {
       obj.payment_entry_start_date = moment(this.bsPaymentRangeValue[0]).format('YYYY-MM-DD'),
       obj.payment_entry_end_date = moment(this.bsPaymentRangeValue[1]).format('YYYY-MM-DD')
     }
+    if(this.selectedPaymentMethod){
+      obj.payment_method = this.selectedPaymentMethod;
+    }
 
 
     this._service.get(this.url,obj).subscribe(res => {
@@ -525,15 +536,9 @@ selectTab(tabId: number) {
 
   getBillItemListWithPagination() {
 
-    // const date = new Date();
-    // const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-    // const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-
     this.loadingIndicator = true;
     const obj:any ={
     customer_id : this.customer_id,
-    // billing_start_date : moment(firstDay).format('YYYY-MM-D'),
-    // billing_end_date : moment(lastDay).format('YYYY-MM-D'),
     limit : this.pageTable.size,
     page : this.pageTable.pageNumber + 1,
     search_param : this.searchParam
@@ -574,10 +579,6 @@ selectTab(tabId: number) {
   }
 
   getBillDetailsListWithPagination() {
-
-    // const date = new Date();
-    // const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-    // const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
     let status = null;
     switch (this.billType) {

@@ -393,7 +393,7 @@
                       <div class="row">
                         <div class="col-lg-12">
                           <div class="form-group row">
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                               <input type="text"
                               placeholder="Filter by date range"
                               class="form-control"
@@ -403,10 +403,14 @@
                               [bsConfig]="bsConfig">
 
                             </div>
-                            <div class="col-sm-8">
+                            <div class="col-sm-6">
                               <input type="text" class="form-control"
                                 placeholder="Filter by bill no, payment no., payment entry person, payment confimation person"
                                 (keyup)="filterSearchPaymentDetails($event)" />
+
+                            </div>
+                            <div class="col-sm-3">
+                              <ng-select (change)="onPaymentMethodChange($event)" [clearable]="true" appendTo="body"  [clearOnBackspace]="false" [items]="paymentMethodList" bindLabel="name" bindValue="id" placeholder="Filter by payment method"></ng-select>
 
                             </div>
                           </div>
@@ -481,7 +485,7 @@
                             </ngx-datatable-column>
 
 
-                            <ngx-datatable-column [cellClass]="'text-center '" [width]="160" name="Action"
+                            <ngx-datatable-column [cellClass]="'text-center '" [width]="160" name="Confirm Payment"
                               [draggable]="false" [sortable]="false">
                               <ng-template let-row="row" ngx-datatable-cell-template>
                                 <span (click)="paymentCheck(row)" *ngIf="!row.is_payment_confirmed" class="cursor"> <i
