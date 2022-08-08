@@ -11,15 +11,17 @@
                             <h5 *ngIf="activeTable == 2"> Retailer List </h5>
                             <h5 *ngIf="activeTable == 3"> Customers with Due List </h5>
 
-                            <button class="btn btn-primary btn-sm mr-2" [ngClass]="{'b-active': isbuttonActive}"
+
+
+                            <!-- <button class="btn btn-link btn-sm mr-2" [ngClass]="{'b-active': isbuttonActive}"
                                 (click)="showCustomerTable(0)">
                                 All </button>
-                            <button class="btn btn-primary btn-sm mr-2" (click)="showCustomerTable(1)">
+                            <button class="btn btn-link btn-sm mr-2" (click)="showCustomerTable(1)">
                                 Wholesaler</button>
-                            <button class="btn btn-primary btn-sm mr-2" (click)="showCustomerTable(2)">
+                            <button class="btn btn-link btn-sm mr-2" (click)="showCustomerTable(2)">
                                 Retailer</button>
-                            <button class="btn btn-primary btn-sm mr-2" (click)="showCustomerTable(3)">
-                                Customers with Due</button>
+                            <button class="btn btn-link btn-sm mr-2" (click)="showCustomerTable(3)">
+                                Customers with Due</button> -->
 
 
 
@@ -34,6 +36,16 @@
                             <!-- <span class="code-header ">use class <code>table</code> inside table element</span> -->
                         </div>
                         <div class="card-block ">
+                          <div class="row mb-3">
+                            <div class="col-lg-12">
+                              <tabset type="pills">
+                                <tab  heading="All" (selectTab)="onTabSelect(0,$event)"></tab>
+                                <tab  heading="Wholesaler" (selectTab)="onTabSelect(1,$event)"></tab>
+                                <tab  heading="Retailer" (selectTab)="onTabSelect(2,$event)"></tab>
+                                <tab  heading="Customers with Due" (selectTab)="onTabSelect(3,$event)"></tab>
+                              </tabset>
+                            </div>
+                            </div>
 
                             <div *ngIf="activeTable == 0">
                                 <div class="row">
@@ -76,18 +88,7 @@
                                                     <span title="{{ value }}"> {{ value }} </span>
                                                 </ng-template>
                                             </ngx-datatable-column>
-                                            <ngx-datatable-column [width]="100" name="Total Due" prop="total_due"
-                                                [draggable]="false" [sortable]="false">
-                                                <ng-template let-value="value" ngx-datatable-cell-template>
-                                                    <span title="{{ value }}"> {{ value }} </span>
-                                                </ng-template>
-                                            </ngx-datatable-column>
-                                            <ngx-datatable-column [width]="180" name="Total Subscribed SIMs" prop="total_subscribed_sims"
-                                                [draggable]="false" [sortable]="false">
-                                                <ng-template let-value="value" ngx-datatable-cell-template>
-                                                    <span title="{{ value }}"> {{ value }} </span>
-                                                </ng-template>
-                                            </ngx-datatable-column>
+
                                             <ngx-datatable-column [width]="200" name="Email" prop="email"
                                                 [draggable]="false" [sortable]="false">
                                                 <ng-template let-value="value" ngx-datatable-cell-template>
@@ -162,18 +163,6 @@
                                                     <span title="{{ value }}"> {{ value }} </span>
                                                 </ng-template>
                                             </ngx-datatable-column>
-                                            <ngx-datatable-column [width]="100" name="Total Due" prop="total_due"
-                                            [draggable]="false" [sortable]="false">
-                                            <ng-template let-value="value" ngx-datatable-cell-template>
-                                                <span title="{{ value }}"> {{ value }} </span>
-                                            </ng-template>
-                                        </ngx-datatable-column>
-                                        <ngx-datatable-column [width]="180" name="Total Subscribed SIMs" prop="total_subscribed_sims"
-                                            [draggable]="false" [sortable]="false">
-                                            <ng-template let-value="value" ngx-datatable-cell-template>
-                                                <span title="{{ value }}"> {{ value }} </span>
-                                            </ng-template>
-                                        </ngx-datatable-column>
                                             <ngx-datatable-column [width]="200" name="Email" prop="email"
                                                 [draggable]="false" [sortable]="false">
                                                 <ng-template let-value="value" ngx-datatable-cell-template>
@@ -250,18 +239,7 @@
                                                     <span title="{{ value }}"> {{ value }} </span>
                                                 </ng-template>
                                             </ngx-datatable-column>
-                                            <ngx-datatable-column [width]="100" name="Total Due" prop="total_due"
-                                            [draggable]="false" [sortable]="false">
-                                            <ng-template let-value="value" ngx-datatable-cell-template>
-                                                <span title="{{ value }}"> {{ value }} </span>
-                                            </ng-template>
-                                        </ngx-datatable-column>
-                                        <ngx-datatable-column [width]="180" name="Total Subscribed SIMs" prop="total_subscribed_sims"
-                                            [draggable]="false" [sortable]="false">
-                                            <ng-template let-value="value" ngx-datatable-cell-template>
-                                                <span title="{{ value }}"> {{ value }} </span>
-                                            </ng-template>
-                                        </ngx-datatable-column>
+
                                             <ngx-datatable-column [width]="200" name="Email" prop="email"
                                                 [draggable]="false" [sortable]="false">
                                                 <ng-template let-value="value" ngx-datatable-cell-template>
@@ -341,18 +319,7 @@
                                                     <span title="{{ value }}"> {{ value }} </span>
                                                 </ng-template>
                                             </ngx-datatable-column>
-                                            <ngx-datatable-column [width]="100" name="Total Due" prop="total_due"
-                                                [draggable]="false" [sortable]="false">
-                                                <ng-template let-value="value" ngx-datatable-cell-template>
-                                                    <span title="{{ value }}"> {{ value }} </span>
-                                                </ng-template>
-                                            </ngx-datatable-column>
-                                            <ngx-datatable-column [width]="180" name="Total Subscribed SIMs" prop="total_subscribed_sims"
-                                                [draggable]="false" [sortable]="false">
-                                                <ng-template let-value="value" ngx-datatable-cell-template>
-                                                    <span title="{{ value }}"> {{ value }} </span>
-                                                </ng-template>
-                                            </ngx-datatable-column>
+
                                             <ngx-datatable-column [width]="200" name="Email" prop="email"
                                                 [draggable]="false" [sortable]="false">
                                                 <ng-template let-value="value" ngx-datatable-cell-template>

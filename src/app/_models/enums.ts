@@ -16,13 +16,15 @@ export enum StatusTypes {
   export enum StockStatus {
     AVAILABLE = 1,
     SUBSCRIBED = 2,
-    RETURNED = 3,
+    SOLD = 3,
     CANCELLED = 4,
-    DAMAMGED = 5,
-    SOLD = 6,
+    RETURNED = 5,
+    SENT_FOR_REISSUANCE = 6,
     HELD = 7,
     PERMANENTLY_CANCELLED = 8
   }
+
+
 
   export enum SubscriptionStatus {
     ACTIVE = 1,

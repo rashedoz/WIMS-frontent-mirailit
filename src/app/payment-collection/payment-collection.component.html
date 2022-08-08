@@ -3,26 +3,31 @@
   <div class="card">
       <div class="card-block">
         <div class="row invoive-info mb-0" *ngIf="details">
-          <div class="col-md-4 col-xs-12 invoice-client-info mb-5">
+          <div class="col-md-4 col-xs-12 invoice-client-info mb-5" >
             <h6>Customer Information :</h6>
-            <p class="fs-14 mb-0"><b>Customer Name : {{details.customer_full_name}}</b></p>
-            <p class="fs-14 mb-0" *ngIf="details.customer_acc_number"><b>Account Number : {{details.customer_acc_number}}</b></p>
-            <p class="fs-14 mb-0" *ngIf="details.customer_email"><b>Email : {{details.customer_email}}</b></p>
-            <p class="fs-14 mb-0" *ngIf="details.customer_mobile"><b>Mobile : {{details.customer_mobile}} </b></p>
-            <p class="fs-14 mb-0" *ngIf="details.customer_telephone"><b>Telephone : {{details.customer_telephone}} </b></p>
-            <p class="fs-14 mb-0" *ngIf="details.customer_gender"><b>Gender : {{details.customer_gender == 1 ? "Male" : "Female"}} </b></p>
-            <p class="fs-14 mb-0" *ngIf="details.customer_address_one"><b>Address : {{details.customer_address_one}} {{details.customer_address_two}}</b></p>
-            <p class="fs-14 mb-0" ><b>Wholesaler : <i *ngIf="details.customer_is_wholesaler" class='icofont icofont-ui-check text-success'></i> <i *ngIf="!details.customer_is_wholesaler" class='icofont icofont-ui-close text-danger'></i> </b></p>
-            <!-- <p class="fs-14 mb-0" *ngIf="details.preferred_payment_method"><b>Preferred Payment Method : {{PaymentType[details.preferred_payment_method]}}</b></p> -->
-            <p class="fs-14 mb-0"><b>{{isbalanceDeduct ? 'Remaining Balance :':'Balance :'}} <span class="text-primary font-weight-bold">{{balance - tempPaidAmount}}</span></b></p>
+            <div class="div-pointer" (click)="gotoPage(details)">
+              <p class="fs-14 mb-0"><b>Customer Name : {{details.customer_full_name}} </b> <span>
+                <strong *ngIf="details.customer_is_wholesaler" class="label label-success"> Wholesaler</strong>
+                <strong *ngIf="!details.customer_is_wholesaler" class="label label-success"> Retailer</strong>
+              </span></p>
+              <p class="fs-14 mb-0" *ngIf="details.customer_acc_number"><b>Account Number : {{details.customer_acc_number}}</b></p>
+              <p class="fs-14 mb-0" *ngIf="details.customer_email"><b>Email : {{details.customer_email}}</b></p>
+              <p class="fs-14 mb-0" *ngIf="details.customer_mobile"><b>Mobile : {{details.customer_mobile}} </b></p>
+              <p class="fs-14 mb-0" *ngIf="details.customer_telephone"><b>Telephone : {{details.customer_telephone}} </b></p>
+              <p class="fs-14 mb-0" *ngIf="details.customer_gender"><b>Gender : {{details.customer_gender == 1 ? "Male" : "Female"}} </b></p>
+              <p class="fs-14 mb-0" *ngIf="details.customer_address_one"><b>Address : {{details.customer_address_one}} {{details.customer_address_two}}</b></p>
+            </div>
+            <p class="fs-14 mb-0"><b>{{isbalanceDeduct ? 'Remaining Balance :':'Balance :'}} <span class="text-primary font-weight-bold">{{balance - tempPaidAmount}}</span> &nbsp; <i class="div-pointer text-info cofont icofont-plus" (click)="gotoPage(details)"></i> </b></p>
 
           </div>
+
+
           <div class="col-md-4 col-xs-12">
             <div class="row mr-1 d-flex justify-content-center text-center">
               <div class="col-12">
                 <h6>Invoice No:</h6>
                 <p class="fs-14 mb-0"><b>{{details.bill_no}}</b></p>
-              
+
               </div>
             </div>
 
@@ -32,7 +37,7 @@
               <div class="col-12">
                 <h6>Invoice Session :</h6>
                 <p class="fs-14 mb-0"><b>{{details.billing_month | date:'MMMM, y'}}</b></p>
-                
+
               </div>
             </div>
 
@@ -86,7 +91,7 @@
 
         <div class="row mb-5" *ngIf="details">
           <div class="col-sm-6">
-            
+
             <div class="row mt-5 pt-5">
               <div *ngIf="due > 0"  class="col-sm-12">
                 <h5 class="text-dark">NOTE</h5>
@@ -100,14 +105,14 @@
                 <p class="text-dark" *ngIf="details.payment_status == 4"> FULLY PAID WITH REFUND </p>
               </div>
             </div>
-           
+
 
 
           </div>
           <div class="col-sm-6">
             <table class="table table-responsive invoice-table invoice-total">
               <tbody>
-               
+
                 <tr>
                   <th>Total :</th>
                   <td>{{details.total_amount}}</td>
@@ -184,7 +189,7 @@
                     <div class="row float-right mt-3">
                       <button type="button" (click)="location.back()" class="btn btn-info waves-effect waves-light mr-2"> <i class="icofont icofont-arrow-left"></i> Back
                       </button>
-                        <button *ngIf="due > 0" (click)="onFormSubmitBill()" type="button" class="btn btn-primary btn-print-invoice waves-effect waves-light m-r-20">  
+                        <button *ngIf="due > 0" (click)="onFormSubmitBill()" type="button" class="btn btn-primary btn-print-invoice waves-effect waves-light m-r-20">
                           CONFIRM & SUBMIT
                         </button>
 

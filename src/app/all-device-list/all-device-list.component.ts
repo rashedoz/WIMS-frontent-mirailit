@@ -31,6 +31,8 @@ export class AllDeviceListComponent implements OnInit {
   scrollBarHorizontal = (window.innerWidth < 1200);
 
   searchParam = '';
+  tabType = "Available";
+  status = 1;
 
   constructor(
     public formBuilder: FormBuilder,
@@ -58,12 +60,43 @@ setPage(pageInfo) {
     this.getList();
 }
 
+
+changeTab(type, e) {
+  this.searchParam = "";
+  this.page.pageNumber = 0;
+  this.page.size = 10;
+
+
+  switch (type) {
+    case "Available":
+      this.status = 1;
+      this.tabType = type;
+      this.getList();
+      break;
+    case "Sold":
+      this.status = 3;
+      this.tabType = type;
+      this.getList();
+      break;
+    case "Cancelled":
+      this.status = 4;
+      this.tabType = type;
+      this.getList();
+      break;
+    default:
+      this.getList();
+      break;
+  }
+}
+
+
   getList() {
     this.loadingIndicator = true;
     const obj = {
       limit: this.page.size,
       page: this.page.pageNumber + 1,
-      search_param:this.searchParam
+      search_param: this.searchParam,
+      status: this.status,
     };
     this._service.get('stock/get-device-list',obj).subscribe(res => {
 

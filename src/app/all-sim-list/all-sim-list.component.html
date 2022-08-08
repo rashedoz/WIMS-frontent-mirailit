@@ -1,241 +1,307 @@
 <block-ui>
-    <div class="row">
+  <div class="row">
 
+    <div class="col-lg-12">
+      <div class="row">
         <div class="col-lg-12">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card card-border-primary">
-                        <div class="card-header">
-                            <h5>SIM List </h5>
-                        </div>
-                        <div class="card-block ">
-
-                            <div class="row mb-4">
-                                <div class="col-lg-12">
-                                <tabset [justified]="false" type="pills">
-
-                                    <tab (selectTab)="changeTab('Available',$event)">
-                                        <ng-template tabHeading>
-                                            Available
-                                       </ng-template>
-                                    </tab>
-                                    <tab (selectTab)="changeTab('Subscribed',$event)">
-                                        <ng-template tabHeading>
-                                            Subscribed
-                                       </ng-template>
-                                    </tab>
-                                    <tab (selectTab)="changeTab('Cancelled',$event)">
-                                        <ng-template tabHeading>
-                                            Cancelled
-                                       </ng-template>
-                                    </tab>
-                                    <tab (selectTab)="changeTab('Permanently Cancelled',$event)">
-                                        <ng-template tabHeading>
-                                            Permanently Cancelled
-                                       </ng-template>
-                                    </tab>
-                                  </tabset>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-lg-7">
-                                  <div class="form-group row">
-                                    <div class="col-sm-12">
-                                      <input type="text" class="form-control" placeholder="Search SIM by CID No, ICCID No, Phone Number" (keyup)="filterSearch($event)" />
-
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            <div class="row ">
-                                <div class="col-lg-12 ">
-                                  <ngx-datatable #table class="material table-bordered" [scrollbarH]="true" [rows]="rows" [loadingIndicator]="loadingIndicator"
-                                  [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
-                                  rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
-                                  (page)="setPage($event)">
-
-                                  <ngx-datatable-column [width]="80" name="SIM CID No" prop="CID_no" [draggable]="false" [sortable]="false">
-                                      <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span > {{ value }} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
-
-                                  <!-- <ngx-datatable-column [width]="200" name="SIM Alias" prop="sim_auto_serial_no" [draggable]="false" [sortable]="false">
-                                      <ng-template let-row="row" ngx-datatable-cell-template>
-                                          <span > {{ row.sim_auto_serial_no }} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column> -->
-
-                                  <ngx-datatable-column [width]="100" name="ICCID No" prop="ICCID_no" [draggable]="false"
-                                      [sortable]="false">
-                                      <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
-
-                                  <ngx-datatable-column [width]="100" name="Phone Number" prop="phone_number" [draggable]="false"
-                                      [sortable]="false">
-                                      <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
-
-                                  <ngx-datatable-column [width]="80" name="Status" prop="status" [draggable]="false"
-                                      [sortable]="false">
-                                      <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span *ngIf="value === 1" > <strong class="label label-success">{{ StockStatus[value] }}</strong> </span>
-                                          <span *ngIf="value === 2" > <strong class="label label-info">{{ StockStatus[value] }}</strong> </span>
-                                          <span *ngIf="value === 3" > <strong class="label label-secondary">{{ StockStatus[value] }}</strong> </span>
-                                          <span *ngIf="value === 4" > <strong class="label label-danger">{{ StockStatus[value] }}</strong> </span>
-                                          <span *ngIf="value === 5" > <strong class="label label-danger">{{ StockStatus[value] }}</strong> </span>
-                                          <span *ngIf="value === 6" > <strong class="label label-primary">{{ StockStatus[value] }}</strong> </span>
-                                          <span *ngIf="value === 7" > <strong class="label label-warning">{{ StockStatus[value] }}</strong> </span>
-                                          <span *ngIf="value === 8" > <strong class="label label-danger">{{ StockStatus[value] }}</strong> </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
-
-                                  <!-- <ngx-datatable-column [width]="80" name="Stock Entry Date" prop="created_at" [draggable]="false"
-                                      [sortable]="false">
-                                      <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span >  {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column> -->
-
-                                  <ngx-datatable-column [width]="200" name="History" prop="id" [draggable]="false"
-                                      [sortable]="false">
-                                      <ng-template let-row="row" ngx-datatable-cell-template>
-                                          <button *ngIf="row.has_lifecycle_history" class="btn btn-info btn-mini mr-1" (click)="openModal(row, template)">
-                                            See Life Cycle History
-                                          </button>
-                                          <button *ngIf="row.has_iccid_modifying_history" class="btn btn-info btn-mini" (click)="openModalICCID(row, templateICCID)">
-                                            See ICCID History
-                                          </button>
-                                      </ng-template>
-                                  </ngx-datatable-column>
-
-                              </ngx-datatable>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5>SIM List </h5>
             </div>
-        </div>
+            <div class="card-block ">
 
+              <div class="row mb-4">
+                <div class="col-lg-12">
+                  <tabset [justified]="false" type="pills">
+
+                    <tab (selectTab)="changeTab('Available',$event)">
+                      <ng-template tabHeading>
+                        Available
+                      </ng-template>
+                    </tab>
+                    <tab (selectTab)="changeTab('Subscribed',$event)">
+                      <ng-template tabHeading>
+                        Subscribed
+                      </ng-template>
+                    </tab>
+                    <tab (selectTab)="changeTab('Cancelled',$event)">
+                      <ng-template tabHeading>
+                        Cancelled
+                      </ng-template>
+                    </tab>
+                    <tab (selectTab)="changeTab('Reissued',$event)">
+                      <ng-template tabHeading>
+                        Reissued
+                      </ng-template>
+                    </tab>
+                  </tabset>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-7">
+                  <div class="form-group row">
+                    <div class="col-sm-12">
+                      <input type="text" class="form-control" placeholder="Filter by cid, iccid no, phone number, customer name.."
+                        (keyup)="filterSearch($event)" />
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row ">
+                <div class="col-lg-12 ">
+                  <ngx-datatable #table class="material table-bordered" [scrollbarH]="true" [rows]="rows"
+                    [loadingIndicator]="loadingIndicator" [externalPaging]="true" [columnMode]="ColumnMode.force"
+                    [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [count]="page.totalElements"
+                    [offset]="page.pageNumber" [limit]="page.size" (page)="setPage($event)">
+
+                    <ngx-datatable-column [width]="80" name="SIM CID No" prop="CID_no" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="100" name="ICCID No" prop="ICCID_no" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="100" name="Phone Number" prop="phone_number" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="80" name="Status" prop="status" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span *ngIf="value == 1"> <strong class="label label-success">{{ StockStatus[value] }}</strong>
+                        </span>
+                        <span *ngIf="value == 2"> <strong class="label label-info">{{ StockStatus[value] }}</strong>
+                        </span>
+                        <span *ngIf="value == 3"> <strong
+                            class="label label-secondary">{{ StockStatus[value] }}</strong> </span>
+                        <span *ngIf="value == 4"> <strong class="label label-danger">{{ StockStatus[value] }}</strong>
+                        </span>
+                        <span *ngIf="value == 5"> <strong class="label label-danger">{{ StockStatus[value] }}</strong>
+                        </span>
+                        <span *ngIf="value == 6"> <strong class="label label-primary">{{ StockStatus[value] }}</strong>
+                        </span>
+                        <span *ngIf="value == 7"> <strong class="label label-warning">{{ StockStatus[value] }}</strong>
+                        </span>
+                        <span *ngIf="value == 8"> <strong class="label label-danger">{{ StockStatus[value] }}</strong>
+                        </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column *ngIf="tabType == 'Cancelled'" [width]="120" name="Last Customer" prop="customer_full_name" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <a [routerLink]="['/customer-details/'+row.current_owner]" routerLinkActive="router-link-active" target="_blank" > {{ row.customer_full_name }} </a>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column *ngIf="tabType == 'Subscribed'" [width]="120" name="Current Customer" prop="customer_full_name" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <a [routerLink]="['/customer-details/'+row.current_owner]" routerLinkActive="router-link-active" target="_blank" > {{ row.customer_full_name }} </a>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column *ngIf="tabType == 'Cancelled'" [width]="120" name="Last Cancelled At" prop="last_cancelled_at" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span *ngIf="!value"> -- </span>
+                        <span *ngIf="value"> {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}}</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column *ngIf="tabType == 'Reissued'" [width]="120" name="Last Reissued At" prop="last_reissued_at" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span *ngIf="!value"> -- </span>
+                        <span *ngIf="value"> {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}}</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column *ngIf="tabType == 'Available'" [width]="120" name="Last Returned At" prop="last_returned_at" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span *ngIf="!value"> -- </span>
+                       <span *ngIf="value"> {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}}</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column *ngIf="tabType == 'Available'" [width]="120" name="Last Received From MC" prop="last_received_from_mc_at" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                       <span *ngIf="!value"> -- </span>
+                       <span *ngIf="value"> {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}}</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+
+
+                    <ngx-datatable-column [width]="350" name="Action" prop="id" [draggable]="false" [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <button *ngIf="tabType == 'Cancelled'" class="btn btn-info btn-mini mr-1" (click)="onSubmitAction('reissuance',row)">
+                          Reissue
+                        </button>
+                        <button *ngIf="tabType == 'Reissued'" class="btn btn-info btn-mini mr-1" (click)="openModalSIMRecieve(row,templateSIMReceive)">
+                          Receive
+                        </button>
+                        <button *ngIf="tabType == 'Cancelled'" class="btn btn-info btn-mini mr-1" (click)="onSubmitAction('return',row)">
+                          Return
+                        </button>
+                        <button class="btn btn-info btn-mini mr-1" (click)="openModal(row, template)">
+                          See Life Cycle History
+                        </button>
+                        <button class="btn btn-info btn-mini" (click)="openModalICCID(row, templateICCID)">
+                          See ICCID History
+                        </button>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                  </ngx-datatable>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <ng-template #templateICCID>
-      <div class="modal-header " *ngIf="iccidHistory">
-          <h5 class="modal-title pull-left " id="modalTitle" *ngIf="iccidHistory.sim_details">Current ICCID No: {{iccidHistory.sim_details.ICCID_no}} | Phone Number: {{iccidHistory.sim_details.phone_number}}</h5>
-          <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideICCID()">
-              <i class="icofont icofont-close"></i>
-          </button>
-      </div>
-      <div class="modal-body pb-0" *ngIf="iccidHistory">
-          <app-card>
-            <div class="row">
+  </div>
 
+  <ng-template #templateICCID>
+    <div class="modal-header " *ngIf="iccidHistory">
+      <h5 class="modal-title pull-left " id="modalTitle" *ngIf="iccidHistory.sim_details.ICCID_no">Current ICCID No:
+        {{iccidHistory.sim_details.ICCID_no}} | Phone Number: {{iccidHistory.sim_details.phone_number}}</h5>
+
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideICCID()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body pb-0" *ngIf="iccidHistory">
+      <app-card>
+        <div class="row">
+
+          <div class="col-md-12">
+            <div class="row">
               <div class="col-md-12">
-                <div class="row">
-                  <div class="col-md-12">
-                  <div class="table-responsive">
-                      <table class="table table-xs table-hover table-bordered table-striped">
-                          <thead>
-                              <tr>
-                                  <!-- <th width="30%" scope="col">CID No</th>
+                <div class="table-responsive" *ngIf="iccidHistory.sim_iccid_modifying_history.length > 0">
+                  <table class="table table-xs table-hover table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <!-- <th width="30%" scope="col">CID No</th>
                                   <th width="30%" scope="col">Phone No</th> -->
-                                  <th width="30%" scope="col">ICCID</th>
-                                  <th width="40%" scope="col">ICCID No Modified On</th>
-                              </tr>
-                          </thead>
+                        <th width="30%" scope="col">ICCID</th>
+                        <th width="40%" scope="col">ICCID No Modified On</th>
+                      </tr>
+                    </thead>
 
-                          <tbody>
-                              <tr *ngFor="let item of iccidHistory.sim_iccid_modifying_history; let i=index">
-                                  <!-- <th>{{item.CID_no}}</th>
+                    <tbody>
+                      <tr *ngFor="let item of iccidHistory.sim_iccid_modifying_history; let i=index">
+                        <!-- <th>{{item.CID_no}}</th>
                                   <th>{{item.phone_number}}</th> -->
-                                  <th>{{item.ICCID_no}}</th>
-                                  <th>{{ item.created_at | amDateFormat:'DD-MMM-YYYY'}}</th>
+                        <th>{{item.ICCID_no}}</th>
+                        <th>{{ item.created_at | amDateFormat:'DD-MMM-YYYY'}}</th>
 
-                              </tr>
-                          </tbody>
-                      </table>
-                      </div>
-                  </div>
+                      </tr>
 
+                    </tbody>
+                  </table>
+                </div>
+                <div *ngIf="iccidHistory.sim_iccid_modifying_history.length == 0">
+                  <h4 class="text-center">No Data Found.</h4>
+                </div>
               </div>
-              </div>
-          </div>
 
-          </app-card>
-      </div>
-      <div class="modal-footer">
-          <div class="pr-4">
-              <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideICCID()"> <i
-                      class="icofont icofont-close"></i> Close</button>
+            </div>
           </div>
+        </div>
 
+      </app-card>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideICCID()"> <i
+            class="icofont icofont-close"></i> Close</button>
       </div>
+
+    </div>
   </ng-template>
-    <ng-template #template>
-      <div class="modal-header ">
-          <h4 class="modal-title pull-left " id="modalTitle"> SIM Lifecycle</h4>
-          <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
-              <i class="icofont icofont-close"></i>
-          </button>
-      </div>
-      <div class="modal-body pb-0" style="height: 550px;overflow-y: auto;">
-          <app-card>
+
+  <ng-template #template>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left " id="modalTitle"> SIM Lifecycle</h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body pb-0" style="height: 550px;overflow-y: auto;">
+      <app-card>
+        <div class="row">
+
+          <div class="col-md-12">
             <div class="row">
+              <div class="col-md-4 mb-3" *ngIf="simObj">
+                <p class="fs-14 mb-0"> SIM CID No : <b>{{simObj.CID_no}}</b></p>
+                <p class="fs-14 mb-0"> SIM ICCID No : <b>{{simObj.ICCID_no}}</b></p>
+                <p class="fs-14 mb-0"> Phone Number : <b>{{simObj.phone_number}}</b></p>
+              </div>
+
+              <div class="col-md-8">
+                <div class="form-group row">
+                  <div class="col-sm-12">
+                    <input type="text" class="form-control" placeholder="Search by customer, member, event.."
+                      (keyup)="filterSimLifecycleSearch($event)" />
+
+                  </div>
+                </div>
+              </div>
 
               <div class="col-md-12">
-                <div class="row">
-                  <div class="col-md-12">
+                <ngx-datatable class="material table-bordered" [scrollbarH]="true" [rows]="simLifecycleDetails"
+                  [loadingIndicator]="loadingIndicator" [externalPaging]="true" [columnMode]="ColumnMode.force"
+                  [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [count]="pageLifeCycle.totalElements"
+                  [offset]="pageLifeCycle.pageNumber" [limit]="pageLifeCycle.size" (page)="setLifeCyclePage($event)">
 
+                  <ngx-datatable-column [width]="150" name="Event " prop="event" [draggable]="false" [sortable]="false">
+                    <ng-template let-value="value" ngx-datatable-cell-template>
+                      <span> {{ value }} </span>
+                    </ng-template>
+                  </ngx-datatable-column>
 
-                    <ngx-datatable class="material table-bordered" [scrollbarH]="true" [rows]="simLifecycleDetails" [loadingIndicator]="loadingIndicator"
-                    [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
-                    rowHeight="auto" [count]="pageLifeCycle.totalElements" [offset]="pageLifeCycle.pageNumber" [limit]="pageLifeCycle.size"
-                    (page)="setPage($event)">
+                  <ngx-datatable-column [width]="80" name="Customer" [draggable]="false" [sortable]="false">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <span *ngIf="row.customer_full_name"> {{ row.customer_full_name }} </span>
+                    </ng-template>
+                  </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="80" name="Customer Code" prop="customer_code" [draggable]="false" [sortable]="false">
-                        <ng-template let-value="value" ngx-datatable-cell-template>
-                            <span > {{ value }} </span>
-                        </ng-template>
-                    </ngx-datatable-column>
+                  <ngx-datatable-column [width]="80" name="Member" [draggable]="false" [sortable]="false">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <span *ngIf="!row.customer_full_name"> {{ row.member_full_name }} </span>
+                    </ng-template>
+                  </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="80" name="Customer Name" prop="customer" [draggable]="false" [sortable]="false">
-                        <ng-template let-value="value" ngx-datatable-cell-template>
-                            <span > {{ value }} </span>
-                        </ng-template>
-                    </ngx-datatable-column>
-
-                    <ngx-datatable-column [width]="80" name="Issue Date" prop="issue_date" [draggable]="false" [sortable]="false">
-                        <ng-template let-value="value" ngx-datatable-cell-template>
-                            <span > {{ value | amDateFormat:'DD-MMM-YYYY'}} </span>
-                        </ng-template>
-                    </ngx-datatable-column>
-
-                    <ngx-datatable-column [width]="80" name="Status" prop="status" [draggable]="false" [sortable]="false">
-                        <ng-template let-value="value" ngx-datatable-cell-template>
-                            <span > {{SubscriptionStatus[value]}} </span>
-                        </ng-template>
-                    </ngx-datatable-column>
-
-                    <ngx-datatable-column [width]="80" name="Returned Physically" prop="id" [draggable]="false" [sortable]="false">
-                        <ng-template let-row="row" ngx-datatable-cell-template>
-                            <span *ngIf="row.status == 1"> -- </span>
-                            <span *ngIf="row.status == 2"> {{ row.is_physically_sim_returned == true ? "Yes" : "No"  }} </span>
-
-                        </ng-template>
-                    </ngx-datatable-column>
-
+                  <ngx-datatable-column [width]="80" name="Date" prop="created_at" [draggable]="false"
+                    [sortable]="false">
+                    <ng-template let-value="value" ngx-datatable-cell-template>
+                      <span> {{ value | amDateFormat:'DD-MMM-YYYY'}} </span>
+                    </ng-template>
+                  </ngx-datatable-column>
 
 
                 </ngx-datatable>
 
 
-                  <!-- <div class="table-responsive">
+                <!-- <div class="table-responsive">
                       <table class="table table-xs table-hover table-bordered table-striped">
                           <thead>
                               <tr>
@@ -258,21 +324,76 @@
                           </tbody>
                       </table>
                       </div> -->
-                  </div>
+              </div>
 
+            </div>
+          </div>
+        </div>
+
+      </app-card>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHide()"> <i
+            class="icofont icofont-close"></i> Close</button>
+      </div>
+
+    </div>
+  </ng-template>
+
+  <ng-template #templateSIMReceive>
+    <div class="modal-header ">
+      <h6 class="modal-title pull-left"> SIM Receive </h6>
+
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideSIMRecieve()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body pb-0">
+      <app-card>
+
+
+        <div class="row mb-3" *ngIf="simObj">
+          <div class="col-md-6">
+            <p class="fs-14 mb-0">SIM CID No : <b>{{simObj.CID_no}}</b></p>
+            <p class="fs-14 mb-0" >Phone Number : <b>{{simObj.phone_number}}</b></p>
+          </div>
+          <div class="col-md-6">
+            <p class="fs-14 mb-0" >Current SIM ICCID : <b>{{simObj.ICCID_no}} </b></p>
+
+          </div>
+        </div>
+        <hr>
+        <form [formGroup]="receiveSIMForm">
+
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">New ICCID No</label>
+            <div class="col-sm-8">
+              <input [ngClass]="{ 'is-invalid': submitted && rs.ICCID_no.errors}"
+              formControlName="ICCID_no" type="text" class="form-control">
+              <div *ngIf="submitted && rs.ICCID_no.errors" class="error-text">
+                <small *ngIf="rs.ICCID_no.errors.required" class="text-danger"> ICCID is
+                  required</small>
               </div>
-              </div>
+            </div>
           </div>
 
-          </app-card>
-      </div>
-      <div class="modal-footer">
-          <div class="pr-4">
-              <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHide()"> <i
-                      class="icofont icofont-close"></i> Close</button>
-          </div>
+
+        </form>
+      </app-card>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideSIMRecieve()"> <i
+            class="icofont icofont-close"></i> Close</button>
+
+            <button class="btn btn-success btn-sm btn-outline-success float-right" (click)="onSubmitSIMReceive()">
+              <i class="icofont-save"></i> Receive
+            </button>
 
       </div>
+
+    </div>
   </ng-template>
 
 </block-ui>

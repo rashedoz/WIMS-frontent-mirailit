@@ -67,10 +67,18 @@
                                   rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
                                   (page)="setPage($event)">
 
-                                <ngx-datatable-column [width]="200" name="Customer" prop="customer_full_name" [draggable]="false"
+                                  <ngx-datatable-column [width]="200" name="Customer" prop="customer_full_name" [draggable]="false"
                                   [sortable]="false">
-                                  <ng-template let-value="value" ngx-datatable-cell-template>
-                                    <span> {{ value }} </span>
+                                  <ng-template let-row="row" ngx-datatable-cell-template>
+                                    <a [routerLink]="['/customer-details/'+row.customer]" routerLinkActive="router-link-active" target="_blank" > {{ row.customer_full_name }} </a>
+                                  </ng-template>
+                                </ngx-datatable-column>
+
+                                <ngx-datatable-column [width]="150" name="Customer Type" [draggable]="false"
+                                  [sortable]="false">
+                                  <ng-template let-row="row" ngx-datatable-cell-template>
+                                    <strong *ngIf="row.customer_is_wholesaler" class="label label-success ng-star-inserted">Wholesaler</strong>
+                                    <strong *ngIf="row.customer_is_retailer" class="label label-success ng-star-inserted">Retailer</strong>
                                   </ng-template>
                                 </ngx-datatable-column>
 

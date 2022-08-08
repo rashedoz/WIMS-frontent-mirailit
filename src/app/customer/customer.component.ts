@@ -141,6 +141,11 @@ get p() {
   return this.RegistrerFormChangePassword.controls;
 }
 
+onTabSelect(tab,e){
+  this.activeTable = tab;
+  this.showCustomerTable(tab);
+}
+
 setPageAll(pageInfo) {
   this.page.pageNumber = pageInfo.offset;
   this.getList();

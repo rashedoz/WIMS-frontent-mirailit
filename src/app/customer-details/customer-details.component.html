@@ -101,7 +101,7 @@
 
                           <div class="col-lg-8 mb-1">
                             <div class="form-group row">
-                              <div class="col-sm-4">
+                              <div class="col-sm-4" *ngIf="billItemType == 'All Items' || billItemType == 'Frozen SIMs'">
                                 <input type="text"
                                 placeholder="Filter by date range"
                                 class="form-control"
@@ -900,8 +900,7 @@
 
   <ng-template #templateSIMReceive>
     <div class="modal-header ">
-      <h6 class="modal-title pull-left " *ngIf="simObj">SIM CID No: {{simObj.CID_no}}, Phone Number : {{simObj.phone_number}} </h6>
-      <h6 class="modal-title pull-left " *ngIf="simObj"> Current SIM ICCID: {{simObj.ICCID_no}} </h6>
+      <h6 class="modal-title pull-left"> SIM Receive </h6>
 
       <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideSIMRecieve()">
         <i class="icofont icofont-close"></i>
@@ -909,6 +908,18 @@
     </div>
     <div class="modal-body pb-0">
       <app-card>
+
+        <div class="row mb-3" *ngIf="simObj">
+          <div class="col-md-6">
+            <p class="fs-14 mb-0">SIM CID No : <b>{{simObj.CID_no}}</b></p>
+            <p class="fs-14 mb-0" >Phone Number : <b>{{simObj.phone_number}}</b></p>
+          </div>
+          <div class="col-md-6">
+            <p class="fs-14 mb-0" >Current SIM ICCID : <b>{{simObj.ICCID_no}} </b></p>
+
+          </div>
+        </div>
+<hr>
         <form [formGroup]="receiveSIMForm">
 
           <div class="form-group row">

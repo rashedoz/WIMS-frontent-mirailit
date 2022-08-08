@@ -331,7 +331,6 @@ selectTab(tabId: number) {
 
  changeTabBillItem(type,e) {
 
-  this.bsBillItemRangeValue = [this.firstDay,this.lastDay];
    this.searchParam = '';
    this.pageTable.pageNumber = 0;
    this.pageTable.size = 10;
@@ -551,7 +550,7 @@ selectTab(tabId: number) {
       obj.device_status = this.deviceBillItemStatus;
     }
 
-    if(this.bsBillItemRangeValue){
+    if(this.bsBillItemRangeValue && ( this.billItemType == 'All Items' || this.billItemType == 'Frozen SIMs' )){
       obj.billing_start_date = moment(this.bsBillItemRangeValue[0]).format('YYYY-MM-DD'),
       obj.billing_end_date = moment(this.bsBillItemRangeValue[1]).format('YYYY-MM-DD')
     }
@@ -1017,6 +1016,8 @@ selectTab(tabId: number) {
                   this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
                 }
               );
+            }else{
+              this.blockUI.stop();
             }
         },
     );

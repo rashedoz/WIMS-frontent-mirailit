@@ -73,6 +73,20 @@ const MENUITEMS = [
     permission: 'is_superuser,is_staff',
     main: [
       {
+        state: 'stock-entry',
+        name: 'Stock Entry',
+        type: 'link',
+        icon: 'ti-control-forward',
+        permission: 'is_superuser,is_staff',
+      },
+      {
+        state: 'updatable-sim-list',
+        name: 'Updatable Sim List',
+        type: 'link',
+        icon: 'ti-control-forward',
+        permission: 'is_superuser,is_staff',
+      },
+      {
         state: 'sim-stock-history',
         name: 'Sim Stock Summary',
         type: 'link',
@@ -136,7 +150,7 @@ const MENUITEMS = [
 
 
         ]
-      },      
+      },
       {
         state: 'supplier',
         name: 'Suppliers',
@@ -171,7 +185,7 @@ const MENUITEMS = [
         type: 'link',
         icon: 'ti-control-forward',
         permission: 'is_superuser,is_staff',
-      },      
+      },
     ]
   },
   // {

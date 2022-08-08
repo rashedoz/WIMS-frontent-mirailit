@@ -6,7 +6,7 @@ export const PurchaseEntryRoutes: Routes = [{
   path: '',
   component: PurchaseEntryComponent,
   data: {
-    breadcrumb: 'Purchase Entry',
+    breadcrumb: 'Stock Entry',
     icon: 'icofont-home bg-c-blue',
     status: false
   }

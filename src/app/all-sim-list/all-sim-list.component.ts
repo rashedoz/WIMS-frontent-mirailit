@@ -1,24 +1,30 @@
-import { Component, TemplateRef, ViewChild, ElementRef, ViewEncapsulation, OnInit } from '@angular/core';
-import { ColumnMode,DatatableComponent } from '@swimlane/ngx-datatable';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { CommonService } from '../_services/common.service';
-import { ToastrService } from 'ngx-toastr';
-import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { Page } from '../_models/page';
-import { StockStatus,SubscriptionStatus } from '../_models/enums';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-
+import {
+  Component,
+  TemplateRef,
+  ViewChild,
+  ElementRef,
+  ViewEncapsulation,
+  OnInit,
+} from "@angular/core";
+import { ColumnMode, DatatableComponent } from "@swimlane/ngx-datatable";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
+import { CommonService } from "../_services/common.service";
+import { ToastrService } from "ngx-toastr";
+import { BlockUI, NgBlockUI } from "ng-block-ui";
+import { Page } from "../_models/page";
+import { StockStatus, SubscriptionStatus } from "../_models/enums";
+import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
+import { ConfirmService } from "../_helpers/confirm-dialog/confirm.service";
 
 @Component({
-  selector: 'app-all-sim-list',
-  templateUrl: './all-sim-list.component.html',
-  encapsulation: ViewEncapsulation.None
+  selector: "app-all-sim-list",
+  templateUrl: "./all-sim-list.component.html",
+  encapsulation: ViewEncapsulation.None,
 })
-
 export class AllSIMListComponent implements OnInit {
-
   entryForm: FormGroup;
+  receiveSIMForm: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
 
@@ -26,48 +32,54 @@ export class AllSIMListComponent implements OnInit {
   SubscriptionStatus = SubscriptionStatus;
   page = new Page();
   pageLifeCycle = new Page();
-  emptyGuid = '00000000-0000-0000-0000-000000000000';
+  emptyGuid = "00000000-0000-0000-0000-000000000000";
   rows = [];
   tempRows = [];
-  columnsWithSearch : string[] = [];
+  columnsWithSearch: string[] = [];
   loadingIndicator = false;
-  iccidHistory:any = null;
+  iccidHistory: any = null;
   ColumnMode = ColumnMode;
-  scrollBarHorizontal = (window.innerWidth < 1200);
+  scrollBarHorizontal = window.innerWidth < 1200;
   @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
-  modalConfig: any = { class: 'gray modal-xl', backdrop: 'static' };
+  modalConfigMd: any = { class: "gray modal-md", backdrop: "static" };
+  modalConfig: any = { class: "gray modal-xl", backdrop: "static" };
   modalRef: BsModalRef;
   modalRefICCID: BsModalRef;
-  simLifecycleDetails : Array<any> = [];
-  url = 'stock/get-available-sim-list';
-  searchParam = '';
+  simLifecycleDetails: Array<any> = [];
+  url = "stock/get-available-sim-list";
+  searchParam = "";
+  simObj = null;
+  tabType = "Available";
+  status = 1;
   constructor(
     public formBuilder: FormBuilder,
     private _service: CommonService,
     private toastr: ToastrService,
     private modalService: BsModalService,
-    private router: Router
+    private router: Router,
+    private confirmService: ConfirmService
   ) {
     this.page.pageNumber = 0;
     this.page.size = 10;
     this.pageLifeCycle.pageNumber = 0;
     this.pageLifeCycle.size = 10;
     window.onresize = () => {
-      this.scrollBarHorizontal = (window.innerWidth < 1200);
+      this.scrollBarHorizontal = window.innerWidth < 1200;
     };
   }
 
-
   ngOnInit() {
-
     this.getList();
+    this.receiveSIMForm = this.formBuilder.group({
+      id: [null, [Validators.required]],
+      ICCID_no: [null, [Validators.required]],
+    });
   }
-
 
   // 'Available', 'Subscribed', 'Cancelled', 'Permanently Cancelled'
 
-  changeTab(type,e) {
-    this.searchParam = '';
+  changeTab(type, e) {
+    this.searchParam = "";
     this.page.pageNumber = 0;
     this.page.size = 10;
 
@@ -75,67 +87,88 @@ export class AllSIMListComponent implements OnInit {
     this.pageLifeCycle.size = 10;
 
     switch (type) {
-      case 'Available':
-        this.url = 'stock/get-available-sim-list';
+      case "Available":
+        this.status = 1;
+        this.tabType = type;
         this.getList();
         break;
-      case 'Subscribed':
-        this.url = 'stock/get-subscribed-sim-list';
-     this.getList();
+      case "Subscribed":
+        this.status = 2;
+        this.tabType = type;
+        this.getList();
         break;
-      case 'Cancelled':
-        this.url = 'stock/get-cancelled-sim-list';
-     this.getList();
+      case "Cancelled":
+        this.status = 4;
+        this.tabType = type;
+        this.getList();
         break;
-      case 'Permanently Cancelled':
-        this.url = 'stock/get-permanently-cancelled-sim-list';
-     this.getList();
+      case "Reissued":
+        this.status = 6;
+        this.tabType = type;
+        this.getList();
         break;
       default:
-        this.url = 'stock/get-available-sim-list';
         this.getList();
         break;
     }
+  }
 
- }
 
+  get rs() {
+    return this.receiveSIMForm.controls;
+  }
 
   setPage(pageInfo) {
     this.page.pageNumber = pageInfo.offset;
     this.getList();
-}
+  }
+
+  setLifeCyclePage(pageInfo) {
+    this.pageLifeCycle.pageNumber = pageInfo.offset;
+    this.getSIMLifeCycle();
+  }
 
   getList() {
     this.loadingIndicator = true;
     const obj = {
       limit: this.page.size,
       page: this.page.pageNumber + 1,
-      search_param:this.searchParam
+      search_param: this.searchParam,
+      status: this.status,
     };
-    this._service.get(this.url,obj).subscribe(res => {
-
-      if (!res) {
-        this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
-        return;
+    this._service.get("stock/get-sim-list", obj).subscribe(
+      (res) => {
+        if (!res) {
+          this.toastr.error(res.Message, "Error!", {
+            closeButton: true,
+            disableTimeOut: true,
+          });
+          return;
+        }
+        // this.tempRows = res;
+        this.rows = res.results;
+        this.page.totalElements = res.count;
+        this.page.totalPages = Math.ceil(
+          this.page.totalElements / this.page.size
+        );
+        setTimeout(() => {
+          this.loadingIndicator = false;
+        }, 1000);
+      },
+      (err) => {
+        this.toastr.error(err.message || err, "Error!", {
+          closeButton: true,
+          disableTimeOut: true,
+        });
+        setTimeout(() => {
+          this.loadingIndicator = false;
+        }, 1000);
       }
-     // this.tempRows = res;
-      this.rows =  res.results;
-      this.page.totalElements = res.count;
-      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-      setTimeout(() => {
-        this.loadingIndicator = false;
-      }, 1000);
-    }, err => {
-      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
-      setTimeout(() => {
-        this.loadingIndicator = false;
-      }, 1000);
-    }
     );
   }
 
-  filterSearch(e){
-    if(e){
+  filterSearch(e) {
+    if (e) {
       this.page.pageNumber = 0;
       this.page.size = 10;
       this.searchParam = e.target.value;
@@ -143,78 +176,175 @@ export class AllSIMListComponent implements OnInit {
     }
   }
 
-  // updateFilterBill(event) {
+  filterSimLifecycleSearch(e) {
+    if (e) {
+      this.pageLifeCycle.pageNumber = 0;
+      this.pageLifeCycle.size = 10;
+      this.searchParam = e.target.value;
+      this.getSIMLifeCycle();
+    }
+  }
 
-  //   const val = event.target.value.toString().toLowerCase().trim();
+  onSubmitAction(action, row) {
+    let url = "";
+    let txt = "";
+    switch (action) {
+      case "reissuance":
+        url = "stock/send-sim-for-reissuance/" + row.id;
+        txt = "You are sending this sim for reissuance.";
+        break;
+      case "receive":
+        url = "stock/receive-sim-from-mother-company/" + row.id;
+        txt = "You are receiving this sim from mother company.";
+        break;
+      case "return":
+        url = "stock/return-sim-to-stock/" + row.id;
+        txt = "The sim will be added to your stock.";
+        break;
+      default:
+        break;
+    }
 
-  //     // assign filtered matches to the active datatable
-  //     const temp = this.tempRows.filter(item => {
-  //       // iterate through each row's column data
-  //       for (let i = 0; i < this.columnsWithSearch.length; i++){
-  //         var colValue = item[this.columnsWithSearch[i]] ;
-  //         // if no filter OR colvalue is NOT null AND contains the given filter
-  //         if (!val || (!!colValue && colValue.toString().toLowerCase().indexOf(val) !== -1)) {
-  //           // found match, return true to add to result set
-  //           return true;
-  //         }
-  //       }
-  //     });
+    this.blockUI.start("Saving...");
+    this.confirmService.confirm("Are you sure?", txt).subscribe((result) => {
+      if (result) {
+        const request = this._service.patch(url, {});
+        request.subscribe(
+          (data) => {
+            this.blockUI.stop();
+            if (data.IsReport == "Success") {
+              this.toastr.success(data.Msg, "Success!", { timeOut: 2000 });
+              this.getList();
+            } else if (data.IsReport == "Warning") {
+              this.toastr.warning(data.Msg, "Warning!", {
+                closeButton: true,
+                disableTimeOut: true,
+              });
+            } else {
+              this.toastr.error(data.Msg, "Error!", {
+                closeButton: true,
+                disableTimeOut: true,
+              });
+            }
+          },
+          (err) => {
+            this.blockUI.stop();
+            this.toastr.error(err.Message || err, "Error!", {
+              closeButton: true,
+              disableTimeOut: true,
+            });
+          }
+        );
+      } else {
+        this.blockUI.stop();
+      }
+    });
+  }
 
-  //   // update the rows
-  //   this.rows = temp;
-  //   // // Whenever the filter changes, always go back to the first page
-  //    this.table.offset = 0;
-  // }
 
+  modalHideSIMRecieve() {
+    this.modalRef.hide();
+    this.simObj = null;
+    this.submitted = false;
+    this.receiveSIMForm.reset();
+  }
+
+  openModalSIMRecieve(item, template: TemplateRef<any>) {
+    this.simObj = item;
+    this.receiveSIMForm.controls['id'].setValue(item.id);
+    this.modalRef = this.modalService.show(template, this.modalConfigMd);
+  }
 
   modalHide() {
     this.modalRef.hide();
     this.simLifecycleDetails = [];
+    this.simObj = null;
   }
 
   openModal(item, template: TemplateRef<any>) {
-
+    this.searchParam = '';
+    this.simObj = item;
     this.pageLifeCycle.pageNumber = 0;
     this.pageLifeCycle.size = 10;
+    this.modalRef = this.modalService.show(template, this.modalConfig);
+    this.getSIMLifeCycle();
+  }
 
+  onSubmitSIMReceive(){
+    this.submitted = true;
+    if (this.receiveSIMForm.invalid) {
+      return;
+    }
+    const obj = {
+      ICCID_no:this.receiveSIMForm.value.ICCID_no.trim()
+    };
+
+    this.confirmService.confirm('Are you sure?', 'You are receiving this sim from mother company.')
+    .subscribe(
+        result => {
+            if (result) {
+              this.blockUI.start('Saving...');
+              const request = this._service.patch('stock/receive-sim-from-mother-company/'+this.receiveSIMForm.value.id, obj);
+              request.subscribe(
+                data => {
+                  this.blockUI.stop();
+                  if (data.IsReport == "Success") {
+                    this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+                    this.modalHideSIMRecieve();
+                    this.getList();
+                  } else if (data.IsReport == "Warning") {
+                    this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+                  } else {
+                    this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+                  }
+                },
+                err => {
+                  this.blockUI.stop();
+                  this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+                }
+              );
+            }
+        },
+    );
+  }
+
+  getSIMLifeCycle() {
     this.loadingIndicator = true;
     const obj = {
       limit: this.pageLifeCycle.size,
       page: this.pageLifeCycle.pageNumber + 1,
-      search_param:this.searchParam
+      search_param: this.searchParam,
+      sim_id: this.simObj.id,
     };
-    this._service.get('stock/get-sim-lifecycle-history/'+item.id,obj).subscribe(res => {
-
-      if (!res) {
-        this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
-        return;
+    this._service.get("stock/sim-traversal-history", obj).subscribe(
+      (res) => {
+        if (!res) {
+          this.toastr.error(res.Message, "Error!", {
+            closeButton: true,
+            disableTimeOut: true,
+          });
+          return;
+        }
+        // this.tempRows = res;
+        this.simLifecycleDetails = res.results;
+        this.pageLifeCycle.totalElements = res.count;
+        this.pageLifeCycle.totalPages = Math.ceil(
+          this.pageLifeCycle.totalElements / this.pageLifeCycle.size
+        );
+        setTimeout(() => {
+          this.loadingIndicator = false;
+        }, 1000);
+      },
+      (err) => {
+        this.toastr.error(err.message || err, "Error!", {
+          closeButton: true,
+          disableTimeOut: true,
+        });
+        setTimeout(() => {
+          this.loadingIndicator = false;
+        }, 1000);
       }
-     // this.tempRows = res;
-      this.simLifecycleDetails =  res.results.reverse();
-      this.pageLifeCycle.totalElements = res.count;
-      this.pageLifeCycle.totalPages = Math.ceil(this.pageLifeCycle.totalElements / this.pageLifeCycle.size);
-      setTimeout(() => {
-        this.loadingIndicator = false;
-      }, 1000);
-      this.modalRef = this.modalService.show(template, this.modalConfig);
-    }, err => {
-      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
-      setTimeout(() => {
-        this.loadingIndicator = false;
-      }, 1000);
-    }
     );
-
-
-    // this._service.get('stock/get-sim-lifecycle-history/'+item.id).subscribe(res => {
-    //   if(res.length){
-    //     this.simLifecycleDetails = res.reverse();
-    //     this.modalRef = this.modalService.show(template, this.modalConfig);
-    //   } else {
-    //     this.toastr.warning('No Details Found.', 'Warning!', { closeButton: true, disableTimeOut: false });
-    //   }
-    // }, err => { }
-    // );
   }
 
   modalHideICCID() {
@@ -223,16 +353,12 @@ export class AllSIMListComponent implements OnInit {
   }
 
   openModalICCID(item, template: TemplateRef<any>) {
-
-    this._service.get('stock/get-sim-iccid-history/'+item.id).subscribe(res => {
-
-       this.iccidHistory = res;
-       this.modalRefICCID = this.modalService.show(template, this.modalConfig);
-
-    }, err => { }
+    this._service.get("stock/get-sim-iccid-history/" + item.id).subscribe(
+      (res) => {
+        this.iccidHistory = res;
+        this.modalRefICCID = this.modalService.show(template, this.modalConfigMd);
+      },
+      (err) => {}
     );
   }
-
-
-
 }

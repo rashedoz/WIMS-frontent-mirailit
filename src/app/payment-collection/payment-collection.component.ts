@@ -135,6 +135,9 @@ export class PaymentCollectionComponent implements OnInit {
     event.target.select()
   }
 
+  gotoPage(item){
+    this.router.navigate([]).then(result => { window.open('/customer-details/'+ item.customer, '_blank'); });
+  }
 
 
   onChangePayBalance(e) {
@@ -146,7 +149,7 @@ export class PaymentCollectionComponent implements OnInit {
         if (this.due > 0) {
           this.paidAmount = this.due;
           this.tempPaidAmount = this.due;
-        } 
+        }
 
       } else if (Number(this.balance) <= this.due) {
         this.tempPaidAmount = Number(this.balance);
@@ -210,10 +213,10 @@ export class PaymentCollectionComponent implements OnInit {
     }
     this.blockUI.start('Saving...');
     const obj = {
-    
-      bill: this.details.id,     
+
+      bill: this.details.id,
       payment_method: this.selectedMethod.id,
-      amount_paid: Number(this.paidAmount),      
+      amount_paid: Number(this.paidAmount),
       payment_remarks: this.remarks
     };
 
@@ -221,15 +224,15 @@ export class PaymentCollectionComponent implements OnInit {
     this.confirmService.confirm('Do you want to collect payment now?', '','No','Yes')
     .subscribe(
         result => {
-            if (result) {                               
+            if (result) {
               this._service.post('payment/save-payment', obj).subscribe(
                 data => {
                   this.blockUI.stop();
                   if (data.IsReport == "Success") {
                     this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
-                
+
                     this.router.navigate(['customer-details/' + this.details.customer]);
-          
+
                   } else if (data.IsReport == "Warning") {
                     this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
                   } else {

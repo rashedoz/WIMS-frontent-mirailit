@@ -6,15 +6,15 @@
                 <div class="col-lg-12">
                     <div class="card card-border-default">
                         <div class="card-header">
-                            <h5>Purchase </h5>
+                            <!-- <h5>Purchase </h5> -->
                             <button class="btn btn-primary btn-mini float-right" (click)="openModalSIMDevice(templateSIMDevice)"><i
                                 class=" icofont icofont-plus "></i> SIM & Device</button>
                             <button class="btn btn-primary btn-mini float-right mr-2" (click)="openModalDevice(templateDevice)"><i
-                                class=" icofont icofont-plus "></i> Device</button>                   
+                                class=" icofont icofont-plus "></i> Device</button>
                             <button class="btn btn-primary btn-mini float-right mr-2" (click)="openModalSIM(templateSIM)"><i
                                     class=" icofont icofont-plus "></i> SIM</button>
-                            
-                          
+
+
                             <!-- <span class="code-header ">use class <code>table</code> inside table element</span> -->
                         </div>
                         <div class="card-block ">
@@ -26,9 +26,9 @@
                                   >
                                 <!-- Row Detail Template -->
                                 <ngx-datatable-row-detail  [rowHeight]="'100%'">
-                                    <ng-template let-row="row" let-expanded="expanded" 
+                                    <ng-template let-row="row" let-expanded="expanded"
                                         ngx-datatable-row-detail-template>
-                                        <div class="w-100">  
+                                        <div class="w-100">
                                             <table
                                                 class="table table-xs table-hover table-bordered table-striped">
                                                 <thead>
@@ -74,14 +74,14 @@
                                         <ng-template let-value="value" ngx-datatable-cell-template>
                                             <span title="{{ value }}"> {{ value }} </span>
                                         </ng-template>
-                                    </ngx-datatable-column>  
+                                    </ngx-datatable-column>
 
                                     <ngx-datatable-column [width]="350" name="Purchase Date" prop="created_at"
                                         [draggable]="false" [sortable]="false">
                                         <ng-template let-value="value" ngx-datatable-cell-template>
                                             <span > {{ value | amDateFormat:'DD-MMM-YYYY' }} </span>
                                         </ng-template>
-                                    </ngx-datatable-column>  
+                                    </ngx-datatable-column>
                                 </ngx-datatable>
 
                                 </div>
@@ -106,7 +106,7 @@
                 <form [formGroup]="entryFormSIM" class="col-sm-12">
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Supplier </label>
-                        <div class="col-sm-5">                        
+                        <div class="col-sm-5">
 
                                 <ng-select formControlName="supplier" [clearable]="false" [ngClass]="{ 'is-invalid': submitted && s.supplier.errors }"
                                     [clearOnBackspace]="false" [items]="supplierList" bindLabel="name" bindValue="id"
@@ -127,7 +127,7 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">Product Type</th>                        
+                                        <th scope="col">Product Type</th>
                                         <th scope="col">Qty</th>
                                         <th scope="col">Amount</th>
                                     </tr>
@@ -135,14 +135,14 @@
 
                                 <tbody>
                                     <tr *ngFor="let item of purchaseItemList; let i=index">
-                                        <th>{{i+1}}</th>                                       
-                                        <th>{{item.product_type}}</th>                                       
-                                        <th><input type="text" numeric numericType="number" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.qty"  required /></th>                                       
-                                        <th><input type="text" numeric numericType="decimal" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.amount"  required /></th>                                     
-                                      
-                                    </tr>                                    
+                                        <th>{{i+1}}</th>
+                                        <th>{{item.product_type}}</th>
+                                        <th><input type="text" numeric numericType="number" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.qty"  required /></th>
+                                        <th><input type="text" numeric numericType="decimal" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.amount"  required /></th>
+
+                                    </tr>
                                 </tbody>
-                            </table>                            
+                            </table>
                             </div>
                         </div>
                         <div class="col-md-5 offset-md-7">
@@ -151,17 +151,17 @@
                                     <tr>
                                         <th>Total</th>
                                         <th class="text-right pr-4">{{itemTotal()}}</th>
-                                    </tr>                           
+                                    </tr>
                                 </tbody>
                             </table>
 
                         </div>
-                        
-                    </div>
-                    
-        
 
-                   
+                    </div>
+
+
+
+
                 </form>
             </app-card>
         </div>
@@ -191,7 +191,7 @@
                 <form [formGroup]="entryFormDevice" class="col-sm-12">
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Supplier </label>
-                        <div class="col-sm-5">                        
+                        <div class="col-sm-5">
 
                                 <ng-select formControlName="supplier" [clearable]="false" [ngClass]="{ 'is-invalid': submitted && d.supplier.errors }"
                                     [clearOnBackspace]="false" [items]="supplierList" bindLabel="name" bindValue="id"
@@ -212,7 +212,7 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">Product Type</th>                        
+                                        <th scope="col">Product Type</th>
                                         <th scope="col">Qty</th>
                                         <th scope="col">Amount</th>
                                     </tr>
@@ -220,14 +220,14 @@
 
                                 <tbody>
                                     <tr *ngFor="let item of purchaseItemList; let i=index">
-                                        <th>{{i+1}}</th>                                       
-                                        <th>{{item.product_type}}</th>                                       
-                                        <th><input type="text" numeric numericType="number" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.qty"  required /></th>                                       
-                                        <th><input type="text" numeric numericType="decimal" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.amount"  required /></th>                                     
-                                      
-                                    </tr>                                    
+                                        <th>{{i+1}}</th>
+                                        <th>{{item.product_type}}</th>
+                                        <th><input type="text" numeric numericType="number" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.qty"  required /></th>
+                                        <th><input type="text" numeric numericType="decimal" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.amount"  required /></th>
+
+                                    </tr>
                                 </tbody>
-                            </table>                            
+                            </table>
                             </div>
                         </div>
                         <div class="col-md-5 offset-md-7">
@@ -236,17 +236,17 @@
                                     <tr>
                                         <th>Total</th>
                                         <th class="text-right pr-4">{{itemTotal()}}</th>
-                                    </tr>                           
+                                    </tr>
                                 </tbody>
                             </table>
 
                         </div>
-                        
-                    </div>
-                    
-        
 
-                   
+                    </div>
+
+
+
+
                 </form>
             </app-card>
         </div>
@@ -276,7 +276,7 @@
                 <form [formGroup]="entryFormSIMDevice" class="col-sm-12">
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Supplier </label>
-                        <div class="col-sm-5">                        
+                        <div class="col-sm-5">
 
                                 <ng-select formControlName="supplier" [clearable]="false" [ngClass]="{ 'is-invalid': submitted && sd.supplier.errors }"
                                     [clearOnBackspace]="false" [items]="supplierList" bindLabel="name" bindValue="id"
@@ -297,7 +297,7 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">Product Type</th>                        
+                                        <th scope="col">Product Type</th>
                                         <th scope="col">Qty</th>
                                         <th scope="col">Amount</th>
                                     </tr>
@@ -305,14 +305,14 @@
 
                                 <tbody>
                                     <tr *ngFor="let item of purchaseItemList; let i=index">
-                                        <th>{{i+1}}</th>                                       
-                                        <th>{{item.product_type}}</th>                                       
-                                        <th><input type="text" numeric numericType="number" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.qty"  required /></th>                                       
-                                        <th><input type="text" numeric numericType="decimal" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.amount"  required /></th>                                     
-                                      
-                                    </tr>                                    
+                                        <th>{{i+1}}</th>
+                                        <th>{{item.product_type}}</th>
+                                        <th><input type="text" numeric numericType="number" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.qty"  required /></th>
+                                        <th><input type="text" numeric numericType="decimal" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.amount"  required /></th>
+
+                                    </tr>
                                 </tbody>
-                            </table>                            
+                            </table>
                             </div>
                         </div>
                         <div class="col-md-5 offset-md-7">
@@ -321,20 +321,20 @@
                                     <tr>
                                         <th>Total</th>
                                         <th class="text-right pr-4">{{itemTotal()}}</th>
-                                    </tr>                           
+                                    </tr>
                                 </tbody>
                             </table>
 
                         </div>
-                        
-                    </div>
-                    
-        
 
-                   
+                    </div>
+
+
+
+
                 </form>
             </app-card>
-        </div> 
+        </div>
         <div class="modal-footer">
             <div class="pr-4">
 

@@ -24340,7 +24340,7 @@ bs-datepicker-container { z-index: 3000; }
 }
 
 .tr-border-bottom{
-    border-bottom: 3px solid #2C3E50 !important; 
+    border-bottom: 3px solid #2C3E50 !important;
 }
 
 /* .bill-item-tab-style{
@@ -24356,4 +24356,7 @@ bs-datepicker-container { z-index: 3000; }
 #bill-details-tab a.nav-link.active{
     color: #fff;
     background-color: #1ABC9C !important;
+}
+.div-pointer{
+  cursor: pointer;
 }

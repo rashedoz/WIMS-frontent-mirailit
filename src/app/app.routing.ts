@@ -73,7 +73,7 @@ export const AppRoutes: Routes = [
         canActivate: [AuthGuard]
       },
       {
-        path: 'purchase-entry',
+        path: 'stock-entry',
         loadChildren: () => import('./purchase-entry/purchase-entry.module').then(m => m.PurchaseEntryModule),
         canActivate: [AuthGuard]
       },
