@@ -60,7 +60,7 @@ export class PaymentListComponent implements OnInit {
 
   bsPaymentRangeValue: Date[];
   selectedPaymentMethod = null;
-  customerType = 'null';
+  customerType = 'all';
 
   constructor(
     private confirmService: ConfirmService,
@@ -100,6 +100,23 @@ export class PaymentListComponent implements OnInit {
 
   newPrint(id){
     this.printService.printInv(id);
+  }
+
+  onCustomerChange(e){
+    switch (e) {
+      case 'all':
+        this.getPaymentList();
+        break;
+      case 'wholesaler':
+        this.getPaymentList();
+        break;
+      case 'retailer':
+        this.getPaymentList();
+        break;
+
+      default:
+        break;
+    }
   }
 
 
@@ -152,6 +169,18 @@ export class PaymentListComponent implements OnInit {
     if(this.selectedPaymentMethod){
       obj.payment_method = this.selectedPaymentMethod;
     }
+
+    if(this.customerType == 'wholesaler'){
+      obj.is_wholesaler = 1;
+      obj.is_retailer = 0;
+    }else if(this.customerType == 'retailer'){
+      obj.is_wholesaler = 0;
+      obj.is_retailer = 1;
+    }else{
+      delete obj['is_wholesaler'];
+      delete obj['is_retailer'];
+    }
+
     this._service.get("payment/get-payment-list",obj).subscribe(
       (res) => {
 

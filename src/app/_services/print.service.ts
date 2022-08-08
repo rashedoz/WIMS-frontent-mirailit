@@ -3,7 +3,6 @@ import { CommonService } from '../_services/common.service';
 import 'jspdf-autotable';
 import { DatePipe } from '@angular/common';
 import { jsPDF } from "jspdf";
-import 'jspdf-autotable';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { SubscriptionStatus,BillStatus } from '../_models/enums';
 import * as moment from 'moment';
@@ -65,8 +64,15 @@ export class PrintService {
 
       doc.setFontSize(this.fontSizes.SubTitleFontSize);
       doc.setFont("times", "bold");
-      doc.text("Invoice No: " + res.bill_no, 175, 10, null, "right");
+      doc.text("Invoice No: " + res.bill_no, 10, 10, null, "left");
       doc.line(10, 18, 200, 18);
+
+      doc.setFontSize(this.fontSizes.SubTitleFontSize);
+      doc.setFont("times", "bold");
+      doc.text("Printed On: " + invoiceDate, 200, 10, null, "right");
+      doc.line(10, 18, 200, 18);
+
+
       doc.setFontSize(this.fontSizes.HeadTitleFontSize);
       doc.setFont("times", "bold");
       doc.text("INVOICE", InitialstartX + 65, (InitialstartY += this.lineSpacing.NormalSpacing + 2), null, "center");
@@ -84,7 +90,7 @@ export class PrintService {
 
       doc.setFontSize(this.fontSizes.TitleFontSize);
       doc.setFont("times", "bold");
-      doc.text(res.customer_full_name + " " + res.customer_last_name, startX, (startY += 6), null, "left");
+      doc.text(res.customer_full_name, startX, (startY += 6), null, "left");
 
       doc.setFontSize(this.fontSizes.NormalFontSize);
       doc.setFont("times", "normal");
@@ -98,7 +104,7 @@ export class PrintService {
 
       doc.setFontSize(this.fontSizes.NormalFontSize);
       doc.setFont("times", "normal");
-      doc.text("Type: " + (res.customer_is_wholesaler == "True" ? "Wholesaler" : "Retailer"), startX, (startY += 5), null, "left");
+      doc.text("Customer Type: " + (res.customer_is_wholesaler == "True" ? "Wholesaler" : "Retailer"), startX, (startY += 5), null, "left");
 
       doc.setFontSize(this.fontSizes.NormalFontSize);
       doc.setFont("times", "normal");
@@ -139,11 +145,10 @@ export class PrintService {
 
       columns = [
         { title: 'No', dataKey: 'no' },
-        { title: 'SIM ICCID No', dataKey: 'ICCID_no' },   
-        { title: 'Phone Num', dataKey: 'phone_number' },        
+        { title: 'ICCID No', dataKey: 'ICCID_no' },
+        { title: 'Phone Number', dataKey: 'phone_number' },
         { title: 'IMEI', dataKey: 'imei' },
         { title: 'Package Name', dataKey: 'package_name' },
-        { title: 'Package Description', dataKey: 'package_des' },        
         { title: 'Notes', dataKey: 'notes' },
         { title: 'Ends At', dataKey: 'ends_at' },
         { title: 'Amount', dataKey: 'amount' }
@@ -159,11 +164,10 @@ export class PrintService {
           imei: element.IMEI ? element.IMEI : 'N/A',
           phone_number: element.phone_number,
           package_name: element.pckg_name,
-          package_des: element.pckg_offer_name,
           amount: element.pckg_first_bill_amount,
           notes: element.pckg_advance_pmnt_desc ? element.pckg_advance_pmnt_desc : '--',
-          ends_at: element.pckg_duration_in_month == 0 ? element.Recurring : moment(res.pckg_duration_in_month).format('MMMM Do YYYY'),
-        
+          ends_at: element.pckg_expiry ?? moment(res.pckg_expiry).format('MMMM Do YYYY'),
+
         });
 
       });
@@ -179,9 +183,8 @@ export class PrintService {
           ICCID_no: { cellWidth: 27 },
           phone_number: { cellWidth: 20 },
           imei: { cellWidth: 27 },
-          package_name: { cellWidth: 30 },
-          package_des: { cellWidth: 30 },
-          notes: { cellWidth: 17 },
+          package_name: { cellWidth: 40 },
+          notes: { cellWidth: 30 },
           ends_at: { cellWidth: 17 },
           amount: { cellWidth: 17 }
         },
@@ -257,7 +260,7 @@ export class PrintService {
           doc.text(res.already_paid, rightStartCol2 + 46, startY, null, 'right');
 
 
-      
+
           if(Number(res.due) > 0){
           // @ts-ignore
           doc.setLineDash([1], 1);
@@ -274,7 +277,7 @@ export class PrintService {
           }
 
 
-         
+
 
 
           if (res.payment_status === 3 || res.payment_status === 4) {
@@ -285,7 +288,7 @@ export class PrintService {
 
           /** Others */
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bolditalic");
+          doc.setFont("times", "bold");
           doc.text("STATUS: " + BillStatus[res.payment_status], startX, (startY += this.lineSpacing.NormalSpacing + 5), null, 'left');
 
           // doc.setFontSize(this.fontSizes.NormalFontSize);
@@ -302,7 +305,7 @@ export class PrintService {
 
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bolditalic");
-          doc.text("POST OFFICE ACCOUNT:", startX, (startY += 7), null, 'left');
+          doc.text("POST OFFICE ACCOUNT:", startX, (startY += 15), null, 'left');
 
           doc.setFontSize(this.fontSizes.NormalFontSize);
           doc.setFont("times", "normal");

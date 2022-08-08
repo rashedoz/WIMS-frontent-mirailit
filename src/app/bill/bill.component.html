@@ -30,7 +30,6 @@
                       </ng-template>
                     </tab>
 
-
                     <!-- <tab (selectTab)="changeTab('Permanently Cancelled',$event)">
                                         <ng-template tabHeading>
                                             Permanently Cancelled
@@ -46,13 +45,9 @@
                   <div class="form-group row">
 
                     <div class="col-sm-3">
-                      <input type="text"
-                      placeholder="Filter by date range"
-                      class="form-control"
-                      (ngModelChange)="onBillDetailsDateValueChange($event)"
-                      [(ngModel)]="bsBillRangeValue"
-                      bsDaterangepicker
-                      [bsConfig]="bsConfig">
+                      <input type="text" placeholder="Filter by date range" class="form-control"
+                        (ngModelChange)="onBillDetailsDateValueChange($event)" [(ngModel)]="bsBillRangeValue"
+                        bsDaterangepicker [bsConfig]="bsConfig">
                     </div>
 
                     <div class="col-sm-5">
@@ -62,25 +57,28 @@
                     </div>
                     <div class="col-sm-4">
                       <div class="form-radio">
-                            <div class="radio radiofill radio-primary radio-inline">
-                                <label>
-                                    <input type="radio" name="radio" value="null" checked="checked" [(ngModel)]="customerType">
-                                    <i class="helper"></i>All
-                                </label>
-                            </div>
-                            <div class="radio radiofill radio-primary radio-inline">
-                                <label>
-                                    <input type="radio" name="radio" value="wholesaler" [(ngModel)]="customerType">
-                                    <i class="helper"></i>Wholesaler
-                                </label>
-                            </div>
-                            <div class="radio radiofill radio-primary radio-inline">
-                                <label>
-                                    <input type="radio" name="radio" value="retailer" [(ngModel)]="customerType">
-                                    <i class="helper"></i>Retailer
-                                </label>
-                            </div>
-                    </div>
+                        <div class="radio radiofill radio-primary radio-inline">
+                          <label>
+                            <input type="radio" name="radio" (change)="onCustomerChange($event.target.value)"
+                              value="all" checked="checked" [(ngModel)]="customerType">
+                            <i class="helper"></i>All
+                          </label>
+                        </div>
+                        <div class="radio radiofill radio-primary radio-inline">
+                          <label>
+                            <input type="radio" name="radio" (change)="onCustomerChange($event.target.value)"
+                              value="wholesaler" [(ngModel)]="customerType">
+                            <i class="helper"></i>Wholesaler
+                          </label>
+                        </div>
+                        <div class="radio radiofill radio-primary radio-inline">
+                          <label>
+                            <input type="radio" name="radio" (change)="onCustomerChange($event.target.value)"
+                              value="retailer" [(ngModel)]="customerType">
+                            <i class="helper"></i>Retailer
+                          </label>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -94,91 +92,92 @@
                     [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [count]="page.totalElements"
                     [offset]="page.pageNumber" [limit]="page.size" (page)="setPage($event)">
 
+                    <ngx-datatable-column [width]="220" name="Action" prop="id" [draggable]="false" [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <button *ngIf="row.payment_status == 1 || row.payment_status == 2"
+                          [routerLink]="['/payment-collection',row.id]" class="btn btn-info btn-mini mr-2"><i
+                            class="icofont icofont-checked"></i>Collect Payment</button>
+
+                        <button (click)="newPrint(row.id)" class="btn btn-primary btn-mini"><i
+                            class="icofont icofont-doc"></i>See Invoice</button>
+
+                      </ng-template>
+                    </ngx-datatable-column>
 
                     <ngx-datatable-column [width]="200" name="Customer" prop="customer_full_name" [draggable]="false"
                       [sortable]="false">
                       <ng-template let-row="row" ngx-datatable-cell-template>
-                        <a [routerLink]="['/customer-details/'+row.customer]" routerLinkActive="router-link-active" target="_blank" > {{ row.customer_full_name }} </a>
+                        <a [routerLink]="['/customer-details/'+row.customer]" routerLinkActive="router-link-active"
+                          target="_blank"> {{ row.customer_full_name }} </a>
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="150" name="Customer Type" [draggable]="false"
-                      [sortable]="false">
+                    <ngx-datatable-column [width]="150" name="Customer Type" [draggable]="false" [sortable]="false">
                       <ng-template let-row="row" ngx-datatable-cell-template>
-                        <strong *ngIf="row.customer_is_wholesaler" class="label label-success ng-star-inserted">Wholesaler</strong>
-                        <strong *ngIf="row.customer_is_retailer" class="label label-success ng-star-inserted">Retailer</strong>
+                        <strong *ngIf="row.customer_is_wholesaler"
+                          class="label label-success ng-star-inserted">Wholesaler</strong>
+                        <strong *ngIf="row.customer_is_retailer"
+                          class="label label-warning ng-star-inserted">Retailer</strong>
                       </ng-template>
                     </ngx-datatable-column>
 
                     <ngx-datatable-column [width]="100" name="Bill No" prop="bill_no" [draggable]="false"
-                    [sortable]="false">
-                    <ng-template let-value="value" ngx-datatable-cell-template>
-                      <span> {{ value }} </span>
-                    </ng-template>
-                  </ngx-datatable-column>
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
 
-                  <ngx-datatable-column [width]="150" name="Payment Status" prop="payment_status" [draggable]="false"
-                    [sortable]="false">
-                    <ng-template let-value="value" ngx-datatable-cell-template>
-                      <span *ngIf="value == 1"> <strong class="label label-danger">{{ billStatus[value]
+                    <ngx-datatable-column [width]="150" name="Payment Status" prop="payment_status" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span *ngIf="value == 1"> <strong class="label label-danger">{{ billStatus[value]
                       }}</strong>
-                  </span>
-                  <span *ngIf="value == 2"><strong class="label label-warning">{{ billStatus[value]
+                        </span>
+                        <span *ngIf="value == 2"><strong class="label label-warning">{{ billStatus[value]
                       }}</strong>
-                  </span>
-                  <span *ngIf="value == 3"> <strong class="label label-success">{{ billStatus[value]
+                        </span>
+                        <span *ngIf="value == 3"> <strong class="label label-success">{{ billStatus[value]
                       }}</strong>
-                  </span>
-                    </ng-template>
-                  </ngx-datatable-column>
+                        </span>
+                      </ng-template>
+                    </ngx-datatable-column>
 
-                  <ngx-datatable-column [width]="150" name="Grand Total" prop="grand_total"
-                    [draggable]="false" [sortable]="false">
-                    <ng-template let-value="value" ngx-datatable-cell-template>
-                      <span> {{ value }} </span>
-                    </ng-template>
-                  </ngx-datatable-column>
+                    <ngx-datatable-column [width]="150" name="Grand Total" prop="grand_total" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
 
-                  <ngx-datatable-column [width]="150" name="Already Paid" prop="already_paid" [draggable]="false"
-                    [sortable]="false">
-                    <ng-template let-value="value" ngx-datatable-cell-template>
-                      <span> {{ value }} </span>
-                    </ng-template>
-                  </ngx-datatable-column>
-                  <ngx-datatable-column [width]="120" name="Due" prop="due"
-                    [draggable]="false" [sortable]="false">
-                    <ng-template let-value="value" ngx-datatable-cell-template>
-                      <span> {{ value }} </span>
-                    </ng-template>
-                  </ngx-datatable-column>
+                    <ngx-datatable-column [width]="150" name="Already Paid" prop="already_paid" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="120" name="Due" prop="due" [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
 
-                  <ngx-datatable-column [width]="120" name="Bill Creator" prop="bill_creator_full_name"
-                    [draggable]="false" [sortable]="false">
-                    <ng-template let-value="value" ngx-datatable-cell-template>
-                      <span> {{ value }} </span>
-                    </ng-template>
-                  </ngx-datatable-column>
+                    <ngx-datatable-column [width]="120" name="Bill Creator" prop="bill_creator_full_name"
+                      [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
 
-                  <ngx-datatable-column [width]="170" name="Created On" prop="created_at"
-                    [draggable]="false" [sortable]="false">
-                    <ng-template let-value="value" ngx-datatable-cell-template>
-                      <span> {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}} </span>
-                    </ng-template>
-                  </ngx-datatable-column>
+                    <ngx-datatable-column [width]="170" name="Created On" prop="created_at" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
 
 
-                  <ngx-datatable-column [width]="220" name="Action" prop="id" [draggable]="false"
-                    [sortable]="false">
-                    <ng-template let-row="row" ngx-datatable-cell-template>
-                      <button *ngIf="row.payment_status == 1 || row.payment_status == 2"
-                        [routerLink]="['/payment-collection',row.id]" class="btn btn-info btn-mini mr-2"><i
-                          class="icofont icofont-checked"></i>Collect Payment</button>
 
-                      <button (click)="newPrint(row.id)" class="btn btn-primary btn-mini"><i
-                          class="icofont icofont-doc"></i>See Invoice</button>
-
-                    </ng-template>
-                  </ngx-datatable-column>
 
                   </ngx-datatable>
 

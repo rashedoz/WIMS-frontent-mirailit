@@ -103,12 +103,12 @@
                             <div class="form-group row">
                               <div class="col-sm-4" *ngIf="billItemType == 'All Items' || billItemType == 'Frozen SIMs'">
                                 <input type="text"
-                                placeholder="Filter by date range"
+                                placeholder="Filter by month"
                                 class="form-control"
                                 (ngModelChange)="onBillItemDateValueChange($event)"
-                                [(ngModel)]="bsBillItemRangeValue"
-                                bsDaterangepicker
-                                [bsConfig]="bsConfig">
+                                [(ngModel)]="bsBillItemValue"
+                                bsDatepicker
+                                [bsConfig]="bsConfigMonth">
 
                               </div>
 

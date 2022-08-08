@@ -61,7 +61,7 @@ const MENUITEMS = [
       },
       {
         state: 'payment-list',
-        name: 'Payment Collection',
+        name: 'Payment List',
         type: 'link',
         icon: 'ti-control-forward',
         permission: 'is_superuser,is_staff',

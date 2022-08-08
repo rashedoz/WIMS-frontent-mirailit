@@ -62,7 +62,7 @@ export class BillComponent implements OnInit {
   methodList = [];
   selectedMethod = {id:1,name:'CASH'};
   isbalanceDeduct = false;
-  customerType = 'null';
+  customerType = 'all';
 
 
   constructor(
@@ -99,6 +99,23 @@ export class BillComponent implements OnInit {
     this.getList();
   }
 
+
+  onCustomerChange(e){
+    switch (e) {
+      case 'all':
+        this.getList();
+        break;
+      case 'wholesaler':
+        this.getList();
+        break;
+      case 'retailer':
+        this.getList();
+        break;
+
+      default:
+        break;
+    }
+  }
 
 
   changeTab(type,e) {
@@ -187,6 +204,17 @@ export class BillComponent implements OnInit {
       if(this.bsBillRangeValue){
         obj.billing_start_date = moment(this.bsBillRangeValue[0]).format('YYYY-MM-DD'),
         obj.billing_end_date = moment(this.bsBillRangeValue[1]).format('YYYY-MM-DD')
+      }
+
+      if(this.customerType == 'wholesaler'){
+        obj.is_wholesaler = 1;
+        obj.is_retailer = 0;
+      }else if(this.customerType == 'retailer'){
+        obj.is_wholesaler = 0;
+        obj.is_retailer = 1;
+      }else{
+        delete obj['is_wholesaler'];
+        delete obj['is_retailer'];
       }
 
 

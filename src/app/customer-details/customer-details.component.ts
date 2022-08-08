@@ -63,6 +63,7 @@ export class CustomerDetailsComponent implements OnInit {
   customer_id;
   customerObj = null;
   customerSIMDeviceCount = null;
+  bsConfigMonth: Partial<BsDatepickerConfig>;
   bsConfig: Partial<BsDaterangepickerConfig>;
   newTotal: number = 0;
   subTotal: number = 0;
@@ -123,7 +124,8 @@ export class CustomerDetailsComponent implements OnInit {
   simBillItemStatus = null;
   deviceBillItemStatus = null;
   simObj = null;
-  bsBillItemRangeValue: Date[];
+  // bsBillItemRangeValue: Date[];
+  bsBillItemValue: Date;
   bsBillDetailsRangeValue: Date[];
   bsPaymentRangeValue: Date[];
   selectedPaymentMethod = null;
@@ -172,8 +174,15 @@ export class CustomerDetailsComponent implements OnInit {
         clearPosition: 'right'
       }
     );
+    this.bsConfigMonth = Object.assign(
+      {
+        dateInputFormat: 'MMMM',
+        adaptivePosition: true,
+        minMode :'month'
+      }
+    );
 
-    this.bsBillItemRangeValue = [this.firstDay,this.lastDay];
+    this.bsBillItemValue = this.firstDay;
 
     if(this.customer_id){
       this.getCustomer();
@@ -252,7 +261,7 @@ selectTab(tabId: number) {
   changeTab(type,e) {
 
 
-    this.bsBillDetailsRangeValue = [this.firstDay,this.lastDay];
+    this.bsBillItemValue = this.firstDay;
     this.bsPaymentRangeValue = [this.firstDay,this.lastDay];
    // this.searchParam = '';
     this.pageTable.pageNumber = 0;
@@ -340,32 +349,33 @@ selectTab(tabId: number) {
    switch (type) {
      case 'All Items':
        this.url = 'bill/customer-billing-items';
-       this.getBillItemListWithPagination();
        this.billItemType = type;
+       this.getBillItemListWithPagination();
        break;
      case 'Frozen SIMs':
        this.url = 'bill/customer-billing-items';
        this.simBillItemStatus = 2;
-       this.getBillItemListWithPagination();
        this.billItemType = type;
+       this.getBillItemListWithPagination();
        break;
      case 'Cancelled SIMs':
       this.url = 'bill/customer-billing-items';
        this.simBillItemStatus = 4;
-       this.getBillItemListWithPagination();
        this.billItemType = type;
+       this.getBillItemListWithPagination();
        break;
      case 'Reissued SIMs':
       this.url = 'bill/customer-billing-items';
       this.simBillItemStatus = 6;
-      this.getBillItemListWithPagination();
       this.billItemType = type;
+       this.getBillItemListWithPagination();
        break;
      case 'Cancelled Devices':
       this.deviceBillItemStatus = 4;
       this.url = 'bill/customer-billing-items';
+      this.billItemType = type;
       this.getBillItemListWithPagination();
-       this.billItemType = type;
+
        break;
      default:
        this.billItemType = type;
@@ -399,10 +409,11 @@ selectTab(tabId: number) {
   }
 
   onBillItemDateValueChange(e){
+
     if(e){
-      this.bsBillItemRangeValue = [e[0],e[1]];
+      this.bsBillItemValue = e;
     }else{
-      this.bsBillItemRangeValue = null
+      this.bsBillItemValue = null
     }
     this.getBillItemListWithPagination();
   }
@@ -550,9 +561,16 @@ selectTab(tabId: number) {
       obj.device_status = this.deviceBillItemStatus;
     }
 
-    if(this.bsBillItemRangeValue && ( this.billItemType == 'All Items' || this.billItemType == 'Frozen SIMs' )){
-      obj.billing_start_date = moment(this.bsBillItemRangeValue[0]).format('YYYY-MM-DD'),
-      obj.billing_end_date = moment(this.bsBillItemRangeValue[1]).format('YYYY-MM-DD')
+
+    if( this.billItemType == 'All Items' || this.billItemType == 'Frozen SIMs'){
+      if(this.bsBillItemValue){
+        let monthLastDate = new Date(this.bsBillItemValue.getFullYear(), this.bsBillItemValue.getMonth() + 1, 0);
+        obj.billing_start_date = moment(this.bsBillItemValue).format('YYYY-MM-DD'),
+        obj.billing_end_date = moment(monthLastDate).format('YYYY-MM-DD')
+      }
+    } else{
+      delete obj['billing_start_date'];
+      delete obj['billing_end_date'];
     }
 
 
