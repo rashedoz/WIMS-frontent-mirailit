@@ -166,7 +166,7 @@ export class PrintService {
           package_name: element.pckg_name,
           notes: element.pckg_advance_pmnt_desc ? element.pckg_advance_pmnt_desc : '--',
           ends_at: element.pckg_expiry != null ? moment(element.pckg_expiry).format('MMMM Do YYYY') : 'recurring',
-          amount: element.pckg_first_bill_amount
+          amount: element.current_month_price
 
         });
 
