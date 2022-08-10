@@ -14,6 +14,12 @@
                 <div class="col-lg-12">
                   <tabset [justified]="false" type="pills">
 
+                    <tab (selectTab)="changeTab('All',$event)">
+                      <ng-template tabHeading>
+                        All
+                      </ng-template>
+                    </tab>
+
                     <tab (selectTab)="changeTab('Unpaid',$event)">
                       <ng-template tabHeading>
                         Unpaid
@@ -162,14 +168,15 @@
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="120" name="Bill Creator" prop="bill_creator_full_name"
+                    <ngx-datatable-column [width]="150" name="Bill Creator" prop="bill_creator_full_name"
                       [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
-                        <span> {{ value }} </span>
+                        <span *ngIf="value" > {{ value }} </span>
+                        <span *ngIf="!value" > system generated </span>
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="170" name="Created On" prop="created_at" [draggable]="false"
+                    <ngx-datatable-column [width]="190" name="Created On" prop="created_at" [draggable]="false"
                       [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span> {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}} </span>

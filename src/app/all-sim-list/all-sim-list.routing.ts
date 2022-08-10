@@ -6,7 +6,7 @@ export const AllSIMListRoutes: Routes = [{
   path: '',
   component: AllSIMListComponent,
   data: {
-    breadcrumb: 'All SIM List',
+    breadcrumb: 'All SIM',
     icon: 'icofont-home bg-c-blue',
     status: false
   }

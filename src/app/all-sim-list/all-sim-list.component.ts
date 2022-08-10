@@ -51,6 +51,8 @@ export class AllSIMListComponent implements OnInit {
   simObj = null;
   tabType = "Available";
   status = 1;
+  stock :any = null;
+
   constructor(
     public formBuilder: FormBuilder,
     private _service: CommonService,
@@ -69,11 +71,20 @@ export class AllSIMListComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getSIMStockData();
     this.getList();
     this.receiveSIMForm = this.formBuilder.group({
       id: [null, [Validators.required]],
       ICCID_no: [null, [Validators.required]],
     });
+  }
+
+  getSIMStockData() {
+    this._service.get('stock/get-current-sim-stock-history').subscribe(res => {
+      this.stock = res;
+      console.log(this.stock);
+    }, err => {}
+    );
   }
 
   // 'Available', 'Subscribed', 'Cancelled', 'Permanently Cancelled'
@@ -156,7 +167,7 @@ export class AllSIMListComponent implements OnInit {
         }, 1000);
       },
       (err) => {
-        this.toastr.error(err.message || err, "Error!", {
+        this.toastr.error(err.Msg || err, "Error!", {
           closeButton: true,
           disableTimeOut: true,
         });
@@ -229,7 +240,7 @@ export class AllSIMListComponent implements OnInit {
           },
           (err) => {
             this.blockUI.stop();
-            this.toastr.error(err.Message || err, "Error!", {
+            this.toastr.error(err.Msg || err, "Error!", {
               closeButton: true,
               disableTimeOut: true,
             });
@@ -300,7 +311,7 @@ export class AllSIMListComponent implements OnInit {
                 },
                 err => {
                   this.blockUI.stop();
-                  this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+                  this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
                 }
               );
             }
@@ -336,7 +347,7 @@ export class AllSIMListComponent implements OnInit {
         }, 1000);
       },
       (err) => {
-        this.toastr.error(err.message || err, "Error!", {
+        this.toastr.error(err.Msg || err, "Error!", {
           closeButton: true,
           disableTimeOut: true,
         });

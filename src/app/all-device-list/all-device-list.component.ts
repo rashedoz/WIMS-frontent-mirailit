@@ -7,7 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
 import { StockStatus } from '../_models/enums';
-
+import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
 
 @Component({
   selector: 'app-all-device-list',
@@ -33,8 +33,9 @@ export class AllDeviceListComponent implements OnInit {
   searchParam = '';
   tabType = "Available";
   status = 1;
-
+  stock = null;
   constructor(
+    private confirmService: ConfirmService,
     public formBuilder: FormBuilder,
     private _service: CommonService,
     private toastr: ToastrService,
@@ -49,11 +50,18 @@ export class AllDeviceListComponent implements OnInit {
 
 
   ngOnInit() {
-
+    this.getDeviceStockData();
     this.getList();
   }
 
 
+
+  getDeviceStockData() {
+    this._service.get('stock/get-current-device-stock-history').subscribe(res => {
+      this.stock = res;
+    }, err => {}
+    );
+  }
 
 setPage(pageInfo) {
     this.page.pageNumber = pageInfo.offset;
@@ -83,11 +91,66 @@ changeTab(type, e) {
       this.tabType = type;
       this.getList();
       break;
+    case "Permanently Cancelled":
+      this.status = 8;
+      this.tabType = type;
+      this.getList();
+      break;
     default:
       this.getList();
       break;
   }
 }
+
+onSubmitAction(action,row){
+  let url = '';
+  let txt = '';
+
+    switch (action) {
+      case 'return':
+        url = 'stock/return-device-to-stock/'+row.id;
+        txt = 'You are returning this device to stock.';
+        break;
+      case 'permanently_cancel':
+        url = 'stock/cancel-device-permanently/'+row.id;
+        txt = 'You are marking this device as permanently cancelled.';
+        break;
+      default:
+        break;
+    }
+
+
+
+  this.blockUI.start('Saving...');
+  this.confirmService.confirm('Are you sure?', txt)
+  .subscribe(
+      result => {
+          if (result) {
+            const request = this._service.patch(url, {});
+            request.subscribe(
+              data => {
+                this.blockUI.stop();
+                if (data.IsReport == "Success") {
+                  this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+                  this.getList();
+                } else if (data.IsReport == "Warning") {
+                  this.toastr.warning(data.Msg, 'Warning!', { timeOut: 2000 });
+                } else {
+                  this.toastr.error(data.Msg, 'Error!',  { timeOut: 2000 });
+                }
+              },
+              err => {
+                this.blockUI.stop();
+                this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
+              }
+            );
+          }else{
+            this.blockUI.stop();
+          }
+      },
+  );
+}
+
 
 
   getList() {
@@ -111,7 +174,7 @@ changeTab(type, e) {
         this.loadingIndicator = false;
       }, 1000);
     }, err => {
-      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);

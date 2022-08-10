@@ -140,7 +140,7 @@ getList() {
       this.loadingIndicator = false;
     }, 1000);
   }, err => {
-    this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+    this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
     setTimeout(() => {
       this.loadingIndicator = false;
     }, 1000);
@@ -194,7 +194,7 @@ showDetails(row, template: TemplateRef<any>) {
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }, err => {
     this.blockUI.stop();
-    this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+    this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
   });
 }
 
@@ -250,7 +250,7 @@ onFormSubmit() {
       },
       err => {
         this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+        this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
       }
     );
 
@@ -296,7 +296,7 @@ onFormSubmit() {
       },
       err => {
         this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+        this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
       }
     );
   }
@@ -335,7 +335,7 @@ onFormSubmitChangePassword() {
       },
       err => {
         this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+        this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
       }
     );
 

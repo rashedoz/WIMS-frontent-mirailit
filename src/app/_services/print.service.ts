@@ -161,12 +161,12 @@ export class PrintService {
         dataArray.push({
           no: i +1,
           ICCID_no: element.ICCID_no,
-          imei: element.IMEI ? element.IMEI : 'N/A',
           phone_number: element.phone_number,
+          imei: element.IMEI ? element.IMEI : 'N/A',
           package_name: element.pckg_name,
-          amount: element.pckg_first_bill_amount,
           notes: element.pckg_advance_pmnt_desc ? element.pckg_advance_pmnt_desc : '--',
-          ends_at: element.pckg_expiry ?? moment(res.pckg_expiry).format('MMMM Do YYYY'),
+          ends_at: element.pckg_expiry != null ? moment(element.pckg_expiry).format('MMMM Do YYYY') : 'recurring',
+          amount: element.pckg_first_bill_amount
 
         });
 

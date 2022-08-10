@@ -661,7 +661,7 @@ private fakeServiceSIM(term) {
                   },
                   err => {
                     this.blockUI.stop();
-                    this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+                    this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
                   }
                 );
 
@@ -749,7 +749,7 @@ private fakeServiceSIM(term) {
       },
       err => {
         this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+        this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
       }
     );
 

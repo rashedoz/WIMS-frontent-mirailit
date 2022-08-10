@@ -62,6 +62,8 @@ export class PaymentListComponent implements OnInit {
   selectedPaymentMethod = null;
   customerType = 'all';
 
+  paymentConfirmableCount = 0;
+
   constructor(
     private confirmService: ConfirmService,
     private modalService: BsModalService,
@@ -146,7 +148,7 @@ export class PaymentListComponent implements OnInit {
                 },
                 err => {
 
-                  this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+                  this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
                 }
               );
             }
@@ -187,12 +189,16 @@ export class PaymentListComponent implements OnInit {
         this.paymentList = res.results;
         this.page.totalElements = res.count;
         this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+        this.paymentConfirmableCount = 0;
+        this.paymentList.forEach(element => {
+          if(!element.is_payment_confirmed)this.paymentConfirmableCount++;
+        });
         setTimeout(() => {
           this.loadingIndicator = false;
         }, 1000);
       },
       (err) => {
-        this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+        this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);

@@ -632,7 +632,7 @@ export class SellDeviceComponent implements OnInit {
                   },
                   err => {
                     this.blockUI.stop();
-                    this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+                    this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
                   }
                 );
 

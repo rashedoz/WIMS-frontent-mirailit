@@ -158,7 +158,7 @@ export class UserListComponent implements OnInit {
       this.saveButtonText = 'Update';
       this.modalRef = this.modalService.show(template, this.modalConfig);
     }, err => {
-      this.toastr.error(err.message || err, 'Error!', { timeOut: 2000 });
+      this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
       this.blockUI.stop();
     }
     );

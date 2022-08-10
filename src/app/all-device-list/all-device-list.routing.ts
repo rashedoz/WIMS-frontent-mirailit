@@ -6,7 +6,7 @@ export const AllDeviceListRoutes: Routes = [{
   path: '',
   component: AllDeviceListComponent,
   data: {
-    breadcrumb: 'All Device List',
+    breadcrumb: 'All Devices',
     icon: 'icofont-home bg-c-blue',
     status: false
   }

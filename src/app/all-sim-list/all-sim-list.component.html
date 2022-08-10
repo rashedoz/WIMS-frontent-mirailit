@@ -1,4 +1,87 @@
 <block-ui>
+
+  <div class="row" *ngIf="stock">
+
+    <div class="col-md-2 mb-3">
+      <div class="card client-blocks dark-primary-border">
+        <div class="card-block">
+          <h5 class="f-22">All Stock Quantity</h5>
+          <ul>
+            <li> <img class="text-danger iw-42" src="assets/icon/custom/all-stock.png">
+            </li>
+            <li class="text-right f-22">
+              {{stock.stock_qty}}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-2 mb-3">
+      <div class="card client-blocks success-border">
+        <div class="card-block">
+          <h5>Available Stock Quantity </h5>
+          <ul>
+            <li> <img class="text-danger iw-42" src="assets/icon/custom/available.png">
+            </li>
+            <li class="text-right text-success f-42">
+              {{stock.available_stock_qty}}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-md-2 mb-3">
+      <div class="card client-blocks warning-border">
+        <div class="card-block">
+          <h5>Cancelled Quantity</h5>
+          <ul>
+            <li> <img class="text-danger iw-42" src="assets/icon/custom/cancel.png">
+            </li>
+            <li class="text-right text-warning f-42">
+              {{stock.cancelled_qty}}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="col-md-2 mb-3">
+      <div class="card client-blocks dark-primary-border">
+        <div class="card-block">
+          <h5>Reissued Quantity</h5>
+          <ul>
+            <li> <img class="text-danger iw-42" src="assets/icon/custom/return.png">
+            </li>
+            <li class="text-right f-42">
+              {{stock.reissued_qty}}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-2 mb-3">
+      <div class="card client-blocks">
+        <div class="card-block">
+          <h5>Subscribed Quantity</h5>
+          <ul>
+            <li> <img class="text-danger iw-42" src="assets/icon/custom/subscribe.png">
+            </li>
+            <li class="text-right text-primary f-42">
+              {{stock.subscribed_qty}}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
   <div class="row">
 
     <div class="col-lg-12">
@@ -42,7 +125,8 @@
                 <div class="col-lg-7">
                   <div class="form-group row">
                     <div class="col-sm-12">
-                      <input type="text" class="form-control" placeholder="Filter by cid, iccid no, phone number, customer name.."
+                      <input type="text" class="form-control"
+                        placeholder="Filter by cid, iccid no, phone number, customer name.."
                         (keyup)="filterSearch($event)" />
 
                     </div>
@@ -99,49 +183,51 @@
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column *ngIf="tabType == 'Cancelled'" [width]="120" name="Last Customer" prop="customer_full_name" [draggable]="false"
-                      [sortable]="false">
+                    <ngx-datatable-column *ngIf="tabType == 'Cancelled'" [width]="120" name="Last Customer"
+                      prop="customer_full_name" [draggable]="false" [sortable]="false">
                       <ng-template let-row="row" ngx-datatable-cell-template>
-                        <a [routerLink]="['/customer-details/'+row.current_owner]" routerLinkActive="router-link-active" target="_blank" > {{ row.customer_full_name }} </a>
+                        <a [routerLink]="['/customer-details/'+row.current_owner]" routerLinkActive="router-link-active"
+                          target="_blank"> {{ row.customer_full_name }} </a>
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column *ngIf="tabType == 'Subscribed'" [width]="120" name="Current Customer" prop="customer_full_name" [draggable]="false"
-                      [sortable]="false">
+                    <ngx-datatable-column *ngIf="tabType == 'Subscribed'" [width]="120" name="Current Customer"
+                      prop="customer_full_name" [draggable]="false" [sortable]="false">
                       <ng-template let-row="row" ngx-datatable-cell-template>
-                        <a [routerLink]="['/customer-details/'+row.current_owner]" routerLinkActive="router-link-active" target="_blank" > {{ row.customer_full_name }} </a>
+                        <a [routerLink]="['/customer-details/'+row.current_owner]" routerLinkActive="router-link-active"
+                          target="_blank"> {{ row.customer_full_name }} </a>
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column *ngIf="tabType == 'Cancelled'" [width]="120" name="Last Cancelled At" prop="last_cancelled_at" [draggable]="false"
-                      [sortable]="false">
+                    <ngx-datatable-column *ngIf="tabType == 'Cancelled'" [width]="120" name="Last Cancelled At"
+                      prop="last_cancelled_at" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span *ngIf="!value"> -- </span>
                         <span *ngIf="value"> {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}}</span>
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column *ngIf="tabType == 'Reissued'" [width]="120" name="Last Reissued At" prop="last_reissued_at" [draggable]="false"
-                      [sortable]="false">
+                    <ngx-datatable-column *ngIf="tabType == 'Reissued'" [width]="120" name="Last Reissued At"
+                      prop="last_reissued_at" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span *ngIf="!value"> -- </span>
                         <span *ngIf="value"> {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}}</span>
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column *ngIf="tabType == 'Available'" [width]="120" name="Last Returned At" prop="last_returned_at" [draggable]="false"
-                      [sortable]="false">
+                    <ngx-datatable-column *ngIf="tabType == 'Available'" [width]="120" name="Last Returned At"
+                      prop="last_returned_at" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span *ngIf="!value"> -- </span>
-                       <span *ngIf="value"> {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}}</span>
+                        <span *ngIf="value"> {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}}</span>
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column *ngIf="tabType == 'Available'" [width]="120" name="Last Received From MC" prop="last_received_from_mc_at" [draggable]="false"
-                      [sortable]="false">
+                    <ngx-datatable-column *ngIf="tabType == 'Available'" [width]="120" name="Last Received From MC"
+                      prop="last_received_from_mc_at" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
-                       <span *ngIf="!value"> -- </span>
-                       <span *ngIf="value"> {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}}</span>
+                        <span *ngIf="!value"> -- </span>
+                        <span *ngIf="value"> {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}}</span>
                       </ng-template>
                     </ngx-datatable-column>
 
@@ -149,13 +235,16 @@
 
                     <ngx-datatable-column [width]="350" name="Action" prop="id" [draggable]="false" [sortable]="false">
                       <ng-template let-row="row" ngx-datatable-cell-template>
-                        <button *ngIf="tabType == 'Cancelled'" class="btn btn-info btn-mini mr-1" (click)="onSubmitAction('reissuance',row)">
+                        <button *ngIf="tabType == 'Cancelled'" class="btn btn-info btn-mini mr-1"
+                          (click)="onSubmitAction('reissuance',row)">
                           Reissue
                         </button>
-                        <button *ngIf="tabType == 'Reissued'" class="btn btn-info btn-mini mr-1" (click)="openModalSIMRecieve(row,templateSIMReceive)">
+                        <button *ngIf="tabType == 'Reissued'" class="btn btn-info btn-mini mr-1"
+                          (click)="openModalSIMRecieve(row,templateSIMReceive)">
                           Receive
                         </button>
-                        <button *ngIf="tabType == 'Cancelled'" class="btn btn-info btn-mini mr-1" (click)="onSubmitAction('return',row)">
+                        <button *ngIf="tabType == 'Cancelled'" class="btn btn-info btn-mini mr-1"
+                          (click)="onSubmitAction('return',row)">
                           Return
                         </button>
                         <button class="btn btn-info btn-mini mr-1" (click)="openModal(row, template)">
@@ -356,10 +445,10 @@
         <div class="row mb-3" *ngIf="simObj">
           <div class="col-md-6">
             <p class="fs-14 mb-0">SIM CID No : <b>{{simObj.CID_no}}</b></p>
-            <p class="fs-14 mb-0" >Phone Number : <b>{{simObj.phone_number}}</b></p>
+            <p class="fs-14 mb-0">Phone Number : <b>{{simObj.phone_number}}</b></p>
           </div>
           <div class="col-md-6">
-            <p class="fs-14 mb-0" >Current SIM ICCID : <b>{{simObj.ICCID_no}} </b></p>
+            <p class="fs-14 mb-0">Current SIM ICCID : <b>{{simObj.ICCID_no}} </b></p>
 
           </div>
         </div>
@@ -369,8 +458,8 @@
           <div class="form-group row">
             <label class="col-sm-4 col-form-label">New ICCID No</label>
             <div class="col-sm-8">
-              <input [ngClass]="{ 'is-invalid': submitted && rs.ICCID_no.errors}"
-              formControlName="ICCID_no" type="text" class="form-control">
+              <input [ngClass]="{ 'is-invalid': submitted && rs.ICCID_no.errors}" formControlName="ICCID_no" type="text"
+                class="form-control">
               <div *ngIf="submitted && rs.ICCID_no.errors" class="error-text">
                 <small *ngIf="rs.ICCID_no.errors.required" class="text-danger"> ICCID is
                   required</small>
@@ -387,9 +476,9 @@
         <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideSIMRecieve()"> <i
             class="icofont icofont-close"></i> Close</button>
 
-            <button class="btn btn-success btn-sm btn-outline-success float-right" (click)="onSubmitSIMReceive()">
-              <i class="icofont-save"></i> Receive
-            </button>
+        <button class="btn btn-success btn-sm btn-outline-success float-right" (click)="onSubmitSIMReceive()">
+          <i class="icofont-save"></i> Receive
+        </button>
 
       </div>
 

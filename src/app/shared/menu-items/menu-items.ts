@@ -86,13 +86,13 @@ const MENUITEMS = [
         icon: 'ti-control-forward',
         permission: 'is_superuser,is_staff',
       },
-      {
-        state: 'sim-stock-history',
-        name: 'Sim Stock Summary',
-        type: 'link',
-        icon: 'ti-control-forward',
-        permission: 'is_superuser,is_staff',
-      },
+      // {
+      //   state: 'sim-stock-history',
+      //   name: 'Sim Stock Summary',
+      //   type: 'link',
+      //   icon: 'ti-control-forward',
+      //   permission: 'is_superuser,is_staff',
+      // },
       {
         state: 'all-sim-list',
         name: 'Sim List',
@@ -100,13 +100,13 @@ const MENUITEMS = [
         icon: 'ti-control-forward',
         permission: 'is_superuser,is_staff',
       },
-      {
-        state: 'device-stock-history',
-        name: 'Device Stock Summary',
-        type: 'link',
-        icon: 'ti-control-forward',
-        permission: 'is_superuser,is_staff',
-      },
+      // {
+      //   state: 'device-stock-history',
+      //   name: 'Device Stock Summary',
+      //   type: 'link',
+      //   icon: 'ti-control-forward',
+      //   permission: 'is_superuser,is_staff',
+      // },
       {
         state: 'all-device-list',
         name: 'Device List',
@@ -121,36 +121,44 @@ const MENUITEMS = [
     permission: 'is_superuser,is_staff',
     main: [
       {
+        state: 'customer',
         name: 'Customers',
-        type: 'sub',
+        type: 'link',
+        icon: 'ti-control-forward',
         permission: 'is_superuser,is_staff',
-        icon: 'icofont-brand-microsoft',
-        children: [
-          {
-            state: 'customer',
-            name: 'Customer List ',
-            type: 'link',
-            icon: 'ti-control-forward',
-            permission: 'is_superuser,is_staff',
-          },
-          {
-            state: 'customer-due-list',
-            name: 'Customers Due List ',
-            type: 'link',
-            icon: 'ti-control-forward',
-            permission: 'is_superuser,is_staff',
-          },
-          {
-            state: 'customer-balance-list',
-            name: 'Customer Balance',
-            type: 'link',
-            icon: 'ti-control-forward',
-            permission: 'is_superuser,is_staff',
-          }
-
-
-        ]
       },
+
+      // {
+      //   name: 'Customers',
+      //   type: 'sub',
+      //   permission: 'is_superuser,is_staff',
+      //   icon: 'icofont-brand-microsoft',
+      //   children: [
+      //     {
+      //       state: 'customer',
+      //       name: 'Customer List ',
+      //       type: 'link',
+      //       icon: 'ti-control-forward',
+      //       permission: 'is_superuser,is_staff',
+      //     },
+      //     {
+      //       state: 'customer-due-list',
+      //       name: 'Customers Due List ',
+      //       type: 'link',
+      //       icon: 'ti-control-forward',
+      //       permission: 'is_superuser,is_staff',
+      //     },
+      //     {
+      //       state: 'customer-balance-list',
+      //       name: 'Customer Balance',
+      //       type: 'link',
+      //       icon: 'ti-control-forward',
+      //       permission: 'is_superuser,is_staff',
+      //     }
+
+
+      //   ]
+      // },
       {
         state: 'supplier',
         name: 'Suppliers',

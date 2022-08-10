@@ -49,7 +49,7 @@ export class BulkEntryComponent implements OnInit {
   simFile:File;
   deviceFile:File;
   subscriptionFile:File;
-  
+
   retrailerList:Array<any> = [];
   wholesalerList:Array<any> = [];
   simList:Array<any> = [];
@@ -73,7 +73,7 @@ export class BulkEntryComponent implements OnInit {
 
   ngOnInit() {
     this.entryForm = this.formBuilder.group({
-      id: [null]    
+      id: [null]
     });
 
   }
@@ -109,21 +109,21 @@ export class BulkEntryComponent implements OnInit {
   }
 
 
-  uploadRetailerFile(event)     
-  {    
+  uploadRetailerFile(event)
+  {
   this.retrailerFile= event.target.files[0];
-  let fileReader = new FileReader();    
-  fileReader.readAsArrayBuffer(this.retrailerFile);     
-  fileReader.onload = (e) => {    
-      this.arrayBuffer = fileReader.result;    
-      var data = new Uint8Array(this.arrayBuffer);    
-      var arr = new Array();    
-      for(var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);    
-      var bstr = arr.join("");    
-      var workbook = XLSX.read(bstr, {type:"binary"});    
-      var first_sheet_name = workbook.SheetNames[0];    
-      var worksheet = workbook.Sheets[first_sheet_name];  
-      const list = XLSX.utils.sheet_to_json(worksheet);  
+  let fileReader = new FileReader();
+  fileReader.readAsArrayBuffer(this.retrailerFile);
+  fileReader.onload = (e) => {
+      this.arrayBuffer = fileReader.result;
+      var data = new Uint8Array(this.arrayBuffer);
+      var arr = new Array();
+      for(var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);
+      var bstr = arr.join("");
+      var workbook = XLSX.read(bstr, {type:"binary"});
+      var first_sheet_name = workbook.SheetNames[0];
+      var worksheet = workbook.Sheets[first_sheet_name];
+      const list = XLSX.utils.sheet_to_json(worksheet);
       this.retrailerList = [];
       list.forEach((element,i) => {
           this.retrailerList.push({
@@ -149,25 +149,25 @@ export class BulkEntryComponent implements OnInit {
             is_staff: 0,
             is_superuser:0
           })
-        });     
+        });
   }
 }
 
-  uploadWholesalerFile(event)     
-  {    
+  uploadWholesalerFile(event)
+  {
   this.wholesalerFile= event.target.files[0];
-  let fileReader = new FileReader();    
-  fileReader.readAsArrayBuffer(this.wholesalerFile);     
-  fileReader.onload = (e) => {    
-      this.arrayBuffer = fileReader.result;    
-      var data = new Uint8Array(this.arrayBuffer);    
-      var arr = new Array();    
-      for(var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);    
-      var bstr = arr.join("");    
-      var workbook = XLSX.read(bstr, {type:"binary"});    
-      var first_sheet_name = workbook.SheetNames[0];    
-      var worksheet = workbook.Sheets[first_sheet_name];  
-      const list = XLSX.utils.sheet_to_json(worksheet);  
+  let fileReader = new FileReader();
+  fileReader.readAsArrayBuffer(this.wholesalerFile);
+  fileReader.onload = (e) => {
+      this.arrayBuffer = fileReader.result;
+      var data = new Uint8Array(this.arrayBuffer);
+      var arr = new Array();
+      for(var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);
+      var bstr = arr.join("");
+      var workbook = XLSX.read(bstr, {type:"binary"});
+      var first_sheet_name = workbook.SheetNames[0];
+      var worksheet = workbook.Sheets[first_sheet_name];
+      const list = XLSX.utils.sheet_to_json(worksheet);
       this.wholesalerList = [];
       list.forEach((element,i) => {
           this.wholesalerList.push({
@@ -193,26 +193,26 @@ export class BulkEntryComponent implements OnInit {
             is_staff: 0,
             is_superuser:0
           })
-        });  
-        
+        });
+
   }
 }
 
-  uploadSIMFile(event)     
-    {    
+  uploadSIMFile(event)
+    {
     this.simFile= event.target.files[0];
-    let fileReader = new FileReader();    
-    fileReader.readAsArrayBuffer(this.simFile);     
-    fileReader.onload = (e) => {    
-        this.arrayBuffer = fileReader.result;    
-        var data = new Uint8Array(this.arrayBuffer);    
-        var arr = new Array();    
-        for(var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);    
-        var bstr = arr.join("");    
-        var workbook = XLSX.read(bstr, {type:"binary"});    
-        var first_sheet_name = workbook.SheetNames[0];    
-        var worksheet = workbook.Sheets[first_sheet_name];  
-        const list = XLSX.utils.sheet_to_json(worksheet);  
+    let fileReader = new FileReader();
+    fileReader.readAsArrayBuffer(this.simFile);
+    fileReader.onload = (e) => {
+        this.arrayBuffer = fileReader.result;
+        var data = new Uint8Array(this.arrayBuffer);
+        var arr = new Array();
+        for(var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);
+        var bstr = arr.join("");
+        var workbook = XLSX.read(bstr, {type:"binary"});
+        var first_sheet_name = workbook.SheetNames[0];
+        var worksheet = workbook.Sheets[first_sheet_name];
+        const list = XLSX.utils.sheet_to_json(worksheet);
         this.simList = [];
         list.forEach((element,i) => {
             this.simList.push({
@@ -221,57 +221,57 @@ export class BulkEntryComponent implements OnInit {
               phone_number:element['phone_number'],
               CID_no:element['CID_no']
             })
-          });  
+          });
           console.log(this.simList);
     }
   }
 
-  uploadDeviceFile(event)     
-    {    
+  uploadDeviceFile(event)
+    {
     this.deviceFile= event.target.files[0];
-    let fileReader = new FileReader();    
-    fileReader.readAsArrayBuffer(this.deviceFile);     
-    fileReader.onload = (e) => {    
-        this.arrayBuffer = fileReader.result;    
-        var data = new Uint8Array(this.arrayBuffer);    
-        var arr = new Array();    
-        for(var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);    
-        var bstr = arr.join("");    
-        var workbook = XLSX.read(bstr, {type:"binary"});    
-        var first_sheet_name = workbook.SheetNames[0];    
-        var worksheet = workbook.Sheets[first_sheet_name];  
-        const list = XLSX.utils.sheet_to_json(worksheet);  
+    let fileReader = new FileReader();
+    fileReader.readAsArrayBuffer(this.deviceFile);
+    fileReader.onload = (e) => {
+        this.arrayBuffer = fileReader.result;
+        var data = new Uint8Array(this.arrayBuffer);
+        var arr = new Array();
+        for(var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);
+        var bstr = arr.join("");
+        var workbook = XLSX.read(bstr, {type:"binary"});
+        var first_sheet_name = workbook.SheetNames[0];
+        var worksheet = workbook.Sheets[first_sheet_name];
+        const list = XLSX.utils.sheet_to_json(worksheet);
         this.deviceList = [];
         list.forEach((element,i) => {
             this.deviceList.push({
               id:Number(element['id']),
               IMEI: element['IMEI'],
             })
-          });  
+          });
           console.log(this.deviceList);
     }
   }
 
-  uploadSubscriptionFile(event)     
-    {    
+  uploadSubscriptionFile(event)
+    {
     this.subscriptionFile= event.target.files[0];
-    let fileReader = new FileReader();    
-    fileReader.readAsArrayBuffer(this.subscriptionFile);     
-    fileReader.onload = (e) => {    
-        this.arrayBuffer = fileReader.result;    
-        var data = new Uint8Array(this.arrayBuffer);    
-        var arr = new Array();    
-        for(var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);    
-        var bstr = arr.join("");    
-        var workbook = XLSX.read(bstr, {type:"binary"});    
-        var first_sheet_name = workbook.SheetNames[0];    
-        var worksheet = workbook.Sheets[first_sheet_name];  
-        const list = XLSX.utils.sheet_to_json(worksheet);  
+    let fileReader = new FileReader();
+    fileReader.readAsArrayBuffer(this.subscriptionFile);
+    fileReader.onload = (e) => {
+        this.arrayBuffer = fileReader.result;
+        var data = new Uint8Array(this.arrayBuffer);
+        var arr = new Array();
+        for(var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);
+        var bstr = arr.join("");
+        var workbook = XLSX.read(bstr, {type:"binary"});
+        var first_sheet_name = workbook.SheetNames[0];
+        var worksheet = workbook.Sheets[first_sheet_name];
+        const list = XLSX.utils.sheet_to_json(worksheet);
         this.subscriptionList = [];
         list.forEach((element,i) => {
-        
+
           let simArray = [],iccidArray = [],planArray = [],amountArray = [];
-          
+
          simArray = element['sim'].toString().split(',');
          iccidArray =  element['ICCID_no'].toString().split(',');
          planArray =  element['plan'].toString().split(',');
@@ -289,10 +289,10 @@ export class BulkEntryComponent implements OnInit {
             "amount": Number(amountArray[i].trim()),
             "customer":Number(element['customer'])
           });
-          subscribed_relocation_items_array.push({          
-            "sim": Number(sim.trim()),            
+          subscribed_relocation_items_array.push({
+            "sim": Number(sim.trim()),
             "plan": Number(planArray[i].trim()),
-            "actual_price": Number(amountArray[i].trim()),  
+            "actual_price": Number(amountArray[i].trim()),
             "discount":0,
             "payable_amount":Number(amountArray[i].trim()),
             "changes_price":0,
@@ -325,12 +325,12 @@ export class BulkEntryComponent implements OnInit {
               "subscribed_relocation_items":subscribed_relocation_items_array
           })
 
-          });  
+          });
           console.log(this.subscriptionList);
     }
   }
 
- 
+
   onSubmitRetailer() {
 
     if (this.retrailerList.length == 0) {
@@ -353,7 +353,7 @@ export class BulkEntryComponent implements OnInit {
       },
       err => {
         this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+        this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
       }
     );
 
@@ -381,11 +381,11 @@ export class BulkEntryComponent implements OnInit {
       },
       err => {
         this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+        this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
       }
     );
 
-  } 
+  }
 
   onSubmitSIM() {
 
@@ -409,7 +409,7 @@ export class BulkEntryComponent implements OnInit {
       },
       err => {
         this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+        this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
       }
     );
 
@@ -437,13 +437,13 @@ export class BulkEntryComponent implements OnInit {
       },
       err => {
         this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+        this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
       }
     );
 
   }
 
-  
+
   onSubmitSubscription() {
 
     if (this.subscriptionList.length == 0) {
@@ -466,7 +466,7 @@ export class BulkEntryComponent implements OnInit {
       },
       err => {
         this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+        this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
       }
     );
 

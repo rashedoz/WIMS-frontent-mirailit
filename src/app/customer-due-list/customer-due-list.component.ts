@@ -172,7 +172,7 @@ setPageDue(pageInfo) {
       this.modalRef = this.modalService.show(template, this.modalConfig);
     }, err => {
       this.blockUI.stop();
-      this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+      this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
     });
   }
 
@@ -228,7 +228,7 @@ setPageDue(pageInfo) {
         this.loadingIndicator = false;
       }, 1000);
     }, err => {
-      this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+      this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -258,7 +258,7 @@ setPageDue(pageInfo) {
         this.loadingIndicator = false;
       }, 1000);
     }, err => {
-      this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+      this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -283,7 +283,7 @@ setPageDue(pageInfo) {
         this.loadingIndicator = false;
       }, 1000);
     }, err => {
-      this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+      this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -315,7 +315,7 @@ setPageDue(pageInfo) {
   //                },
   //                err => {
 
-  //                  this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+  //                  this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
   //                }
   //              );
   //            }
@@ -398,7 +398,7 @@ changePassword(row, template: TemplateRef<any>) {
         this.loadingIndicator = false;
       }, 1000);
     }, err => {
-      this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+      this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -427,7 +427,7 @@ changePassword(row, template: TemplateRef<any>) {
         this.loadingIndicator = false;
       }, 1000);
     }, err => {
-      this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+      this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -479,7 +479,7 @@ changePassword(row, template: TemplateRef<any>) {
         },
         err => {
           this.blockUI.stop();
-          this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+          this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
         }
       );
 
@@ -524,7 +524,7 @@ changePassword(row, template: TemplateRef<any>) {
         },
         err => {
           this.blockUI.stop();
-          this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+          this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
         }
       );
     }
@@ -565,7 +565,7 @@ changePassword(row, template: TemplateRef<any>) {
         },
         err => {
           this.blockUI.stop();
-          this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+          this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
         }
       );
 

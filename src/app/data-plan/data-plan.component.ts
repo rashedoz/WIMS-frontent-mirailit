@@ -112,7 +112,7 @@ export class DataPlanComponent implements OnInit {
         this.loadingIndicator = false;
       }, 1000);
     }, err => {
-      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -137,7 +137,7 @@ export class DataPlanComponent implements OnInit {
 
   //   }, err => {
   //     this.blockUI.stop();
-  //     this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+  //     this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
   //   });
   // }
 
@@ -180,7 +180,7 @@ export class DataPlanComponent implements OnInit {
       },
       err => {
         this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+        this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
       }
     );
 
@@ -192,6 +192,15 @@ export class DataPlanComponent implements OnInit {
     this.submitted = false;
     this.modalTitle = 'Add Data Plan';
     this.btnSaveText = 'Save';
+
+      let planHistoryControl = <FormArray>(
+        this.entryForm.controls.planHistory
+      );
+      while (this.planHistoryList.length !== 0) {
+        planHistoryControl.removeAt(0);
+      }
+
+    this.planHistoryList.push(this.initPlanHistory());
   }
 
   openModal(template: TemplateRef<any>) {

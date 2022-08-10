@@ -9,7 +9,7 @@
                             <h5 *ngIf="activeTable == 0"> All Customer List </h5>
                             <h5 *ngIf="activeTable == 1"> Wholesaler List </h5>
                             <h5 *ngIf="activeTable == 2"> Retailer List </h5>
-                            <h5 *ngIf="activeTable == 3"> Customers with Due List </h5>
+                            <!-- <h5 *ngIf="activeTable == 3"> Customers with Due List </h5> -->
 
 
 
@@ -42,7 +42,7 @@
                                 <tab  heading="All" (selectTab)="onTabSelect(0,$event)"></tab>
                                 <tab  heading="Wholesaler" (selectTab)="onTabSelect(1,$event)"></tab>
                                 <tab  heading="Retailer" (selectTab)="onTabSelect(2,$event)"></tab>
-                                <tab  heading="Customers with Due" (selectTab)="onTabSelect(3,$event)"></tab>
+                                <!-- <tab  heading="Customers with Due" (selectTab)="onTabSelect(3,$event)"></tab> -->
                               </tabset>
                             </div>
                             </div>

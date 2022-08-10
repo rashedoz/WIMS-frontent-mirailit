@@ -47,7 +47,7 @@ export class BillComponent implements OnInit {
   date = new Date();
   firstDay = new Date(this.date.getFullYear(), this.date.getMonth(), 1);
   lastDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0);
-  billType = 'Unpaid';
+  billType = 'All';
   remarks = null;
   billItem;
   balanceObj;
@@ -125,6 +125,10 @@ export class BillComponent implements OnInit {
     this.page.size = 10;
 
     switch (type) {
+      case 'All':
+        this.billType = type;
+       this.getList();
+       break;
       case 'Unpaid':
         this.billType = type;
        this.getList();
@@ -176,6 +180,14 @@ export class BillComponent implements OnInit {
 
     let status = null;
     switch (this.billType) {
+      case 'All':
+        status = null;
+        break;
+
+      case 'Unpaid':
+        status = 1;
+        break;
+
       case 'Unpaid':
         status = 1;
         break;
@@ -195,11 +207,16 @@ export class BillComponent implements OnInit {
     this.loadingIndicator = true;
     const obj:any ={
       // customer_id : this.customer_id,
-      payment_status : status,
       limit : this.page.size,
       page : this.page.pageNumber + 1,
       search_param : this.searchParam
       }
+      if(status){
+        obj.payment_status = status;
+      }else{
+        delete obj['payment_status'];
+      }
+
 
       if(this.bsBillRangeValue){
         obj.billing_start_date = moment(this.bsBillRangeValue[0]).format('YYYY-MM-DD'),
@@ -232,7 +249,7 @@ export class BillComponent implements OnInit {
         this.loadingIndicator = false;
       }, 1000);
     }, err => {
-      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);

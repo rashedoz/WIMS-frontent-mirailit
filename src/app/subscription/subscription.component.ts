@@ -97,7 +97,7 @@ export class SubscriptionComponent implements OnInit {
                 },
                 err => {
                   this.blockUI.stop();
-                  this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+                  this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
                 }
               );
             }

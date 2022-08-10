@@ -90,7 +90,7 @@ export class WholesalerListComponent implements OnInit {
         this.loadingIndicator = false;
       }, 1000);
     }, err => {
-      this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+      this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -114,7 +114,7 @@ export class WholesalerListComponent implements OnInit {
       this.modalRef = this.modalService.show(template, this.modalConfig);
     }, err => {
       this.blockUI.stop();
-      this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+      this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
     });
   }
 
@@ -155,7 +155,7 @@ export class WholesalerListComponent implements OnInit {
       },
       err => {
         this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+        this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
       }
     );
 

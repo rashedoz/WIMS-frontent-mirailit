@@ -24360,3 +24360,7 @@ bs-datepicker-container { z-index: 3000; }
 .div-pointer{
   cursor: pointer;
 }
+
+.iw-42{
+  width: 42px !important;
+}

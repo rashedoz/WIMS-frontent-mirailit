@@ -62,7 +62,7 @@ export class ProfileEditComponent implements OnInit {
   });
 
   this.RegistrerFormChangePassword = this.formBuilder.group({
-    id:[null],    
+    id:[null],
     old_password: ['', [Validators.required, Validators.minLength(6)]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     confirmPassword: ['', Validators.required]
@@ -112,7 +112,7 @@ export class ProfileEditComponent implements OnInit {
 
     }, err => {
       this.blockUI.stop();
-      this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+      this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
     });
 
 }
@@ -127,10 +127,10 @@ onFormSubmit() {
     this.blockUI.start('Updating...');
 
     const obj = {
-      // email: this.RegistrerForm.value.email.trim(),     
+      // email: this.RegistrerForm.value.email.trim(),
       first_name: this.RegistrerForm.value.firstName.trim(),
       last_name: this.RegistrerForm.value.lastName.trim(),
-      mobile: this.RegistrerForm.value.mobile.trim(),  
+      mobile: this.RegistrerForm.value.mobile.trim(),
       alternative_mobile:this.RegistrerForm.value.alternative_mobile,
       occupation:this.RegistrerForm.value.occupation,
       nid:this.RegistrerForm.value.nid,
@@ -142,25 +142,25 @@ onFormSubmit() {
       acc_number:this.RegistrerForm.value.acc_number,
       telephone:this.RegistrerForm.value.telephone,
     };
-  
+
     this._service.put('update-user-profile/'+id, obj).subscribe(
       data => {
         this.blockUI.stop();
         if (data.IsReport == "Success") {
           this.toastr.success(data.Msg, 'Success!', { timeOut: 4000 });
-          this.getDetails();   
-        
+          this.getDetails();
+
         } else if (data.IsReport == "Warning") {
-          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });        
+          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
         }
-        
+
         else {
           this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
         }
       },
       err => {
         this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+        this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
       }
     );
 
@@ -176,32 +176,32 @@ onFormSubmitChangePassword() {
 
     const obj = {
       user_id: this.RegistrerFormChangePassword.value.id,
-      old_password: this.RegistrerFormChangePassword.value.old_password.trim(),     
-      new_password: this.RegistrerFormChangePassword.value.password.trim()     
+      old_password: this.RegistrerFormChangePassword.value.old_password.trim(),
+      new_password: this.RegistrerFormChangePassword.value.password.trim()
     };
-  
+
     this._service.post('update-user-password', obj).subscribe(
       data => {
         this.blockUI.stop();
         if (data.IsReport == "Success") {
           this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
-          this.getDetails(); 
+          this.getDetails();
           this.submittedPassword = false;
         }
         else if (data.IsReport == "Warning") {
-          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });        
+          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
         }else {
           this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
         }
       },
       err => {
         this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+        this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
       }
     );
 
 
- 
+
 
 }
 

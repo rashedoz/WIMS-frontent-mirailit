@@ -129,7 +129,7 @@ export class CustomerDetailsComponent implements OnInit {
   bsBillDetailsRangeValue: Date[];
   bsPaymentRangeValue: Date[];
   selectedPaymentMethod = null;
-
+  paymentConfirmableCount = 0;
 
 
   constructor(
@@ -277,8 +277,9 @@ selectTab(tabId: number) {
        this.billItemsDetailTabs.tabs[0].active = true;
         break;
       case 'Bills Details':
+        this.bsBillDetailsRangeValue = [this.firstDay,this.lastDay];
         this.url = 'bill/get-bill-list';
-        this.billType = 'Unpaid';
+        this.billType = 'All';
         this.getBillDetailsListWithPagination();
         this.billDetailTabs.tabs[0].active = true;
         break;
@@ -311,6 +312,11 @@ selectTab(tabId: number) {
    this.pageTable.pageNumber = 0;
    this.pageTable.size = 10;
    switch (type) {
+     case 'All':
+       this.url = 'bill/get-bill-list';
+       this.billType = type;
+       this.getBillDetailsListWithPagination();
+       break;
      case 'Unpaid':
        this.url = 'bill/get-bill-list';
        this.billType = type;
@@ -496,7 +502,7 @@ selectTab(tabId: number) {
                  },
                  err => {
 
-                   this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+                   this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
                  }
                );
              }
@@ -532,11 +538,17 @@ selectTab(tabId: number) {
       this.paymentDetailList = res.results;
         this.pageTable.totalElements = res.count;
       this.pageTable.totalPages = Math.ceil(this.pageTable.totalElements / this.pageTable.size);
+
+      this.paymentConfirmableCount = 0;
+      this.paymentDetailList.forEach(element => {
+        if(!element.is_payment_confirmed)this.paymentConfirmableCount++;
+      });
+
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
     }, err => {
-      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -587,7 +599,7 @@ selectTab(tabId: number) {
         this.loadingIndicator = false;
       }, 1000);
     }, err => {
-      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -599,6 +611,10 @@ selectTab(tabId: number) {
 
     let status = null;
     switch (this.billType) {
+      case 'All':
+        status = null;
+        break;
+
       case 'Unpaid':
         status = 1;
         break;
@@ -618,10 +634,15 @@ selectTab(tabId: number) {
     this.loadingIndicator = true;
     const obj:any ={
     customer_id : this.customer_id,
-    payment_status : status,
     limit : this.pageTable.size,
     page : this.pageTable.pageNumber + 1,
     search_param : this.searchParam
+    }
+
+    if(status){
+      obj.payment_status = status;
+    }else{
+      delete obj['payment_status'];
     }
 
     if(this.bsBillDetailsRangeValue){
@@ -641,7 +662,7 @@ selectTab(tabId: number) {
         this.loadingIndicator = false;
       }, 1000);
     }, err => {
-      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -671,7 +692,7 @@ selectTab(tabId: number) {
         this.loadingIndicator = false;
       }, 1000);
     }, err => {
-      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -734,7 +755,7 @@ selectTab(tabId: number) {
       },
       err => {
         this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+        this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
       }
     );
 
@@ -762,7 +783,7 @@ selectTab(tabId: number) {
         this.loadingIndicator = false;
       }, 1000);
     }, err => {
-      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -816,7 +837,7 @@ selectTab(tabId: number) {
       },
       err => {
         this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+        this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
       }
     );
 
@@ -953,7 +974,7 @@ selectTab(tabId: number) {
                 },
                 err => {
                   this.blockUI.stop();
-                  this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+                  this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
                 }
               );
             }
@@ -1003,7 +1024,11 @@ selectTab(tabId: number) {
       switch (action) {
         case 'return':
           url = 'bill/return-device-to-stock/'+row.id;
-          txt = 'This device will be added to your stock.';
+          txt = 'You are returning this device to stock.';
+          break;
+        case 'permanently_cancel':
+          url = 'bill/cancel-device-permanently/'+row.id;
+          txt = 'You are marking this device as permanently cancelled.';
           break;
 
         default:
@@ -1031,7 +1056,7 @@ selectTab(tabId: number) {
                 },
                 err => {
                   this.blockUI.stop();
-                  this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+                  this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
                 }
               );
             }else{

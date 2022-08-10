@@ -98,7 +98,7 @@ export class RetailerSubscriptionListComponent implements OnInit {
         this.loadingIndicator = false;
       }, 1000);
     }, err => {
-      this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -155,7 +155,7 @@ export class RetailerSubscriptionListComponent implements OnInit {
                  },
                  err => {
 
-                   this.toastr.error(err.Message || err, 'Error!', { closeButton: true, disableTimeOut: true });
+                   this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
                  }
                );
              }

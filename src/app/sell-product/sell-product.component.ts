@@ -87,6 +87,7 @@ export class SellProductComponent implements OnInit {
   count=1;
   searchParam = '';
   input$ = new Subject<string>();
+  customerType = 'all';
 
 // for sim
   sims = [];
@@ -174,9 +175,30 @@ export class SellProductComponent implements OnInit {
 
   }
 
+  onCustomerTypeChange(e){
+    this.searchParam = '';
+    this.entryForm.controls['customer'].setValue(null);
+    this.selectedCustomer = null;
+    switch (e) {
+      case 'all':
+       this.customerType = e;
+       this.getCustomer();
+        break;
+      case 'wholesaler':
+        this.customerType = e;
+        this.getCustomer();
+        break;
+      case 'retailer':
+        this.customerType = e;
+        this.getCustomer();
+        break;
 
-   
-  
+      default:
+        break;
+    }
+  }
+
+
 
 onSearch() {
     this.input$.pipe(
@@ -196,6 +218,8 @@ onSearch() {
       this.selectedCustomer = e;
     }else{
       this.selectedCustomer = null;
+      this.searchParam = '';
+      this.getCustomer();
     }
   }
 
@@ -221,18 +245,44 @@ private fetchMore() {
     this.count++;
     this.page.pageNumber = this.count;
     let obj;
-    if(this.searchParam){
-       obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber,
-        search_param:this.searchParam
-      };
-    }else{
-       obj = {
-        limit: this.page.size,
-        page: this.page.pageNumber
-      };
+    obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber,
+      search_param:this.searchParam
+    };
+    // if(this.searchParam){
+    //    obj = {
+    //     limit: this.page.size,
+    //     page: this.page.pageNumber,
+    //     search_param:this.searchParam
+    //   };
+    // }else{
+    //    obj = {
+    //     limit: this.page.size,
+    //     page: this.page.pageNumber
+    //   };
+    // }
+
+  if(this.customerType){
+    this.customersBuffer = [];
+    switch (this.customerType) {
+      case 'all':
+        delete obj['is_retailer'];
+        delete obj['is_wholesaler'];
+        break;
+      case 'wholesaler':
+        obj.is_wholesaler = 1;
+        break;
+      case 'retailer':
+        obj.is_retailer = 1;
+        break;
+
+      default:
+        break;
     }
+  }
+
+
       this._service.get("get-customer-list",obj).subscribe(
         (res) => {
           more = res.results;
@@ -253,27 +303,53 @@ private fetchMore() {
 
 getCustomer(){
   let obj;
-  if(this.searchParam){
-     obj = {
-      limit: this.page.size,
-      page: this.page.pageNumber,
-      search_param:this.searchParam
-    };
-  }else{
-     obj = {
-      limit: this.page.size,
-      page: this.page.pageNumber
-    };
-  }
+  obj = {
+    limit: this.page.size,
+    page: this.page.pageNumber,
+    search_param:this.searchParam
+  };
+  // if(this.searchParam){
+  //    obj = {
+  //     limit: this.page.size,
+  //     page: this.page.pageNumber,
+  //     search_param:this.searchParam
+  //   };
+  // }else{
+  //    obj = {
+  //     limit: this.page.size,
+  //     page: this.page.pageNumber
+  //   };
+  // }
 
+  if(this.customerType){
+    switch (this.customerType) {
+      case 'all':
+        delete obj['is_retailer'];
+        delete obj['is_wholesaler'];
+        break;
+      case 'wholesaler':
+        obj.is_wholesaler = 1;
+        break;
+      case 'retailer':
+        obj.is_retailer = 1;
+        break;
+
+      default:
+        break;
+    }
+  }
+  this.blockUI.start("Loading...");
   this._service.get("get-customer-list",obj).subscribe(
     (res) => {
       this.customers = res.results;
       this.page.totalElements = res.count;
       this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-      this.customersBuffer = this.customers.slice(0, this.bufferSize);
+      if(this.customers) this.customersBuffer = this.customers.slice(0, this.bufferSize);
+      this.blockUI.stop();
     },
-    (err) => {}
+    (err) => {
+      this.blockUI.stop();
+    }
   );
 }
 
@@ -284,17 +360,41 @@ private fakeServiceCustomer(term) {
   this.searchParam = term;
 
   let obj;
-  if(this.searchParam){
-     obj = {
-      limit: this.page.size,
-      page: this.page.pageNumber,
-      search_param:this.searchParam
-    };
-  }else{
-     obj = {
-      limit: this.page.size,
-      page: this.page.pageNumber
-    };
+  obj = {
+    limit: this.page.size,
+    page: this.page.pageNumber,
+    search_param:this.searchParam
+  };
+
+  // if(this.searchParam){
+  //    obj = {
+  //     limit: this.page.size,
+  //     page: this.page.pageNumber,
+  //     search_param:this.searchParam
+  //   };
+  // }else{
+  //    obj = {
+  //     limit: this.page.size,
+  //     page: this.page.pageNumber
+  //   };
+  // }
+
+  if(this.customerType){
+    switch (this.customerType) {
+      case 'all':
+        delete obj['is_retailer'];
+        delete obj['is_wholesaler'];
+        break;
+      case 'wholesaler':
+        obj.is_wholesaler = 1;
+        break;
+      case 'retailer':
+        obj.is_retailer = 1;
+        break;
+
+      default:
+        break;
+    }
   }
 
   let params = new HttpParams();
@@ -625,16 +725,14 @@ private fakeServiceSIM(term) {
 
 
 
-
-
-  getCustomerList() {
-    this._service.get("user-list?is_customer=true").subscribe(
-      (res) => {
-        this.customerList = res;
-      },
-      (err) => {}
-    );
-  }
+  // getCustomerList() {
+  //   this._service.get("user-list?is_customer=true").subscribe(
+  //     (res) => {
+  //       this.customerList = res;
+  //     },
+  //     (err) => {}
+  //   );
+  // }
 
   getSIMList() {
     this._service.get("stock/get-subscriptable-sim-list").subscribe(
@@ -721,8 +819,8 @@ private fakeServiceSIM(term) {
 
     if (e){
       console.log(e);
-      
-       item.controls["package_item"].setValue(e);      
+
+       item.controls["package_item"].setValue(e);
        item.controls["plan"].setValue(e.plan);
        item.controls["has_device_dependency"].setValue(e.has_device_dependency);
        if(e.has_device_dependency){
@@ -751,7 +849,7 @@ private fakeServiceSIM(term) {
     }else if(value == ''){
       this.discount = 0;
     }else {
-      this.discount = Number(value);     
+      this.discount = Number(value);
     }
   }
 
@@ -778,10 +876,10 @@ private fakeServiceSIM(term) {
             phone_number: element.phone_number,
             device:element.has_device_dependency ? element.device.id : null,
             IMEI: element.has_device_dependency ? element.IMEI : null,
-			      pckg_name:element.package_item.pckg_name,
-			      pckg_offer_name:element.package_item.pckg_offer_name,
+                  pckg_name:element.package_item.pckg_name,
+                  pckg_offer_name:element.package_item.pckg_offer_name,
             pckg_offer_month_covers:element.package_item.pckg_offer_month_covers,
-			      plan:element.package_item.plan,
+                  plan:element.package_item.plan,
             pckg_duration_name:element.package_item.pckg_duration_name,
             pckg_duration_in_month:element.package_item.pckg_duration_in_month,
             has_device_dependency:element.package_item.has_device_dependency,
@@ -817,7 +915,7 @@ private fakeServiceSIM(term) {
     .subscribe(
         result => {
             if (result) {
-            
+
                 this._service.post('bill/create-new-bill', obj).subscribe(
                   data => {
                     this.blockUI.stop();
@@ -830,7 +928,7 @@ private fakeServiceSIM(term) {
                       this.confirmService.confirm('Do you want to collect payment now?', '','NOT NOW','Yes')
                       .subscribe(
                           result => {
-                              if (result) {                               
+                              if (result) {
                                this.router.navigate(['/payment-collection/'+data.bill_id]);
                               }else{
                                 this.router.navigate(['/customer-details/'+customer_id]);
@@ -839,7 +937,7 @@ private fakeServiceSIM(term) {
                       );
 
 
-                      // this.router.navigate([]).then(result => { window.open('/payment-collection/'+ data.bill_id, '_blank'); });                     
+                      // this.router.navigate([]).then(result => { window.open('/payment-collection/'+ data.bill_id, '_blank'); });
                       // this.entryForm.get('session').disable();
                       // this.entryForm.get('session').setValue(moment().format('MMM-YYYY'));
                       // this.confirmService.confirm('Do You Want To Sell Device?', '','Close','Sell Device')
@@ -860,7 +958,7 @@ private fakeServiceSIM(term) {
                   },
                   err => {
                     this.blockUI.stop();
-                    this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+                    this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
                   }
                 );
 
@@ -950,7 +1048,7 @@ private fakeServiceSIM(term) {
       },
       err => {
         this.blockUI.stop();
-        this.toastr.error(err.Message || err, 'Error!', { timeOut: 2000 });
+        this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
       }
     );
 
