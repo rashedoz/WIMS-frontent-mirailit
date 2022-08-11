@@ -133,6 +133,11 @@ export const AppRoutes: Routes = [
         canActivate: [AuthGuard]
       },
       {
+        path: 'package-list',
+        loadChildren: () => import('./package-list/package-list.module').then(m => m.PackageListModule),
+        canActivate: [AuthGuard]
+      },
+      {
         path: 'actions',
         loadChildren: () => import('./subscription/subscription.module').then(m => m.SubscriptionModule),
         canActivate: [AuthGuard]

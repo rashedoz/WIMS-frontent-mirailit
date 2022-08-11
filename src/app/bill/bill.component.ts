@@ -172,6 +172,11 @@ export class BillComponent implements OnInit {
     this.getList();
   }
 
+  goToPaymentCollection(id){
+    this.router.navigate([]).then(result => { window.open('/payment-collection/'+ id, '_blank'); });
+  }
+
+
   newPrint(id){
     this.printService.printInv(id);
   }

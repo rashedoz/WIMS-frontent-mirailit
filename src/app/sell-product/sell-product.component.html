@@ -535,6 +535,13 @@
                 <th scope="row">Plan</th>
                 <td>{{packageObj.plan}}</td>
               </tr>
+              <tr *ngIf="packageObj.pckg_duration > 0">
+                <th scope="row">Duration</th>
+                <td>
+                  <span *ngIf="packageObj.pckg_duration == 1"> {{packageObj.pckg_duration}} month</span>
+                  <span *ngIf="packageObj.pckg_duration > 1"> {{packageObj.pckg_duration}} months</span>
+                </td>
+              </tr>
               <tr>
                 <th scope="row">Comes with Device</th>
                 <td>
@@ -578,10 +585,10 @@
                 <th scope="row">Refundable Deposit </th>
                 <td>{{packageObj.pckg_refundable_deposit}}</td>
               </tr>
-              <tr *ngIf="packageObj.has_device_dependency">
+              <!-- <tr *ngIf="packageObj.has_device_dependency">
                 <th scope="row">Duration </th>
                 <td>{{packageObj.pckg_duration_name}}</td>
-              </tr>
+              </tr> -->
             </tbody>
           </table>
         </div>

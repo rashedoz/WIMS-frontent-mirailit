@@ -100,8 +100,7 @@
 
                     <ngx-datatable-column [width]="220" name="Action" prop="id" [draggable]="false" [sortable]="false">
                       <ng-template let-row="row" ngx-datatable-cell-template>
-                        <button *ngIf="row.payment_status == 1 || row.payment_status == 2"
-                          [routerLink]="['/payment-collection',row.id]" class="btn btn-info btn-mini mr-2"><i
+                        <button *ngIf="row.payment_status == 1 || row.payment_status == 2" class="btn btn-info btn-mini mr-2"  (click)="goToPaymentCollection(row.id)"><i
                             class="icofont icofont-checked"></i>Collect Payment</button>
 
                         <button (click)="newPrint(row.id)" class="btn btn-primary btn-mini"><i

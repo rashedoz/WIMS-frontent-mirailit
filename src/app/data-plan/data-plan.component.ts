@@ -99,7 +99,7 @@ export class DataPlanComponent implements OnInit {
     //   size: this.page.size,
     //   pageNumber: this.page.pageNumber
     // };
-    this._service.get('subscription/get-data-plan-list').subscribe(res => {
+    this._service.get('package/get-data-plan-list').subscribe(res => {
 
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
@@ -163,7 +163,7 @@ export class DataPlanComponent implements OnInit {
      plans: plans
     };
 
-    const request = this._service.post('subscription/save-data-plan', obj);
+    const request = this._service.post('package/save-data-plan', obj);
 
     request.subscribe(
       data => {

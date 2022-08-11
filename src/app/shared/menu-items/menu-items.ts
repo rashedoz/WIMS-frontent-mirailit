@@ -181,7 +181,7 @@ const MENUITEMS = [
     permission: 'is_superuser,is_staff',
     main: [
       {
-        state: '',
+        state: 'package-list',
         name: 'Package',
         type: 'link',
         icon: 'ti-control-forward',

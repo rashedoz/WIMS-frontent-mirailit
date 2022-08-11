@@ -75,11 +75,11 @@
                     </td>
                     <td>{{item.pckg_name}}</td>
                     <td>
-                      <span *ngIf="item.pckg_advance_pmnt_desc && item.pckg_first_bill_amount == 0"> {{item.pckg_advance_pmnt_desc}}</span>
+                      <span *ngIf="item.pckg_advance_pmnt_desc"> {{item.pckg_advance_pmnt_desc}}</span>
                       <span *ngIf="!item.pckg_advance_pmnt_desc"> -- </span>
                     </td>
                     <td>{{item.selling_platform}}</td>
-                    <td>{{item.pckg_first_bill_amount}}</td>
+                    <td>{{item.current_month_price}}</td>
                   </tr>
                 </tbody>
               </table>
