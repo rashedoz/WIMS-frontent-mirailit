@@ -20,7 +20,7 @@
     <div class="col-md-2 mb-3">
       <div class="card client-blocks success-border">
         <div class="card-block">
-          <h5>Available Stock Quantity </h5>
+          <h5>Available Quantity </h5>
           <ul>
             <li> <img class="text-danger iw-42" src="assets/icon/custom/available.png">
             </li>
@@ -125,7 +125,7 @@
                 <div class="col-lg-7">
                   <div class="form-group row">
                     <div class="col-sm-12">
-                      <input type="text" class="form-control"
+                      <input type="text" class="form-control" [(ngModel)]="searchParam"
                         placeholder="Filter by cid, iccid no, phone number, customer name.."
                         (keyup)="filterSearch($event)" />
 

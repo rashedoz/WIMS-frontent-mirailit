@@ -17,7 +17,7 @@
               <p class="fs-14 mb-0" *ngIf="details.customer_gender"><b>Gender : {{details.customer_gender == 1 ? "Male" : "Female"}} </b></p>
               <p class="fs-14 mb-0" *ngIf="details.customer_address_one"><b>Address : {{details.customer_address_one}} {{details.customer_address_two}}</b></p>
             </div>
-            <p class="fs-14 mb-0"><b>{{isbalanceDeduct ? 'Remaining Balance :':'Balance :'}} <span class="text-primary font-weight-bold">{{balance - tempPaidAmount}}</span> &nbsp; <i class="div-pointer text-info cofont icofont-plus" (click)="gotoPage(details)"></i> </b></p>
+            <p class="fs-14 mb-0"><b>{{isbalanceDeduct ? 'Remaining Balance :':'Balance :'}} <span class="text-primary font-weight-bold">{{balance - tempPaidAmount}}</span> &nbsp; <i tooltip="Load Balance" class="div-pointer text-info cofont icofont-plus" (click)="openModalLoadBalance(templateBalanceLoad)"></i> </b></p>
 
           </div>
 
@@ -205,5 +205,60 @@
         </div>
       </div>
     </div>
+
+
+    <ng-template #templateBalanceLoad>
+      <div class="modal-header ">
+        <h4 class="modal-title pull-left " id="modalTitle">Load Balance</h4>
+        <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideLoadBalance()">
+          <i class="icofont icofont-close"></i>
+        </button>
+      </div>
+      <div class="modal-body ">
+        <app-card>
+          <form [formGroup]="balanceLoadForm" class="col-sm-12">
+
+            <div class="form-group row">
+              <label class="col-sm-5 col-form-label">Payment Method </label>
+              <div class="col-sm-7">
+                <ng-select placeholder="Select a payment method" formControlName="payment_method" [clearable]="false"
+                  [clearOnBackspace]="false" [items]="methodListWithoutFrom" bindValue="id" bindLabel="name"></ng-select>
+
+                <div *ngIf="submitted && b.payment_method.errors" class="error-text">
+                  <span *ngIf="b.payment_method.errors.required" class="text-danger"> Payment Method is required</span>
+
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-5 col-form-label">Amount </label>
+              <div class="col-sm-7">
+                <input numeric numericType="decimal" type="text" formControlName="amount"
+                  [ngClass]="{ 'is-invalid': submitted && b.amount.errors }" type="text" class="form-control" />
+
+                <div *ngIf="submitted && b.amount.errors" class="error-text">
+                  <span *ngIf="b.amount.errors.required" class="text-danger"> Amount is required</span>
+
+                </div>
+              </div>
+            </div>
+
+          </form>
+        </app-card>
+      </div>
+      <div class="modal-footer">
+        <div class="pr-4">
+
+          <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideLoadBalance()"> <i
+              class="icofont icofont-close"></i> Close</button>
+
+          <button class="btn btn-success btn-sm btn-outline-success" (click)="onBalanceLoadFormSubmit()"><i
+              class="icofont icofont-check-circled"></i> Submit</button>
+
+        </div>
+
+      </div>
+    </ng-template>
+
 
 </block-ui>

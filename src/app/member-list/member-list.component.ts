@@ -44,6 +44,8 @@ export class MemberListComponent implements OnInit {
   details;
   user;
   searchParam = '';
+  public currentUser: any = null;
+
   constructor(
     private modalService: BsModalService,
     public formBuilder: FormBuilder,
@@ -63,7 +65,7 @@ export class MemberListComponent implements OnInit {
       this.scrollBarHorizontal = (window.innerWidth < 1200);
     };
 
-
+    this.currentUser = this.authService.currentUserDetails.value;
   }
 
 
@@ -83,6 +85,9 @@ export class MemberListComponent implements OnInit {
       address_two: [null],
       dob: [null],
       gender: [1],
+      is_superuser: [false],
+      is_staff: [true],
+      is_active: [true],
       firstName: [null, [Validators.required]],
       lastName: [null, [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -174,8 +179,32 @@ getItem(row, template: TemplateRef<any>) {
     this.RegistrerForm.controls['occupation'].setValue(row.occupation);
     this.RegistrerForm.controls['firstName'].setValue(row.first_name);
     this.RegistrerForm.controls['lastName'].setValue(row.last_name);
+    this.RegistrerForm.controls['is_superuser'].setValue(row.is_superuser);
+    this.RegistrerForm.controls['is_staff'].setValue(row.is_staff);
+    this.RegistrerForm.controls['is_active'].setValue(row.is_active);
     this.RegistrerForm.controls['confirmPassword'].setValue(null);
     this.RegistrerForm.controls['password'].setValue(null);
+
+
+    if(this.currentUser.is_superuser){
+      this.RegistrerForm.controls['is_superuser'].enable();
+      this.RegistrerForm.controls['is_staff'].enable();
+
+      if(this.currentUser.id == row.id){
+        this.RegistrerForm.controls['is_active'].disable();
+      }else{
+        this.RegistrerForm.controls['is_active'].enable();
+      }
+
+    }else{
+      this.RegistrerForm.controls['is_superuser'].disable();
+      this.RegistrerForm.controls['is_staff'].disable();
+      this.RegistrerForm.controls['is_active'].disable();
+    }
+
+
+
+
     this.modalRef = this.modalService.show(template, this.modalConfig);
 
 }
@@ -232,6 +261,9 @@ onFormSubmit() {
       gender:this.RegistrerForm.value.gender,
       fax:this.RegistrerForm.value.fax,
       acc_number:this.RegistrerForm.value.acc_number,
+      is_superuser:this.RegistrerForm.value.is_superuser,
+      is_staff:this.RegistrerForm.value.is_staff,
+      is_active:this.RegistrerForm.value.is_active,
       telephone:this.RegistrerForm.value.telephone,
     };
 
@@ -276,8 +308,9 @@ onFormSubmit() {
       is_customer: 0,
       is_wholesaler: 0 ,
       is_retailer: 0,
-      is_staff: 1,
-      is_superuser:0
+      is_staff: this.RegistrerForm.value.is_staff,
+      is_superuser:this.RegistrerForm.value.is_superuser,
+      is_active:this.RegistrerForm.value.is_active
     };
 
     this._service.post('register-user', obj).subscribe(
@@ -362,6 +395,17 @@ modalHide() {
 openModal(template: TemplateRef<any>) {
 
   this.RegistrerForm.controls['gender'].setValue(1);
+
+  if(this.currentUser.is_superuser){
+    this.RegistrerForm.controls['is_superuser'].enable();
+    this.RegistrerForm.controls['is_staff'].enable();
+    this.RegistrerForm.controls['is_active'].enable();
+  }else{
+    this.RegistrerForm.controls['is_superuser'].disable();
+    this.RegistrerForm.controls['is_staff'].disable();
+    this.RegistrerForm.controls['is_active'].disable();
+  }
+
   this.modalRef = this.modalService.show(template, this.modalConfig);
 }
 

@@ -1,108 +1,142 @@
 <block-ui>
-    <div class="row">
+  <div class="row">
 
+    <div class="col-lg-12">
+      <div class="row">
         <div class="col-lg-12">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card card-border-primary">
-                        <div class="card-header">
-                            <!-- <h5>Payment List </h5> -->
-                            <button class="btn btn-primary btn-sm float-right" (click)="openModal(template)"><i
-                                class=" icofont icofont-plus "></i> Add Member</button>
-                        </div>
-                        <div class="card-block ">
-                          <div class="row">
-                            <div class="col-lg-7">
-                              <div class="form-group row">
-                                <div class="col-sm-12">
-                                  <input type="text" class="form-control" placeholder="Search member by first name, last name, mobile, email" (keyup)="filterSearch($event)" />
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <!-- <h5>Payment List </h5> -->
+              <button class="btn btn-primary btn-sm float-right" (click)="openModal(template)"><i
+                  class=" icofont icofont-plus "></i> Add Member</button>
+            </div>
+            <div class="card-block ">
+              <div class="row">
+                <div class="col-lg-7">
+                  <div class="form-group row">
+                    <div class="col-sm-12">
+                      <input type="text" class="form-control"
+                        placeholder="Search member by first name, last name, mobile, email"
+                        (keyup)="filterSearch($event)" />
 
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                            <div class="row">
-                                <div class="col-lg-12 ">
-                                  <ngx-datatable #table class="material table-bordered" [rows]="memberList" [scrollbarH]="true"
-                                  [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
-                                  [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-12 ">
+                  <ngx-datatable #table class="material table-bordered" [rows]="memberList" [scrollbarH]="true"
+                    [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force" [headerHeight]="40"
+                    [limit]="10" [footerHeight]="50" rowHeight="auto">
 
-                                  <ngx-datatable-column [width]="100" name="Member Code" prop="member_code" [draggable]="false" [sortable]="false">
-                                    <ng-template let-value="value" ngx-datatable-cell-template>
-                                        <span > {{ value }} </span>
-                                    </ng-template>
-                                </ngx-datatable-column>
-                                  <ngx-datatable-column [width]="100" name="First Name" prop="first_name" [draggable]="false" [sortable]="false">
-                                    <ng-template let-value="value" ngx-datatable-cell-template>
-                                        <span > {{ value }} </span>
-                                    </ng-template>
-                                </ngx-datatable-column>
-                                  <ngx-datatable-column [width]="100" name="Last Name" prop="last_name" [draggable]="false" [sortable]="false">
-                                      <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span > {{ value }} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
-                                  <ngx-datatable-column [width]="100" name="Mobile" prop="mobile" [draggable]="false" [sortable]="false">
-                                      <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span > {{ value }} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
-                                  <ngx-datatable-column [width]="100" name="Email" prop="email" [draggable]="false" [sortable]="false">
-                                      <ng-template let-value="value" ngx-datatable-cell-template>
-                                          <span > {{ value }} </span>
-                                      </ng-template>
-                                  </ngx-datatable-column>
+                    <ngx-datatable-column [width]="100" name="Member Code" prop="member_code" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="120" name="First Name" prop="first_name" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="120" name="Last Name" prop="last_name" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="100" name="Mobile" prop="mobile" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="150" name="Email" prop="email" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="100" name="Super User" [draggable]="false" [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span *ngIf="row.is_superuser"> <i class="icofont icofont-tick-mark text-success fs-18"></i> </span>
+                        <span *ngIf="!row.is_superuser"> <i class="icofont icofont-close text-danger fs-18"></i> </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="100" name="Staff" [draggable]="false" [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span *ngIf="row.is_staff"> <i class="icofont icofont-tick-mark text-success fs-18"></i> </span>
+                        <span *ngIf="!row.is_staff"> <i class="icofont icofont-close text-danger fs-18"></i> </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="100" name="Active" [draggable]="false" [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span *ngIf="row.is_active"> <i class="icofont icofont-tick-mark text-success fs-18"></i>
+                        </span>
+                        <span *ngIf="!row.is_active"> <i class="icofont icofont-close text-danger fs-18"></i> </span>
+                      </ng-template>
+                    </ngx-datatable-column>
 
 
-                                  <ngx-datatable-column [width]="90" name="Created Date" prop="created_at" [draggable]="false"
+                    <!-- <ngx-datatable-column [width]="90" name="Created Date" prop="created_at" [draggable]="false"
                                       [sortable]="false">
                                       <ng-template let-value="value" ngx-datatable-cell-template>
                                           <span >  {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
                                       </ng-template>
-                                  </ngx-datatable-column>
+                                  </ngx-datatable-column> -->
 
 
-                                  <ngx-datatable-column [width]="280" name="Action" prop="id" [draggable]="false"
-                                      [sortable]="false">
-                                      <ng-template let-row="row" ngx-datatable-cell-template>
-                                        <button (click)="showDetails(row,templateDetails)" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-eye"></i>Show Profile</button>
-                                        <button (click)="getItem(row,template)" class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-edit"></i>Edit Profile</button>
-                                        <button (click)="changePassword(row,templateChangePassword)" class="btn btn-info btn-mini"><i class="icofont icofont-retweet"></i>Change Password</button>
-                                      </ng-template>
-                                  </ngx-datatable-column>
+                    <ngx-datatable-column [width]="300" name="Action" prop="id" [draggable]="false" [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <button (click)="showDetails(row,templateDetails)" class="btn btn-primary btn-mini mr-1"><i
+                            class="icofont icofont-eye"></i>Show Profile</button>
+                        <button (click)="getItem(row,template)" class="btn btn-primary btn-mini mr-1"><i
+                            class="icofont icofont-edit"></i>Edit Profile</button>
+                        <button (click)="changePassword(row,templateChangePassword)" class="btn btn-info btn-mini"><i
+                            class="icofont icofont-retweet"></i>Change Password</button>
+                      </ng-template>
+                    </ngx-datatable-column>
 
-                              </ngx-datatable>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                  </ngx-datatable>
                 </div>
+              </div>
             </div>
+          </div>
         </div>
-
+      </div>
     </div>
 
-
-    <ng-template #templateChangePassword>
-        <div class="modal-header ">
-            <h4 class="modal-title pull-left " > Change Password</h4>
-            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideChangePassword()">
-                <i class="icofont icofont-close"></i>
-            </button>
-        </div>
-        <div class="modal-body ">
-            <app-card>
-                 <form [formGroup]="RegistrerFormChangePassword" class="col-sm-12">
+  </div>
 
 
-                        <div class="form-group row" *ngIf="user">
-                            <label class="col-sm-4 col-form-label">Name </label>
-                            <div class="col-sm-8">
-                                <label class="font-weight-bold col-form-label"><h5>{{user.first_name}} {{user.last_name}}</h5></label>
-                            </div>
-                        </div>
+  <ng-template #templateChangePassword>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left "> Change Password</h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideChangePassword()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+      <app-card>
+        <form [formGroup]="RegistrerFormChangePassword" class="col-sm-12">
 
-                        <!-- <div class="form-group row">
+
+          <div class="form-group row" *ngIf="user">
+            <label class="col-sm-4 col-form-label">Name </label>
+            <div class="col-sm-8">
+              <label class="font-weight-bold col-form-label">
+                <h5>{{user.first_name}} {{user.last_name}}</h5>
+              </label>
+            </div>
+          </div>
+
+          <!-- <div class="form-group row">
                             <label class="col-sm-4 col-form-label">Old Password </label>
                             <div class="col-sm-8">
                                 <input type="password" formControlName="old_password" class="form-control" [ngClass]="{ 'is-invalid': submitted && p.old_password.errors }" placeholder="Enter old password" required>
@@ -112,393 +146,453 @@
                                 </div>
                             </div>
                         </div> -->
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">New Password </label>
-                            <div class="col-sm-8">
-                                <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && p.password.errors }" placeholder="Enter new password" required>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">New Password </label>
+            <div class="col-sm-8">
+              <input type="password" formControlName="password" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && p.password.errors }" placeholder="Enter new password" required>
 
-                                <div *ngIf="submitted && p.password.errors" class="error-text">
-                                    <span *ngIf="p.password.errors.required" class="text-danger">New password is required</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Confirm Password </label>
-                            <div class="col-sm-8">
-                                <input type="password" formControlName="confirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && p.confirmPassword.errors }" placeholder="Confirm Password" required>
-
-                                <div *ngIf="submitted && p.confirmPassword.errors" class="error-text">
-                                    <span *ngIf="p.confirmPassword.errors.required" class="text-danger">Confirm Password is required</span>
-                                    <span *ngIf="p.confirmPassword.errors.mustMatch" class="text-danger">Passwords must match</span>
-                                </div>
-                            </div>
-                        </div>
-
-            </form>
-
-            </app-card>
-        </div>
-        <div class="modal-footer">
-            <div class="pr-4">
-
-                <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideChangePassword()"> <i
-                        class="icofont icofont-close"></i> Close</button>
-
-                <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmitChangePassword()"><i
-                        class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
-
+              <div *ngIf="submitted && p.password.errors" class="error-text">
+                <span *ngIf="p.password.errors.required" class="text-danger">New password is required</span>
+              </div>
             </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Confirm Password </label>
+            <div class="col-sm-8">
+              <input type="password" formControlName="confirmPassword" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && p.confirmPassword.errors }" placeholder="Confirm Password"
+                required>
 
-        </div>
-    </ng-template>
+              <div *ngIf="submitted && p.confirmPassword.errors" class="error-text">
+                <span *ngIf="p.confirmPassword.errors.required" class="text-danger">Confirm Password is required</span>
+                <span *ngIf="p.confirmPassword.errors.mustMatch" class="text-danger">Passwords must match</span>
+              </div>
+            </div>
+          </div>
 
-    <ng-template #template>
-        <div class="modal-header ">
-            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
-            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
-                <i class="icofont icofont-close"></i>
-            </button>
-        </div>
-        <div class="modal-body ">
-            <app-card>
-                 <form [formGroup]="RegistrerForm" class="col-sm-12">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Member Code </label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="member_code" type="text"
-                                    class="form-control" />
+        </form>
 
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">First Name </label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="firstName"
-                                    [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" type="text"
-                                    class="form-control" />
+      </app-card>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
 
-                                <div *ngIf="submitted && f.firstName.errors" class="error-text">
-                                    <span *ngIf="f.firstName.errors.required" class="text-danger"> Member first name is required</span>
+        <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideChangePassword()"> <i
+            class="icofont icofont-close"></i> Close</button>
 
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Last Name </label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="lastName"
-                                    [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" type="text"
-                                    class="form-control" />
+        <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmitChangePassword()"><i
+            class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
 
-                                <div *ngIf="submitted && f.lastName.errors" class="error-text">
-                                    <span *ngIf="f.lastName.errors.required" class="text-danger"> Member last name is required</span>
+      </div>
 
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Email </label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="email"
-                                    [ngClass]="{ 'is-invalid': submitted && f.email.errors }" type="text"
-                                    class="form-control" />
+    </div>
+  </ng-template>
 
-                                <div *ngIf="submitted && f.email.errors" class="error-text">
-                                    <span *ngIf="f.email.errors.required" class="text-danger"> Email is required</span>
+  <ng-template #template>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+      <app-card>
+        <form [formGroup]="RegistrerForm" class="col-sm-12">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Member Code </label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="member_code" type="text" class="form-control" />
 
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Mobile </label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="mobile"
-                                    [ngClass]="{ 'is-invalid': submitted && f.mobile.errors }" type="text"
-                                    class="form-control" />
-
-                                <div *ngIf="submitted && f.mobile.errors" class="error-text">
-                                    <span *ngIf="f.mobile.errors.required" class="text-danger"> Mobile number is required</span>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Telephone </label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="telephone" type="text"
-                                    class="form-control" />
-
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Date of Birth </label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" readonly formControlName="dob" [bsConfig]="bsConfig"
-                              bsDatepicker>
-
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Gender</label>
-                            <div class="col-sm-8">
-                                <div class="form-radio pt-1">
-                                    <div class="radio radio-inverse radio-inline" >
-                                        <label class="pt-1">
-                                            <input formControlName="gender" type="radio" name="gender"
-                                            [value]=1>
-                                            <i class="helper"></i>Male
-                                        </label>
-                                    </div>
-                                    <div class="radio radio-inverse radio-inline" >
-                                        <label class="pt-1">
-                                            <input formControlName="gender" type="radio" name="gender"
-                                            [value]=2>
-                                            <i class="helper"></i>Female
-                                        </label>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Occupation </label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="occupation" type="text"
-                                    class="form-control" />
-
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">NID </label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="nid" type="text"
-                                    class="form-control" />
-
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Alternative Mobile </label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="alternative_mobile" type="text"
-                                    class="form-control" />
-
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Fax </label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="fax" type="text"
-                                    class="form-control" />
-
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Account Number </label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="acc_number" type="text"
-                                    class="form-control" />
-
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Address 1</label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="address_one" type="text"
-                                    class="form-control" />
-
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Address 2</label>
-                            <div class="col-sm-8">
-                                <input type="text" formControlName="address_two" type="text"
-                                    class="form-control" />
-
-                            </div>
-                        </div>
-                        <div *ngIf="!isEdit">
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label"> Password </label>
-                            <div class="col-sm-8">
-                                <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" placeholder="Enter password" required>
-
-                                <div *ngIf="submitted && f.password.errors" class="error-text">
-                                    <span *ngIf="f.password.errors.required" class="text-danger">Password is required</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Confirm Password </label>
-                            <div class="col-sm-8">
-                                <input type="password" formControlName="confirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" placeholder="Confirm Password" required>
-
-                                <div *ngIf="submitted && f.confirmPassword.errors" class="error-text">
-                                    <span *ngIf="f.confirmPassword.errors.required" class="text-danger">Confirm Password is required</span>
-                                    <span *ngIf="f.confirmPassword.errors.mustMatch" class="text-danger">Passwords must match</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
                 </div>
-            </form>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">First Name </label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="firstName"
+                    [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" type="text" class="form-control" />
 
+                  <div *ngIf="submitted && f.firstName.errors" class="error-text">
+                    <span *ngIf="f.firstName.errors.required" class="text-danger"> Member first name is required</span>
 
-            </app-card>
-        </div>
-        <div class="modal-footer">
-            <div class="pr-4">
-
-                <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHide()"> <i
-                        class="icofont icofont-close"></i> Close</button>
-
-                <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmit()"><i
-                        class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
-
-            </div>
-
-        </div>
-    </ng-template>
-
-    <ng-template #templateDetails>
-        <div class="modal-header ">
-            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
-            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
-                <i class="icofont icofont-close"></i>
-            </button>
-        </div>
-        <div class="modal-body " *ngIf="details">
-            <app-card>
-
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label font-weight-bold">Member Code </label>
-                            <div class="col-sm-8">
-                                <label class="col-form-label">: {{details.member_code}} </label>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label font-weight-bold">First Name </label>
-                            <div class="col-sm-8">
-                                <label class="col-form-label">: {{details.first_name}} </label>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label font-weight-bold">Last Name </label>
-                            <div class="col-sm-8">
-                                <label class="col-form-label">: {{details.last_name}} </label>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label font-weight-bold">Email </label>
-                            <div class="col-sm-8">
-                                <label class="col-form-label">: {{details.email}} </label>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label font-weight-bold">Mobile </label>
-                            <div class="col-sm-8">
-                                <label class="col-form-label">: {{details.mobile}} </label>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label font-weight-bold">Telephone </label>
-                            <div class="col-sm-8">
-                                <label class="col-form-label">: {{details.telephone}} </label>
-
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label font-weight-bold">Date of Birth </label>
-                            <div class="col-sm-8">
-                                <label class="col-form-label" *ngIf="details.dob">: {{details.dob | amDateFormat:'DD-MMM-YYYY' : null}} </label>
-                                <label class="col-form-label" *ngIf="!details.dob">:  </label>
-
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label font-weight-bold">Gender</label>
-                            <div class="col-sm-8">
-                                <label class="col-form-label" *ngIf="details.gender == 1">: Male </label>
-                                <label class="col-form-label" *ngIf="details.gender == 2">: Female </label>
-                                <label class="col-form-label" *ngIf="!details.gender">:  </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label font-weight-bold">Occupation </label>
-                            <div class="col-sm-8">
-                                <label class="col-form-label">: {{details.occupation}} </label>
-
-
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label font-weight-bold">NID </label>
-                            <div class="col-sm-8">
-                                <label class="col-form-label">: {{details.nid}} </label>
-
-
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label font-weight-bold">Alternative Mobile </label>
-                            <div class="col-sm-8">
-                                 <label class="col-form-label">: {{details.alternative_mobile}} </label>
-
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label font-weight-bold">Fax </label>
-                            <div class="col-sm-8">
-                                <label class="col-form-label">: {{details.fax}} </label>
-
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label font-weight-bold">Account Number </label>
-                            <div class="col-sm-8">
-                                <label class="col-form-label">: {{details.acc_number}} </label>
-
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label font-weight-bold">Address 1</label>
-                            <div class="col-sm-8">
-                                <label class="col-form-label">: {{details.address_one}} </label>
-
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label font-weight-bold">Address 2</label>
-                            <div class="col-sm-8">
-                                <label class="col-form-label">: {{details.address_two}} </label>
-                            </div>
-                        </div>
-                    </div>
+                  </div>
                 </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Last Name </label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="lastName"
+                    [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" type="text" class="form-control" />
 
+                  <div *ngIf="submitted && f.lastName.errors" class="error-text">
+                    <span *ngIf="f.lastName.errors.required" class="text-danger"> Member last name is required</span>
 
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Email </label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+                    type="text" class="form-control" />
 
-            </app-card>
-        </div>
-        <div class="modal-footer">
-            <div class="pr-4">
+                  <div *ngIf="submitted && f.email.errors" class="error-text">
+                    <span *ngIf="f.email.errors.required" class="text-danger"> Email is required</span>
 
-                <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHide()"> <i
-                        class="icofont icofont-close"></i> Close</button>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Mobile </label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="mobile" [ngClass]="{ 'is-invalid': submitted && f.mobile.errors }"
+                    type="text" class="form-control" />
+
+                  <div *ngIf="submitted && f.mobile.errors" class="error-text">
+                    <span *ngIf="f.mobile.errors.required" class="text-danger"> Mobile number is required</span>
+
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Telephone </label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="telephone" type="text" class="form-control" />
+
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Date of Birth </label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" readonly formControlName="dob" [bsConfig]="bsConfig"
+                    bsDatepicker>
+
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Gender</label>
+                <div class="col-sm-8">
+                  <div class="form-radio pt-1">
+                    <div class="radio radio-inverse radio-inline">
+                      <label class="pt-1">
+                        <input formControlName="gender" type="radio" name="gender" [value]=1>
+                        <i class="helper"></i>Male
+                      </label>
+                    </div>
+                    <div class="radio radio-inverse radio-inline">
+                      <label class="pt-1">
+                        <input formControlName="gender" type="radio" name="gender" [value]=2>
+                        <i class="helper"></i>Female
+                      </label>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
 
             </div>
+            <div class="col-sm-6">
 
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Occupation </label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="occupation" type="text" class="form-control" />
+
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">NID </label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="nid" type="text" class="form-control" />
+
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Alternative Mobile </label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="alternative_mobile" type="text" class="form-control" />
+
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Fax </label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="fax" type="text" class="form-control" />
+
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Account Number </label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="acc_number" type="text" class="form-control" />
+
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Address 1</label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="address_one" type="text" class="form-control" />
+
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Address 2</label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="address_two" type="text" class="form-control" />
+
+                </div>
+              </div>
+              <div *ngIf="!isEdit">
+                <div class="form-group row">
+                  <label class="col-sm-4 col-form-label"> Password </label>
+                  <div class="col-sm-8">
+                    <input type="password" formControlName="password" class="form-control"
+                      [ngClass]="{ 'is-invalid': submitted && f.password.errors }" placeholder="Enter password"
+                      required>
+
+                    <div *ngIf="submitted && f.password.errors" class="error-text">
+                      <span *ngIf="f.password.errors.required" class="text-danger">Password is required</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-4 col-form-label">Confirm Password </label>
+                  <div class="col-sm-8">
+                    <input type="password" formControlName="confirmPassword" class="form-control"
+                      [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" placeholder="Confirm Password"
+                      required>
+
+                    <div *ngIf="submitted && f.confirmPassword.errors" class="error-text">
+                      <span *ngIf="f.confirmPassword.errors.required" class="text-danger">Confirm Password is
+                        required</span>
+                      <span *ngIf="f.confirmPassword.errors.mustMatch" class="text-danger">Passwords must match</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-12">
+
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="form-group row">
+                    <label class="col-sm-5 col-form-label" for="is_superuser">Is Super User ?</label>
+                    <div class="col-sm-7">
+                      <div class="form-group text-left mt-2">
+                        <div class="checkbox-fade fade-in-primary">
+                          <label>
+                            <input type="checkbox" formControlName="is_superuser" id="is_superuser">
+                            <span class="cr">
+                              <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group row">
+                    <label class="col-sm-5 col-form-label" for="is_staff">Is Staff ?</label>
+                    <div class="col-sm-7">
+                      <div class="form-group text-left mt-2">
+                        <div class="checkbox-fade fade-in-primary">
+                          <label>
+                            <input type="checkbox" formControlName="is_staff" id="is_staff">
+                            <span class="cr">
+                              <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group row">
+                    <label class="col-sm-5 col-form-label" for="is_active">Is Active ?</label>
+                    <div class="col-sm-7">
+                      <div class="form-group text-left mt-2">
+                        <div class="checkbox-fade fade-in-primary">
+                          <label>
+                            <input type="checkbox" formControlName="is_active" id="is_active">
+                            <span class="cr">
+                              <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+
+            </div>
+          </div>
+        </form>
+
+
+      </app-card>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+
+        <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHide()"> <i
+            class="icofont icofont-close"></i> Close</button>
+
+        <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmit()"><i
+            class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+
+      </div>
+
+    </div>
+  </ng-template>
+
+  <ng-template #templateDetails>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body " *ngIf="details">
+      <app-card>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group row">
+              <label class="col-sm-4 col-form-label font-weight-bold">Member Code </label>
+              <div class="col-sm-8">
+                <label class="col-form-label">: {{details.member_code}} </label>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-4 col-form-label font-weight-bold">First Name </label>
+              <div class="col-sm-8">
+                <label class="col-form-label">: {{details.first_name}} </label>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-4 col-form-label font-weight-bold">Last Name </label>
+              <div class="col-sm-8">
+                <label class="col-form-label">: {{details.last_name}} </label>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-4 col-form-label font-weight-bold">Email </label>
+              <div class="col-sm-8">
+                <label class="col-form-label">: {{details.email}} </label>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-4 col-form-label font-weight-bold">Mobile </label>
+              <div class="col-sm-8">
+                <label class="col-form-label">: {{details.mobile}} </label>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-4 col-form-label font-weight-bold">Telephone </label>
+              <div class="col-sm-8">
+                <label class="col-form-label">: {{details.telephone}} </label>
+
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-4 col-form-label font-weight-bold">Date of Birth </label>
+              <div class="col-sm-8">
+                <label class="col-form-label" *ngIf="details.dob">: {{details.dob | amDateFormat:'DD-MMM-YYYY' : null}}
+                </label>
+                <label class="col-form-label" *ngIf="!details.dob">: </label>
+
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-4 col-form-label font-weight-bold">Gender</label>
+              <div class="col-sm-8">
+                <label class="col-form-label" *ngIf="details.gender == 1">: Male </label>
+                <label class="col-form-label" *ngIf="details.gender == 2">: Female </label>
+                <label class="col-form-label" *ngIf="!details.gender">: </label>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+
+            <div class="form-group row">
+              <label class="col-sm-4 col-form-label font-weight-bold">Occupation </label>
+              <div class="col-sm-8">
+                <label class="col-form-label">: {{details.occupation}} </label>
+
+
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-4 col-form-label font-weight-bold">NID </label>
+              <div class="col-sm-8">
+                <label class="col-form-label">: {{details.nid}} </label>
+
+
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-4 col-form-label font-weight-bold">Alternative Mobile </label>
+              <div class="col-sm-8">
+                <label class="col-form-label">: {{details.alternative_mobile}} </label>
+
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-4 col-form-label font-weight-bold">Fax </label>
+              <div class="col-sm-8">
+                <label class="col-form-label">: {{details.fax}} </label>
+
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-4 col-form-label font-weight-bold">Account Number </label>
+              <div class="col-sm-8">
+                <label class="col-form-label">: {{details.acc_number}} </label>
+
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-4 col-form-label font-weight-bold">Address 1</label>
+              <div class="col-sm-8">
+                <label class="col-form-label">: {{details.address_one}} </label>
+
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-4 col-form-label font-weight-bold">Address 2</label>
+              <div class="col-sm-8">
+                <label class="col-form-label">: {{details.address_two}} </label>
+              </div>
+            </div>
+          </div>
         </div>
-    </ng-template>
+
+
+
+      </app-card>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+
+        <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHide()"> <i
+            class="icofont icofont-close"></i> Close</button>
+
+      </div>
+
+    </div>
+  </ng-template>
 
 </block-ui>

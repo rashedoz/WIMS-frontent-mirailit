@@ -36,7 +36,8 @@ export enum StatusTypes {
     NOT_PAID_YET = 1,
     PARTIALLY_PAID = 2,
     PAID = 3,
-    FULLY_PAID_WITH_REFUND = 4
+    FULLY_PAID_WITH_REFUND = 4,
+    NOT_APPLICABLE = 6
   }
 
   export enum SubsItemsStaus {

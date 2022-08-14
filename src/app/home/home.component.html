@@ -1,410 +1,230 @@
-<ng-container *ngIf="currentUser.is_customer; else elseTemplate">
+<div class="row mb-2">
+
+  <div class="col-lg-12">
+    <div class="card card-border-primary">
+      <div class="card-body">
+        <div class="row users-card">
+          <div class="col-xl-6">
+            <div class="card user-card">
+              <div class="card-header-img m-3">
+                <img class="img-fluid img-circle" src="assets/images/user.png" alt="card-img">
+                <h4>Hello, {{currentUser.first_name}} {{currentUser.last_name}}</h4>
+                <h6 *ngIf="currentUser.is_superuser">Super User</h6>
+                <h6 *ngIf="!currentUser.is_superuser && currentUser.is_staff">Staff</h6>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-6">
+            <div class="card user-card mt-5 pt-5">
+              <div class="row mb-4 m-2 pb-3">
+                <div class="col-lg-6">
+                  <tabset [justified]="false" type="pills">
+                    <tab (selectTab)="changeTab('All Months',$event)">
+                      <ng-template tabHeading>
+                        All Months
+                      </ng-template>
+                    </tab>
+                    <tab (selectTab)="changeTab('Current Month',$event)">
+                      <ng-template tabHeading>
+                        Calendar
+                      </ng-template>
+                    </tab>
+                  </tabset>
+                </div>
+                <div class="col-lg-6" *ngIf="tabType == 'Current Month'">
+                  <input type="text" placeholder="Filter by month" class="form-control"
+                    (ngModelChange)="onMonthValueChange($event)" [(ngModel)]="bsMonthValue" bsDatepicker
+                    [bsConfig]="bsConfigMonth">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<div class="row mb-2">
+  <div class="col-lg-6">
     <div class="row mb-2">
-        <div class="col-lg-12">
-            <div class="card card-border-primary">
-                <div class="card-header">
-                    <h4 class="text-center"> Welcome </h4>
-                </div>
-            </div>
+      <div class="col-lg-12 col-sm-12">
+        <div class="card card-border-primary">
+          <div class="card-header">
+            <h6> PIE CHART HERE </h6>
+          </div>
         </div>
+      </div>
     </div>
-</ng-container>
-<ng-template #elseTemplate>
+  </div>
+  <div class="col-lg-6" *ngIf="billCollectionMethodData">
     <div class="row mb-2">
-        <div class="col-lg-8 col-sm-12">
-            <div class="row mb-2">
-                <div class="col-lg-12 col-sm-12">
-                    <div class="card card-border-primary">
-                        <div class="card-header">
-                            <h6>SIM </h6>
-                        </div>
-                    </div>
-                </div>
+      <div class="col-lg-12 col-sm-12">
+        <div class="card card-border-primary">
+          <div class="card-header">
+            <h5>Bill Collection Methods ({{billCollectionMethodData.bill_collection_ways_distinct}}) </h5>
+          </div>
+
+          <div class="card-block">
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <tbody>
+                  <tr>
+                    <td>Cash</td>
+                    <td>{{billCollectionMethodData.paid_by_cash}}</td>
+                  </tr>
+                  <tr>
+                    <td>Bank</td>
+                    <td>{{billCollectionMethodData.paid_by_bank}}</td>
+                  </tr>
+                  <tr>
+                    <td>From Balance</td>
+                    <td>{{billCollectionMethodData.paid_from_balance}}</td>
+                  </tr>
+                  <tr>
+                    <td>Card Payment</td>
+                    <td>{{billCollectionMethodData.paid_through_card}}</td>
+                  </tr>
+                  <tr>
+                    <td>Online Banking</td>
+                    <td>{{billCollectionMethodData.paid_through_online_banking}}</td>
+                  </tr>
+                  <tr>
+                    <td>Not Applicable</td>
+                    <td>{{billCollectionMethodData.paid_through_system}}</td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <th>Total</th>
+                  <th>{{billCollectionMethodData.paid_by_cash + billCollectionMethodData.paid_by_bank + billCollectionMethodData.paid_from_balance + billCollectionMethodData.paid_through_card +  billCollectionMethodData.paid_through_online_banking + billCollectionMethodData.paid_through_system}}</th>
+                </tfoot>
+              </table>
             </div>
-            <div class="row" *ngIf="simStock">
-                <div class="col-md-4">
-                    <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <div class="card client-blocks dark-primary-border">
-                                <div class="card-block">
-                                    <h5 class="custom-title">Currently Available SIM Qty </h5>
-                                    <ul>
-                                        <li> <img class="text-danger icon-w-40" src="assets/icon/custom/available.png">
-                                        </li>
-                                        <li class="text-right text-success f-42">
-                                            {{simStock.available_stock_qty}}
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12 mb-3">
-                            <div class="card client-blocks dark-primary-border">
-                                <div class="card-block">
-                                    <h5 class="custom-title">Currently SIM Held Qty</h5>
-                                    <ul>
-                                        <li> <img class="text-warning icon-w-40" src="assets/icon/custom/held.png">
-                                        </li>
-                                        <li class="text-right text-warning f-42">
-                                            {{simStock.held_qty}}
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12 mb-3">
-                            <div class="card client-blocks dark-primary-border">
-                                <div class="card-block">
-                                    <h5 class="custom-title">Total Sold SIM Qty</h5>
-                                    <ul>
-                                        <li> <img class="text-success icon-w-40" src="assets/icon/custom/sold2.png">
-                                        </li>
-                                        <li class="text-right text-success f-42">
-                                            {{simStock.sold_qty}}
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="row">
-                        <div class="col-md-12 mb-3 div-pointer">
-                            <div class="card client-blocks sucsess-border">
-                                <div class="card-block" [routerLink]="['/cancelled-sim-list']"
-                                    routerLinkActive="router-link-active">
-                                    <h5 class="custom-title">Currently Cancelled SIM Qty</h5>
-                                    <ul>
-                                        <li> <img class="text-danger icon-w-40" src="assets/icon/custom/cancel.png">
-                                        </li>
-                                        <li class="text-right text-warning f-42">
-                                            {{simStock.cancelled_qty}}
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12 mb-3">
-                            <div class="card client-blocks sucsess-border">
-                                <div class="card-block">
-                                    <h5 class="custom-title">Currently Reissued SIM Qty</h5>
-                                    <ul>
-                                        <li> <img class="text-danger icon-w-40" src="assets/icon/custom/return.png">
-                                        </li>
-                                        <li class="text-right text-primary f-42">
-                                            {{simStock.reissued_qty}}
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12 mb-3">
-                            <div class="card client-blocks sucsess-border">
-                                <div class="card-block">
-                                    <h5 class="custom-title">Currently Subscribed SIM Qty</h5>
-                                    <ul>
-                                        <li> <img class="text-danger icon-w-40" src="assets/icon/custom/subscribe.png">
-                                        </li>
-                                        <li class="text-right text-primary f-42">
-                                            {{simStock.subscribed_qty}}
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <div class="card client-blocks warning-border">
-                                <div class="card-block">
-                                    <h5 class="custom-title">This month’s Sold SIM Qty</h5>
-                                    <ul>
-                                        <li> <img class="text-success icon-w-40" src="assets/icon/custom/sold2.png">
-                                        </li>
-                                        <li class="text-right text-success f-42">
-                                            {{simStock.sim_sold_this_month}}
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12 mb-3">
-                            <div class="card client-blocks warning-border">
-                                <div class="card-block">
-                                    <h5 class="custom-title">This month’s Reissued SIM Qty</h5>
-                                    <ul>
-                                        <li> <img class="text-danger icon-w-40" src="assets/icon/custom/return.png">
-                                        </li>
-                                        <li class="text-right text-primary f-42">
-                                            {{simStock.sim_reissued_this_month}}
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12 mb-3">
-                            <div class="card client-blocks warning-border">
-                                <div class="card-block">
-                                    <h5 class="custom-title">This month’s Subscribed SIM Qty</h5>
-                                    <ul>
-                                        <li> <img class="text-danger icon-w-40" src="assets/icon/custom/subscribe.png">
-                                        </li>
-                                        <li class="text-right text-primary f-42">
-                                            {{simStock.sim_subscribed_this_month}}
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 col-sm-12">
-            <div class="row mb-2">
-                <div class="col-lg-12">
-                    <div class="card card-border-primary">
-                        <div class="card-header">
-                            <h6>Device </h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row" *ngIf="deviceStock">
-                <div class="col-md-12 mb-1">
-                    <div class="card client-blocks success-border">
-                        <div class="card-block">
-                            <h5 class="custom-title">Currently Available Device Qty </h5>
-                            <ul>
-                                <li> <img class="text-danger icon-w-40" src="assets/icon/custom/available.png">
-                                </li>
-                                <li class="text-right text-success f-42">
-                                    {{deviceStock.available_stock_qty}}
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col-md-12 mb-1 div-pointer">
-                    <div class="card client-blocks warning-border">
-                        <div class="card-block" [routerLink]="['/cancelled-device-list']"
-                            routerLinkActive="router-link-active">
-                            <h5 class="custom-title">Currently Cancelled Device Qty</h5>
-                            <ul>
-                                <li> <img class="text-danger icon-w-40" src="assets/icon/custom/cancel.png">
-                                </li>
-                                <li class="text-right text-warning f-42">
-                                    {{deviceStock.cancelled_qty}}
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col-md-12 mb-1">
-                    <div class="card client-blocks">
-                        <div class="card-block">
-                            <h5 class="custom-title">Total Sold Device Qty</h5>
-                            <ul>
-                                <li> <img class="text-danger icon-w-40" src="assets/icon/custom/sold.png">
-                                </li>
-                                <li class="text-right text-primary f-42">
-                                    {{deviceStock.sold_qty}}
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-12 mb-1">
-                    <div class="card client-blocks primary-dark-border">
-                        <div class="card-block">
-                            <h5 class="custom-title">This month’s Sold Device Qty</h5>
-                            <ul>
-                                <li> <img class="text-danger icon-w-40" src="assets/icon/custom/sold.png">
-                                </li>
-                                <li class="text-right text-primary f-42">
-                                    {{deviceStock.device_sold_this_month}}
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          </div>
 
         </div>
+      </div>
     </div>
+  </div>
+</div>
 
-    <div class="row mt-3 mb-2">
-        <div class="col-lg-12">
-            <div class="card card-border-primary">
-                <div class="card-header">
-                    <h6>Bill </h6>
-                </div>
+<div class="row mb-2">
+  <div class="col-lg-6">
+    <div class="row mb-2">
+      <div class="col-lg-12 col-sm-12">
+        <div class="card card-border-primary">
+          <div class="card-header">
+            <h5> Retailer Customer (185) </h5>
+          </div>
+          <div class="card-block">
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <tbody>
+                  <tr>
+                    <td>Retailer Sims</td>
+                    <td>185</td>
+                  </tr>
+                  <tr>
+                    <td>Retailer Devices</td>
+                    <td>185</td>
+                  </tr>
+                  <tr>
+                    <td>Retailer Collectable Bills Qty</td>
+                    <td>185</td>
+                  </tr>
+                  <tr>
+                    <td>Retailer Bill Collected Qty</td>
+                    <td>185</td>
+                  </tr>
+                  <tr>
+                    <td>Retailer Collectable Bill Amount</td>
+                    <td>185</td>
+                  </tr>
+                  <tr>
+                    <td>Retailer Bill Collected Amount</td>
+                    <td>185</td>
+                  </tr>
+                  <tr>
+                    <td>Retailer Due</td>
+                    <td>185</td>
+                  </tr>
+                  <tr>
+                    <td>Retailer Carryover Due</td>
+                    <td>185</td>
+                  </tr>
+
+                </tbody>
+                <tfoot>
+                  <th>Retailer Total Due</th>
+                  <th>185</th>
+                </tfoot>
+              </table>
             </div>
+          </div>
+
         </div>
+      </div>
     </div>
-    <div class="row">
+  </div>
+  <div class="col-lg-6">
+    <div class="row mb-2">
+      <div class="col-lg-12 col-sm-12">
+        <div class="card card-border-primary">
+          <div class="card-header">
+            <h5> Wholesaler Customer (16) </h5>
+          </div>
+          <div class="card-block">
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <tbody>
+                  <tr>
+                    <td>Wholesaler Sims</td>
+                    <td>185</td>
+                  </tr>
+                  <tr>
+                    <td>Wholesaler Devices</td>
+                    <td>185</td>
+                  </tr>
+                  <tr>
+                    <td>Wholesaler Collectable Bills Qty</td>
+                    <td>185</td>
+                  </tr>
+                  <tr>
+                    <td>Wholesaler Bill Collected Qty</td>
+                    <td>185</td>
+                  </tr>
+                  <tr>
+                    <td>Wholesaler Collectable Bill Amount</td>
+                    <td>185</td>
+                  </tr>
+                  <tr>
+                    <td>Wholesaler Bill Collected Amount</td>
+                    <td>185</td>
+                  </tr>
+                  <tr>
+                    <td>Wholesaler Due</td>
+                    <td>185</td>
+                  </tr>
+                  <tr>
+                    <td>Wholesaler Carryover Due</td>
+                    <td>185</td>
+                  </tr>
 
-        <div class="col-md-12 col-xl-4">
-            <div class="row" *ngIf="billCount">
-                <div class="col-md-12 mb-1 div-pointer">
-                    <div class="card client-blocks success-border">
-                        <div class="card-block" [routerLink]="['/bill-list/fully-paid']"
-                            routerLinkActive="router-link-active">
-                            <h5 class="custom-title">Fully Paid Bills </h5>
-                            <ul>
-                                <li> <img class="icon-w-40" src="assets/icon/custom/full-paid-bill.png">
-                                </li>
-                                <li class="text-right text-success f-42">
-                                    {{billCount.fully_paid_bills}}
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col-md-12 mb-1 div-pointer">
-                    <div class="card client-blocks warning-border">
-                        <div class="card-block" [routerLink]="['/bill-list/partially-paid']"
-                            routerLinkActive="router-link-active">
-                            <h5 class="custom-title">Partially Paid Bills</h5>
-                            <ul>
-                                <li> <img class="icon-w-40" src="assets/icon/custom/partially-paid-bill.png">
-                                </li>
-                                <li class="text-right text-warning f-42">
-                                    {{billCount.partially_paid_bills}}
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col-md-12 mb-1 div-pointer">
-                    <div class="card client-blocks danger-border">
-                        <div class="card-block" [routerLink]="['/bill-list/unpaid']"
-                            routerLinkActive="router-link-active">
-                            <h5 class="custom-title">Unpaid Bills</h5>
-                            <ul>
-                                <li> <img class="icon-w-40" src="assets/icon/custom/unpaid-bill.png">
-                                </li>
-                                <li class="text-right text-danger f-42">
-                                    {{billCount.unpaid_bills}}
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                </tbody>
+                <tfoot>
+                  <th>Wholesaler Total Due</th>
+                  <th>185</th>
+                </tfoot>
+              </table>
             </div>
+          </div>
 
         </div>
-
-        <div class="col-md-12 col-xl-8 mb-5">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="card table-1-card">
-                        <div class="card-header">
-                            <h5 class="custom-title">Customer Due List </h5>
-
-                            <!-- <ng-select [items]="photosBuffer" [dropdownPosition]="'bottom'" [virtualScroll]="true" [loading]="loading" bindLabel="title"
-                                bindValue="thumbnailUrl" placeholder="Select photo" appendTo="body" (scroll)="onScroll($event)"
-                                (scrollToEnd)="onScrollToEnd()">
-                                <ng-template ng-header-tmp>
-                                    <small class="form-text text-muted">Loaded {{photosBuffer.length}} of
-                                        {{photos.length}}</small>
-                                </ng-template>
-                                <ng-template ng-option-tmp let-item="item" let-index="index">
-                                    <b>{{index}}</b> {{item.title}}
-                                </ng-template>
-                            </ng-select>  -->
-
-
-
-                            <button class="btn btn-primary btn-mini float-right" [routerLink]="['/customer-due-list']"
-                                routerLinkActive="router-link-active">Show More</button>
-                        </div>
-                        <div class="card-block">
-                            <div class="table-responsive" *ngIf="customerDueList.length > 0">
-                                <!-- <ngx-datatable class="material table-bordered" [scrollbarH]="true" [rows]="customerDueList" [loadingIndicator]="loadingIndicator"
-                            [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
-                            rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
-                            (page)="setPage($event)">
-
-
-
-                            <ngx-datatable-column [width]="100" name="Code" prop="customer_code" [draggable]="false" [sortable]="false">
-                                <ng-template let-value="value" ngx-datatable-cell-template>
-                                    <span > {{ value }} </span>
-                                </ng-template>
-                            </ngx-datatable-column>
-
-                            <ngx-datatable-column [width]="220" name="Name" prop="first_name" [draggable]="false" [sortable]="false">
-                                <ng-template let-row="row" ngx-datatable-cell-template>
-                                    <span > {{ row.first_name }} {{row.last_name}}</span>
-                                </ng-template>
-                            </ngx-datatable-column>
-
-                            <ngx-datatable-column [width]="100" name="Mobile" prop="mobile" [draggable]="false" [sortable]="false">
-                                <ng-template let-value="value" ngx-datatable-cell-template>
-                                    <span > {{ value }} </span>
-                                </ng-template>
-                            </ngx-datatable-column>
-
-                            <ngx-datatable-column [width]="100" name="Total Due" prop="total_due" [draggable]="false" [sortable]="false">
-                                <ng-template let-value="value" ngx-datatable-cell-template>
-                                    <span > {{ value }} </span>
-                                </ng-template>
-                            </ngx-datatable-column>
-
-                        </ngx-datatable> -->
-                                <table class="table">
-                                    <thead>
-                                        <tr class="text-capitalize">
-                                            <th>Customer Code</th>
-                                            <th>Name</th>
-                                            <th>Mobile</th>
-                                            <th>Total Due</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let item of customerDueList">
-                                            <td>{{item.customer_code}}</td>
-                                            <td>{{item.first_name}} {{item.last_name}}</td>
-                                            <td>{{item.mobile}}</td>
-                                            <td>{{item.total_due}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                </div>
-                <!-- System clock start -->
-                <!-- <div class="col-sm-12">
-                <div class="card borderless-card">
-                    <div class="card-block clock-widget">
-                        <div id="current-time">7:22:38 AM</div>
-                        <h5 class="custom-title">Sunday 30th April , 2017</h5>
-                        <i class="icofont icofont-ui-alarm basic-alarm"></i>
-                        <i class="icofont icofont-ui-alarm bg-alarm"></i>
-                    </div>
-                </div>
-            </div> -->
-                <!-- System clock end -->
-            </div>
-        </div>
-
-
+      </div>
     </div>
-</ng-template>
+  </div>
+</div>
+
+

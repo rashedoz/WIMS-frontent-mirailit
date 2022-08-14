@@ -132,6 +132,19 @@ export class CustomerDetailsComponent implements OnInit {
   paymentConfirmableCount = 0;
 
 
+  // for customer
+  selectedCustomer = null;
+  customers = [];
+  customersBuffer = [];
+  bufferSize = 50;
+  numberOfItemsFromEndBeforeFetchingMore = 10;
+  loading = false;
+  count=1;
+  searchParamCustomer = '';
+  input$ = new Subject<string>();
+  customerType = 'all';
+
+
   constructor(
     private confirmService: ConfirmService,
     public formBuilder: FormBuilder,
@@ -144,6 +157,10 @@ export class CustomerDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     public printService: PrintService
   ) {
+
+    this.router.routeReuseStrategy.shouldReuseRoute = function () {
+      return false;
+    };
 
     this.page.pageNumber = 1;
     this.page.size = 50;
@@ -184,9 +201,13 @@ export class CustomerDetailsComponent implements OnInit {
 
     this.bsBillItemValue = this.firstDay;
 
+
     if(this.customer_id){
       this.getCustomer();
+      this.getAllCustomer();
+      this.onSearch();
       this.getCustomerSIMDeviceCount();
+      this.selectedCustomer = Number(this.customer_id);
     }
 
     this.url = 'bill/customer-billing-items';
@@ -262,7 +283,8 @@ selectTab(tabId: number) {
 
 
     this.bsBillItemValue = this.firstDay;
-    this.bsPaymentRangeValue = [this.firstDay,this.lastDay];
+    this.bsBillDetailsRangeValue = [];
+    this.bsPaymentRangeValue = [];
    // this.searchParam = '';
     this.pageTable.pageNumber = 0;
     this.pageTable.size = 10;
@@ -277,7 +299,6 @@ selectTab(tabId: number) {
        this.billItemsDetailTabs.tabs[0].active = true;
         break;
       case 'Bills Details':
-        this.bsBillDetailsRangeValue = [this.firstDay,this.lastDay];
         this.url = 'bill/get-bill-list';
         this.billType = 'All';
         this.getBillDetailsListWithPagination();
@@ -285,7 +306,7 @@ selectTab(tabId: number) {
         break;
       case 'Payment Details':
         this.url = 'payment/get-payment-list';
-     this.getListWithPagination();
+        this.getListWithPagination();
         break;
       // case 'Balance':
       //   this.url = 'get-user-detail/';
@@ -307,7 +328,7 @@ selectTab(tabId: number) {
  }
 
  changeTabBillDetailsItem(type,e) {
-  this.bsBillDetailsRangeValue = [this.firstDay,this.lastDay];
+//  this.bsBillDetailsRangeValue = [this.firstDay,this.lastDay];
    this.searchParam = '';
    this.pageTable.pageNumber = 0;
    this.pageTable.size = 10;
@@ -520,10 +541,15 @@ selectTab(tabId: number) {
       search_param: this.searchParam
     };
 
-    if(this.bsPaymentRangeValue){
+    if(this.bsPaymentRangeValue && this.bsPaymentRangeValue.length > 0){
       obj.payment_entry_start_date = moment(this.bsPaymentRangeValue[0]).format('YYYY-MM-DD'),
       obj.payment_entry_end_date = moment(this.bsPaymentRangeValue[1]).format('YYYY-MM-DD')
+    }else{
+        delete obj['payment_entry_start_date'];
+        delete obj['payment_entry_end_date'];
     }
+
+
     if(this.selectedPaymentMethod){
       obj.payment_method = this.selectedPaymentMethod;
     }
@@ -645,9 +671,12 @@ selectTab(tabId: number) {
       delete obj['payment_status'];
     }
 
-    if(this.bsBillDetailsRangeValue){
+    if(this.bsBillDetailsRangeValue && this.bsBillDetailsRangeValue.length > 0){
       obj.billing_start_date = moment(this.bsBillDetailsRangeValue[0]).format('YYYY-MM-DD'),
       obj.billing_end_date = moment(this.bsBillDetailsRangeValue[1]).format('YYYY-MM-DD')
+    } else{
+      delete obj['billing_start_date'];
+      delete obj['billing_end_date'];
     }
 
     this._service.get(this.url,obj).subscribe(res => {
@@ -1079,6 +1108,199 @@ selectTab(tabId: number) {
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 
+
+
+  ///////////////////////////// For Customer Search //////////////////////
+
+  onSearch() {
+    this.input$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      switchMap(term => this.fakeServiceCustomer(term))
+    ).subscribe((data : any) => {
+      this.customers = data.results;
+      this.page.totalElements = data.count;
+      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+      this.customersBuffer = this.customers.slice(0, this.bufferSize);
+      })
+  }
+
+  onCustomerChange(e){
+    if(e){
+      this.selectedCustomer = e;
+      this.router.navigate(['customer-details/' + this.selectedCustomer.id]);
+    }else{
+      this.selectedCustomer = null;
+      this.searchParamCustomer = '';
+      this.getAllCustomer();
+    }
+  }
+
+onScrollToEnd() {
+      this.fetchMore();
+  }
+
+onScroll({ end }) {
+    if (this.loading || this.customers.length <= this.customersBuffer.length) {
+        return;
+    }
+
+    if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.customersBuffer.length) {
+        this.fetchMore();
+    }
+}
+
+private fetchMore() {
+
+    let more;
+   // const len = this.customersBuffer.length;
+    if(this.count < this.page.totalPages){
+    this.count++;
+    this.page.pageNumber = this.count;
+    let obj;
+    obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber,
+      search_param:this.searchParamCustomer
+    };
+    // if(this.searchParam){
+    //    obj = {
+    //     limit: this.page.size,
+    //     page: this.page.pageNumber,
+    //     search_param:this.searchParam
+    //   };
+    // }else{
+    //    obj = {
+    //     limit: this.page.size,
+    //     page: this.page.pageNumber
+    //   };
+    // }
+
+
+  // if(this.customerType){
+  //   this.customersBuffer = [];
+  //   switch (this.customerType) {
+  //     case 'all':
+  //       delete obj['is_retailer'];
+  //       delete obj['is_wholesaler'];
+  //       break;
+  //     case 'wholesaler':
+  //       obj.is_wholesaler = 1;
+  //       break;
+  //     case 'retailer':
+  //       obj.is_retailer = 1;
+  //       break;
+
+  //     default:
+  //       break;
+  //   }
+  // }
+
+
+      this._service.get("get-customer-list",obj).subscribe(
+        (res) => {
+          more = res.results;
+          //  const more = this.customers.slice(len, this.bufferSize + len);
+          this.loading = true;
+          // using timeout here to simulate backend API delay
+          setTimeout(() => {
+              this.loading = false;
+              this.customersBuffer = this.customersBuffer.concat(more);
+          }, 100)
+        },
+        (err) => {}
+      );
+    }
+
+}
+
+
+getAllCustomer(){
+  let obj;
+  obj = {
+    limit: this.page.size,
+    page: this.page.pageNumber,
+    search_param:this.searchParamCustomer
+  };
+
+  // if(this.customerType){
+  //   switch (this.customerType) {
+  //     case 'all':
+  //       delete obj['is_retailer'];
+  //       delete obj['is_wholesaler'];
+  //       break;
+  //     case 'wholesaler':
+  //       obj.is_wholesaler = 1;
+  //       break;
+  //     case 'retailer':
+  //       obj.is_retailer = 1;
+  //       break;
+
+  //     default:
+  //       break;
+  //   }
+  // }
+  this.blockUI.start("Loading...");
+  this._service.get("get-customer-list",obj).subscribe(
+    (res) => {
+      this.customers = res.results;
+      this.page.totalElements = res.count;
+      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+      if(this.customers) this.customersBuffer = this.customers.slice(0, this.bufferSize);
+      this.blockUI.stop();
+    },
+    (err) => {
+      this.blockUI.stop();
+    }
+  );
+}
+
+private fakeServiceCustomer(term) {
+
+  this.page.size = 50;
+  this.page.pageNumber = 1;
+  this.searchParam = term;
+
+  let obj;
+  obj = {
+    limit: this.page.size,
+    page: this.page.pageNumber,
+    search_param:this.searchParam
+  };
+
+
+  if(this.customerType){
+    switch (this.customerType) {
+      case 'all':
+        delete obj['is_retailer'];
+        delete obj['is_wholesaler'];
+        break;
+      case 'wholesaler':
+        obj.is_wholesaler = 1;
+        break;
+      case 'retailer':
+        obj.is_retailer = 1;
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  let params = new HttpParams();
+  if (obj) {
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        params = params.append(key, obj[key]);
+      }
+    }
+  }
+  return this.http.get<any>(environment.apiUrl + 'get-customer-list', { params }).pipe(
+    map(res => {
+      return res;
+    })
+  );
+}
 
 
 }

@@ -29,7 +29,7 @@ export class AuthenticationService {
      var data = {email: param.UserName,password:param.Password};
     // var data = "email=" + param.UserName + "&password=" + encodeURIComponent(param.Password)  + "&grant_type=password";
     // var reqHeader = new HttpHeaders({ 'Content-Type': 'application/x-www-urlencoded', 'No-Auth': 'True' });
-    return this.http.post<any>(environment.baseUrl + 'auth/jwt/create', data)
+    return this.http.post<any>(environment.baseUrl + 'api/login', data)
       .pipe(map(res => {
 
         // const user = {
@@ -57,20 +57,20 @@ export class AuthenticationService {
 
 
   verifyToken(token) {
- 
+
     var reqHeader = new HttpHeaders({ 'Authorization': 'Bearer '+token});
     return this.http.get<any>(environment.baseUrl +'auth/users/me',{ headers: reqHeader })  .pipe(map(data => {
       // store user details and jwt token in local storage to keep user logged in between page refreshes
       // let expireDate = new Date(data[".expires"]);
-     
+
       //  let userData = data.result.user;
-      let Roles = [];        
+      let Roles = [];
       if(data.is_superuser){
         Roles.push("is_superuser");
       }
       if(data.is_staff){
         Roles.push("is_staff");
-      } 
+      }
       if(data.is_customer){
         Roles.push("is_customer");
       }
@@ -86,15 +86,15 @@ export class AuthenticationService {
           email: data.email,
           first_name: data.first_name,
           last_name: data.last_name,
-          full_name: data.first_name+ ' '+ data.last_name,  
+          full_name: data.first_name+ ' '+ data.last_name,
           image: data.image,
           is_active: data.is_active,
           is_customer: data.is_customer,
           is_retailer: data.is_retailer,
           is_staff: data.is_staff,
           is_superuser: data.is_superuser,
-          is_wholesaler: data.is_wholesaler,  
-          customer_code: data.customer_code, 
+          is_wholesaler: data.is_wholesaler,
+          customer_code: data.customer_code,
           member_code: data.member_code,
           mobile:data.mobile,
           balance:data.balance,
@@ -113,7 +113,7 @@ export class AuthenticationService {
         Cookie.set('.WIMS.Admin.Cookie', JSON.stringify(user), expireDate, '/', window.location.hostname, false);
         this.currentUserDetails.next(user);
         return true;
-    
+
     }),
       catchError(err => {
         console.log(err);

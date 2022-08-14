@@ -64,41 +64,52 @@ export class LoginSystemAdminComponent implements OnInit {
 
     this.authService.login({ UserName: this.LoginForm.value.Email, Password: this.LoginForm.value.Password}).subscribe(
       data => {
-     
+
         if(!data){
           this.blockUI.stop();
           return;
-        } 
-        if (data.access) {
-
-          this.authService.verifyToken(data.access).subscribe(
-            data2 => {
-              this.blockUI.stop();
-              if (data2) {
-
-                this.toastr.success('Logged in successfully', 'Success!', { timeOut: 2000 });
-                this.router.navigate([this.returnUrl]);
-                this.menuItems.refreshMenu();
-              }else{
-                this.toastr.error(data2.Message, 'Error!', { timeOut: 3000 });
-              }
-            },
-            error => {
-              this.blockUI.stop();
-              if (error.status === 400) {
-                this.toastr.error('Unauthorized request found', 'Error!', { timeOut: 3000 });
-              } else if (error.status === 401) {
-                this.toastr.error('Invalid Email Or Password', 'Error!', { timeOut: 3000 });
-              }
-            }
-          );
-          // this.toastr.success('Logged in successfully', 'Success!', { timeOut: 2000 });
-          // this.router.navigate([this.returnUrl]);
-          // this.menuItems.refreshMenu();
-        }else{
-          this.toastr.error(data.Message, 'Error!', { timeOut: 3000 });
-          this.blockUI.stop();
         }
+        if (data.detsil) {
+          this.toastr.error(data.detsil, 'Error!', { timeOut: 3000 });
+          this.blockUI.stop();
+        }else{
+
+          if (data.access) {
+
+            this.authService.verifyToken(data.access).subscribe(
+              data2 => {
+                this.blockUI.stop();
+                if (data2) {
+
+                  this.toastr.success('Logged in successfully', 'Success!', { timeOut: 2000 });
+                  this.router.navigate([this.returnUrl]);
+                  this.menuItems.refreshMenu();
+                }else{
+                  this.toastr.error(data2.Message, 'Error!', { timeOut: 3000 });
+                }
+              },
+              error => {
+                this.blockUI.stop();
+                if (error.status === 400) {
+                  this.toastr.error('Unauthorized request found', 'Error!', { timeOut: 3000 });
+                } else if (error.status === 401) {
+                  this.toastr.error('Invalid Email Or Password', 'Error!', { timeOut: 3000 });
+                }
+              }
+            );
+            // this.toastr.success('Logged in successfully', 'Success!', { timeOut: 2000 });
+            // this.router.navigate([this.returnUrl]);
+            // this.menuItems.refreshMenu();
+          }else{
+            this.toastr.error(data.Msg, 'Error!', { timeOut: 3000 });
+            this.blockUI.stop();
+          }
+
+        }
+
+
+
+
       },
       error => {
         this.blockUI.stop();

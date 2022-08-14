@@ -141,6 +141,10 @@ export class BillComponent implements OnInit {
       this.billType = type;
        this.getList();
        break;
+     case 'Not Applicable':
+      this.billType = type;
+       this.getList();
+       break;
     default:
       this.getList();
       break;
@@ -203,6 +207,10 @@ export class BillComponent implements OnInit {
 
       case 'Fully Paid':
         status = 3;
+        break;
+
+      case 'Not Applicable':
+        status = 6;
         break;
 
       default:

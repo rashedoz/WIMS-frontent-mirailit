@@ -22,6 +22,7 @@ import { BillStatus, PaymentType } from "./../_models/enums";
 export class PaymentCollectionComponent implements OnInit {
 
   entryFormBill: FormGroup;
+  balanceLoadForm: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
   bill_id: any = null;
@@ -37,12 +38,17 @@ export class PaymentCollectionComponent implements OnInit {
   paidAmount: number = 0;
   tempPaidAmount: number = 0;
   paymentMethodList = [{ id: 1, name: 'CASH' }, { id: 2, name: 'FROM BALANCE' }, { id: 3, name: 'CARD PAYMENT' }, { id: 4, name: 'ONLINE BANKING' }]
+  methodListWithoutFrom = [{"id":1,"name":"CASH"},{"id":3,"name":"CARD_PAYMENT"},{"id":4,"name":"ONLINE_BANKING"}]
   methodList = [];
   selectedMethod = { id: 1, name: 'CASH' };
 
   grand_total = 0;
   refund_amount = 0;
   due = 0;
+
+  modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
+  modalRef: BsModalRef;
+
   constructor(
     private confirmService: ConfirmService,
     public formBuilder: FormBuilder,
@@ -62,6 +68,10 @@ export class PaymentCollectionComponent implements OnInit {
     this.entryFormBill = this.formBuilder.group({
       invoice_month: [null, [Validators.required]],
     });
+    this.balanceLoadForm = this.formBuilder.group({
+      amount: [null, [Validators.required]],
+      payment_method: [null, [Validators.required]]
+    });
 
     this.entryFormBill.get('invoice_month').disable();
     this.entryFormBill.get('invoice_month').setValue(moment().format('MMM-YYYY'));
@@ -71,6 +81,9 @@ export class PaymentCollectionComponent implements OnInit {
     return this.entryFormBill.controls;
   }
 
+  get b() {
+    return this.balanceLoadForm.controls;
+  }
   // goBack(){
   //   this._location.back();
   // }
@@ -256,6 +269,61 @@ export class PaymentCollectionComponent implements OnInit {
 
   }
 
+
+  onBalanceLoadFormSubmit() {
+    this.submitted = true;
+    if (this.balanceLoadForm.invalid) {
+      return;
+    }
+
+    this.blockUI.start('Saving...');
+    const obj = {
+      customer: this.details.customer,
+      paid_amount: Number(this.balanceLoadForm.value.amount),
+      payment_method: this.balanceLoadForm.value.payment_method
+    };
+
+    this._service.post('load-customer-balance', obj).subscribe(
+      data => {
+        this.blockUI.stop();
+        if (data.IsReport == "Success") {
+          this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+          this.modalHideLoadBalance();
+
+          // if(this.pageType == 'Balance'){
+          //   this.url = 'get-user-detail/';
+          //   this.getCustomer();
+          // }else if(this.pageType == 'BalanceHistory'){
+          //   this.url = 'get-customer-balance-loading-history/';
+          //   this.getBalanceLoadList();
+          // }
+
+          this.getBillDetails();
+
+
+        } else if (data.IsReport == "Warning") {
+          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+        } else {
+          this.toastr.error(data.Msg, 'Error!', { timeOut: 2000 });
+        }
+      },
+      err => {
+        this.blockUI.stop();
+        this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
+      }
+    );
+
+  }
+
+  modalHideLoadBalance() {
+    this.balanceLoadForm.reset();
+    this.modalRef.hide();
+    this.submitted = false;
+  }
+
+  openModalLoadBalance(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template, this.modalConfig);
+  }
 
 
 

@@ -44,7 +44,7 @@ const MENUITEMS = [
         state: 'bill',
         name: 'Bill',
         type: 'link',
-        icon: 'icofont-dashboard'
+        icon: 'ti-agenda'
       },
     ]
   },
@@ -56,14 +56,14 @@ const MENUITEMS = [
         state: 'sell-product',
         name: 'Sell Products',
         type: 'link',
-        icon: 'ti-control-forward',
+        icon: 'ti-share',
         permission: 'is_superuser,is_staff',
       },
       {
         state: 'payment-list',
         name: 'Payment List',
         type: 'link',
-        icon: 'ti-control-forward',
+        icon: 'ti-menu-alt',
         permission: 'is_superuser,is_staff',
       },
     ]
@@ -76,14 +76,14 @@ const MENUITEMS = [
         state: 'stock-entry',
         name: 'Stock Entry',
         type: 'link',
-        icon: 'ti-control-forward',
+        icon: 'ti-server',
         permission: 'is_superuser,is_staff',
       },
       {
         state: 'updatable-sim-list',
         name: 'Updatable Sim List',
         type: 'link',
-        icon: 'ti-control-forward',
+        icon: 'ti-export',
         permission: 'is_superuser,is_staff',
       },
       // {
@@ -97,7 +97,7 @@ const MENUITEMS = [
         state: 'all-sim-list',
         name: 'Sim List',
         type: 'link',
-        icon: 'ti-control-forward',
+        icon: 'ti-ticket',
         permission: 'is_superuser,is_staff',
       },
       // {
@@ -111,7 +111,7 @@ const MENUITEMS = [
         state: 'all-device-list',
         name: 'Device List',
         type: 'link',
-        icon: 'ti-control-forward',
+        icon: 'ti-notepad',
         permission: 'is_superuser,is_staff',
       },
     ]
@@ -124,7 +124,7 @@ const MENUITEMS = [
         state: 'customer',
         name: 'Customers',
         type: 'link',
-        icon: 'ti-control-forward',
+        icon: 'ti-user',
         permission: 'is_superuser,is_staff',
       },
 
@@ -163,14 +163,14 @@ const MENUITEMS = [
         state: 'supplier',
         name: 'Suppliers',
         type: 'link',
-        icon: 'ti-control-forward',
+        icon: 'ti-id-badge',
         permission: 'is_superuser,is_staff',
       },
       {
         state: 'member-list',
         name: 'Members',
         type: 'link',
-        icon: 'ti-control-forward',
+        icon: 'ti-stamp',
         permission: 'is_superuser,is_staff',
       },
 
@@ -184,14 +184,14 @@ const MENUITEMS = [
         state: 'package-list',
         name: 'Package',
         type: 'link',
-        icon: 'ti-control-forward',
+        icon: 'ti-layout-list-thumb',
         permission: 'is_superuser,is_staff',
       },
       {
         state: 'data-plan-list',
         name: 'Data Plan',
         type: 'link',
-        icon: 'ti-control-forward',
+        icon: 'ti-list',
         permission: 'is_superuser,is_staff',
       },
     ]

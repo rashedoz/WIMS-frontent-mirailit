@@ -35,6 +35,11 @@
                         Fully Paid
                       </ng-template>
                     </tab>
+                    <tab (selectTab)="changeTab('Not Applicable',$event)">
+                      <ng-template tabHeading>
+                        Not Applicable
+                      </ng-template>
+                    </tab>
 
                     <!-- <tab (selectTab)="changeTab('Permanently Cancelled',$event)">
                                         <ng-template tabHeading>
@@ -56,12 +61,12 @@
                         bsDaterangepicker [bsConfig]="bsConfig">
                     </div>
 
-                    <div class="col-sm-5">
+                    <div class="col-sm-6">
                       <input type="text" [(ngModel)]="searchParam" class="form-control"
-                        placeholder="Filter by customer name, bill no, bill creator.." (keyup)="filterSearch($event)" />
+                        placeholder="Filter by customer name, bill no, cid, iccid, phone number, imei, bill creator.." (keyup)="filterSearch($event)" />
 
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                       <div class="form-radio">
                         <div class="radio radiofill radio-primary radio-inline">
                           <label>
@@ -143,6 +148,9 @@
                       }}</strong>
                         </span>
                         <span *ngIf="value == 3"> <strong class="label label-success">{{ billStatus[value]
+                      }}</strong>
+                        </span>
+                        <span *ngIf="value == 6"> <strong class="label label-default">{{ billStatus[value]
                       }}</strong>
                         </span>
                       </ng-template>

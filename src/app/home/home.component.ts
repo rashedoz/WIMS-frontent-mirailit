@@ -9,8 +9,9 @@ import { Router } from '@angular/router';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
 // HC_exporting(Highcharts);
-
+import * as moment from 'moment';
 import { HttpClient } from '@angular/common/http';
+import { BsDatepickerConfig, BsDaterangepickerConfig } from "ngx-bootstrap/datepicker";
 
 @Component({
   selector: 'app-home',
@@ -31,16 +32,14 @@ export class HomeComponent implements OnInit {
   ColumnMode = ColumnMode;
   // highcharts = Highcharts;
   @BlockUI() blockUI: NgBlockUI;
+  bsConfigMonth: Partial<BsDatepickerConfig>;
+  tabType = 'All Months';
+  date = new Date();
+  firstDay = new Date(this.date.getFullYear(), this.date.getMonth(), 1);
+  lastDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0);
 
-
-
-  // photos = [];
-  // photosBuffer = [];
-  // bufferSize = 50;
-  // numberOfItemsFromEndBeforeFetchingMore = 10;
-  // loading = false;
-
-
+  bsMonthValue: Date;
+  billCollectionMethodData = null;
 
   constructor(
     private authService: AuthenticationService,
@@ -56,12 +55,15 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getSIMCount();
-    this.getDeviceCount();
-    this.getBillCount();
+
+    this.getBillCollectionMethodData();
+
+    // this.getSIMCount();
+    // this.getDeviceCount();
+    // this.getBillCount();
    // this.getCustomerDueList();
 
-   
+
     // this.getCourseEnrollmentCount();
 
     // this.http.get<any[]>('https://jsonplaceholder.typicode.com/photos').subscribe(photos => {
@@ -69,51 +71,87 @@ export class HomeComponent implements OnInit {
     //         this.photosBuffer = this.photos.slice(0, this.bufferSize);
     //     });
 
+
+
+    this.bsConfigMonth = Object.assign(
+      {
+        dateInputFormat: 'MMMM',
+        adaptivePosition: true,
+        minMode :'month'
+      }
+    );
+
   }
 
 
 
-//   onScrollToEnd() {
-//     this.fetchMore();
-// }
+  changeTab(type,e) {
 
-// onScroll({ end }) {
-//     if (this.loading || this.photos.length <= this.photosBuffer.length) {
-//         return;
-//     }
+    switch (type) {
+      case 'All Months':
+        this.tabType = type;
+        this.getBillCollectionMethodData();
+       break;
+      case 'Current Month':
+        this.bsMonthValue = this.firstDay;
+        this.tabType = type;
+        this.getBillCollectionMethodData();
+       break;
 
-//     if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.photosBuffer.length) {
-//         this.fetchMore();
-//     }
-// }
+    default:
 
-// private fetchMore() {
-//     const len = this.photosBuffer.length;
-//     const more = this.photos.slice(len, this.bufferSize + len);
-//     this.loading = true;
-//     // using timeout here to simulate backend API delay
-//     setTimeout(() => {
-//         this.loading = false;
-//         this.photosBuffer = this.photosBuffer.concat(more);
-//     }, 100)
-// }
+      break;
+    }
 
+ }
 
+ onMonthValueChange(e){
 
-
-
-
-
-
-
-
-
-
-
-  setPage(pageInfo) {
-    this.page.pageNumber = pageInfo.offset;
-    this.getCustomerDueList();
+  if(e){
+    this.bsMonthValue = e;
+  }else{
+    this.bsMonthValue = null
+  }
+  this.getBillCollectionMethodData();
 }
+
+
+getBillCollectionMethodData() {
+  this.blockUI.start('Getting Data...');
+  let obj:any ={};
+
+  if( this.tabType == 'Current Month'){
+      let monthLastDate = new Date(this.bsMonthValue.getFullYear(), this.bsMonthValue.getMonth() + 1, 0);
+      obj.billing_start_date = moment(this.bsMonthValue).format('YYYY-MM-DD'),
+      obj.billing_end_date = moment(monthLastDate).format('YYYY-MM-DD')
+  } else{
+    delete obj['billing_start_date'];
+    delete obj['billing_end_date'];
+  }
+
+  this._service.get('bill-dashboard/payment-method-records',obj).subscribe(res => {
+    this.blockUI.stop();
+    if (!res) {
+      this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+      return;
+    }
+    this.billCollectionMethodData = res;
+  }, err => {
+    this.blockUI.stop();
+    this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
+  }
+  );
+}
+
+
+
+
+
+
+
+
+
+
 
   getSIMCount() {
     this._service.get('stock/get-current-sim-stock-history').subscribe(res => {
