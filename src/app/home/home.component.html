@@ -1,3 +1,4 @@
+<block-ui>
 <div class="row mb-2">
 
   <div class="col-lg-12">
@@ -6,27 +7,29 @@
         <div class="row users-card">
           <div class="col-xl-6">
             <div class="card user-card">
-              <div class="card-header-img m-3">
-                <img class="img-fluid img-circle" src="assets/images/user.png" alt="card-img">
-                <h4>Hello, {{currentUser.first_name}} {{currentUser.last_name}}</h4>
-                <h6 *ngIf="currentUser.is_superuser">Super User</h6>
-                <h6 *ngIf="!currentUser.is_superuser && currentUser.is_staff">Staff</h6>
+              <div class="card-header-img mt-1">
+                <img style="width:80px" class="img-fluid img-circle" src="assets/images/user.png" alt="card-img">
+                <h4 class="mt-1">Hello, {{currentUser.first_name}} {{currentUser.last_name}}</h4>
+                <h6 class="mt-0" *ngIf="currentUser.is_superuser">Super User</h6>
+                <h6 class="mt-0" *ngIf="!currentUser.is_superuser && currentUser.is_staff">Staff</h6>
               </div>
             </div>
           </div>
           <div class="col-xl-6">
-            <div class="card user-card mt-5 pt-5">
+            <div class="card user-card mt-2 pt-5">
               <div class="row mb-4 m-2 pb-3">
                 <div class="col-lg-6">
                   <tabset [justified]="false" type="pills">
-                    <tab (selectTab)="changeTab('All Months',$event)">
-                      <ng-template tabHeading>
-                        All Months
-                      </ng-template>
-                    </tab>
+
                     <tab (selectTab)="changeTab('Current Month',$event)">
                       <ng-template tabHeading>
                         Calendar
+                      </ng-template>
+                    </tab>
+
+                    <tab (selectTab)="changeTab('All Months',$event)">
+                      <ng-template tabHeading>
+                        All Months
                       </ng-template>
                     </tab>
                   </tabset>
@@ -53,7 +56,12 @@
       <div class="col-lg-12 col-sm-12">
         <div class="card card-border-primary">
           <div class="card-header">
-            <h6> PIE CHART HERE </h6>
+            <h5> PIE CHART </h5>
+          </div>
+          <div class="card-block">
+            <highcharts-chart [Highcharts]="highcharts" [options]="pieChartOptions"
+            style="width: 100%; min-height: 245px; display: block;">
+        </highcharts-chart>
           </div>
         </div>
       </div>
@@ -67,7 +75,7 @@
             <h5>Bill Collection Methods ({{billCollectionMethodData.bill_collection_ways_distinct}}) </h5>
           </div>
 
-          <div class="card-block">
+          <div class="card-block pt-2">
             <div class="table-responsive">
               <table class="table table-sm">
                 <tbody>
@@ -115,50 +123,53 @@
     <div class="row mb-2">
       <div class="col-lg-12 col-sm-12">
         <div class="card card-border-primary">
-          <div class="card-header">
-            <h5> Retailer Customer (185) </h5>
+          <div class="card-header" *ngIf="eligibleRetailersCount">
+            <h5> Retailer Customer ({{eligibleRetailersCount}}) </h5>
           </div>
           <div class="card-block">
             <div class="table-responsive">
               <table class="table table-sm">
                 <tbody>
-                  <tr>
+                  <tr *ngIf="retailersPeripheralsCount">
                     <td>Retailer Sims</td>
-                    <td>185</td>
+                    <td>{{retailersPeripheralsCount.active_or_frozen_or_advanced_cancelled_sim_count}}</td>
                   </tr>
-                  <tr>
+                  <tr *ngIf="retailersPeripheralsCount">
                     <td>Retailer Devices</td>
-                    <td>185</td>
+                    <td>{{retailersPeripheralsCount.active_or_frozen_or_advanced_cancelled_device_count}}</td>
                   </tr>
-                  <tr>
+                  <tr *ngIf="retailersBillRecords">
                     <td>Retailer Collectable Bills Qty</td>
-                    <td>185</td>
+                    <td>{{retailersBillRecords.retailer_collectable_bills}}</td>
                   </tr>
-                  <tr>
+                  <tr *ngIf="retailersBillRecords">
                     <td>Retailer Bill Collected Qty</td>
-                    <td>185</td>
+                    <td>{{retailersBillRecords.retailer_collected_bills}}</td>
                   </tr>
                   <tr>
+                    <td style="padding: 0 !important;" colspan="2" >&nbsp;</td>
+                  </tr>
+                  <tr *ngIf="retailersBillRecords">
                     <td>Retailer Collectable Bill Amount</td>
-                    <td>185</td>
+                    <td>{{retailersBillRecords.retailer_collectable_bill_amount}}</td>
                   </tr>
-                  <tr>
+                  <tr style="border-bottom: 2px solid black;" *ngIf="retailersBillRecords">
                     <td>Retailer Bill Collected Amount</td>
-                    <td>185</td>
+                    <td>{{retailersBillRecords.retailer_collected_bill_amount}}</td>
                   </tr>
-                  <tr>
+                  <tr *ngIf="retailersBillRecords">
                     <td>Retailer Due</td>
-                    <td>185</td>
+                    <td>{{retailersBillRecords.retailer_collectable_bill_amount - retailersBillRecords.retailer_collected_bill_amount}}</td>
                   </tr>
-                  <tr>
+                  <tr style="border-bottom: 2px solid black;" *ngIf="retailersBillRecords">
                     <td>Retailer Carryover Due</td>
-                    <td>185</td>
+                    <td>{{retailersBillRecords.retailer_carry_over_due}}</td>
                   </tr>
 
                 </tbody>
-                <tfoot>
+                <tfoot *ngIf="retailersBillRecords">
                   <th>Retailer Total Due</th>
-                  <th>185</th>
+                  <th>{{ (retailersBillRecords.retailer_collectable_bill_amount - retailersBillRecords.retailer_collected_bill_amount) +  retailersBillRecords.retailer_carry_over_due}}</th>
                 </tfoot>
               </table>
             </div>
@@ -172,50 +183,53 @@
     <div class="row mb-2">
       <div class="col-lg-12 col-sm-12">
         <div class="card card-border-primary">
-          <div class="card-header">
-            <h5> Wholesaler Customer (16) </h5>
+          <div class="card-header" *ngIf="eligibleWholesalersCount">
+            <h5> Wholesaler Customer ({{eligibleWholesalersCount}}) </h5>
           </div>
           <div class="card-block">
             <div class="table-responsive">
               <table class="table table-sm">
                 <tbody>
-                  <tr>
+                  <tr *ngIf="wholesalersPeripheralsCount">
                     <td>Wholesaler Sims</td>
-                    <td>185</td>
+                    <td>{{wholesalersPeripheralsCount.active_or_frozen_or_advanced_cancelled_sim_count}}</td>
                   </tr>
-                  <tr>
+                  <tr *ngIf="wholesalersPeripheralsCount">
                     <td>Wholesaler Devices</td>
-                    <td>185</td>
+                    <td>{{wholesalersPeripheralsCount.active_or_frozen_or_advanced_cancelled_device_count}}</td>
                   </tr>
-                  <tr>
+                  <tr *ngIf="wholesalersBillRecords">
                     <td>Wholesaler Collectable Bills Qty</td>
-                    <td>185</td>
+                    <td>{{wholesalersBillRecords.wholesaler_collectable_bills}}</td>
                   </tr>
-                  <tr>
+                  <tr *ngIf="wholesalersBillRecords">
                     <td>Wholesaler Bill Collected Qty</td>
-                    <td>185</td>
+                    <td>{{wholesalersBillRecords.wholesaler_collected_bills}}</td>
                   </tr>
                   <tr>
+                    <td style="padding: 0 !important;" colspan="2" >&nbsp;</td>
+                  </tr>
+                  <tr *ngIf="wholesalersBillRecords">
                     <td>Wholesaler Collectable Bill Amount</td>
-                    <td>185</td>
+                    <td>{{wholesalersBillRecords.wholesaler_collectable_bill_amount}}</td>
                   </tr>
-                  <tr>
+                  <tr style="border-bottom: 2px solid black;" *ngIf="wholesalersBillRecords">
                     <td>Wholesaler Bill Collected Amount</td>
-                    <td>185</td>
+                    <td>{{wholesalersBillRecords.wholesaler_collected_bill_amount}}</td>
                   </tr>
-                  <tr>
+                  <tr *ngIf="wholesalersBillRecords">
                     <td>Wholesaler Due</td>
-                    <td>185</td>
+                    <td>{{wholesalersBillRecords.wholesaler_collectable_bill_amount - wholesalersBillRecords.wholesaler_collected_bill_amount}}</td>
                   </tr>
-                  <tr>
+                  <tr style="border-bottom: 2px solid black;" *ngIf="wholesalersBillRecords">
                     <td>Wholesaler Carryover Due</td>
-                    <td>185</td>
+                    <td>{{wholesalersBillRecords.wholesaler_carry_over_due}}</td>
                   </tr>
 
                 </tbody>
-                <tfoot>
+                <tfoot *ngIf="wholesalersBillRecords">
                   <th>Wholesaler Total Due</th>
-                  <th>185</th>
+                  <th>{{ (wholesalersBillRecords.wholesaler_collectable_bill_amount - wholesalersBillRecords.wholesaler_collected_bill_amount) +  retailersBillRecords.retailer_carry_over_due}}</th>
                 </tfoot>
               </table>
             </div>
@@ -225,6 +239,7 @@
       </div>
     </div>
   </div>
+
 </div>
 
-
+</block-ui>

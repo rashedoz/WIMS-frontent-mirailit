@@ -10,3 +10,7 @@ h5.custom-title {
   font-size: 12px !important;
   font-weight: 600;
 }
+
+.table.table-sm td, .table.table-sm th {
+  padding: 0.4rem 2rem !important;
+}
