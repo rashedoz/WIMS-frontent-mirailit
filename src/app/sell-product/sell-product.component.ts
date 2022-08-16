@@ -21,16 +21,24 @@ import { ToastrService } from "ngx-toastr";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { BsDatepickerConfig } from "ngx-bootstrap/datepicker";
 import { Page } from "./../_models/page";
-import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
-import { AuthenticationService } from './../_services/authentication.service';
-import * as moment from 'moment';
+import { ConfirmService } from "../_helpers/confirm-dialog/confirm.service";
+import { AuthenticationService } from "./../_services/authentication.service";
+import * as moment from "moment";
 
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { environment } from '../../environments/environment';
-import { Subject, Observable, of, concat } from 'rxjs';
-import { distinctUntilChanged, debounceTime, switchMap, tap, catchError, filter, map } from 'rxjs/operators';
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
+import { environment } from "../../environments/environment";
+import { Subject, Observable, of, concat } from "rxjs";
+import {
+  distinctUntilChanged,
+  debounceTime,
+  switchMap,
+  tap,
+  catchError,
+  filter,
+  map,
+} from "rxjs/operators";
 
-import { PrintService } from '../_services/print.service';
+import { PrintService } from "../_services/print.service";
 
 @Component({
   selector: "app-sell-product",
@@ -43,11 +51,11 @@ export class SellProductComponent implements OnInit {
   itemHistoryList: FormArray;
   itemFormArray: any;
 
-  fromRowData:any;
+  fromRowData: any;
 
-  subTotal:number =0;
-  discount:number=0;
-  grandTotal:number=0;
+  subTotal: number = 0;
+  discount: number = 0;
+  grandTotal: number = 0;
 
   submitted = false;
   submittedCustomer = false;
@@ -73,40 +81,45 @@ export class SellProductComponent implements OnInit {
   simList: Array<any> = [];
   deviceList: Array<any> = [];
   platformList: Array<any> = [];
-  remarks = '';
+  remarks = "";
 
   packageObj = null;
 
-// for customer
+  // for customer
   selectedCustomer = null;
   customers = [];
   customersBuffer = [];
   bufferSize = 50;
   numberOfItemsFromEndBeforeFetchingMore = 10;
   loading = false;
-  count=1;
-  searchParam = '';
+  count = 1;
+  searchParam = "";
   input$ = new Subject<string>();
-  customerType = 'all';
+  customerType = "all";
 
-// for sim
+  // for sim
   sims = [];
   simsBuffer = [];
   simsBufferSize = 50;
   loadingSIM = false;
-  simsCount=1;
-  simsSearchParam = '';
+  simsCount = 1;
+  simsSearchParam = "";
   simsInput$ = new Subject<string>();
 
-   // for device
-   devices = [];
-   devicesBuffer = [];
-   devicesBufferSize = 50;
-   loadingDevice = false;
-   devicesCount = 1;
-   devicesSearchParam = '';
-   devicesInput$ = new Subject<string>();
+  // for device
+  devices = [];
+  devicesBuffer = [];
+  devicesBufferSize = 50;
+  loadingDevice = false;
+  devicesCount = 1;
+  devicesSearchParam = "";
+  devicesInput$ = new Subject<string>();
 
+  selectedSIMArray = [];
+
+  // this.selectedSIMArray.forEach((element,i) => {
+  //   this.simsBuffer.splice(this.simsBuffer.indexOf(element),1);
+  // });
 
   constructor(
     private authService: AuthenticationService,
@@ -148,19 +161,22 @@ export class SellProductComponent implements OnInit {
     });
 
     this.RegistrerForm = this.formBuilder.group({
-      email: [null, [Validators.required, Validators.email, Validators.maxLength(50)]],
+      email: [
+        null,
+        [Validators.required, Validators.email, Validators.maxLength(50)],
+      ],
       mobile: [null, [Validators.required]],
       firstName: [null, [Validators.required]],
       lastName: [null, [Validators.required]],
-      customerType: ['Wholesaler']
+      customerType: ["Wholesaler"],
     });
 
-    this.entryForm.get('session').disable();
-    this.entryForm.get('session').setValue(moment().format('MMM-YYYY'));
+    this.entryForm.get("session").disable();
+    this.entryForm.get("session").setValue(moment().format("MMM-YYYY"));
     this.itemHistoryList = this.entryForm.get("itemHistory") as FormArray;
     this.itemFormArray = this.entryForm.get("itemHistory")["controls"];
 
-   // this.getCustomerList();
+    // this.getCustomerList();
     this.getPackageList();
     this.getPlatformList();
 
@@ -172,23 +188,22 @@ export class SellProductComponent implements OnInit {
 
     this.getDevice();
     this.onSearchDevice();
-
   }
 
-  onCustomerTypeChange(e){
-    this.searchParam = '';
-    this.entryForm.controls['customer'].setValue(null);
+  onCustomerTypeChange(e) {
+    this.searchParam = "";
+    this.entryForm.controls["customer"].setValue(null);
     this.selectedCustomer = null;
     switch (e) {
-      case 'all':
-       this.customerType = e;
-       this.getCustomer();
-        break;
-      case 'wholesaler':
+      case "all":
         this.customerType = e;
         this.getCustomer();
         break;
-      case 'retailer':
+      case "wholesaler":
+        this.customerType = e;
+        this.getCustomer();
+        break;
+      case "retailer":
         this.customerType = e;
         this.getCustomer();
         break;
@@ -198,57 +213,116 @@ export class SellProductComponent implements OnInit {
     }
   }
 
-
-
-onSearch() {
-    this.input$.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
-      switchMap(term => this.fakeServiceCustomer(term))
-    ).subscribe((data : any) => {
-      this.customers = data.results;
-      this.page.totalElements = data.count;
-      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-      this.customersBuffer = this.customers.slice(0, this.bufferSize);
-      })
+  onSearch() {
+    this.input$
+      .pipe(
+        debounceTime(200),
+        distinctUntilChanged(),
+        switchMap((term) => this.fakeServiceCustomer(term))
+      )
+      .subscribe((data: any) => {
+        this.customers = data.results;
+        this.page.totalElements = data.count;
+        this.page.totalPages = Math.ceil(
+          this.page.totalElements / this.page.size
+        );
+        this.customersBuffer = this.customers.slice(0, this.bufferSize);
+      });
   }
 
-  onCustomerChange(e){
-    if(e){
+  onCustomerChange(e) {
+    if (e) {
       this.selectedCustomer = e;
-    }else{
+    } else {
       this.selectedCustomer = null;
-      this.searchParam = '';
+      this.searchParam = "";
       this.getCustomer();
     }
   }
 
-onScrollToEnd() {
-      this.fetchMore();
+  onScrollToEnd() {
+    this.fetchMore();
   }
 
-onScroll({ end }) {
+  onScroll({ end }) {
     if (this.loading || this.customers.length <= this.customersBuffer.length) {
-        return;
+      return;
     }
 
-    if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.customersBuffer.length) {
-        this.fetchMore();
+    if (
+      end + this.numberOfItemsFromEndBeforeFetchingMore >=
+      this.customersBuffer.length
+    ) {
+      this.fetchMore();
     }
-}
+  }
 
-private fetchMore() {
-
+  private fetchMore() {
     let more;
-   // const len = this.customersBuffer.length;
-    if(this.count < this.page.totalPages){
-    this.count++;
-    this.page.pageNumber = this.count;
+    // const len = this.customersBuffer.length;
+    if (this.count < this.page.totalPages) {
+      this.count++;
+      this.page.pageNumber = this.count;
+      let obj;
+      obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber,
+        search_param: this.searchParam,
+      };
+      // if(this.searchParam){
+      //    obj = {
+      //     limit: this.page.size,
+      //     page: this.page.pageNumber,
+      //     search_param:this.searchParam
+      //   };
+      // }else{
+      //    obj = {
+      //     limit: this.page.size,
+      //     page: this.page.pageNumber
+      //   };
+      // }
+
+      if (this.customerType) {
+        this.customersBuffer = [];
+        switch (this.customerType) {
+          case "all":
+            delete obj["is_retailer"];
+            delete obj["is_wholesaler"];
+            break;
+          case "wholesaler":
+            obj.is_wholesaler = 1;
+            break;
+          case "retailer":
+            obj.is_retailer = 1;
+            break;
+
+          default:
+            break;
+        }
+      }
+
+      this._service.get("get-customer-list", obj).subscribe(
+        (res) => {
+          more = res.results;
+          //  const more = this.customers.slice(len, this.bufferSize + len);
+          this.loading = true;
+          // using timeout here to simulate backend API delay
+          setTimeout(() => {
+            this.loading = false;
+            this.customersBuffer = this.customersBuffer.concat(more);
+          }, 100);
+        },
+        (err) => {}
+      );
+    }
+  }
+
+  getCustomer() {
     let obj;
     obj = {
       limit: this.page.size,
       page: this.page.pageNumber,
-      search_param:this.searchParam
+      search_param: this.searchParam,
     };
     // if(this.searchParam){
     //    obj = {
@@ -263,206 +337,158 @@ private fetchMore() {
     //   };
     // }
 
-  if(this.customerType){
-    this.customersBuffer = [];
-    switch (this.customerType) {
-      case 'all':
-        delete obj['is_retailer'];
-        delete obj['is_wholesaler'];
-        break;
-      case 'wholesaler':
-        obj.is_wholesaler = 1;
-        break;
-      case 'retailer':
-        obj.is_retailer = 1;
-        break;
+    if (this.customerType) {
+      switch (this.customerType) {
+        case "all":
+          delete obj["is_retailer"];
+          delete obj["is_wholesaler"];
+          break;
+        case "wholesaler":
+          obj.is_wholesaler = 1;
+          break;
+        case "retailer":
+          obj.is_retailer = 1;
+          break;
 
-      default:
-        break;
-    }
-  }
-
-
-      this._service.get("get-customer-list",obj).subscribe(
-        (res) => {
-          more = res.results;
-          //  const more = this.customers.slice(len, this.bufferSize + len);
-          this.loading = true;
-          // using timeout here to simulate backend API delay
-          setTimeout(() => {
-              this.loading = false;
-              this.customersBuffer = this.customersBuffer.concat(more);
-          }, 100)
-        },
-        (err) => {}
-      );
-    }
-
-}
-
-
-getCustomer(){
-  let obj;
-  obj = {
-    limit: this.page.size,
-    page: this.page.pageNumber,
-    search_param:this.searchParam
-  };
-  // if(this.searchParam){
-  //    obj = {
-  //     limit: this.page.size,
-  //     page: this.page.pageNumber,
-  //     search_param:this.searchParam
-  //   };
-  // }else{
-  //    obj = {
-  //     limit: this.page.size,
-  //     page: this.page.pageNumber
-  //   };
-  // }
-
-  if(this.customerType){
-    switch (this.customerType) {
-      case 'all':
-        delete obj['is_retailer'];
-        delete obj['is_wholesaler'];
-        break;
-      case 'wholesaler':
-        obj.is_wholesaler = 1;
-        break;
-      case 'retailer':
-        obj.is_retailer = 1;
-        break;
-
-      default:
-        break;
-    }
-  }
-  this.blockUI.start("Loading...");
-  this._service.get("get-customer-list",obj).subscribe(
-    (res) => {
-      this.customers = res.results;
-      this.page.totalElements = res.count;
-      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-      if(this.customers) this.customersBuffer = this.customers.slice(0, this.bufferSize);
-      this.blockUI.stop();
-    },
-    (err) => {
-      this.blockUI.stop();
-    }
-  );
-}
-
-private fakeServiceCustomer(term) {
-
-  this.page.size = 50;
-  this.page.pageNumber = 1;
-  this.searchParam = term;
-
-  let obj;
-  obj = {
-    limit: this.page.size,
-    page: this.page.pageNumber,
-    search_param:this.searchParam
-  };
-
-  // if(this.searchParam){
-  //    obj = {
-  //     limit: this.page.size,
-  //     page: this.page.pageNumber,
-  //     search_param:this.searchParam
-  //   };
-  // }else{
-  //    obj = {
-  //     limit: this.page.size,
-  //     page: this.page.pageNumber
-  //   };
-  // }
-
-  if(this.customerType){
-    switch (this.customerType) {
-      case 'all':
-        delete obj['is_retailer'];
-        delete obj['is_wholesaler'];
-        break;
-      case 'wholesaler':
-        obj.is_wholesaler = 1;
-        break;
-      case 'retailer':
-        obj.is_retailer = 1;
-        break;
-
-      default:
-        break;
-    }
-  }
-
-  let params = new HttpParams();
-  if (obj) {
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        params = params.append(key, obj[key]);
+        default:
+          break;
       }
     }
+    this.blockUI.start("Loading...");
+    this._service.get("get-customer-list", obj).subscribe(
+      (res) => {
+        this.customers = res.results;
+        this.page.totalElements = res.count;
+        this.page.totalPages = Math.ceil(
+          this.page.totalElements / this.page.size
+        );
+        if (this.customers)
+          this.customersBuffer = this.customers.slice(0, this.bufferSize);
+        this.blockUI.stop();
+      },
+      (err) => {
+        this.blockUI.stop();
+      }
+    );
   }
-  return this.http.get<any>(environment.apiUrl + 'get-customer-list', { params }).pipe(
-    map(res => {
-      return res;
-    })
-  );
-}
 
+  private fakeServiceCustomer(term) {
+    this.page.size = 50;
+    this.page.pageNumber = 1;
+    this.searchParam = term;
 
+    let obj;
+    obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber,
+      search_param: this.searchParam,
+    };
 
-/// for SIM
+    // if(this.searchParam){
+    //    obj = {
+    //     limit: this.page.size,
+    //     page: this.page.pageNumber,
+    //     search_param:this.searchParam
+    //   };
+    // }else{
+    //    obj = {
+    //     limit: this.page.size,
+    //     page: this.page.pageNumber
+    //   };
+    // }
+
+    if (this.customerType) {
+      switch (this.customerType) {
+        case "all":
+          delete obj["is_retailer"];
+          delete obj["is_wholesaler"];
+          break;
+        case "wholesaler":
+          obj.is_wholesaler = 1;
+          break;
+        case "retailer":
+          obj.is_retailer = 1;
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    let params = new HttpParams();
+    if (obj) {
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          params = params.append(key, obj[key]);
+        }
+      }
+    }
+    return this.http
+      .get<any>(environment.apiUrl + "get-customer-list", { params })
+      .pipe(
+        map((res) => {
+          return res;
+        })
+      );
+  }
+
+  /// for SIM
   onSearchSIM() {
-    this.simsInput$.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
-      switchMap(term => this.fakeServiceSIM(term))
-    ).subscribe((data : any) => {
-      this.sims = data.results;
-      this.pageSIM.totalElements = data.count;
-      this.pageSIM.totalPages = Math.ceil(this.pageSIM.totalElements / this.pageSIM.size);
-      this.simsBuffer = this.sims.slice(0, this.simsBufferSize);
-      })
+    this.simsInput$
+      .pipe(
+        debounceTime(200),
+        distinctUntilChanged(),
+        switchMap((term) => this.fakeServiceSIM(term))
+      )
+      .subscribe((data: any) => {
+        this.sims = data.results;
+        this.pageSIM.totalElements = data.count;
+        this.pageSIM.totalPages = Math.ceil(
+          this.pageSIM.totalElements / this.pageSIM.size
+        );
+        this.simsBuffer = this.sims.slice(0, this.simsBufferSize);
+        this.refreshSIMDisableStatus();
+
+      });
   }
 
- onScrollToEndSIM() {
-      this.fetchMoreSIM();
+  onScrollToEndSIM() {
+    this.fetchMoreSIM();
   }
 
-onScrollSIM({ end }) {
+  onScrollSIM({ end }) {
     if (this.loadingSIM || this.sims.length <= this.simsBuffer.length) {
-        return;
+      return;
     }
 
-    if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.simsBuffer.length) {
-        this.fetchMoreSIM();
+    if (
+      end + this.numberOfItemsFromEndBeforeFetchingMore >=
+      this.simsBuffer.length
+    ) {
+      this.fetchMoreSIM();
     }
-}
+  }
 
-private fetchMoreSIM() {
-
+  private fetchMoreSIM() {
     let more;
 
-    if(this.simsCount < this.pageSIM.totalPages){
-    this.simsCount++;
-    this.pageSIM.pageNumber = this.simsCount;
-    let obj;
-    if(this.simsSearchParam){
-       obj = {
-        limit: this.pageSIM.size,
-        page: this.pageSIM.pageNumber,
-        search_param:this.simsSearchParam
-      };
-    }else{
-       obj = {
-        limit: this.pageSIM.size,
-        page: this.pageSIM.pageNumber
-      };
-    }
-      this._service.get("stock/get-subscriptable-sim-list",obj).subscribe(
+    if (this.simsCount < this.pageSIM.totalPages) {
+      this.simsCount++;
+      this.pageSIM.pageNumber = this.simsCount;
+      let obj;
+      if (this.simsSearchParam) {
+        obj = {
+          limit: this.pageSIM.size,
+          page: this.pageSIM.pageNumber,
+          search_param: this.simsSearchParam,
+        };
+      } else {
+        obj = {
+          limit: this.pageSIM.size,
+          page: this.pageSIM.pageNumber,
+        };
+      }
+      this._service.get("stock/get-subscriptable-sim-list", obj).subscribe(
         (res) => {
           console.log(res);
           more = res.results;
@@ -470,189 +496,59 @@ private fetchMoreSIM() {
           this.loadingSIM = true;
           // using timeout here to simulate backend API delay
           setTimeout(() => {
-              this.loadingSIM = false;
-              this.simsBuffer = this.simsBuffer.concat(more);
-          }, 100)
+            this.loadingSIM = false;
+            this.simsBuffer = this.simsBuffer.concat(more);
+          }, 100);
         },
         (err) => {}
       );
     }
-
-}
-
-
-getSIM(){
-  let obj;
-  if(this.simsSearchParam){
-     obj = {
-      limit: this.pageSIM.size,
-      page: this.pageSIM.pageNumber,
-      search_param:this.simsSearchParam
-    };
-  }else{
-     obj = {
-      limit: this.pageSIM.size,
-      page: this.pageSIM.pageNumber
-    };
   }
 
-  this._service.get("stock/get-subscriptable-sim-list",obj).subscribe(
-    (res) => {
-      this.sims = res.results;
-      this.pageSIM.totalElements = res.count;
-      this.pageSIM.totalPages = Math.ceil(this.pageSIM.totalElements / this.pageSIM.size);
-      this.simsBuffer = this.sims.slice(0, this.simsBufferSize);
-    },
-    (err) => {}
-  );
-}
-
-private fakeServiceSIM(term) {
-
-  this.pageSIM.size = 50;
-  this.pageSIM.pageNumber = 1;
-  this.simsSearchParam = term;
-
-  let obj;
-  if(this.simsSearchParam){
-     obj = {
-      limit: this.pageSIM.size,
-      page: this.pageSIM.pageNumber,
-      search_param:this.simsSearchParam
-    };
-  }else{
-     obj = {
-      limit: this.pageSIM.size,
-      page: this.pageSIM.pageNumber
-    };
-  }
-
-  let params = new HttpParams();
-  if (obj) {
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        params = params.append(key, obj[key]);
-      }
-    }
-  }
-  return this.http.get<any>(environment.apiUrl + 'stock/get-subscriptable-sim-list', { params }).pipe(
-    map(res => {
-      return res;
-    })
-  );
-}
-
-
-
-  /// for Device
-  onSearchDevice() {
-    this.devicesInput$.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
-      switchMap(term => this.fakeServiceDevice(term))
-    ).subscribe((data: any) => {
-      this.devices = data.results;
-      this.pageDevice.totalElements = data.count;
-      this.pageDevice.totalPages = Math.ceil(this.pageDevice.totalElements / this.pageDevice.size);
-      this.devicesBuffer = this.devices.slice(0, this.devicesBufferSize);
-    })
-  }
-
-  onScrollToEndDevice() {
-    this.fetchMoreDevice();
-  }
-
-  onScrollDevice({ end }) {
-    if (this.loadingDevice || this.devices.length <= this.devicesBuffer.length) {
-      return;
-    }
-
-    if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.devicesBuffer.length) {
-      this.fetchMoreDevice();
-    }
-  }
-
-  private fetchMoreDevice() {
-
-    let more;
-
-    if (this.devicesCount < this.pageDevice.totalPages) {
-      this.devicesCount++;
-      this.pageDevice.pageNumber = this.devicesCount;
-      let obj;
-      if (this.devicesSearchParam) {
-        obj = {
-          limit: this.pageDevice.size,
-          page: this.pageDevice.pageNumber,
-          search_param: this.devicesSearchParam
-        };
-      } else {
-        obj = {
-          limit: this.pageDevice.size,
-          page: this.pageDevice.pageNumber
-        };
-      }
-      this._service.get("stock/get-available-device-list", obj).subscribe(
-        (res) => {
-          more = res.results;
-          //  const more = this.customers.slice(len, this.bufferSize + len);
-          this.loadingDevice = true;
-          // using timeout here to simulate backend API delay
-          setTimeout(() => {
-            this.loadingDevice = false;
-            this.devicesBuffer = this.devicesBuffer.concat(more);
-          }, 100)
-        },
-        (err) => { }
-      );
-    }
-
-  }
-
-
-  getDevice() {
+  getSIM() {
     let obj;
-    if (this.devicesSearchParam) {
+    if (this.simsSearchParam) {
       obj = {
-        limit: this.pageDevice.size,
-        page: this.pageDevice.pageNumber,
-        search_param: this.devicesSearchParam
+        limit: this.pageSIM.size,
+        page: this.pageSIM.pageNumber,
+        search_param: this.simsSearchParam,
       };
     } else {
       obj = {
-        limit: this.pageDevice.size,
-        page: this.pageDevice.pageNumber
+        limit: this.pageSIM.size,
+        page: this.pageSIM.pageNumber,
       };
     }
 
-    this._service.get("stock/get-available-device-list", obj).subscribe(
+    this._service.get("stock/get-subscriptable-sim-list", obj).subscribe(
       (res) => {
-        this.devices = res.results;
-        this.pageDevice.totalElements = res.count;
-        this.pageDevice.totalPages = Math.ceil(this.pageDevice.totalElements / this.pageDevice.size);
-        this.devicesBuffer = this.devices.slice(0, this.devicesBufferSize);
+        this.sims = res.results;
+        this.pageSIM.totalElements = res.count;
+        this.pageSIM.totalPages = Math.ceil(
+          this.pageSIM.totalElements / this.pageSIM.size
+        );
+        this.simsBuffer = this.sims.slice(0, this.simsBufferSize);
       },
-      (err) => { }
+      (err) => {}
     );
   }
 
-  private fakeServiceDevice(term) {
-
-    this.pageDevice.size = 50;
-    this.pageDevice.pageNumber = 1;
-    this.devicesSearchParam = term;
+  private fakeServiceSIM(term) {
+    this.pageSIM.size = 50;
+    this.pageSIM.pageNumber = 1;
+    this.simsSearchParam = term;
 
     let obj;
-    if (this.devicesSearchParam) {
+    if (this.simsSearchParam) {
       obj = {
-        limit: this.pageDevice.size,
-        page: this.pageDevice.pageNumber,
-        search_param: this.devicesSearchParam
+        limit: this.pageSIM.size,
+        page: this.pageSIM.pageNumber,
+        search_param: this.simsSearchParam,
       };
     } else {
       obj = {
-        limit: this.pageDevice.size,
-        page: this.pageDevice.pageNumber
+        limit: this.pageSIM.size,
+        page: this.pageSIM.pageNumber,
       };
     }
 
@@ -664,14 +560,158 @@ private fakeServiceSIM(term) {
         }
       }
     }
-    return this.http.get<any>(environment.apiUrl + 'stock/get-available-device-list', { params }).pipe(
-      map(res => {
-        return res;
+    return this.http
+      .get<any>(environment.apiUrl + "stock/get-subscriptable-sim-list", {
+        params,
       })
+      .pipe(
+        map((res) => {
+          return res;
+        })
+      );
+  }
+
+  /// for Device
+  onSearchDevice() {
+    this.devicesInput$
+      .pipe(
+        debounceTime(200),
+        distinctUntilChanged(),
+        switchMap((term) => this.fakeServiceDevice(term))
+      )
+      .subscribe((data: any) => {
+        this.devices = data.results;
+        this.pageDevice.totalElements = data.count;
+        this.pageDevice.totalPages = Math.ceil(
+          this.pageDevice.totalElements / this.pageDevice.size
+        );
+        this.devicesBuffer = this.devices.slice(0, this.devicesBufferSize);
+
+        this.refreshDeviceDisableStatus();
+
+      });
+  }
+
+  onScrollToEndDevice() {
+    this.fetchMoreDevice();
+  }
+
+  onScrollDevice({ end }) {
+    if (
+      this.loadingDevice ||
+      this.devices.length <= this.devicesBuffer.length
+    ) {
+      return;
+    }
+
+    if (
+      end + this.numberOfItemsFromEndBeforeFetchingMore >=
+      this.devicesBuffer.length
+    ) {
+      this.fetchMoreDevice();
+    }
+  }
+
+  private fetchMoreDevice() {
+    let more;
+
+    if (this.devicesCount < this.pageDevice.totalPages) {
+      this.devicesCount++;
+      this.pageDevice.pageNumber = this.devicesCount;
+      let obj;
+      if (this.devicesSearchParam) {
+        obj = {
+          limit: this.pageDevice.size,
+          page: this.pageDevice.pageNumber,
+          search_param: this.devicesSearchParam,
+        };
+      } else {
+        obj = {
+          limit: this.pageDevice.size,
+          page: this.pageDevice.pageNumber,
+        };
+      }
+      this._service.get("stock/get-available-device-list", obj).subscribe(
+        (res) => {
+          more = res.results;
+          //  const more = this.customers.slice(len, this.bufferSize + len);
+          this.loadingDevice = true;
+          // using timeout here to simulate backend API delay
+          setTimeout(() => {
+            this.loadingDevice = false;
+            this.devicesBuffer = this.devicesBuffer.concat(more);
+          }, 100);
+        },
+        (err) => {}
+      );
+    }
+  }
+
+  getDevice() {
+    let obj;
+    if (this.devicesSearchParam) {
+      obj = {
+        limit: this.pageDevice.size,
+        page: this.pageDevice.pageNumber,
+        search_param: this.devicesSearchParam,
+      };
+    } else {
+      obj = {
+        limit: this.pageDevice.size,
+        page: this.pageDevice.pageNumber,
+      };
+    }
+
+    this._service.get("stock/get-available-device-list", obj).subscribe(
+      (res) => {
+        this.devices = res.results;
+        this.pageDevice.totalElements = res.count;
+        this.pageDevice.totalPages = Math.ceil(
+          this.pageDevice.totalElements / this.pageDevice.size
+        );
+        this.devicesBuffer = this.devices.slice(0, this.devicesBufferSize);
+      },
+      (err) => {}
     );
   }
 
+  private fakeServiceDevice(term) {
+    this.pageDevice.size = 50;
+    this.pageDevice.pageNumber = 1;
+    this.devicesSearchParam = term;
 
+    let obj;
+    if (this.devicesSearchParam) {
+      obj = {
+        limit: this.pageDevice.size,
+        page: this.pageDevice.pageNumber,
+        search_param: this.devicesSearchParam,
+      };
+    } else {
+      obj = {
+        limit: this.pageDevice.size,
+        page: this.pageDevice.pageNumber,
+      };
+    }
+
+    let params = new HttpParams();
+    if (obj) {
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          params = params.append(key, obj[key]);
+        }
+      }
+    }
+    return this.http
+      .get<any>(environment.apiUrl + "stock/get-available-device-list", {
+        params,
+      })
+      .pipe(
+        map((res) => {
+          return res;
+        })
+      );
+  }
 
   get f() {
     return this.entryForm.controls;
@@ -687,19 +727,21 @@ private fakeServiceSIM(term) {
 
   customSearchFn(term: string, item: any) {
     term = term.toLocaleLowerCase();
-    let name = item.first_name +" "+item.last_name;
-    return item.customer_code.toLocaleLowerCase().indexOf(term) > -1 ||
-           name.toLocaleLowerCase().indexOf(term) > -1 ||
-           item.first_name.toLocaleLowerCase().indexOf(term) > -1 ||
-           item.last_name.toLocaleLowerCase().indexOf(term) > -1 ||
-           item.mobile.toLocaleLowerCase().indexOf(term) > -1;
-    }
+    let name = item.first_name + " " + item.last_name;
+    return (
+      item.customer_code.toLocaleLowerCase().indexOf(term) > -1 ||
+      name.toLocaleLowerCase().indexOf(term) > -1 ||
+      item.first_name.toLocaleLowerCase().indexOf(term) > -1 ||
+      item.last_name.toLocaleLowerCase().indexOf(term) > -1 ||
+      item.mobile.toLocaleLowerCase().indexOf(term) > -1
+    );
+  }
 
   initItemHistory() {
     return this.formBuilder.group({
       package: [null, [Validators.required]],
       package_item: [null],
-      has_device_dependency : [true],
+      has_device_dependency: [true],
       platform: [null, [Validators.required]],
       sim: [null, [Validators.required]],
       phone_number: [null, [Validators.required]],
@@ -707,23 +749,25 @@ private fakeServiceSIM(term) {
       device: [null],
       IMEI: [null],
       plan: [null, [Validators.required]],
-      actual_amount: [{value: null, disabled: true}, [Validators.required]],
-      discount: [{value: 0, disabled: true}],
+      actual_amount: [{ value: null, disabled: true }, [Validators.required]],
+      discount: [{ value: 0, disabled: true }],
       amount: [null, [Validators.required]],
     });
   }
 
   addItemHistory() {
     this.itemHistoryList.push(this.initItemHistory());
+    this.refreshSIMDisableStatus();
+    this.refreshDeviceDisableStatus();
   }
 
   removeItemHistory(i) {
     if (this.itemHistoryList.length > 1) {
       this.itemHistoryList.removeAt(i);
     }
+    this.refreshSIMDisableStatus();
+    this.refreshDeviceDisableStatus();
   }
-
-
 
   // getCustomerList() {
   //   this._service.get("user-list?is_customer=true").subscribe(
@@ -762,54 +806,54 @@ private fakeServiceSIM(term) {
   }
 
   onSIMChange(e, item) {
-    if(e){
-      if (e.ICCID_no){
+
+    this.refreshSIMDisableStatus();
+    if (e) {
+      if (e.ICCID_no) {
         item.controls["sim_iccid"].setValue(e.ICCID_no);
         item.controls["sim_iccid"].disable();
 
-        if (e.phone_number){
-         item.controls["phone_number"].setValue(e.phone_number);
-         item.controls["phone_number"].disable();
-        }else{
-         item.controls["phone_number"].setValue(null);
-         item.controls["phone_number"].enable();
+        if (e.phone_number) {
+          item.controls["phone_number"].setValue(e.phone_number);
+          item.controls["phone_number"].disable();
+        } else {
+          item.controls["phone_number"].setValue(null);
+          item.controls["phone_number"].enable();
         }
+      } else {
+        item.controls["sim_iccid"].setValue(null);
+        item.controls["sim_iccid"].enable();
 
-       }else {
-         item.controls["sim_iccid"].setValue(null);
-         item.controls["sim_iccid"].enable();
-
-         item.controls["phone_number"].setValue(null);
-         item.controls["phone_number"].enable();
-       }
-    }else{
+        item.controls["phone_number"].setValue(null);
+        item.controls["phone_number"].enable();
+      }
+    } else {
       item.controls["sim_iccid"].setValue(null);
       item.controls["phone_number"].setValue(null);
       item.controls["sim_iccid"].disable();
       item.controls["phone_number"].disable();
     }
-
-
   }
 
   onDeviceChange(e, item) {
-    if(e){
-      if (e.IMEI){
+
+    this.refreshDeviceDisableStatus();
+
+    if (e) {
+      if (e.IMEI) {
         item.controls["IMEI"].setValue(e.IMEI);
         item.controls["IMEI"].disable();
-       }else {
-         item.controls["IMEI"].setValue(null);
-         item.controls["IMEI"].enable();
-       }
-    }else{
+      } else {
+        item.controls["IMEI"].setValue(null);
+        item.controls["IMEI"].enable();
+      }
+    } else {
       item.controls["IMEI"].setValue(null);
       item.controls["IMEI"].disable();
     }
-
   }
 
   onPackageChange(e, item) {
-
     item.controls["sim"].setValue(null);
     item.controls["sim_iccid"].setValue(null);
     item.controls["phone_number"].setValue(null);
@@ -817,46 +861,48 @@ private fakeServiceSIM(term) {
     item.controls["IMEI"].setValue(null);
     item.controls["plan"].setValue(null);
 
-    if (e){
+    if (e) {
       console.log(e);
 
-       item.controls["package_item"].setValue(e);
-       item.controls["plan"].setValue(e.plan);
-       item.controls["has_device_dependency"].setValue(e.has_device_dependency);
-       if(e.has_device_dependency){
+      item.controls["package_item"].setValue(e);
+      item.controls["plan"].setValue(e.plan);
+      item.controls["has_device_dependency"].setValue(e.has_device_dependency);
+      if (e.has_device_dependency) {
         item.controls["device"].setValidators([Validators.required]);
         item.controls["device"].updateValueAndValidity();
 
         item.controls["IMEI"].setValidators([Validators.required]);
         item.controls["IMEI"].updateValueAndValidity();
-       }else{
+      } else {
         item.controls["device"].setValidators(null);
         item.controls["device"].updateValueAndValidity();
 
         item.controls["IMEI"].setValidators(null);
         item.controls["IMEI"].updateValueAndValidity();
-       }
-       item.controls["amount"].setValue(e.pckg_first_bill_amount);
-      }else {
-        item.controls["platform"].setValue(null);
       }
+      item.controls["amount"].setValue(e.pckg_first_bill_amount);
+    } else {
+      item.controls["platform"].setValue(null);
+    }
   }
 
   onChangeDiscount(value) {
     if (Number(value) > this.subTotal) {
-      this.toastr.warning('Discount amount can\'t be greater then total amount : '+this.subTotal, 'Warning!',  { timeOut: 4000 });
+      this.toastr.warning(
+        "Discount amount can't be greater then total amount : " + this.subTotal,
+        "Warning!",
+        { timeOut: 4000 }
+      );
       this.discount = 0;
-    }else if(value == ''){
+    } else if (value == "") {
       this.discount = 0;
-    }else {
+    } else {
       this.discount = Number(value);
     }
   }
 
-
-
-  inputFocused(event: any){
-    event.target.select()
+  inputFocused(event: any) {
+    event.target.select();
   }
 
   onFormSubmit() {
@@ -867,141 +913,144 @@ private fakeServiceSIM(term) {
     let bill_items = [];
     let sim_assigned = 0;
     let device_assigned = 0;
-   // this.blockUI.start('Saving...');
+    // this.blockUI.start('Saving...');
 
-    this.fromRowData.itemHistory.filter(x=> x.package).forEach(element => {
-      bill_items.push({
-            sim:element.sim.id,
-            ICCID_no: element.sim_iccid,
-            phone_number: element.phone_number,
-            device:element.has_device_dependency ? element.device.id : null,
-            IMEI: element.has_device_dependency ? element.IMEI : null,
-                  pckg_name:element.package_item.pckg_name,
-                  pckg_offer_name:element.package_item.pckg_offer_name,
-            pckg_offer_month_covers:element.package_item.pckg_offer_month_covers,
-                  plan:element.package_item.plan,
-            pckg_duration_name:element.package_item.pckg_duration_name,
-            pckg_duration_in_month:element.package_item.pckg_duration_in_month,
-            has_device_dependency:element.package_item.has_device_dependency,
-            device_deposit:element.package_item.device_deposit,
-            pckg_initial_fee:element.package_item.pckg_initial_fee,
-            pckg_shipping_charge:element.package_item.pckg_shipping_charge,
-            pckg_price:element.package_item.pckg_price,
-            pckg_initial_discount:element.package_item.pckg_initial_discount,
-            pckg_first_bill_amount:element.package_item.pckg_first_bill_amount,
-            pckg_recurring_bill_amount:element.package_item.pckg_recurring_bill_amount,
-            pckg_cancellation_fee:element.package_item.pckg_cancellation_fee,
-            pckg_refundable_deposit:element.package_item.pckg_refundable_deposit,
-            selling_platform:element.platform
+    this.fromRowData.itemHistory
+      .filter((x) => x.package)
+      .forEach((element) => {
+        bill_items.push({
+          sim: element.sim,
+          ICCID_no: element.sim_iccid,
+          phone_number: element.phone_number,
+          device: element.has_device_dependency ? element.device : null,
+          IMEI: element.has_device_dependency ? element.IMEI : null,
+          pckg_name: element.package_item.pckg_name,
+          pckg_offer_name: element.package_item.pckg_offer_name,
+          pckg_offer_month_covers: element.package_item.pckg_offer_month_covers,
+          plan: element.package_item.plan,
+          pckg_duration_name: element.package_item.pckg_duration_name,
+          pckg_duration_in_month: element.package_item.pckg_duration_in_month,
+          has_device_dependency: element.package_item.has_device_dependency,
+          device_deposit: element.package_item.device_deposit,
+          pckg_initial_fee: element.package_item.pckg_initial_fee,
+          pckg_shipping_charge: element.package_item.pckg_shipping_charge,
+          pckg_price: element.package_item.pckg_price,
+          pckg_initial_discount: element.package_item.pckg_initial_discount,
+          pckg_first_bill_amount: element.package_item.pckg_first_bill_amount,
+          pckg_recurring_bill_amount:
+            element.package_item.pckg_recurring_bill_amount,
+          pckg_cancellation_fee: element.package_item.pckg_cancellation_fee,
+          pckg_refundable_deposit: element.package_item.pckg_refundable_deposit,
+          selling_platform: element.platform,
+        });
+        sim_assigned++;
+        if (element.device != null) device_assigned++;
       });
-      sim_assigned++;
-      if(element.device != null) device_assigned++;
-    });
 
     this.grandTotal = this.subTotal - this.discount;
     const obj = {
-      customer:this.entryForm.value.customer,
-      total_sim_assigned:sim_assigned,
-      total_device_assigned:device_assigned,
-      total_amount:Number(this.subTotal),
-      overall_discount:Number(this.discount),
-      grand_total:Number(this.grandTotal),
-      bill_remarks:this.remarks,
-      bill_items : bill_items
-
+      customer: this.entryForm.value.customer,
+      total_sim_assigned: sim_assigned,
+      total_device_assigned: device_assigned,
+      total_amount: Number(this.subTotal),
+      overall_discount: Number(this.discount),
+      grand_total: Number(this.grandTotal),
+      bill_remarks: this.remarks,
+      bill_items: bill_items,
     };
 
-    this.confirmService.confirm('Are you sure?', 'You are selling the product(s).')
-    .subscribe(
-        result => {
-            if (result) {
+    this.confirmService
+      .confirm("Are you sure?", "You are selling the product(s).")
+      .subscribe((result) => {
+        if (result) {
+          this._service.post("bill/create-new-bill", obj).subscribe(
+            (data) => {
+              this.blockUI.stop();
+              if (data.IsReport == "Success") {
+                this.toastr.success(data.Msg, "Success!", {
+                  closeButton: true,
+                  disableTimeOut: true,
+                });
+                const customer_id = this.entryForm.value.customer;
+                this.formReset();
+                this.printService.printInv(data.bill_id);
 
-                this._service.post('bill/create-new-bill', obj).subscribe(
-                  data => {
-                    this.blockUI.stop();
-                    if (data.IsReport == "Success") {
-                      this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
-                      const customer_id = this.entryForm.value.customer;
-                      this.formReset();
-                      this.printService.printInv(data.bill_id);
-
-                      this.confirmService.confirm('Do you want to collect payment now?', '','NOT NOW','Yes')
-                      .subscribe(
-                          result => {
-                              if (result) {
-                               this.router.navigate(['/payment-collection/'+data.bill_id]);
-                              }else{
-                                this.router.navigate(['/customer-details/'+customer_id]);
-                              }
-                          },
-                      );
-
-
-                      // this.router.navigate([]).then(result => { window.open('/payment-collection/'+ data.bill_id, '_blank'); });
-                      // this.entryForm.get('session').disable();
-                      // this.entryForm.get('session').setValue(moment().format('MMM-YYYY'));
-                      // this.confirmService.confirm('Do You Want To Sell Device?', '','Close','Sell Device')
-                      // .subscribe(
-                      //     result => {
-                      //         if (result) {
-                      //           this.router.navigate([]).then(result => { window.open('/sell-device-by-customer/'+customer_id, '_blank'); });
-                      //         //  this.router.navigate(['sell-device-by-customer/'+customer_id]);
-                      //         }
-                      //     },
-                      // );
-
-                    } else if (data.IsReport == "Warning") {
-                      this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+                this.confirmService
+                  .confirm(
+                    "Do you want to collect payment now?",
+                    "",
+                    "NOT NOW",
+                    "Yes"
+                  )
+                  .subscribe((result) => {
+                    if (result) {
+                      this.router.navigate([
+                        "/payment-collection/" + data.bill_id,
+                      ]);
                     } else {
-                      this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+                      this.router.navigate([
+                        "/customer-details/" + customer_id,
+                      ]);
                     }
-                  },
-                  err => {
-                    this.blockUI.stop();
-                    this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
-                  }
-                );
+                  });
 
-
-
+                // this.router.navigate([]).then(result => { window.open('/payment-collection/'+ data.bill_id, '_blank'); });
+                // this.entryForm.get('session').disable();
+                // this.entryForm.get('session').setValue(moment().format('MMM-YYYY'));
+                // this.confirmService.confirm('Do You Want To Sell Device?', '','Close','Sell Device')
+                // .subscribe(
+                //     result => {
+                //         if (result) {
+                //           this.router.navigate([]).then(result => { window.open('/sell-device-by-customer/'+customer_id, '_blank'); });
+                //         //  this.router.navigate(['sell-device-by-customer/'+customer_id]);
+                //         }
+                //     },
+                // );
+              } else if (data.IsReport == "Warning") {
+                this.toastr.warning(data.Msg, "Warning!", {
+                  closeButton: true,
+                  disableTimeOut: true,
+                });
+              } else {
+                this.toastr.error(data.Msg, "Error!", {
+                  closeButton: true,
+                  disableTimeOut: true,
+                });
+              }
+            },
+            (err) => {
+              this.blockUI.stop();
+              this.toastr.error(err.Msg || err, "Error!", { timeOut: 2000 });
             }
-            else{
-                this.blockUI.stop();
-            }
-        },
-
-    );
-
-
-
-
-
+          );
+        } else {
+          this.blockUI.stop();
+        }
+      });
   }
 
-
-
-  itemTotal(){
+  itemTotal() {
     this.fromRowData = this.entryForm.getRawValue();
-    if(this.fromRowData.itemHistory.length > 0){
-      this.subTotal = this.fromRowData.itemHistory.map(x => Number(x.amount)).reduce((a, b) => a + b);
+    if (this.fromRowData.itemHistory.length > 0) {
+      this.subTotal = this.fromRowData.itemHistory
+        .map((x) => Number(x.amount))
+        .reduce((a, b) => a + b);
     }
   }
 
-  formReset(){
+  formReset() {
     this.submitted = false;
     this.entryForm.reset();
-    Object.keys(this.entryForm.controls).forEach(key => {
-      this.entryForm.controls[key].setErrors(null)
+    Object.keys(this.entryForm.controls).forEach((key) => {
+      this.entryForm.controls[key].setErrors(null);
     });
-    let itemHistoryControl = <FormArray>(
-      this.entryForm.controls.itemHistory
-    );
+    let itemHistoryControl = <FormArray>this.entryForm.controls.itemHistory;
     while (this.itemHistoryList.length !== 1) {
       itemHistoryControl.removeAt(0);
     }
-    this.subTotal=0;
-    this.discount=0;
-    this.grandTotal=0;
+    this.subTotal = 0;
+    this.discount = 0;
+    this.grandTotal = 0;
 
     this.getCustomer();
     this.getSIM();
@@ -1016,7 +1065,7 @@ private fakeServiceSIM(term) {
       return;
     }
 
-    this.blockUI.start('Saving...');
+    this.blockUI.start("Saving...");
 
     const obj = {
       email: this.RegistrerForm.value.email.trim(),
@@ -1025,35 +1074,37 @@ private fakeServiceSIM(term) {
       last_name: this.RegistrerForm.value.lastName.trim(),
       mobile: this.RegistrerForm.value.mobile.trim(),
       is_customer: 1,
-      is_wholesaler: this.RegistrerForm.value.customerType === 'Wholesaler' ? 1 : 0 ,
-      is_retailer: this.RegistrerForm.value.customerType === 'Retailer' ? 1 : 0 ,
+      is_wholesaler:
+        this.RegistrerForm.value.customerType === "Wholesaler" ? 1 : 0,
+      is_retailer: this.RegistrerForm.value.customerType === "Retailer" ? 1 : 0,
       is_staff: 0,
-      is_superuser:0
+      is_superuser: 0,
     };
 
-    this.authService.registerSystemAdmin('auth/users/', obj).subscribe(
-      data => {
+    this.authService.registerSystemAdmin("auth/users/", obj).subscribe(
+      (data) => {
         this.blockUI.stop();
         if (data) {
-          this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+          this.toastr.success(data.Msg, "Success!", { timeOut: 2000 });
           this.modalHideCustomer();
           this.getCustomer();
-          this.entryForm.controls['customer'].setValue(data.id);
+          this.entryForm.controls["customer"].setValue(data.id);
         }
         // else if (data.IsReport == "Warning") {
         //   this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
         else {
-          this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+          this.toastr.error(data.Msg, "Error!", {
+            closeButton: true,
+            disableTimeOut: true,
+          });
         }
       },
-      err => {
+      (err) => {
         this.blockUI.stop();
-        this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
+        this.toastr.error(err.Msg || err, "Error!", { timeOut: 2000 });
       }
     );
-
   }
-
 
   modalHideCustomer() {
     this.RegistrerForm.reset();
@@ -1062,7 +1113,7 @@ private fakeServiceSIM(term) {
   }
 
   openModalCustomer(template: TemplateRef<any>) {
-    this.RegistrerForm.controls['customerType'].setValue('Wholesaler');
+    this.RegistrerForm.controls["customerType"].setValue("Wholesaler");
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 
@@ -1071,10 +1122,34 @@ private fakeServiceSIM(term) {
     this.packageObj = null;
   }
 
-  openModalPackageDetails(template: TemplateRef<any>,row) {
+  openModalPackageDetails(template: TemplateRef<any>, row) {
     this.packageObj = row;
     this.modalRef = this.modalService.show(template, this.modalConfigLg);
   }
 
+
+  refreshSIMDisableStatus(){
+    let selectedSims = [];
+    this.itemFormArray.forEach((form) => {
+      if (form.controls["sim"].value)
+        selectedSims.push(form.controls["sim"].value);
+    });
+
+    this.simsBuffer.forEach((element) => {
+      element.disabled = selectedSims.indexOf(element.id) !== -1;
+    });
+  }
+
+  refreshDeviceDisableStatus(){
+    let selectedDevices = [];
+    this.itemFormArray.forEach((form) => {
+      if (form.controls["device"].value)
+        selectedDevices.push(form.controls["device"].value);
+    });
+
+    this.devicesBuffer.forEach((element) => {
+      element.disabled = selectedDevices.indexOf(element.id) !== -1;
+    });
+  }
 
 }

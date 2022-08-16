@@ -94,11 +94,11 @@
 
                     <ngx-datatable-column [width]="300" name="Action" prop="id" [draggable]="false" [sortable]="false">
                       <ng-template let-row="row" ngx-datatable-cell-template>
-                        <button (click)="showDetails(row,templateDetails)" class="btn btn-primary btn-mini mr-1"><i
+                        <button *ngIf="!currentUser.is_superuser" (click)="showDetails(row,templateDetails)" class="btn btn-primary btn-mini mr-1"><i
                             class="icofont icofont-eye"></i>Show Profile</button>
-                        <button (click)="getItem(row,template)" class="btn btn-primary btn-mini mr-1"><i
+                        <button *ngIf="currentUser.is_superuser" (click)="getItem(row,template)" class="btn btn-primary btn-mini mr-1"><i
                             class="icofont icofont-edit"></i>Edit Profile</button>
-                        <button (click)="changePassword(row,templateChangePassword)" class="btn btn-info btn-mini"><i
+                        <button *ngIf="currentUser.is_superuser || currentUser.id == row.id" (click)="changePassword(row,templateChangePassword)" class="btn btn-info btn-mini"><i
                             class="icofont icofont-retweet"></i>Change Password</button>
                       </ng-template>
                     </ngx-datatable-column>
@@ -128,8 +128,8 @@
 
 
           <div class="form-group row" *ngIf="user">
-            <label class="col-sm-4 col-form-label">Name </label>
-            <div class="col-sm-8">
+            <label class="col-sm-5 col-form-label">Name </label>
+            <div class="col-sm-7">
               <label class="font-weight-bold col-form-label">
                 <h5>{{user.first_name}} {{user.last_name}}</h5>
               </label>
@@ -147,8 +147,8 @@
                             </div>
                         </div> -->
           <div class="form-group row">
-            <label class="col-sm-4 col-form-label">New Password </label>
-            <div class="col-sm-8">
+            <label class="col-sm-5 col-form-label">New Password </label>
+            <div class="col-sm-7">
               <input type="password" formControlName="password" class="form-control"
                 [ngClass]="{ 'is-invalid': submitted && p.password.errors }" placeholder="Enter new password" required>
 
@@ -158,8 +158,8 @@
             </div>
           </div>
           <div class="form-group row">
-            <label class="col-sm-4 col-form-label">Confirm Password </label>
-            <div class="col-sm-8">
+            <label class="col-sm-5 col-form-label">Confirm Password </label>
+            <div class="col-sm-7">
               <input type="password" formControlName="confirmPassword" class="form-control"
                 [ngClass]="{ 'is-invalid': submitted && p.confirmPassword.errors }" placeholder="Confirm Password"
                 required>
