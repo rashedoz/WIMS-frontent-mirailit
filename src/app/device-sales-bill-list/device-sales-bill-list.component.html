@@ -138,7 +138,7 @@
                     <ngx-datatable-column [width]="170" name="Created Date" prop="created_at" [draggable]="false"
                       [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
-                        <span> {{value | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}} </span>
+                        <span> {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}} </span>
                       </ng-template>
                     </ngx-datatable-column>
 
