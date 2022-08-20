@@ -148,6 +148,22 @@
                       </ng-template>
                     </ngx-datatable-column>
 
+                    <ngx-datatable-column *ngIf="tabType == 'Available'" [width]="120" name="Last Returned At"
+                    prop="last_returned_at" [draggable]="false" [sortable]="false">
+                    <ng-template let-value="value" ngx-datatable-cell-template>
+                      <span *ngIf="!value"> -- </span>
+                      <span *ngIf="value"> {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}}</span>
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-column *ngIf="tabType == 'Cancelled'" [width]="120" name="Last Cancelled At"
+                  prop="last_cancelled_at" [draggable]="false" [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <span *ngIf="!value"> -- </span>
+                    <span *ngIf="value"> {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}}</span>
+                  </ng-template>
+                </ngx-datatable-column>
+
                     <ngx-datatable-column *ngIf="tabType == 'Sold'" [width]="120" name="Current Customer"
                       prop="customer_full_name" [draggable]="false" [sortable]="false">
                       <ng-template let-row="row" ngx-datatable-cell-template>
@@ -187,17 +203,22 @@
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="150" name="Action"  *ngIf="tabType == 'Cancelled'" [draggable]="false" [sortable]="false">
+                    <ngx-datatable-column [width]="150" name="Action"   [draggable]="false" [sortable]="false">
                       <ng-template let-row="row" ngx-datatable-cell-template>
 
-                        <button (click)="onSubmitAction('return',row)" class="btn btn-success btn-mini mr-1"><i class="icofont icofont-arrow-left"></i>Return
+                        <button class="btn btn-info btn-mini mr-1" (click)="openModal(row, template)">
+                          See Life Cycle History
+                        </button>
+
+                        <button *ngIf="tabType == 'Cancelled'" (click)="onSubmitAction('return',row)" class="btn btn-success btn-mini mr-1"><i class="icofont icofont-arrow-left"></i>Return
                         To Stock</button>
 
-                        <button (click)="onSubmitAction('permanently_cancel',row)" class="btn btn-danger btn-mini mr-1"><i class="icofont icofont-close"></i>Permanently Cancel</button>
+                        <button *ngIf="tabType == 'Cancelled'" (click)="onSubmitAction('permanently_cancel',row)" class="btn btn-danger btn-mini mr-1"><i class="icofont icofont-close"></i>Permanently Cancel</button>
 
 
                       </ng-template>
                     </ngx-datatable-column>
+
 
                   </ngx-datatable>
                 </div>
@@ -209,5 +230,89 @@
     </div>
 
   </div>
+
+
+
+
+
+
+
+  <ng-template #template>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left " id="modalTitle"> Device Lifecycle</h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body pb-0" style="height: 550px;overflow-y: auto;">
+      <app-card>
+        <div class="row">
+
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-4 mb-3" *ngIf="deviceObj">
+                <p class="fs-14 mb-0"> Device DID No : <b>{{deviceObj.DID_no}}</b></p>
+                <p class="fs-14 mb-0"> Device IMEI : <b>{{deviceObj.IMEI}}</b></p>
+              </div>
+
+              <div class="col-md-8">
+                <div class="form-group row">
+                  <div class="col-sm-12">
+                    <input type="text" class="form-control" placeholder="Search by customer, imei, event.."
+                      (keyup)="filterDeviceLifecycleSearch($event)" />
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-12">
+                <ngx-datatable class="material table-bordered" [scrollbarH]="true" [rows]="deviceLifecycleDetails"
+                  [loadingIndicator]="loadingIndicator" [externalPaging]="true" [columnMode]="ColumnMode.force"
+                  [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [count]="pageLifeCycle.totalElements"
+                  [offset]="pageLifeCycle.pageNumber" [limit]="pageLifeCycle.size" (page)="setLifeCyclePage($event)">
+
+                  <ngx-datatable-column [width]="150" name="Event " prop="event" [draggable]="false" [sortable]="false">
+                    <ng-template let-value="value" ngx-datatable-cell-template>
+                      <span> {{ value }} </span>
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-column [width]="80" name="Customer" [draggable]="false" [sortable]="false">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <span *ngIf="row.customer_full_name"> {{ row.customer_full_name }} </span>
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-column [width]="80" name="Member" [draggable]="false" [sortable]="false">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <span *ngIf="!row.customer_full_name"> {{ row.member_full_name }} </span>
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-column [width]="80" name="Date" prop="created_at" [draggable]="false"
+                    [sortable]="false">
+                    <ng-template let-value="value" ngx-datatable-cell-template>
+                      <span> {{ value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}} </span>
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                </ngx-datatable>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </app-card>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHide()"> <i
+            class="icofont icofont-close"></i> Close</button>
+      </div>
+
+    </div>
+  </ng-template>
 
 </block-ui>

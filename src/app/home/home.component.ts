@@ -89,7 +89,7 @@ export class HomeComponent implements OnInit {
 
     setTimeout(() => {
       this.showPicChart();
-    }, 1000);
+    }, 1500);
 
 
     // this.getSIMCount();

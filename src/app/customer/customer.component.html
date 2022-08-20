@@ -700,19 +700,19 @@
 
                     <ngx-datatable-column [width]="150" name="Activation Date" prop="activation_date" [draggable]="false" [sortable]="false">
                         <ng-template let-value="value" ngx-datatable-cell-template>
-                          <span >  {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
+                          <span >  {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}} </span>
                         </ng-template>
                     </ngx-datatable-column>
 
                     <ngx-datatable-column [width]="150" name="Cancellation Date" prop="cancellation_date" [draggable]="false" [sortable]="false">
                         <ng-template let-value="value" ngx-datatable-cell-template>
-                          <span *ngIf="value" >  {{ value | amDateFormat:'DD-MMM-YYYY'}} </span>
+                          <span *ngIf="value" >  {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}} </span>
                           <span *ngIf="!value" >  --- </span>
                         </ng-template>
                     </ngx-datatable-column>
                     <ngx-datatable-column [width]="150" name="Held Date" prop="held_date" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
-                        <span *ngIf="value" >  {{ value | amDateFormat:'DD-MMM-YYYY'}} </span>
+                        <span *ngIf="value" >  {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}} </span>
                         <span *ngIf="!value" >  --- </span>
                       </ng-template>
                   </ngx-datatable-column>

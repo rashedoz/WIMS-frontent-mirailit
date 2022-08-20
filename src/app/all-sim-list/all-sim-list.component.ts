@@ -140,6 +140,7 @@ export class AllSIMListComponent implements OnInit {
   }
 
   getList() {
+    this.rows = [];
     this.loadingIndicator = true;
     const obj = {
       limit: this.page.size,
