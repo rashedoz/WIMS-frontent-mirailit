@@ -809,12 +809,13 @@ export class SellProductComponent implements OnInit {
 
     this.refreshSIMDisableStatus();
     if (e) {
-      if (e.ICCID_no) {
-        item.controls["sim_iccid"].setValue(e.ICCID_no);
+      const simObj = this.simsBuffer.find(x=> x.id == e);
+      if (simObj.ICCID_no) {
+        item.controls["sim_iccid"].setValue(simObj.ICCID_no);
         item.controls["sim_iccid"].disable();
 
-        if (e.phone_number) {
-          item.controls["phone_number"].setValue(e.phone_number);
+        if (simObj.phone_number) {
+          item.controls["phone_number"].setValue(simObj.phone_number);
           item.controls["phone_number"].disable();
         } else {
           item.controls["phone_number"].setValue(null);
@@ -840,8 +841,9 @@ export class SellProductComponent implements OnInit {
     this.refreshDeviceDisableStatus();
 
     if (e) {
-      if (e.IMEI) {
-        item.controls["IMEI"].setValue(e.IMEI);
+      const deviceObj = this.devicesBuffer.find(x=> x.id == e);
+      if (deviceObj.IMEI) {
+        item.controls["IMEI"].setValue(deviceObj.IMEI);
         item.controls["IMEI"].disable();
       } else {
         item.controls["IMEI"].setValue(null);
