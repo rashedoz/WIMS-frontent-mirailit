@@ -1,252 +1,293 @@
 <block-ui>
-<div class="row mb-2">
+  <div class="row mb-2">
 
-  <div class="col-lg-12">
-    <div class="card card-border-primary">
-      <div class="card-body">
-        <div class="row users-card">
-          <div class="col-xl-6">
-            <div class="card user-card">
-              <div class="card-header-img mt-1">
-                <img style="width:80px" class="img-fluid img-circle" src="assets/images/user.png" alt="card-img">
-                <h4 class="mt-1">Hello, {{currentUser.first_name}} {{currentUser.last_name}}</h4>
-                <h6 class="mt-0" *ngIf="currentUser.is_superuser">Super User</h6>
-                <h6 class="mt-0" *ngIf="!currentUser.is_superuser && currentUser.is_staff">Staff</h6>
+    <div class="col-lg-12">
+      <div class="card card-border-primary">
+        <div class="card-body">
+          <div class="row users-card">
+            <div class="col-xl-6">
+              <div class="card user-card">
+                <div class="card-header-img mt-1">
+                  <img style="width:80px" class="img-fluid img-circle" src="assets/images/user.png" alt="card-img">
+                  <h4 class="mt-1">Hello, {{currentUser.first_name}} {{currentUser.last_name}}</h4>
+                  <h6 class="mt-0" *ngIf="currentUser.is_superuser">Super User</h6>
+                  <h6 class="mt-0" *ngIf="!currentUser.is_superuser && currentUser.is_staff">Staff</h6>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col-xl-6">
-            <div class="card user-card mt-2 pt-5">
-              <div class="row mb-4 m-2 pb-3">
+            <div class="col-xl-6">
+              <div class="card user-card mt-2 pt-5">
+                <div class="row mb-4 m-2 pb-3">
 
-                <div class="col-lg-6" *ngIf="tabType == 'Current Month'">
-                  <input type="text" placeholder="Filter by month" class="form-control"
-                    (ngModelChange)="onMonthValueChange($event)" [(ngModel)]="bsMonthValue" bsDatepicker
-                    [bsConfig]="bsConfigMonth">
-                </div>
-
+                  <div class="col-lg-6" *ngIf="tabType == 'Current Month'">
+                    <input type="text" placeholder="Filter by month" class="form-control"
+                      (ngModelChange)="onMonthValueChange($event)" [(ngModel)]="bsMonthValue" bsDatepicker
+                      [bsConfig]="bsConfigMonth">
+                  </div>
 
 
-                <div [class]="tabType == 'Current Month' ? 'col-lg-6' : 'col-lg-6 offset-lg-6'">
-                  <tabset [justified]="false" type="pills">
 
-                    <tab (selectTab)="changeTab('Current Month',$event)">
-                      <ng-template tabHeading>
-                        Calendar
-                      </ng-template>
-                    </tab>
+                  <div [class]="tabType == 'Current Month' ? 'col-lg-6' : 'col-lg-6 offset-lg-6'">
+                    <tabset [justified]="false" type="pills">
 
-                    <tab (selectTab)="changeTab('All Months',$event)">
+                      <tab (selectTab)="changeTab('Current Month',$event)">
+                        <ng-template tabHeading>
+                          Calendar
+                        </ng-template>
+                      </tab>
+
+                      <!-- <tab (selectTab)="changeTab('All Months',$event)">
                       <ng-template tabHeading>
                         All Months
                       </ng-template>
-                    </tab>
-                  </tabset>
-                </div>
+                    </tab> -->
+                    </tabset>
+                  </div>
 
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+
   </div>
 
+  <div class="row mb-2">
+    <div class="col-lg-6">
+      <div class="row mb-2">
+        <div class="col-lg-12 col-sm-12">
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5 class="title-custom" *ngIf="bsMonthValue"> Bill Collection Statistics Of {{bsMonthValue | date:'MMMM, y'}} </h5>
+              <h5 class="title-custom" *ngIf="!bsMonthValue"> Bill Collection Statistics For All Months</h5>
+            </div>
+            <div class="card-block">
+              <div class="row pt-2" *ngIf="showLoader">
+                <div class="col-sm-3 offset-sm-5">
+                  <mat-spinner color="primary" [diameter]="30"></mat-spinner>
+                </div>
+              </div>
 
-</div>
-
-<div class="row mb-2">
-  <div class="col-lg-6">
-    <div class="row mb-2">
-      <div class="col-lg-12 col-sm-12">
-        <div class="card card-border-primary">
-          <div class="card-header">
-            <h5> PIE CHART </h5>
-          </div>
-          <div class="card-block">
-            <highcharts-chart [Highcharts]="highcharts" [options]="pieChartOptions"
-            style="width: 100%; min-height: 245px; display: block;">
-        </highcharts-chart>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-lg-6" *ngIf="billCollectionMethodData">
-    <div class="row mb-2">
-      <div class="col-lg-12 col-sm-12">
-        <div class="card card-border-primary">
-          <div class="card-header">
-            <h5>Bill Collection Methods ({{billCollectionMethodData.bill_collection_ways_distinct}}) </h5>
-          </div>
-
-          <div class="card-block pt-2">
-            <div class="table-responsive">
-              <table class="table table-sm">
-                <tbody>
-                  <tr>
-                    <td>Cash</td>
-                    <td>{{billCollectionMethodData.paid_by_cash}}</td>
-                  </tr>
-                  <tr>
-                    <td>Bank</td>
-                    <td>{{billCollectionMethodData.paid_by_bank}}</td>
-                  </tr>
-                  <tr>
-                    <td>From Balance</td>
-                    <td>{{billCollectionMethodData.paid_from_balance}}</td>
-                  </tr>
-                  <tr>
-                    <td>Card Payment</td>
-                    <td>{{billCollectionMethodData.paid_through_card}}</td>
-                  </tr>
-                  <tr>
-                    <td>Online Banking</td>
-                    <td>{{billCollectionMethodData.paid_through_online_banking}}</td>
-                  </tr>
-                  <tr>
-                    <td>Not Applicable</td>
-                    <td>{{billCollectionMethodData.paid_through_system}}</td>
-                  </tr>
-                </tbody>
-                <tfoot>
-                  <th>Total</th>
-                  <th>{{billCollectionMethodData.paid_by_cash + billCollectionMethodData.paid_by_bank + billCollectionMethodData.paid_from_balance + billCollectionMethodData.paid_through_card +  billCollectionMethodData.paid_through_online_banking + billCollectionMethodData.paid_through_system}}</th>
-                </tfoot>
-              </table>
+              <highcharts-chart *ngIf="!showLoader" [Highcharts]="highcharts" [options]="pieChartOptions"
+                style="width: 100%; min-height: 245px; display: block;">
+              </highcharts-chart>
             </div>
           </div>
-
         </div>
       </div>
     </div>
-  </div>
-</div>
-
-<div class="row mb-2">
-  <div class="col-lg-6">
-    <div class="row mb-2">
-      <div class="col-lg-12 col-sm-12">
-        <div class="card card-border-primary">
-          <div class="card-header" >
-            <h5 *ngIf="eligibleRetailersCount == 0"> Retailer Customer (0) </h5>
-            <h5 *ngIf="eligibleRetailersCount > 0"> Retailer Customer ({{eligibleRetailersCount}}) </h5>
-          </div>
-          <div class="card-block">
-            <div class="table-responsive">
-              <table class="table table-sm">
-                <tbody>
-                  <tr *ngIf="retailersPeripheralsCount">
-                    <td>Retailer Sims</td>
-                    <td>{{retailersPeripheralsCount.active_or_frozen_or_advanced_cancelled_sim_count}}</td>
-                  </tr>
-                  <tr *ngIf="retailersPeripheralsCount">
-                    <td>Retailer Devices</td>
-                    <td>{{retailersPeripheralsCount.active_or_frozen_or_advanced_cancelled_device_count}}</td>
-                  </tr>
-                  <tr *ngIf="retailersBillRecords">
-                    <td>Retailer Collectable Bills Qty</td>
-                    <td>{{retailersBillRecords.retailer_collectable_bills}}</td>
-                  </tr>
-                  <tr *ngIf="retailersBillRecords">
-                    <td>Retailer Bill Collected Qty</td>
-                    <td>{{retailersBillRecords.retailer_collected_bills}}</td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 0 !important;" colspan="2" >&nbsp;</td>
-                  </tr>
-                  <tr *ngIf="retailersBillRecords">
-                    <td>Retailer Collectable Bill Amount</td>
-                    <td>{{retailersBillRecords.retailer_collectable_bill_amount}}</td>
-                  </tr>
-                  <tr style="border-bottom: 2px solid black;" *ngIf="retailersBillRecords">
-                    <td>Retailer Bill Collected Amount</td>
-                    <td>{{retailersBillRecords.retailer_collected_bill_amount}}</td>
-                  </tr>
-                  <tr *ngIf="retailersBillRecords">
-                    <td>Retailer Due</td>
-                    <td>{{retailersBillRecords.retailer_collectable_bill_amount - retailersBillRecords.retailer_collected_bill_amount}}</td>
-                  </tr>
-                  <tr style="border-bottom: 2px solid black;" *ngIf="retailersBillRecords">
-                    <td>Retailer Carryover Due</td>
-                    <td>{{retailersBillRecords.retailer_carry_over_due}}</td>
-                  </tr>
-
-                </tbody>
-                <tfoot *ngIf="retailersBillRecords">
-                  <th>Retailer Total Due</th>
-                  <th>{{ (retailersBillRecords.retailer_collectable_bill_amount - retailersBillRecords.retailer_collected_bill_amount) +  retailersBillRecords.retailer_carry_over_due}}</th>
-                </tfoot>
-              </table>
+    <div class="col-lg-6" *ngIf="billCollectionMethodData">
+      <div class="row mb-2">
+        <div class="col-lg-12 col-sm-12">
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5 class="title-custom" >Bill Collection Methods ({{billCollectionMethodData.bill_collection_ways_distinct}}) </h5>
             </div>
-          </div>
 
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-lg-6">
-    <div class="row mb-2">
-      <div class="col-lg-12 col-sm-12">
-        <div class="card card-border-primary">
-          <div class="card-header">
-            <h5 *ngIf="eligibleWholesalersCount == 0"> Wholesaler Customer (0) </h5>
-            <h5 *ngIf="eligibleWholesalersCount > 0"> Wholesaler Customer ({{eligibleWholesalersCount}}) </h5>
-          </div>
-          <div class="card-block">
-            <div class="table-responsive">
-              <table class="table table-sm">
-                <tbody>
-                  <tr *ngIf="wholesalersPeripheralsCount">
-                    <td>Wholesaler Sims</td>
-                    <td>{{wholesalersPeripheralsCount.active_or_frozen_or_advanced_cancelled_sim_count}}</td>
-                  </tr>
-                  <tr *ngIf="wholesalersPeripheralsCount">
-                    <td>Wholesaler Devices</td>
-                    <td>{{wholesalersPeripheralsCount.active_or_frozen_or_advanced_cancelled_device_count}}</td>
-                  </tr>
-                  <tr *ngIf="wholesalersBillRecords">
-                    <td>Wholesaler Collectable Bills Qty</td>
-                    <td>{{wholesalersBillRecords.wholesaler_collectable_bills}}</td>
-                  </tr>
-                  <tr *ngIf="wholesalersBillRecords">
-                    <td>Wholesaler Bill Collected Qty</td>
-                    <td>{{wholesalersBillRecords.wholesaler_collected_bills}}</td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 0 !important;" colspan="2" >&nbsp;</td>
-                  </tr>
-                  <tr *ngIf="wholesalersBillRecords">
-                    <td>Wholesaler Collectable Bill Amount</td>
-                    <td>{{wholesalersBillRecords.wholesaler_collectable_bill_amount}}</td>
-                  </tr>
-                  <tr style="border-bottom: 2px solid black;" *ngIf="wholesalersBillRecords">
-                    <td>Wholesaler Bill Collected Amount</td>
-                    <td>{{wholesalersBillRecords.wholesaler_collected_bill_amount}}</td>
-                  </tr>
-                  <tr *ngIf="wholesalersBillRecords">
-                    <td>Wholesaler Due</td>
-                    <td>{{wholesalersBillRecords.wholesaler_collectable_bill_amount - wholesalersBillRecords.wholesaler_collected_bill_amount}}</td>
-                  </tr>
-                  <tr style="border-bottom: 2px solid black;" *ngIf="wholesalersBillRecords">
-                    <td>Wholesaler Carryover Due</td>
-                    <td>{{wholesalersBillRecords.wholesaler_carry_over_due}}</td>
-                  </tr>
+            <div class="card-block pt-2">
 
-                </tbody>
-                <tfoot *ngIf="wholesalersBillRecords">
-                  <th>Wholesaler Total Due</th>
-                  <th>{{ (wholesalersBillRecords.wholesaler_collectable_bill_amount - wholesalersBillRecords.wholesaler_collected_bill_amount) +  wholesalersBillRecords.wholesaler_carry_over_due}}</th>
-                </tfoot>
-              </table>
+              <div class="row pt-2" *ngIf="showLoader">
+                <div class="col-sm-3 offset-sm-5">
+                  <mat-spinner color="primary" [diameter]="30"></mat-spinner>
+                </div>
+              </div>
+
+              <div class="table-responsive" *ngIf="!showLoader">
+                <table class="table table-sm">
+                  <tbody>
+                    <tr>
+                      <td>Cash</td>
+                      <td>{{billCollectionMethodData.paid_by_cash}}</td>
+                    </tr>
+                    <tr>
+                      <td>Bank</td>
+                      <td>{{billCollectionMethodData.paid_by_bank}}</td>
+                    </tr>
+                    <tr>
+                      <td>From Balance</td>
+                      <td>{{billCollectionMethodData.paid_from_balance}}</td>
+                    </tr>
+                    <tr>
+                      <td>Card Payment</td>
+                      <td>{{billCollectionMethodData.paid_through_card}}</td>
+                    </tr>
+                    <tr>
+                      <td>Online Banking</td>
+                      <td>{{billCollectionMethodData.paid_through_online_banking}}</td>
+                    </tr>
+                    <tr>
+                      <td>Not Applicable</td>
+                      <td>{{billCollectionMethodData.paid_through_system}}</td>
+                    </tr>
+                  </tbody>
+                  <tfoot class="text-primary">
+                    <th>Total</th>
+                    <th>
+                      {{billCollectionMethodData.paid_by_cash + billCollectionMethodData.paid_by_bank + billCollectionMethodData.paid_from_balance + billCollectionMethodData.paid_through_card +  billCollectionMethodData.paid_through_online_banking + billCollectionMethodData.paid_through_system}}
+                    </th>
+                  </tfoot>
+                </table>
+              </div>
             </div>
-          </div>
 
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-</div>
+  <div class="row mb-2">
+    <div class="col-lg-6">
+
+      <div class="row mb-2">
+        <div class="col-lg-12 col-sm-12">
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5 class="title-custom" *ngIf="eligibleRetailersCount == 0"> Retailer Customer (0) </h5>
+              <h5  class="title-custom"*ngIf="eligibleRetailersCount > 0"> Retailer Customer ({{eligibleRetailersCount}}) </h5>
+            </div>
+            <div class="card-block">
+
+              <div class="row pt-2" *ngIf="showLoader">
+                <div class="col-sm-3 offset-sm-5">
+                  <mat-spinner color="primary" [diameter]="30"></mat-spinner>
+                </div>
+              </div>
+
+
+              <div class="table-responsive" *ngIf="!showLoader">
+                <table class="table table-sm">
+                  <tbody>
+                    <tr *ngIf="retailersPeripheralsCount">
+                      <td>Retailer Sims</td>
+                      <td>{{retailersPeripheralsCount.retailer_sim_count}}</td>
+                    </tr>
+                    <tr *ngIf="retailersPeripheralsCount">
+                      <td>Retailer Devices</td>
+                      <td>{{retailersPeripheralsCount.retailer_device_count}}</td>
+                    </tr>
+                    <tr *ngIf="retailersBillRecords">
+                      <td>Retailer Collectable Bills Qty</td>
+                      <td>{{retailersBillRecords.retailer_collectable_bills}}</td>
+                    </tr>
+                    <tr *ngIf="retailersBillRecords">
+                      <td>Retailer Bill Collected Qty</td>
+                      <td>{{retailersBillRecords.retailer_collected_bills}}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 0 !important;" colspan="2">&nbsp;</td>
+                    </tr>
+                    <tr *ngIf="retailersBillRecords" >
+                      <td>Retailer Collectable Bill Amount</td>
+                      <td class="text-info">{{retailersBillRecords.retailer_collectable_bill_amount}}</td>
+                    </tr>
+                    <tr style="border-bottom: 2px solid black;" *ngIf="retailersBillRecords" >
+                      <td>Retailer Bill Collected Amount</td>
+                      <td class="text-success font-weight-bold">{{retailersBillRecords.retailer_collected_bill_amount}}</td>
+                    </tr>
+                    <tr *ngIf="retailersBillRecords" >
+                      <td>Retailer Due</td>
+                      <td>
+                        {{retailersBillRecords.retailer_collectable_bill_amount - retailersBillRecords.retailer_collected_bill_amount}}
+                      </td>
+                    </tr>
+                    <tr style="border-bottom: 2px solid black;" *ngIf="retailersBillRecords" >
+                      <td>Retailer Carryover Due</td>
+                      <td>{{retailersBillRecords.retailer_carry_over_due}}</td>
+                    </tr>
+
+                  </tbody>
+                  <tfoot *ngIf="retailersBillRecords">
+                    <th >Retailer Total Due</th>
+                    <th class="text-danger">
+                      {{ (retailersBillRecords.retailer_collectable_bill_amount - retailersBillRecords.retailer_collected_bill_amount) +  retailersBillRecords.retailer_carry_over_due}}
+                    </th>
+                  </tfoot>
+                </table>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="row mb-2">
+        <div class="col-lg-12 col-sm-12">
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5 class="title-custom" *ngIf="eligibleWholesalersCount == 0"> Wholesaler Customer (0) </h5>
+              <h5 class="title-custom" *ngIf="eligibleWholesalersCount > 0"> Wholesaler Customer ({{eligibleWholesalersCount}}) </h5>
+            </div>
+            <div class="card-block">
+
+              <div class="row pt-2" *ngIf="showLoader">
+                <div class="col-sm-3 offset-sm-5">
+                  <mat-spinner color="primary" [diameter]="30"></mat-spinner>
+                </div>
+              </div>
+
+              <div class="table-responsive" *ngIf="!showLoader">
+                <table class="table table-sm">
+                  <tbody>
+                    <tr *ngIf="wholesalersPeripheralsCount">
+                      <td>Wholesaler Sims</td>
+                      <td>{{wholesalersPeripheralsCount.wholesaler_sim_count}}</td>
+                    </tr>
+                    <tr *ngIf="wholesalersPeripheralsCount">
+                      <td>Wholesaler Devices</td>
+                      <td>{{wholesalersPeripheralsCount.wholesaler_device_count}}</td>
+                    </tr>
+                    <tr *ngIf="wholesalersBillRecords">
+                      <td>Wholesaler Collectable Bills Qty</td>
+                      <td>{{wholesalersBillRecords.wholesaler_collectable_bills}}</td>
+                    </tr>
+                    <tr *ngIf="wholesalersBillRecords">
+                      <td>Wholesaler Bill Collected Qty</td>
+                      <td>{{wholesalersBillRecords.wholesaler_collected_bills}}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 0 !important;" colspan="2">&nbsp;</td>
+                    </tr>
+                    <tr *ngIf="wholesalersBillRecords" >
+                      <td>Wholesaler Collectable Bill Amount</td>
+                      <td class="text-info">{{wholesalersBillRecords.wholesaler_collectable_bill_amount}}</td>
+                    </tr>
+                    <tr style="border-bottom: 2px solid black;" *ngIf="wholesalersBillRecords" >
+                      <td>Wholesaler Bill Collected Amount</td>
+                      <td class="text-success font-weight-bold">{{wholesalersBillRecords.wholesaler_collected_bill_amount}}</td>
+                    </tr>
+                    <tr *ngIf="wholesalersBillRecords" >
+                      <td>Wholesaler Due</td>
+                      <td>
+                        {{wholesalersBillRecords.wholesaler_collectable_bill_amount - wholesalersBillRecords.wholesaler_collected_bill_amount}}
+                      </td>
+                    </tr>
+                    <tr style="border-bottom: 2px solid black;" *ngIf="wholesalersBillRecords">
+                      <td >Wholesaler Carryover Due</td>
+                      <td>{{wholesalersBillRecords.wholesaler_carry_over_due}}</td>
+                    </tr>
+
+                  </tbody>
+                  <tfoot *ngIf="wholesalersBillRecords">
+                    <th >Wholesaler Total Due</th>
+                    <th class="text-danger">
+                      {{ (wholesalersBillRecords.wholesaler_collectable_bill_amount - wholesalersBillRecords.wholesaler_collected_bill_amount) +  wholesalersBillRecords.wholesaler_carry_over_due}}
+                    </th>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 
 </block-ui>

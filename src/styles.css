@@ -24364,3 +24364,10 @@ bs-datepicker-container { z-index: 3000; }
 .iw-42{
   width: 42px !important;
 }
+
+.title-custom{
+  font-weight: 600 !important;
+    color: #1abc9c !important;;
+    font-size: 20px !important;
+    margin-bottom: 5px !important;
+}

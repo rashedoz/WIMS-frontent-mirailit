@@ -913,7 +913,7 @@ export class SellProductComponent implements OnInit {
     let bill_items = [];
     let sim_assigned = 0;
     let device_assigned = 0;
-    // this.blockUI.start('Saving...');
+    this.blockUI.start('Saving...');
 
     this.fromRowData.itemHistory
       .filter((x) => x.package)
@@ -971,9 +971,9 @@ export class SellProductComponent implements OnInit {
                   closeButton: true,
                   disableTimeOut: true,
                 });
-                const customer_id = this.entryForm.value.customer;
-                this.formReset();
-                this.printService.printInv(data.bill_id);
+               // const customer_id = this.entryForm.value.customer;
+
+
 
                 this.confirmService
                   .confirm(
@@ -983,17 +983,25 @@ export class SellProductComponent implements OnInit {
                     "Yes"
                   )
                   .subscribe((result) => {
+
+                  this.formReset();
+
+                    this.blockUI.stop();
                     if (result) {
                       this.router.navigate([
                         "/payment-collection/" + data.bill_id,
                       ]);
                     } else {
-                      this.router.navigate([
-                        "/customer-details/" + customer_id,
-                      ]);
+                      this.printService.printInv(data.bill_id);
+                      setTimeout(() => {
+                        window.location.reload();
+                      }, 500);
+
+                      // this.router.navigate([
+                      //   "/customer-details/" + customer_id,
+                      // ]);
                     }
                   });
-
                 // this.router.navigate([]).then(result => { window.open('/payment-collection/'+ data.bill_id, '_blank'); });
                 // this.entryForm.get('session').disable();
                 // this.entryForm.get('session').setValue(moment().format('MMM-YYYY'));
@@ -1041,6 +1049,7 @@ export class SellProductComponent implements OnInit {
   formReset() {
     this.submitted = false;
     this.entryForm.reset();
+    this.entryForm.controls["customer"].setValue(null);
     Object.keys(this.entryForm.controls).forEach((key) => {
       this.entryForm.controls[key].setErrors(null);
     });
@@ -1051,12 +1060,23 @@ export class SellProductComponent implements OnInit {
     this.subTotal = 0;
     this.discount = 0;
     this.grandTotal = 0;
+    this.selectedCustomer = null;
 
-    this.getCustomer();
-    this.getSIM();
-    this.getPackageList();
-    this.getDevice();
+
+
     this.getPlatformList();
+    this.getCustomer();
+    this.onSearch();
+    this.getSIM();
+    this.onSearchSIM();
+    this.getDevice();
+    this.onSearchDevice();
+
+    // this.getCustomer();
+    // this.getSIM();
+    // this.getPackageList();
+    // this.getDevice();
+    // this.getPlatformList();
   }
 
   onFormSubmitCustomer() {

@@ -52,7 +52,7 @@ export class HomeComponent implements OnInit {
 
   pieChartOptions: any;
   pieChartArray = [];
-
+  showLoader = false;
   constructor(
     private authService: AuthenticationService,
     private toastr: ToastrService,
@@ -142,7 +142,7 @@ export class HomeComponent implements OnInit {
          // console.log(values);
             this.showPicChart();
       });
-
+      this.bsMonthValue = null;
         break;
       case "Current Month":
         this.bsMonthValue = this.firstDay;
@@ -211,8 +211,10 @@ export class HomeComponent implements OnInit {
   }
 
   getBillCollectionMethodData() {
+    this.showLoader = true;
     return new Promise((resolve, reject) => {
-      this.blockUI.start("Getting Data...");
+
+    //  this.blockUI.start("Getting Data...");
       let obj: any = {};
 
       if (this.tabType == "Current Month") {
@@ -232,7 +234,7 @@ export class HomeComponent implements OnInit {
 
       this._service.get("bill-dashboard/payment-method-records", obj).subscribe(
         (res) => {
-          this.blockUI.stop();
+        //  this.blockUI.stop();
           if (!res) {
             this.toastr.error(res.Message, "Error!", {
               closeButton: true,
@@ -242,9 +244,11 @@ export class HomeComponent implements OnInit {
           }
           this.billCollectionMethodData = res;
           resolve(this.billCollectionMethodData);
+          this.showLoader = false;
         },
         (err) => {
-          this.blockUI.stop();
+        //  this.blockUI.stop();
+        this.showLoader = false;
           reject(err.Msg);
           this.toastr.error(err.Msg || err, "Error!", {
             closeButton: true,
@@ -281,10 +285,12 @@ export class HomeComponent implements OnInit {
   //   }
   //   );
   // }
+
   getBillEligibleRetailersCountData() {
+    this.showLoader = true;
     return new Promise((resolve, reject) => {
 
-      this.blockUI.start("Getting Data...");
+    //  this.blockUI.start("Getting Data...");
       let obj: any = {};
 
       if (this.tabType == "Current Month") {
@@ -306,7 +312,7 @@ export class HomeComponent implements OnInit {
         .get("bill-dashboard/bill-eligible-retailers-count", obj)
         .subscribe(
           (res) => {
-            this.blockUI.stop();
+            //this.blockUI.stop();
             if (!res) {
               this.toastr.error(res.Message, "Error!", {
                 closeButton: true,
@@ -316,9 +322,11 @@ export class HomeComponent implements OnInit {
             }
             this.eligibleRetailersCount = res.eligible_retailer_count;
             resolve(this.eligibleRetailersCount);
+            this.showLoader = false;
           },
           (err) => {
-            this.blockUI.stop();
+            //this.blockUI.stop();
+            this.showLoader = false;
             reject(err.Msg);
             this.toastr.error(err.Msg || err, "Error!", {
               closeButton: true,
@@ -371,9 +379,10 @@ export class HomeComponent implements OnInit {
   // }
 
   getRetailersPeripheralsCountData() {
+    this.showLoader = true;
   return new Promise((resolve, reject) => {
 
-    this.blockUI.start("Getting Data...");
+   // this.blockUI.start("Getting Data...");
     let obj: any = {};
 
     if (this.tabType == "Current Month") {
@@ -393,7 +402,7 @@ export class HomeComponent implements OnInit {
       .get("bill-dashboard/retailers-peripherals-count", obj)
       .subscribe(
         (res) => {
-          this.blockUI.stop();
+        //  this.blockUI.stop();
           if (!res) {
             this.toastr.error(res.Message, "Error!", {
               closeButton: true,
@@ -403,9 +412,11 @@ export class HomeComponent implements OnInit {
           }
           this.retailersPeripheralsCount = res;
           resolve(this.retailersPeripheralsCount);
+          this.showLoader = false;
         },
         (err) => {
-          this.blockUI.stop();
+         // this.blockUI.stop();
+         this.showLoader = false;
           reject(err.Msg);
           this.toastr.error(err.Msg || err, "Error!", {
             closeButton: true,
@@ -461,9 +472,9 @@ export class HomeComponent implements OnInit {
   // }
 
   getRetailersBillRecordsData(){
-
+    this.showLoader = true;
     return new Promise((resolve, reject) => {
-    this.blockUI.start("Getting Data...");
+   // this.blockUI.start("Getting Data...");
     let obj: any = {};
 
     if (this.tabType == "Current Month") {
@@ -481,7 +492,7 @@ export class HomeComponent implements OnInit {
 
     this._service.get("bill-dashboard/retailers-bill-records", obj).subscribe(
       (res) => {
-        this.blockUI.stop();
+       // this.blockUI.stop();
         if (!res) {
           this.toastr.error(res.Message, "Error!", {
             closeButton: true,
@@ -491,9 +502,11 @@ export class HomeComponent implements OnInit {
         }
         this.retailersBillRecords = res;
         resolve(this.retailersBillRecords);
+        this.showLoader = false;
       },
       (err) => {
-        this.blockUI.stop();
+      //  this.blockUI.stop();
+      this.showLoader = false;
         reject(err.Msg);
         this.toastr.error(err.Msg || err, "Error!", {
           closeButton: true,
@@ -546,8 +559,9 @@ export class HomeComponent implements OnInit {
   // }
 
   getBillEligibleWholesalersCountData(){
+    this.showLoader = true;
     return new Promise((resolve, reject) => {
-  this.blockUI.start("Getting Data...");
+  //this.blockUI.start("Getting Data...");
     let obj: any = {};
 
     if (this.tabType == "Current Month") {
@@ -567,7 +581,7 @@ export class HomeComponent implements OnInit {
       .get("bill-dashboard/bill-eligible-wholesalers-count", obj)
       .subscribe(
         (res) => {
-          this.blockUI.stop();
+        //  this.blockUI.stop();
           if (!res) {
             this.toastr.error(res.Message, "Error!", {
               closeButton: true,
@@ -577,9 +591,11 @@ export class HomeComponent implements OnInit {
           }
           this.eligibleWholesalersCount = res.eligible_wholesaler_count;
           resolve(this.eligibleWholesalersCount);
+          this.showLoader = false;
         },
         (err) => {
-          this.blockUI.stop();
+         // this.blockUI.stop();
+         this.showLoader = false;
           reject(err.Msg);
           this.toastr.error(err.Msg || err, "Error!", {
             closeButton: true,
@@ -633,9 +649,10 @@ export class HomeComponent implements OnInit {
   // }
 
   getWholesalersPeripheralsCountData(){
+    this.showLoader = true;
     return new Promise((resolve, reject) => {
 
-    this.blockUI.start("Getting Data...");
+   // this.blockUI.start("Getting Data...");
     let obj: any = {};
 
     if (this.tabType == "Current Month") {
@@ -655,7 +672,7 @@ export class HomeComponent implements OnInit {
       .get("bill-dashboard/wholesalers-peripherals-count", obj)
       .subscribe(
         (res) => {
-          this.blockUI.stop();
+         // this.blockUI.stop();
           if (!res) {
             this.toastr.error(res.Message, "Error!", {
               closeButton: true,
@@ -665,9 +682,11 @@ export class HomeComponent implements OnInit {
           }
           this.wholesalersPeripheralsCount = res;
           resolve(this.wholesalersPeripheralsCount);
+          this.showLoader = false;
         },
         (err) => {
-          this.blockUI.stop();
+         // this.blockUI.stop();
+         this.showLoader = false;
           reject(err.Msg);
           this.toastr.error(err.Msg || err, "Error!", {
             closeButton: true,
@@ -721,8 +740,9 @@ export class HomeComponent implements OnInit {
   // }
 
   getWholesalersBillRecordsData(){
+    this.showLoader = true;
     return new Promise((resolve, reject) => {
-    this.blockUI.start("Getting Data...");
+    //this.blockUI.start("Getting Data...");
     let obj: any = {};
 
     if (this.tabType == "Current Month") {
@@ -740,7 +760,7 @@ export class HomeComponent implements OnInit {
 
     this._service.get("bill-dashboard/wholesalers-bill-records", obj).subscribe(
       (res) => {
-        this.blockUI.stop();
+       // this.blockUI.stop();
         if (!res) {
           this.toastr.error(res.Message, "Error!", {
             closeButton: true,
@@ -751,9 +771,11 @@ export class HomeComponent implements OnInit {
         this.wholesalersBillRecords = res;
 
         resolve(this.wholesalersBillRecords);
+        this.showLoader = false;
       },
       (err) => {
-        this.blockUI.stop();
+       // this.blockUI.stop();
+       this.showLoader = false;
         reject(err.Msg);
         this.toastr.error(err.Msg || err, "Error!", {
           closeButton: true,
@@ -811,7 +833,7 @@ export class HomeComponent implements OnInit {
     //     'y': element.Count
     //   });
     // });
-
+    this.showLoader = true;
     if (this.retailersBillRecords && this.wholesalersBillRecords) {
 
       let relailer_total_due = (this.retailersBillRecords.retailer_collectable_bill_amount - this.retailersBillRecords.retailer_collected_bill_amount) +  this.retailersBillRecords.retailer_carry_over_due;
@@ -823,10 +845,10 @@ export class HomeComponent implements OnInit {
       let collectedAmount =  this.retailersBillRecords.retailer_collected_bill_amount + this.wholesalersBillRecords.wholesaler_collected_bill_amount;
       let due = relailer_total_due + wholesaler_total_due;
 
-      arr.push({
-        name: "Collectable Amount",
-        y: collectableAmount,
-      });
+      // arr.push({
+      //   name: "Collectable Amount",
+      //   y: collectableAmount,
+      // });
 
       arr.push({
         name: "Collected Amount",
@@ -838,9 +860,7 @@ export class HomeComponent implements OnInit {
         y: due,
       });
 
-      console.log(collectableAmount);
-      console.log(collectedAmount);
-      console.log(arr);
+      this.showLoader = false;
 
       this.pieChartOptions = {
         chart: {
@@ -897,7 +917,7 @@ export class HomeComponent implements OnInit {
             type: "pie",
             //name: 'Amount Collection Pie Chart',
             data: arr,
-            colors: ["#3498db", "#2ecc71", "#c0392b"],
+            colors: ["#2ecc71", "#c0392b"],
             dataLabels: {
               enabled: true,
               formatter: function () {
