@@ -221,7 +221,7 @@ export class AllSIMListComponent implements OnInit {
     let txt = "";
     switch (action) {
       case "unfreeze":
-        url = "stock/freeze-unfreeze-billing-item/" + row.id;
+        url = "stock/freeze-unfreeze-sim/" + row.id;
         txt = "You are going to unfreeze this sim.";
         break;
       case "reissuance":
