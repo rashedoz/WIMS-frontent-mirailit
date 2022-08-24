@@ -117,6 +117,11 @@
                         Reissued
                       </ng-template>
                     </tab>
+                    <tab (selectTab)="changeTab('Permanently Cancelled',$event)">
+                      <ng-template tabHeading>
+                        Permanently Cancelled
+                      </ng-template>
+                    </tab>
                   </tabset>
                 </div>
               </div>
@@ -233,7 +238,7 @@
 
 
 
-                    <ngx-datatable-column [width]="350" name="Action" prop="id" [draggable]="false" [sortable]="false">
+                    <ngx-datatable-column [width]="500" name="Action" prop="id" [draggable]="false" [sortable]="false">
                       <ng-template let-row="row" ngx-datatable-cell-template>
                         <button *ngIf="tabType == 'Cancelled'" class="btn btn-info btn-mini mr-1"
                           (click)="onSubmitAction('reissuance',row)">
@@ -246,6 +251,10 @@
                         <button *ngIf="tabType == 'Cancelled'" class="btn btn-info btn-mini mr-1"
                           (click)="onSubmitAction('return',row)">
                           Return
+                        </button>
+                        <button *ngIf="tabType == 'Cancelled'" class="btn btn-danger btn-mini mr-1"
+                          (click)="onSubmitAction('permanently_cancelled',row)">
+                          Permanently Cancelled
                         </button>
                         <button class="btn btn-info btn-mini mr-1" (click)="openModal(row, template)">
                           See Life Cycle History

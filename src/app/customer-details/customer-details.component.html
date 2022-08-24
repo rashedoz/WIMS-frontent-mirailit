@@ -237,7 +237,7 @@
 
 
 
-                            <ngx-datatable-column [width]="250" name="Action" prop="id" [draggable]="false"
+                            <ngx-datatable-column [width]="350" name="Action" prop="id" [draggable]="false"
                               [sortable]="false">
                               <ng-template let-row="row" ngx-datatable-cell-template>
 
@@ -305,6 +305,10 @@
                                     <button (click)="onSubmitAction('sim','reissue',row)" *ngIf="row.sim_status == 4"
                                       class="btn btn-info btn-mini mr-1"><i
                                         class="icofont icofont-paper-plane"></i>Reissue</button>
+
+                                    <button (click)="onSubmitAction('sim','permanently_cancelled',row)" *ngIf="row.sim_status == 4"
+                                      class="btn btn-danger btn-mini mr-1"><i
+                                        class="icofont icofont-paper-plane"></i>Permanently Cancelled</button>
 
                                     <button (click)="openModalSIMRecieve(row,templateSIMReceive)"
                                       *ngIf="row.sim_status == 6" class="btn btn-success btn-mini mr-1"><i

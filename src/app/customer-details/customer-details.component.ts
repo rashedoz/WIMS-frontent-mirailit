@@ -1045,6 +1045,10 @@ selectTab(tabId: number) {
           url = 'bill/receive-sim-from-mother-company/'+row.id;
           txt = 'You are receiving this sim from mother company.';
           break;
+          case "permanently_cancelled":
+            url = "stock/cancel-sim-permanently/" + row.id;
+            txt = "This sim will be Permanently Cancelled.";
+            break;
 
         default:
           break;

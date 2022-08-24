@@ -118,6 +118,11 @@ export class AllSIMListComponent implements OnInit {
         this.tabType = type;
         this.getList();
         break;
+      case "Permanently Cancelled":
+        this.status = 8;
+        this.tabType = type;
+        this.getList();
+        break;
       default:
         this.getList();
         break;
@@ -211,7 +216,11 @@ export class AllSIMListComponent implements OnInit {
         break;
       case "return":
         url = "stock/return-sim-to-stock/" + row.id;
-        txt = "The sim will be added to your stock.";
+        txt = "This sim will be added to your stock.";
+        break;
+      case "permanently_cancelled":
+        url = "stock/cancel-sim-permanently/" + row.id;
+        txt = "This sim will be Permanently Cancelled.";
         break;
       default:
         break;
