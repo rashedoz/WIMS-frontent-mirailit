@@ -51,7 +51,8 @@ export class AllSIMListComponent implements OnInit {
   simObj = null;
   tabType = "Available";
   status = 1;
-  stock :any = null;
+  stock: any = null;
+  isFrozen = false;
 
   constructor(
     public formBuilder: FormBuilder,
@@ -80,10 +81,12 @@ export class AllSIMListComponent implements OnInit {
   }
 
   getSIMStockData() {
-    this._service.get('stock/get-current-sim-stock-history').subscribe(res => {
-      this.stock = res;
-      console.log(this.stock);
-    }, err => {}
+    this._service.get("stock/get-current-sim-stock-history").subscribe(
+      (res) => {
+        this.stock = res;
+        console.log(this.stock);
+      },
+      (err) => {}
     );
   }
 
@@ -96,10 +99,17 @@ export class AllSIMListComponent implements OnInit {
 
     this.pageLifeCycle.pageNumber = 0;
     this.pageLifeCycle.size = 10;
+    this.isFrozen = false;
 
     switch (type) {
       case "Available":
         this.status = 1;
+        this.tabType = type;
+        this.getList();
+        break;
+      case "Frozen":
+        this.isFrozen = true;
+        this.status = 2;
         this.tabType = type;
         this.getList();
         break;
@@ -129,7 +139,6 @@ export class AllSIMListComponent implements OnInit {
     }
   }
 
-
   get rs() {
     return this.receiveSIMForm.controls;
   }
@@ -147,12 +156,17 @@ export class AllSIMListComponent implements OnInit {
   getList() {
     this.rows = [];
     this.loadingIndicator = true;
-    const obj = {
+    let obj:any = {
       limit: this.page.size,
       page: this.page.pageNumber + 1,
       search_param: this.searchParam,
       status: this.status,
     };
+
+    if(this.tabType == 'Frozen'){
+      obj.is_frozen = 1
+    }
+
     this._service.get("stock/get-sim-list", obj).subscribe(
       (res) => {
         if (!res) {
@@ -206,6 +220,10 @@ export class AllSIMListComponent implements OnInit {
     let url = "";
     let txt = "";
     switch (action) {
+      case "unfreeze":
+        url = "bill/freeze-unfreeze-billing-item/" + row.id;
+        txt = "You are going to unfreeze this sim.";
+        break;
       case "reissuance":
         url = "stock/send-sim-for-reissuance/" + row.id;
         txt = "You are sending this sim for reissuance.";
@@ -262,7 +280,6 @@ export class AllSIMListComponent implements OnInit {
     });
   }
 
-
   modalHideSIMRecieve() {
     this.modalRef.hide();
     this.simObj = null;
@@ -272,7 +289,7 @@ export class AllSIMListComponent implements OnInit {
 
   openModalSIMRecieve(item, template: TemplateRef<any>) {
     this.simObj = item;
-    this.receiveSIMForm.controls['id'].setValue(item.id);
+    this.receiveSIMForm.controls["id"].setValue(item.id);
     this.modalRef = this.modalService.show(template, this.modalConfigMd);
   }
 
@@ -283,7 +300,7 @@ export class AllSIMListComponent implements OnInit {
   }
 
   openModal(item, template: TemplateRef<any>) {
-    this.searchParam = '';
+    this.searchParam = "";
     this.simObj = item;
     this.pageLifeCycle.pageNumber = 0;
     this.pageLifeCycle.size = 10;
@@ -291,42 +308,57 @@ export class AllSIMListComponent implements OnInit {
     this.getSIMLifeCycle();
   }
 
-  onSubmitSIMReceive(){
+  onSubmitSIMReceive() {
     this.submitted = true;
     if (this.receiveSIMForm.invalid) {
       return;
     }
     const obj = {
-      ICCID_no:this.receiveSIMForm.value.ICCID_no.trim()
+      ICCID_no: this.receiveSIMForm.value.ICCID_no.trim(),
     };
 
-    this.confirmService.confirm('Are you sure?', 'You are receiving this sim from mother company.')
-    .subscribe(
-        result => {
-            if (result) {
-              this.blockUI.start('Saving...');
-              const request = this._service.patch('stock/receive-sim-from-mother-company/'+this.receiveSIMForm.value.id, obj);
-              request.subscribe(
-                data => {
-                  this.blockUI.stop();
-                  if (data.IsReport == "Success") {
-                    this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
-                    this.modalHideSIMRecieve();
-                    this.getList();
-                  } else if (data.IsReport == "Warning") {
-                    this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-                  } else {
-                    this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
-                  }
-                },
-                err => {
-                  this.blockUI.stop();
-                  this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
-                }
-              );
+    this.confirmService
+      .confirm(
+        "Are you sure?",
+        "You are receiving this sim from mother company."
+      )
+      .subscribe((result) => {
+        if (result) {
+          this.blockUI.start("Saving...");
+          const request = this._service.patch(
+            "stock/receive-sim-from-mother-company/" +
+              this.receiveSIMForm.value.id,
+            obj
+          );
+          request.subscribe(
+            (data) => {
+              this.blockUI.stop();
+              if (data.IsReport == "Success") {
+                this.toastr.success(data.Msg, "Success!", { timeOut: 2000 });
+                this.modalHideSIMRecieve();
+                this.getList();
+              } else if (data.IsReport == "Warning") {
+                this.toastr.warning(data.Msg, "Warning!", {
+                  closeButton: true,
+                  disableTimeOut: true,
+                });
+              } else {
+                this.toastr.error(data.Msg, "Error!", {
+                  closeButton: true,
+                  disableTimeOut: true,
+                });
+              }
+            },
+            (err) => {
+              this.blockUI.stop();
+              this.toastr.error(err.Msg || err, "Error!", {
+                closeButton: true,
+                disableTimeOut: true,
+              });
             }
-        },
-    );
+          );
+        }
+      });
   }
 
   getSIMLifeCycle() {
@@ -377,7 +409,10 @@ export class AllSIMListComponent implements OnInit {
     this._service.get("stock/get-sim-iccid-history/" + item.id).subscribe(
       (res) => {
         this.iccidHistory = res;
-        this.modalRefICCID = this.modalService.show(template, this.modalConfigMd);
+        this.modalRefICCID = this.modalService.show(
+          template,
+          this.modalConfigMd
+        );
       },
       (err) => {}
     );

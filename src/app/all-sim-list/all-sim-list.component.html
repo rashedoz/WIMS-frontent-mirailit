@@ -107,6 +107,11 @@
                         Subscribed
                       </ng-template>
                     </tab>
+                    <tab (selectTab)="changeTab('Frozen',$event)">
+                      <ng-template tabHeading>
+                        Frozen
+                      </ng-template>
+                    </tab>
                     <tab (selectTab)="changeTab('Cancelled',$event)">
                       <ng-template tabHeading>
                         Cancelled
@@ -166,29 +171,34 @@
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="80" name="Status" prop="status" [draggable]="false"
+                    <ngx-datatable-column [width]="150" name="Status" [draggable]="false"
                       [sortable]="false">
-                      <ng-template let-value="value" ngx-datatable-cell-template>
-                        <span *ngIf="value == 1"> <strong class="label label-success">{{ StockStatus[value] }}</strong>
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span *ngIf="row.status == 1"> <strong class="label label-success">{{ StockStatus[row.status] }}</strong>
                         </span>
-                        <span *ngIf="value == 2"> <strong class="label label-info">{{ StockStatus[value] }}</strong>
+                        <span *ngIf="row.status == 2"> <strong class="label label-info">{{ StockStatus[row.status] }}</strong>
                         </span>
-                        <span *ngIf="value == 3"> <strong
-                            class="label label-secondary">{{ StockStatus[value] }}</strong> </span>
-                        <span *ngIf="value == 4"> <strong class="label label-danger">{{ StockStatus[value] }}</strong>
+                        <span *ngIf="row.status == 3"> <strong
+                            class="label label-secondary">{{ StockStatus[row.status] }}</strong> </span>
+                        <span *ngIf="row.status == 4"> <strong class="label label-danger">{{ StockStatus[row.status] }}</strong>
                         </span>
-                        <span *ngIf="value == 5"> <strong class="label label-danger">{{ StockStatus[value] }}</strong>
+                        <span *ngIf="row.status == 5"> <strong class="label label-danger">{{ StockStatus[row.status] }}</strong>
                         </span>
-                        <span *ngIf="value == 6"> <strong class="label label-primary">{{ StockStatus[value] }}</strong>
+                        <span *ngIf="row.status == 6"> <strong class="label label-primary">{{ StockStatus[row.status] }}</strong>
                         </span>
-                        <span *ngIf="value == 7"> <strong class="label label-warning">{{ StockStatus[value] }}</strong>
+                        <span *ngIf="row.status == 7"> <strong class="label label-warning">{{ StockStatus[row.status] }}</strong>
                         </span>
-                        <span *ngIf="value == 8"> <strong class="label label-danger">{{ StockStatus[value] }}</strong>
+                        <span *ngIf="row.status == 8"> <strong class="label label-danger">{{ StockStatus[row.status] }}</strong>
                         </span>
+
+                        <span *ngIf="row.is_frozen"> <strong class="label label-default">Frozen</strong>
+                        </span>
+
+
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column *ngIf="tabType == 'Cancelled'" [width]="120" name="Last Customer"
+                    <ngx-datatable-column *ngIf="tabType == 'Cancelled'" [width]="150" name="Last Customer"
                       prop="customer_full_name" [draggable]="false" [sortable]="false">
                       <ng-template let-row="row" ngx-datatable-cell-template>
                         <a [routerLink]="['/customer-details/'+row.current_owner]" routerLinkActive="router-link-active"
@@ -196,7 +206,7 @@
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column *ngIf="tabType == 'Subscribed'" [width]="120" name="Current Customer"
+                    <ngx-datatable-column *ngIf="tabType == 'Subscribed'" [width]="150" name="Current Customer"
                       prop="customer_full_name" [draggable]="false" [sortable]="false">
                       <ng-template let-row="row" ngx-datatable-cell-template>
                         <a [routerLink]="['/customer-details/'+row.current_owner]" routerLinkActive="router-link-active"
@@ -236,6 +246,14 @@
                       </ng-template>
                     </ngx-datatable-column>
 
+                    <ngx-datatable-column *ngIf="tabType == 'Frozen' || tabType == 'Subscribed'" [width]="150" name="Last Frozen At"
+                      prop="last_frozen_at" [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span *ngIf="!value"> -- </span>
+                        <span *ngIf="value"> {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}}</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
 
 
                     <ngx-datatable-column [width]="500" name="Action" prop="id" [draggable]="false" [sortable]="false">
@@ -252,6 +270,9 @@
                           (click)="onSubmitAction('return',row)">
                           Return
                         </button>
+                        <button *ngIf="tabType == 'Frozen'" (click)="onSubmitAction('unfreeze',row)"
+                        class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-unlocked"></i>Unfreeze</button>
+
                         <button *ngIf="tabType == 'Cancelled'" class="btn btn-danger btn-mini mr-1"
                           (click)="onSubmitAction('permanently_cancelled',row)">
                           Permanently Cancelled
