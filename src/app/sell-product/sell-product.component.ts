@@ -788,7 +788,7 @@ export class SellProductComponent implements OnInit {
   }
 
   getPackageList() {
-    this._service.get("package/get-package-list").subscribe(
+    this._service.get("package/get-package-list",{limit: 1000000,page: 1}).subscribe(
       (res) => {
         this.packageList = res.results;
       },
