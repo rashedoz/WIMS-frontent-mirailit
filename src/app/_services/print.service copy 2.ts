@@ -35,7 +35,7 @@ export class PrintService {
     this.blockUI.start('Generating invoice...');
     this._service.get("bill/get-customer-invoice-detail/" + id).subscribe(res => {
       console.log(res);
-      const doc = new jsPDF('l', 'mm', 'a4',true);
+      const doc = new jsPDF('p', 'mm', 'a4');
       //Dimension of A4 in mm: 210 × 297
       //Dimension of A4 in pts: 595 × 842
       doc.setProperties({
@@ -53,8 +53,8 @@ export class PrintService {
 
       let invoiceDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
 
-      let rightStartCol1 = 220;
-      let rightStartCol2 = 235;
+      let rightStartCol1 = 140;
+      let rightStartCol2 = 150;
 
       let InitialstartX = 40;
       let startX = 12;
@@ -65,22 +65,22 @@ export class PrintService {
       doc.setFontSize(this.fontSizes.SubTitleFontSize);
       doc.setFont("times", "bold");
       doc.text("Invoice No: " + res.bill_no, 10, 10, null, "left");
-
+      doc.line(10, 18, 200, 18);
 
       doc.setFontSize(this.fontSizes.SubTitleFontSize);
       doc.setFont("times", "bold");
-      doc.text("Printed On: " + invoiceDate, 285, 10, null, "right");
-      doc.line(10, 18, 285, 18);
+      doc.text("Printed On: " + invoiceDate, 200, 10, null, "right");
+      doc.line(10, 18, 200, 18);
 
 
       doc.setFontSize(this.fontSizes.HeadTitleFontSize);
       doc.setFont("times", "bold");
-      doc.text("INVOICE", InitialstartX + 110, (InitialstartY += this.lineSpacing.NormalSpacing + 2), null, "center");
-      doc.line(10, 26, 285, 26);
+      doc.text("INVOICE", InitialstartX + 65, (InitialstartY += this.lineSpacing.NormalSpacing + 2), null, "center");
+      doc.line(10, 26, 200, 26);
 
       doc.setFontSize(this.fontSizes.Head2TitleFontSize);
       doc.setFont("times", "normal");
-      doc.text("WiFi Bill For The Month of "+ moment(res.billing_month).format('MMMM, YYYY'), InitialstartX + 108, (startY += this.lineSpacing.NormalSpacing + 12), null, "center");
+      doc.text("WiFi Bill For The Month of "+ moment(res.billing_month).format('MMMM, YYYY'), InitialstartX + 65, (startY += this.lineSpacing.NormalSpacing + 12), null, "center");
 
 
       /** Left part */
@@ -139,16 +139,25 @@ export class PrintService {
       doc.text("Email: " + addressObj.email, rightStartCol1, (tempY += 5), null, 'left');
 
 
-      let roundCount = 0;
+      // Bill Type
       let columns = [];
+
+
+      columns = [
+        { title: 'No', dataKey: 'no' },
+        { title: 'ICCID No', dataKey: 'ICCID_no' },
+        { title: 'Phone Number', dataKey: 'phone_number' },
+        { title: 'IMEI', dataKey: 'imei' },
+        { title: 'Package Name', dataKey: 'package_name' },
+        { title: 'Notes', dataKey: 'notes' },
+        { title: 'Ends At', dataKey: 'ends_at' },
+        { title: 'Amount', dataKey: 'amount' }
+      ];
+
+
       let dataArray = [];
 
       res.bill_items.forEach((element,i) => {
-
-       const amount_details1 = element.has_device_dependency ? 'Device Deposit: '+element.device_deposit+', ' : '';
-       const amount_details2 = 'Initial Fee: '+element.pckg_initial_fee+', Price: '+element.pckg_price+', Discount: '+element.pckg_initial_discount;
-       const amount_details = amount_details1.concat(amount_details2);
-
         dataArray.push({
           no: i +1,
           ICCID_no: element.ICCID_no,
@@ -157,202 +166,60 @@ export class PrintService {
           package_name: element.pckg_name,
           notes: element.pckg_advance_pmnt_desc ? element.pckg_advance_pmnt_desc : '--',
           ends_at: element.pckg_expiry != null ? moment(element.pckg_expiry).format('MMMM Do YYYY') : 'recurring',
-          amount_details: amount_details,
           amount: element.current_month_price
+
         });
-        if(element.round == 1)roundCount++;
+
       });
 
-      if(roundCount > 0){
-
-        columns = [
-          { title: 'No', dataKey: 'no' },
-          { title: 'ICCID No', dataKey: 'ICCID_no' },
-          { title: 'Phone Number', dataKey: 'phone_number' },
-          { title: 'IMEI', dataKey: 'imei' },
-          { title: 'Package Name', dataKey: 'package_name' },
-          { title: 'Notes', dataKey: 'notes' },
-          { title: 'Ends At', dataKey: 'ends_at' },
-          { title: 'Amount Details', dataKey: 'amount_details' },
-          { title: 'Amount', dataKey: 'amount',halign: 'right' }
-        ];
-
-
-        /** Table */
-        // @ts-ignore
-        doc.autoTable(columns, dataArray, {
-          theme: 'plain',
-          startY: startY + 10,
-          margin:12,
-          columnStyles: {
-            no: { cellWidth: 8 },
-            ICCID_no: { cellWidth: 27 },
-            phone_number: { cellWidth: 30 },
-            imei: { cellWidth: 27 },
-            package_name: { cellWidth: 53 },
-            notes: { cellWidth: 38 },
-            ends_at: { cellWidth: 17 },
-            amount_details: { cellWidth: 53 },
-            amount: {halign :'right', cellWidth: 18 }
-          },
-          styles: {
-            font: 'times',
-            lineWidth: 0.4,
-            overflow: 'linebreak',
-            fontSize: 8
-          },
-          cellPadding: 2,
-          didParseCell: (hookData) => {
-            if (hookData.section === 'head') {
-                if (hookData.column.dataKey === 'amount') {
-                    hookData.cell.styles.halign = 'right';
-                }
-            }
-        }
-        });
-
-      }else{
-
-        columns = [
-          { title: 'No', dataKey: 'no' },
-          { title: 'ICCID No', dataKey: 'ICCID_no' },
-          { title: 'Phone Number', dataKey: 'phone_number' },
-          { title: 'IMEI', dataKey: 'imei' },
-          { title: 'Package Name', dataKey: 'package_name' },
-          { title: 'Notes', dataKey: 'notes' },
-          { title: 'Ends At', dataKey: 'ends_at' },
-          { title: 'Amount', dataKey: 'amount',halign: 'right' }
-        ];
+      /** Table */
+      // @ts-ignore
+      doc.autoTable(columns, dataArray, {
+        theme: 'plain',
+        startY: startY + 10,
+        margin:12,
+        columnStyles: {
+          no: { cellWidth: 8 },
+          ICCID_no: { cellWidth: 27 },
+          phone_number: { cellWidth: 20 },
+          imei: { cellWidth: 27 },
+          package_name: { cellWidth: 40 },
+          notes: { cellWidth: 30 },
+          ends_at: { cellWidth: 17 },
+          amount: { cellWidth: 17 }
+        },
+        styles: {
+          font: 'times',
+          lineWidth: 0.4,
+          overflow: 'linebreak',
+          fontSize: 8
+        },
+        cellPadding: 2
+      });
 
 
-        /** Table */
-        // @ts-ignore
-        doc.autoTable(columns, dataArray, {
-          theme: 'plain',
-          startY: startY + 10,
-          margin:12,
-          columnStyles: {
-            no: { cellWidth: 8 },
-            ICCID_no: { cellWidth: 27 },
-            phone_number: { cellWidth: 30 },
-            imei: { cellWidth: 27 },
-            package_name: { cellWidth: 76 },
-            notes: { cellWidth: 55 },
-            ends_at: { cellWidth: 20 },
-            amount: {halign :'right', cellWidth: 28 }
-          },
-          styles: {
-            font: 'times',
-            lineWidth: 0.4,
-            overflow: 'linebreak',
-            fontSize: 8
-          },
-          cellPadding: 2,
-          didParseCell: (hookData) => {
-            if (hookData.section === 'head') {
-                if (hookData.column.dataKey === 'amount') {
-                    hookData.cell.styles.halign = 'right';
-                }
-            }
-        }
-        });
-
-      }
-
-
-
-
-
-        // @ts-ignore
-        startY = doc.previousAutoTable.finalY;
-
-
-          // @ts-ignore
-         if (doc.previousAutoTable.finalY < 115) {
 
 
          // @ts-ignore
-          doc.setLineDash([1], 1);
-          doc.line(startX - 2, startY +=1, 285, startY)
-
+         if (doc.previousAutoTable.finalY < 200) {
           // @ts-ignore
-          doc.setLineDash([1], 1);
-          doc.line(startX - 2, startY += 1, 285, startY)
-
-
-          doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text('Total', rightStartCol2 + 20, startY += 12, null, 'right');
-          doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text(res.total_amount, rightStartCol2 + 46, startY, null, 'right');
-
-          doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text('Discount', rightStartCol2 + 20, startY += 5, null, 'right');
-          doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text("-" + res.overall_discount, rightStartCol2 + 46, startY, null, 'right');
-
-          // @ts-ignore
-          doc.setLineDash([1], 1);
-          doc.line(rightStartCol2 + 52, startY += 2, 215, startY)
-
-
-          //Grand Total
-          doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text('Grand Total', rightStartCol2 + 20, startY += 5, null, 'right');
-          doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text(res.grand_total, rightStartCol2 + 46, startY, null, 'right');
-
-
-
-          //Paid
-          doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text('Paid', rightStartCol2 + 20, startY += 5, null, 'right');
-          doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text(res.already_paid, rightStartCol2 + 46, startY, null, 'right');
-
-
-
-          if(Number(res.due) > 0){
-          // @ts-ignore
-          doc.setLineDash([1], 1);
-          doc.line(rightStartCol2 + 52, startY += 5, 215, startY)
-
-          //Due
-          doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text('Due', rightStartCol2 + 20, startY += 5, null, 'right');
-          doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text(res.due, rightStartCol2 + 46, startY, null, 'right');
-
-          }
-
-          // @ts-ignore
-          startY = doc.previousAutoTable.finalY + 5;
-
+          startY = doc.previousAutoTable.finalY + 2;
           } else {
-
-          // @ts-ignore
-          //  startY = 15;
-
-
+            doc.addPage();
             // @ts-ignore
-            if (doc.previousAutoTable.finalY < 160) {
-
-                        // @ts-ignore
-          doc.setLineDash([1], 1);
-          doc.line(startX - 2, startY, 285, startY)
+            startY = 15;
+          }
 
           // @ts-ignore
           doc.setLineDash([1], 1);
-          doc.line(startX - 2, startY += 1, 285, startY)
+          doc.line(startX - 2, startY, 200, startY)
+
+          // @ts-ignore
+          doc.setLineDash([1], 1);
+          doc.line(startX - 2, startY += 1, 200, startY)
+
+
+          let calStartX = startX + 110;
 
 
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
@@ -371,7 +238,7 @@ export class PrintService {
 
           // @ts-ignore
           doc.setLineDash([1], 1);
-          doc.line(rightStartCol2 + 52, startY += 2, 215, startY)
+          doc.line(rightStartCol2 - 20, startY += 2, 200, startY)
 
 
           //Grand Total
@@ -397,7 +264,7 @@ export class PrintService {
           if(Number(res.due) > 0){
           // @ts-ignore
           doc.setLineDash([1], 1);
-          doc.line(rightStartCol2 + 52, startY += 5, 215, startY)
+          doc.line(rightStartCol2 - 20, startY += 5, 200, startY)
 
           //Due
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
@@ -406,88 +273,6 @@ export class PrintService {
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
           doc.text(res.due, rightStartCol2 + 46, startY, null, 'right');
-
-          }
-
-              // @ts-ignore
-              startY = 15;
-              doc.addPage();
-
-
-            }else{
-
-              // @ts-ignore
-           doc.addPage();
-
-          // @ts-ignore
-          startY = 15;
-
-            // @ts-ignore
-          doc.setLineDash([1], 1);
-          doc.line(startX - 2, startY += 1, 285, startY)
-
-          // @ts-ignore
-          doc.setLineDash([1], 1);
-          doc.line(startX - 2, startY += 1, 285, startY)
-
-
-          doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text('Total', rightStartCol2 + 20, startY += 12, null, 'right');
-          doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text(res.total_amount, rightStartCol2 + 46, startY, null, 'right');
-
-          doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text('Discount', rightStartCol2 + 20, startY += 5, null, 'right');
-          doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text("-" + res.overall_discount, rightStartCol2 + 46, startY, null, 'right');
-
-          // @ts-ignore
-          doc.setLineDash([1], 1);
-          doc.line(rightStartCol2 + 52, startY += 2, 215, startY)
-
-
-          //Grand Total
-          doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text('Grand Total', rightStartCol2 + 20, startY += 5, null, 'right');
-          doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text(res.grand_total, rightStartCol2 + 46, startY, null, 'right');
-
-
-
-          //Paid
-          doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text('Paid', rightStartCol2 + 20, startY += 5, null, 'right');
-          doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text(res.already_paid, rightStartCol2 + 46, startY, null, 'right');
-
-
-
-          if(Number(res.due) > 0){
-          // @ts-ignore
-          doc.setLineDash([1], 1);
-          doc.line(rightStartCol2 + 52, startY += 5, 215, startY)
-
-          //Due
-          doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text('Due', rightStartCol2 + 20, startY += 5, null, 'right');
-          doc.setFontSize(this.fontSizes.SubTitleFontSize);
-          doc.setFont("times", "bold");
-          doc.text(res.due, rightStartCol2 + 46, startY, null, 'right');
-
-          }
-
-
-            }
-
 
           }
 
@@ -504,7 +289,7 @@ export class PrintService {
           /** Others */
           doc.setFontSize(this.fontSizes.SubTitleFontSize);
           doc.setFont("times", "bold");
-          doc.text("STATUS: " + BillStatus[res.payment_status], startX, (startY += this.lineSpacing.NormalSpacing), null, 'left');
+          doc.text("STATUS: " + BillStatus[res.payment_status], startX, (startY += this.lineSpacing.NormalSpacing + 5), null, 'left');
 
           // doc.setFontSize(this.fontSizes.NormalFontSize);
           // doc.setFont("times", "normal");
