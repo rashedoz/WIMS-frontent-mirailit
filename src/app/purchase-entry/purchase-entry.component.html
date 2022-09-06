@@ -104,9 +104,11 @@
         <div class="modal-body ">
             <app-card>
                 <form [formGroup]="entryFormSIM" class="col-sm-12">
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Supplier </label>
-                        <div class="col-sm-5">
+                  <div class="row">
+                    <div class="col-md-7">
+                      <div class="form-group row">
+                        <label class="col-sm-5 col-form-label">Supplier </label>
+                        <div class="col-sm-7">
 
                                 <ng-select formControlName="supplier" [clearable]="false" [ngClass]="{ 'is-invalid': submitted && s.supplier.errors }"
                                     [clearOnBackspace]="false" [items]="supplierList" bindLabel="name" bindValue="id"
@@ -119,6 +121,24 @@
                             </div>
                         </div>
                     </div>
+                    </div>
+                    <div class="col-md-5">
+                      <div class="form-group text-right">
+                        <div class="checkbox-fade fade-in-primary">
+                          <label>
+                            <input type="checkbox" formControlName="is_phone_sim">
+                            <span class="cr">
+                              <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                            </span> Is Phone SIM ?
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+
                     <hr>
                     <div class="row">
                         <div class="col-md-12">
@@ -274,9 +294,11 @@
         <div class="modal-body ">
             <app-card>
                 <form [formGroup]="entryFormSIMDevice" class="col-sm-12">
+                <div class="row">
+                  <div class="col-md-7">
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Supplier </label>
-                        <div class="col-sm-5">
+                        <label class="col-sm-5 col-form-label">Supplier </label>
+                        <div class="col-sm-7">
 
                                 <ng-select formControlName="supplier" [clearable]="false" [ngClass]="{ 'is-invalid': submitted && sd.supplier.errors }"
                                     [clearOnBackspace]="false" [items]="supplierList" bindLabel="name" bindValue="id"
@@ -289,6 +311,22 @@
                             </div>
                         </div>
                     </div>
+                    </div>
+
+                    <div class="col-md-5">
+                      <div class="form-group text-right">
+                        <div class="checkbox-fade fade-in-primary">
+                          <label>
+                            <input type="checkbox" formControlName="is_phone_sim">
+                            <span class="cr">
+                              <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                            </span> Is Phone SIM ?
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+
                     <hr>
                     <div class="row">
                         <div class="col-md-12">

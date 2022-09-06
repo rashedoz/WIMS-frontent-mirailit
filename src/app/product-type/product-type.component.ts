@@ -124,7 +124,7 @@ export class ProductTypeComponent implements OnInit {
       product_type: this.entryForm.value.Name.trim()
     };
 
-    const request = this._service.post('product/save-product-type', obj);
+    const request = this._service.post('package/save-product-type', obj);
 
     request.subscribe(
       data => {

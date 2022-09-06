@@ -60,13 +60,15 @@ export class PurchaseEntryComponent implements OnInit {
 
   ngOnInit() {
     this.entryFormSIM = this.formBuilder.group({
-      supplier: [null, [Validators.required]]
+      supplier: [null, [Validators.required]],
+      is_phone_sim:[false]
     });
     this.entryFormDevice = this.formBuilder.group({
       supplier: [null, [Validators.required]]
     });
     this.entryFormSIMDevice = this.formBuilder.group({
-      supplier: [null, [Validators.required]]
+      supplier: [null, [Validators.required]],
+      is_phone_sim:[false]
     });
 
     this.getList();
@@ -139,9 +141,9 @@ export class PurchaseEntryComponent implements OnInit {
       return;
     }
     let purchase_details = [];
-    this.blockUI.start('Saving...');
 
-    this.purchaseItemList.forEach(element => {
+
+    this.purchaseItemList.filter(x=> Number(x.qty) != 0 && Number(x.amount) != 0).forEach(element => {
       purchase_details.push({
         product_type:element.product_type_id,
         qty: Number(element.qty),
@@ -149,10 +151,17 @@ export class PurchaseEntryComponent implements OnInit {
       });
     });
 
+    if(purchase_details.length < 1 ){
+        this.toastr.warning("Qty and Amount can't be empty", 'Warning!', { closeButton: true, disableTimeOut: true });
+        return;
+    }
+
+    this.blockUI.start('Saving...');
     const obj = {
       supplier:this.entryFormSIM.value.supplier,
       total_amount:this.totalAmount,
-      purchase_details:purchase_details
+      purchase_details:purchase_details,
+      is_phone_sim:this.entryFormSIM.value.is_phone_sim ? this.entryFormSIM.value.is_phone_sim : false
     };
 
     this._service.post('purchase/entry-sim-purchase', obj).subscribe(
@@ -183,15 +192,21 @@ export class PurchaseEntryComponent implements OnInit {
       return;
     }
     let purchase_details = [];
-    this.blockUI.start('Saving...');
 
-    this.purchaseItemList.forEach(element => {
+    this.purchaseItemList.filter(x=> Number(x.qty) != 0 && Number(x.amount) != 0).forEach(element => {
       purchase_details.push({
         product_type:element.product_type_id,
         qty: Number(element.qty),
         total_amount: Number(element.amount)
       });
     });
+
+    if(purchase_details.length < 1 ){
+        this.toastr.warning("Qty and Amount can't be empty", 'Warning!', { closeButton: true, disableTimeOut: true });
+        return;
+    }
+
+    this.blockUI.start('Saving...');
 
     const obj = {
       supplier:this.entryFormDevice.value.supplier,
@@ -258,7 +273,8 @@ export class PurchaseEntryComponent implements OnInit {
     const obj = {
       supplier:this.entryFormSIMDevice.value.supplier,
       total_amount: Number(this.totalAmount),
-      purchase_details:purchase_details
+      purchase_details:purchase_details,
+      is_phone_sim: this.entryFormSIMDevice.value.is_phone_sim ? this.entryFormSIMDevice.value.is_phone_sim : false
     };
 
     this.blockUI.start('Saving...');

@@ -35,12 +35,14 @@ export class PackageListComponent implements OnInit {
   offerList = [];
   planList = [];
   durationList = [];
+  tempDurationList = [];
   loadingIndicator = false;
   ColumnMode = ColumnMode;
   packageObj = null;
   scrollBarHorizontal = (window.innerWidth < 1200);
 
   isDeviceEnable = true;
+  isPhoneSimEnable = false;
 
   constructor(
     private modalService: BsModalService,
@@ -62,6 +64,7 @@ export class PackageListComponent implements OnInit {
       pckg_name: [null, [Validators.required, Validators.maxLength(550)]],
       pckg_offer: [null, [Validators.required]],
       pckg_plan: [null, [Validators.required]],
+      is_phone_sim: [false],
       has_device_dependency: [true],
       pckg_duration: [null, [Validators.required]],
       device_deposit: [null],
@@ -69,7 +72,7 @@ export class PackageListComponent implements OnInit {
       pckg_shipping_charge: [null],
       pckg_price: [null, [Validators.required]],
       pckg_initial_discount: [null, [Validators.required]],
-      pckg_first_bill_amount: [null, [Validators.required]],
+      pckg_first_bill_amount: [{value: null, disabled: true}, [Validators.required]],
       pckg_recurring_bill_amount: [null, [Validators.required]],
       pckg_cancellation_fee: [null],
       pckg_refundable_deposit: [null],
@@ -83,6 +86,56 @@ export class PackageListComponent implements OnInit {
 
   get f() {
     return this.entryForm.controls;
+  }
+
+  onOfferTypeChange(e){
+
+    this.entryForm.controls["pckg_duration"].setValue(null);
+    this.tempDurationList = this.durationList.filter((x)=> x.pckg_duration_in_month <= e.pckg_offer_month_covers);
+  }
+
+  onPhoneSIMChange(e){
+    this.isPhoneSimEnable = e;
+    if(e){
+      this.isDeviceEnable = false;
+
+      this.entryForm.controls["has_device_dependency"].setValue(false);
+      this.entryForm.controls["device_deposit"].setValidators(null);
+      this.entryForm.controls["device_deposit"].updateValueAndValidity();
+
+      this.entryForm.controls["pckg_refundable_deposit"].setValidators(null);
+      this.entryForm.controls["pckg_refundable_deposit"].updateValueAndValidity();
+
+
+    }else{
+      this.isDeviceEnable = true;
+      this.entryForm.controls["has_device_dependency"].setValue(true);
+
+      this.entryForm.controls["device_deposit"].setValidators([Validators.required]);
+      this.entryForm.controls["device_deposit"].updateValueAndValidity();
+
+      this.entryForm.controls["pckg_refundable_deposit"].setValidators([Validators.required]);
+      this.entryForm.controls["pckg_refundable_deposit"].updateValueAndValidity();
+
+
+
+    }
+
+
+    // if(!this.isDeviceEnable){
+    //  this.entryForm.controls["device_deposit"].setValidators([Validators.required]);
+    //  this.entryForm.controls["device_deposit"].updateValueAndValidity();
+
+    //  this.entryForm.controls["pckg_refundable_deposit"].setValidators([Validators.required]);
+    //  this.entryForm.controls["pckg_refundable_deposit"].updateValueAndValidity();
+    // }else{
+    //   this.entryForm.controls["device_deposit"].setValidators(null);
+    //   this.entryForm.controls["device_deposit"].updateValueAndValidity();
+
+    //   this.entryForm.controls["pckg_refundable_deposit"].setValidators(null);
+    //   this.entryForm.controls["pckg_refundable_deposit"].updateValueAndValidity();
+    // }
+
   }
 
   onDeviceChange(e){
@@ -133,11 +186,32 @@ export class PackageListComponent implements OnInit {
     );
   }
 
-
   setPage(pageInfo) {
     this.page.pageNumber = pageInfo.offset;
     this.getList();
   }
+
+  cal(){
+    let amount = 0;
+    const device_deposit =  Number(this.entryForm.value.device_deposit);
+    const pckg_initial_fee =  Number(this.entryForm.value.pckg_initial_fee);
+    const pckg_shipping_charge =  Number(this.entryForm.value.pckg_shipping_charge);
+    const pckg_price =  Number(this.entryForm.value.pckg_price);
+    let pckg_initial_discount =  Number(this.entryForm.value.pckg_initial_discount);
+    const sub = device_deposit + pckg_initial_fee + pckg_shipping_charge + pckg_price;
+
+    if(sub < pckg_initial_discount){
+      this.entryForm.controls['pckg_initial_discount'].setValue(0);
+      amount = sub;
+
+    }else{
+      amount = sub - pckg_initial_discount;
+    }
+
+    this.entryForm.controls['pckg_first_bill_amount'].setValue(amount);
+  }
+
+
 
   getList() {
     this.loadingIndicator = true;
@@ -195,7 +269,7 @@ export class PackageListComponent implements OnInit {
 
 
 
-   this.blockUI.start('Saving...');
+  // this.blockUI.start('Saving...');
 
     let packageArray = [];
     let packageObj = {
@@ -208,10 +282,12 @@ export class PackageListComponent implements OnInit {
       pckg_shipping_charge: this.entryForm.value.pckg_shipping_charge ? Number(this.entryForm.value.pckg_shipping_charge) : 0,
       pckg_price: this.entryForm.value.pckg_price ? Number(this.entryForm.value.pckg_price) : 0,
       pckg_initial_discount: this.entryForm.value.pckg_initial_discount ? Number(this.entryForm.value.pckg_initial_discount) : 0,
+      pckg_first_bill_amount: this.entryForm.getRawValue().pckg_initial_discount ? Number(this.entryForm.getRawValue().pckg_first_bill_amount) : 0,
       pckg_recurring_bill_amount: this.entryForm.value.pckg_recurring_bill_amount ? Number(this.entryForm.value.pckg_recurring_bill_amount) : 0,
       pckg_cancellation_fee: this.entryForm.value.pckg_cancellation_fee ? Number(this.entryForm.value.pckg_cancellation_fee) : 0,
       pckg_refundable_deposit: this.entryForm.value.pckg_refundable_deposit ? Number(this.entryForm.value.pckg_refundable_deposit) : 0,
-      pckg_duration: this.entryForm.value.pckg_duration
+      pckg_duration: this.entryForm.value.pckg_duration,
+      has_phone_sim_dependency:this.entryForm.value.is_phone_sim ? this.entryForm.value.is_phone_sim : false
     };
 
     packageArray.push(packageObj);
@@ -220,6 +296,8 @@ export class PackageListComponent implements OnInit {
     };
 
 
+    console.log(obj);
+    return;
     const request = this._service.post('package/save-package', obj);
 
     request.subscribe(

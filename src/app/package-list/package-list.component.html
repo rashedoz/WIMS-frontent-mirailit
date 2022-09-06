@@ -185,7 +185,7 @@
             <div class="form-group row">
               <label class="col-sm-3 col-form-label"> Offer Type </label>
               <div class="col-sm-9">
-                <ng-select [clearable]="false" [clearOnBackspace]="false"
+                <ng-select [clearable]="false" [clearOnBackspace]="false" (change)="onOfferTypeChange($event)"
                   [ngClass]="{ 'is-invalid': submitted && f.pckg_offer.errors}" formControlName="pckg_offer"
                   [items]="offerList" bindLabel="pckg_offer_name" bindValue="id" placeholder="Select a offer type">
                 </ng-select>
@@ -218,7 +218,7 @@
               <div class="col-sm-9">
                 <ng-select [clearable]="false"  [clearOnBackspace]="false"
                   [ngClass]="{ 'is-invalid': submitted && f.pckg_plan.errors}" formControlName="pckg_duration"
-                  [items]="durationList" bindLabel="pckg_duration_name" bindValue="id" placeholder="Select a package duration"></ng-select>
+                  [items]="tempDurationList" bindLabel="pckg_duration_name" bindValue="id" placeholder="Select a package duration"></ng-select>
 
                   <div *ngIf="submitted && f.pckg_duration.errors" class="error-text">
                     <small *ngIf="f.pckg_duration.errors.required"
@@ -235,7 +235,20 @@
             <div class="col-md-6">
 
               <div class="form-group row">
-                <label class="col-sm-7 col-form-label"> Comes with Device ? </label>
+                <label class="col-sm-7 col-form-label"> Use Phone Sim Only </label>
+                <div class="col-sm-5 mt-2">
+                  <div class="checkbox-fade fade-in-default" >
+                    <label>
+                        <input type="checkbox" (change)="onPhoneSIMChange($event.target.checked)" formControlName="is_phone_sim">
+                        <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                    </label>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group row" *ngIf="!isPhoneSimEnable">
+                <label class="col-sm-7 col-form-label"> Comes with Device  </label>
                 <div class="col-sm-5 mt-2">
                   <div class="checkbox-fade fade-in-default" >
                     <label>
@@ -311,7 +324,7 @@
               </div>
 
               <div class="form-group row">
-                <label class="col-sm-7 col-form-label"> 1st Bill Amount </label>
+                <label class="col-sm-7 col-form-label"> 1st Bill Amount  {{cal()}}</label>
                 <div class="col-sm-5">
                   <input type="text" numeric numericType="number" formControlName="pckg_first_bill_amount" type="text" class="form-control" />
 
