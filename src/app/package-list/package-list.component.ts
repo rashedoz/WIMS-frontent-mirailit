@@ -269,7 +269,7 @@ export class PackageListComponent implements OnInit {
 
 
 
-  // this.blockUI.start('Saving...');
+  this.blockUI.start('Saving...');
 
     let packageArray = [];
     let packageObj = {
@@ -296,9 +296,7 @@ export class PackageListComponent implements OnInit {
     };
 
 
-    console.log(obj);
-    return;
-    const request = this._service.post('package/save-package', obj);
+      const request = this._service.post('package/save-package', obj);
 
     request.subscribe(
       data => {
