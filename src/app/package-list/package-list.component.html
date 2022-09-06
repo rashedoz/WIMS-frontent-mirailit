@@ -97,6 +97,13 @@
                 </td>
               </tr>
               <tr>
+                <th scope="row">Use Phone Sim Only</th>
+                <td>
+                  <span *ngIf="packageObj.has_phone_sim_dependency">Yes</span>
+                  <span *ngIf="!packageObj.has_phone_sim_dependency">No</span>
+                </td>
+              </tr>
+              <tr>
                 <th scope="row">Comes with Device</th>
                 <td>
                   <span *ngIf="packageObj.has_device_dependency">Yes</span>
