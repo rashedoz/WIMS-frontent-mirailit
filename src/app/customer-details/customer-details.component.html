@@ -42,7 +42,8 @@
                   <p class="fs-14 mb-0" *ngIf="customerObj.mobile">Mobile : <b>{{customerObj.mobile}} </b></p>
                   <p class="fs-14 mb-0" *ngIf="customerObj.telephone">Telephone : <b>{{customerObj.telephone}} </b></p>
                   <p class="fs-14 mb-0" *ngIf="customerObj.gender">Gender :
-                    <b>{{customerObj.gender == 1 ? "Male" : "Female"}} </b></p>
+                    <b>{{customerObj.gender == 1 ? "Not Set " : customerObj.gender == 2 ? "Male" : "Female" }} </b></p>
+
                 </div>
                 <div class="col-md-4">
                   <p class="fs-14 mb-0" *ngIf="customerObj.address_one">Address : <b>{{customerObj.address_one}}
@@ -200,6 +201,9 @@
                               [sortable]="false">
                               <ng-template let-value="value" ngx-datatable-cell-template>
                                 <!-- <span> {{ SIMAndDeviceStatus[value] }} </span> -->
+                                <span *ngIf="value == 0"> <strong
+                                    class="label label-default">{{ SIMAndDeviceStatus[value] }}</strong>
+                                </span>
                                 <span *ngIf="value == 1"> <strong
                                     class="label label-success">{{ SIMAndDeviceStatus[value] }}</strong>
                                 </span>
@@ -223,6 +227,9 @@
                                 </span>
                                 <span *ngIf="value == 8"> <strong
                                     class="label label-danger">{{ SIMAndDeviceStatus[value] }}</strong>
+                                </span>
+                                <span *ngIf="value == 9"> <strong
+                                    class="label label-warning">{{ SIMAndDeviceStatus[value] }}</strong>
                                 </span>
 
                               </ng-template>

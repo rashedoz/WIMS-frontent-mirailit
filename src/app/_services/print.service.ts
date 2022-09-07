@@ -149,7 +149,7 @@ export class PrintService {
        const amount_details2 = 'Initial Fee: '+element.pckg_initial_fee+', Price: '+element.pckg_price+', Discount: '+element.pckg_initial_discount;
        const amount_details = amount_details1.concat(amount_details2);
 
-       let note = element.pckg_advance_pmnt_desc ? '\n Note: '+element.pckg_advance_pmnt_desc : '';
+       let note = element.pckg_advance_pmnt_desc ? '\n'+element.pckg_advance_pmnt_desc : '';
 
         dataArray.push({
           no: i +1,
@@ -157,7 +157,7 @@ export class PrintService {
           phone_number: element.phone_number,
           imei: element.IMEI ? element.IMEI : 'N/A',
           package_name: element.pckg_name,
-          ends_at: element.pckg_expiry != null ? moment(element.pckg_expiry).format('MMMM Do YYYY') : 'recurring '+note,
+          note: element.pckg_expiry != null ? moment(element.pckg_expiry).format('MMMM Do YYYY') : 'Recurring'+ note,
           amount_details: amount_details,
           amount: element.current_month_price
         });
@@ -172,7 +172,7 @@ export class PrintService {
           { title: 'Phone Number', dataKey: 'phone_number' },
           { title: 'IMEI', dataKey: 'imei' },
           { title: 'Package Name', dataKey: 'package_name' },
-          { title: 'Ends At', dataKey: 'ends_at' },
+          { title: 'Note', dataKey: 'note' },
           { title: 'Details', dataKey: 'amount_details' },
           { title: 'Amount', dataKey: 'amount',halign: 'right' }
         ];
@@ -190,7 +190,7 @@ export class PrintService {
             phone_number: { cellWidth: 30 },
             imei: { cellWidth: 30 },
             package_name: { cellWidth: 63 },
-            ends_at: { cellWidth: 36 },
+            note: { cellWidth: 36 },
             amount_details: { cellWidth: 60 },
             amount: {halign :'right', cellWidth: 18 }
           },
@@ -218,7 +218,7 @@ export class PrintService {
           { title: 'Phone Number', dataKey: 'phone_number' },
           { title: 'IMEI', dataKey: 'imei' },
           { title: 'Package Name', dataKey: 'package_name' },
-          { title: 'Ends At', dataKey: 'ends_at' },
+          { title: 'Note', dataKey: 'note' },
           { title: 'Amount', dataKey: 'amount',halign: 'right' }
         ];
 
@@ -235,7 +235,7 @@ export class PrintService {
             phone_number: { cellWidth: 30 },
             imei: { cellWidth: 30 },
             package_name: { cellWidth: 96 },
-            ends_at: { cellWidth: 50 },
+            note: { cellWidth: 50 },
             amount: {halign :'right', cellWidth: 28 }
           },
           styles: {
@@ -255,7 +255,6 @@ export class PrintService {
         });
 
       }
-
 
 
 

@@ -84,7 +84,7 @@ export class MemberListComponent implements OnInit {
       address_one: [null],
       address_two: [null],
       dob: [null],
-      gender: [1],
+      gender: [2],
       is_superuser: [false],
       is_staff: [true],
       is_active: [true],
@@ -394,7 +394,7 @@ modalHide() {
 
 openModal(template: TemplateRef<any>) {
 
-  this.RegistrerForm.controls['gender'].setValue(1);
+  this.RegistrerForm.controls['gender'].setValue(2);
 
   if(this.currentUser.is_superuser){
     this.RegistrerForm.controls['is_superuser'].enable();

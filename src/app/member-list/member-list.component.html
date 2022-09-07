@@ -277,13 +277,13 @@
                   <div class="form-radio pt-1">
                     <div class="radio radio-inverse radio-inline">
                       <label class="pt-1">
-                        <input formControlName="gender" type="radio" name="gender" [value]=1>
+                        <input formControlName="gender" type="radio" name="gender" [value]=2>
                         <i class="helper"></i>Male
                       </label>
                     </div>
                     <div class="radio radio-inverse radio-inline">
                       <label class="pt-1">
-                        <input formControlName="gender" type="radio" name="gender" [value]=2>
+                        <input formControlName="gender" type="radio" name="gender" [value]=3>
                         <i class="helper"></i>Female
                       </label>
                     </div>
@@ -519,8 +519,9 @@
             <div class="form-group row">
               <label class="col-sm-4 col-form-label font-weight-bold">Gender</label>
               <div class="col-sm-8">
-                <label class="col-form-label" *ngIf="details.gender == 1">: Male </label>
-                <label class="col-form-label" *ngIf="details.gender == 2">: Female </label>
+                <label class="col-form-label" *ngIf="details.gender == 1">: Not Set </label>
+                <label class="col-form-label" *ngIf="details.gender == 2">: Male </label>
+                <label class="col-form-label" *ngIf="details.gender == 3">: Female </label>
                 <label class="col-form-label" *ngIf="!details.gender">: </label>
               </div>
             </div>

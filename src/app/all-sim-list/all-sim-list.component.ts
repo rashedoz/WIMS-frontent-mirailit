@@ -53,6 +53,7 @@ export class AllSIMListComponent implements OnInit {
   status = 1;
   stock: any = null;
   isFrozen = false;
+  isPhoneSIM = false;
 
   constructor(
     public formBuilder: FormBuilder,
@@ -84,10 +85,16 @@ export class AllSIMListComponent implements OnInit {
     this._service.get("stock/get-current-sim-stock-history").subscribe(
       (res) => {
         this.stock = res;
-        console.log(this.stock);
       },
       (err) => {}
     );
+  }
+
+  onPhoneSIMChange(e){
+    this.searchParam = "";
+    this.page.pageNumber = 0;
+    this.page.size = 10;
+    this.getList();
   }
 
   // 'Available', 'Subscribed', 'Cancelled', 'Permanently Cancelled'
@@ -120,6 +127,11 @@ export class AllSIMListComponent implements OnInit {
         break;
       case "Cancelled":
         this.status = 4;
+        this.tabType = type;
+        this.getList();
+        break;
+      case "Will Be Cancelled":
+        this.status = 2;
         this.tabType = type;
         this.getList();
         break;
@@ -164,7 +176,17 @@ export class AllSIMListComponent implements OnInit {
     };
 
     if(this.tabType == 'Frozen'){
-      obj.is_frozen = 1
+      obj.is_frozen = 1;
+    }
+
+    if(this.tabType == 'Will Be Cancelled'){
+      obj.is_adv_cancelled = 1;
+    }
+
+    if(this.isPhoneSIM){
+      obj.is_phone_sim = 1;
+    }else{
+      obj.is_phone_sim = 0;
     }
 
     this._service.get("stock/get-sim-list", obj).subscribe(
@@ -235,6 +257,10 @@ export class AllSIMListComponent implements OnInit {
       case "return":
         url = "stock/return-sim-to-stock/" + row.id;
         txt = "This sim will be added to your stock.";
+        break;
+      case "undo-cacellation":
+        url = 'stock/undo-sim-cancellation/'+row.id;
+        txt = 'You are reverting your decision.';
         break;
       case "permanently_cancelled":
         url = "stock/cancel-sim-permanently/" + row.id;

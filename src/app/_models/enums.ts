@@ -52,6 +52,7 @@ export enum StatusTypes {
   }
 
   export enum SIMAndDeviceStatus{
+    NOT_APPLICABLE = 0,
     ACTIVE = 1,
     FROZEN = 2,
     CANCELLED_IN_ADVANCE = 3,
@@ -59,5 +60,12 @@ export enum StatusTypes {
     RETURNED = 5,
     SENT_FOR_REISSUANCE = 6,
     RECEIVED_FROM_MC = 7,
-    UNSETTLED = 8
+    UNSETTLED = 8,
+    REPLACED = 9
+  }
+
+  export enum Gender{
+    NOT_SET = 1,
+    MALE = 2,
+    FEMALE = 3
   }

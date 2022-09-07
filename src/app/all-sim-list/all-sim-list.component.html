@@ -94,7 +94,7 @@
             <div class="card-block ">
 
               <div class="row mb-4">
-                <div class="col-lg-12">
+                <div class="col-lg-10">
                   <tabset [justified]="false" type="pills">
 
                     <tab (selectTab)="changeTab('Available',$event)">
@@ -117,6 +117,11 @@
                         Cancelled
                       </ng-template>
                     </tab>
+                    <tab (selectTab)="changeTab('Will Be Cancelled',$event)">
+                      <ng-template tabHeading>
+                        Will Be Cancelled
+                      </ng-template>
+                    </tab>
                     <tab (selectTab)="changeTab('Reissued',$event)">
                       <ng-template tabHeading>
                         Reissued
@@ -128,6 +133,16 @@
                       </ng-template>
                     </tab>
                   </tabset>
+                </div>
+                <div class="col-lg-2">
+                  <div class="checkbox-fade fade-in-primary mt-2" >
+                    <label>
+                        <input type="checkbox" [(ngModel)]="isPhoneSIM" (ngModelChange)="onPhoneSIMChange($event)">
+                        <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                        <span class="text-inverse">Phone SIM</span>
+                    </label>
+
+                  </div>
                 </div>
               </div>
 
@@ -150,21 +165,29 @@
                     [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [count]="page.totalElements"
                     [offset]="page.pageNumber" [limit]="page.size" (page)="setPage($event)">
 
-                    <ngx-datatable-column [width]="80" name="SIM CID No" prop="CID_no" [draggable]="false"
+                    <ngx-datatable-column *ngIf="isPhoneSIM == true" [width]="120" name="SIM Type" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> <strong class="label label-warning">Phone Sim</strong>
+                        </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="120" name="SIM CID No" prop="CID_no" [draggable]="false"
                       [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span> {{ value }} </span>
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="100" name="ICCID No" prop="ICCID_no" [draggable]="false"
+                    <ngx-datatable-column [width]="150" name="ICCID No" prop="ICCID_no" [draggable]="false"
                       [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="100" name="Phone Number" prop="phone_number" [draggable]="false"
+                    <ngx-datatable-column [width]="150" name="Phone Number" prop="phone_number" [draggable]="false"
                       [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>
@@ -214,6 +237,14 @@
                       </ng-template>
                     </ngx-datatable-column>
 
+                    <ngx-datatable-column *ngIf="tabType == 'Will Be Cancelled'" [width]="150" name="Current Customer"
+                      prop="customer_full_name" [draggable]="false" [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <a [routerLink]="['/customer-details/'+row.current_owner]" routerLinkActive="router-link-active"
+                          target="_blank"> {{ row.customer_full_name }} </a>
+                      </ng-template>
+                    </ngx-datatable-column>
+
                     <ngx-datatable-column *ngIf="tabType == 'Cancelled'" [width]="120" name="Last Cancelled At"
                       prop="last_cancelled_at" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
@@ -254,6 +285,14 @@
                       </ng-template>
                     </ngx-datatable-column>
 
+                    <ngx-datatable-column *ngIf="tabType == 'Will Be Cancelled'" [width]="180" name="Last Adv. Cancelled At"
+                      prop="last_adv_cancelled_at" [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span *ngIf="!value"> -- </span>
+                        <span *ngIf="value"> {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}}</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
 
 
                     <ngx-datatable-column [width]="500" name="Action" prop="id" [draggable]="false" [sortable]="false">
@@ -277,6 +316,10 @@
                           (click)="onSubmitAction('permanently_cancelled',row)">
                           Permanently Cancelled
                         </button>
+
+                        <button *ngIf="tabType == 'Will Be Cancelled'" (click)="onSubmitAction('undo-cacellation',row)"
+                          class="btn btn-success btn-mini mr-1"><i class="icofont icofont-reply-all"></i>Undo Cancellation</button>
+
                         <button class="btn btn-info btn-mini mr-1" (click)="openModal(row, template)">
                           See Life Cycle History
                         </button>

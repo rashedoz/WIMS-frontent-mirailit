@@ -14,7 +14,7 @@
               <p class="fs-14 mb-0" *ngIf="details.customer_email"><b>Email : {{details.customer_email}}</b></p>
               <p class="fs-14 mb-0" *ngIf="details.customer_mobile"><b>Mobile : {{details.customer_mobile}} </b></p>
               <p class="fs-14 mb-0" *ngIf="details.customer_telephone"><b>Telephone : {{details.customer_telephone}} </b></p>
-              <p class="fs-14 mb-0" *ngIf="details.customer_gender"><b>Gender : {{details.customer_gender == 1 ? "Male" : "Female"}} </b></p>
+              <p class="fs-14 mb-0" *ngIf="details.customer_gender"><b>Gender : {{details.customer_gender == 1 ? "Not Set " : details.customer_gender == 2 ? "Male" : "Female" }} </b></p>
               <p class="fs-14 mb-0" *ngIf="details.customer_address_one"><b>Address : {{details.customer_address_one}} {{details.customer_address_two}}</b></p>
             </div>
             <p class="fs-14 mb-0"><b>{{isbalanceDeduct ? 'Remaining Balance :':'Balance :'}} <span class="text-primary font-weight-bold">{{balance - tempPaidAmount}}</span> &nbsp; <i tooltip="Load Balance" class="div-pointer text-info cofont icofont-plus" (click)="openModalLoadBalance(templateBalanceLoad)"></i> </b></p>

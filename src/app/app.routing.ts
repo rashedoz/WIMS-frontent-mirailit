@@ -342,6 +342,11 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./sell-product/sell-product.module').then(m => m.SellProductModule),
         canActivate: [AuthGuard]
       },
+      {
+        path: 'sell-phone-sim-product',
+        loadChildren: () => import('./sell-phone-sim-product/sell-phone-sim-product.module').then(m => m.SellPhoneSIMProductModule),
+        canActivate: [AuthGuard]
+      },
     ]
   }, {
     path: '**',

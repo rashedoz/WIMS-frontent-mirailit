@@ -56,7 +56,7 @@ export class ProfileEditComponent implements OnInit {
     address_one: [null],
     address_two: [null],
     dob: [null],
-    gender: [1],
+    gender: [2],
     firstName: [null, [Validators.required]],
     lastName: [null, [Validators.required]]
   });

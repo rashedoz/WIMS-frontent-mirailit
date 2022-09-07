@@ -41,11 +41,11 @@ import {
 import { PrintService } from "../_services/print.service";
 
 @Component({
-  selector: "app-sell-product",
-  templateUrl: "./sell-product.component.html",
+  selector: "app-sell-phone-sim-product",
+  templateUrl: "./sell-phone-sim-product.component.html",
   encapsulation: ViewEncapsulation.None,
 })
-export class SellProductComponent implements OnInit {
+export class SellPhoneSIMProductComponent implements OnInit {
   RegistrerForm: FormGroup;
   entryForm: FormGroup;
   itemHistoryList: FormArray;
@@ -488,7 +488,7 @@ export class SellProductComponent implements OnInit {
           page: this.pageSIM.pageNumber,
         };
       }
-      obj.is_phone_sim = 0;
+      obj.is_phone_sim = 1;
       this._service.get("stock/get-subscriptable-sim-list", obj).subscribe(
         (res) => {
           console.log(res);
@@ -521,8 +521,7 @@ export class SellProductComponent implements OnInit {
       };
     }
 
-    obj.is_phone_sim = 0;
-
+    obj.is_phone_sim = 1;
     this._service.get("stock/get-subscriptable-sim-list", obj).subscribe(
       (res) => {
         this.sims = res.results;
@@ -554,8 +553,7 @@ export class SellProductComponent implements OnInit {
         page: this.pageSIM.pageNumber,
       };
     }
-    obj.is_phone_sim = 0;
-
+    obj.is_phone_sim = 1;
     let params = new HttpParams();
     if (obj) {
       for (const key in obj) {
@@ -792,7 +790,7 @@ export class SellProductComponent implements OnInit {
   // }
 
   getPackageList() {
-    this._service.get("package/get-package-list",{limit: 1000000,page: 1,has_phone_sim_dependency:0}).subscribe(
+    this._service.get("package/get-package-list",{limit: 1000000,page: 1,has_phone_sim_dependency:1}).subscribe(
       (res) => {
         this.packageList = res.results;
       },
