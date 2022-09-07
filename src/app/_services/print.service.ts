@@ -148,8 +148,9 @@ export class PrintService {
        const amount_details1 = element.has_device_dependency ? 'Device Deposit: '+element.device_deposit+', ' : '';
        const amount_details2 = 'Initial Fee: '+element.pckg_initial_fee+', Price: '+element.pckg_price+', Discount: '+element.pckg_initial_discount;
        const amount_details = amount_details1.concat(amount_details2);
-
        let note = element.pckg_advance_pmnt_desc ? '\n'+element.pckg_advance_pmnt_desc : '';
+
+
 
         dataArray.push({
           no: i +1,
@@ -157,7 +158,7 @@ export class PrintService {
           phone_number: element.phone_number,
           imei: element.IMEI ? element.IMEI : 'N/A',
           package_name: element.pckg_name,
-          note: element.pckg_expiry != null ? moment(element.pckg_expiry).format('MMMM Do YYYY') : 'Recurring'+ note,
+          note: element.sim_status == 9 ? 'Replaced' : element.pckg_expiry != null ? moment(element.pckg_expiry).format('MMMM Do YYYY') : 'Recurring'+ note,
           amount_details: amount_details,
           amount: element.current_month_price
         });
@@ -207,7 +208,15 @@ export class PrintService {
                     hookData.cell.styles.halign = 'right';
                 }
             }
-        }
+        },
+        willDrawCell: function (data) {
+
+          if (data.row.section === 'body' && data.column.dataKey === 'note') {
+            if (data.cell.raw == 'Replaced') {
+              doc.setTextColor(231, 76, 60) // Red
+            }
+          }
+        },
         });
 
       }else{
@@ -251,6 +260,14 @@ export class PrintService {
                     hookData.cell.styles.halign = 'right';
                 }
             }
+        },
+        willDrawCell: function (data) {
+
+          if (data.row.section === 'body' && data.column.dataKey === 'note') {
+            if (data.cell.raw == 'Replaced') {
+              doc.setTextColor(231, 76, 60) // Red
+            }
+          }
         }
         });
 

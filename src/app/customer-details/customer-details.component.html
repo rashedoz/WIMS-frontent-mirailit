@@ -199,37 +199,38 @@
 
                             <ngx-datatable-column [width]="140" name="SIM Status" prop="sim_status" [draggable]="false"
                               [sortable]="false">
-                              <ng-template let-value="value" ngx-datatable-cell-template>
+                              <ng-template let-row="row" ngx-datatable-cell-template>
                                 <!-- <span> {{ SIMAndDeviceStatus[value] }} </span> -->
-                                <span *ngIf="value == 0"> <strong
-                                    class="label label-default">{{ SIMAndDeviceStatus[value] }}</strong>
+                                <span *ngIf="row.sim_status == 0"> <strong
+                                    class="label label-default">{{ SIMAndDeviceStatus[row.sim_status] }}</strong>
                                 </span>
-                                <span *ngIf="value == 1"> <strong
-                                    class="label label-success">{{ SIMAndDeviceStatus[value] }}</strong>
+                                <span *ngIf="row.sim_status == 1"> <strong
+                                    class="label label-success">{{ SIMAndDeviceStatus[row.sim_status] }}</strong>
+                                    <button (click)="openModalSIMReplace(row,templateSIMReplace)" tooltip="Replace This SIM" placement="top" [adaptivePosition]="false" class="btn btn-primary btn-mini py-1" type="button"><i class="icofont-spinner-alt-5"></i></button>
                                 </span>
-                                <span *ngIf="value == 2"> <strong
-                                    class="label label-info">{{ SIMAndDeviceStatus[value] }}</strong>
+                                <span *ngIf="row.sim_status == 2"> <strong
+                                    class="label label-info">{{ SIMAndDeviceStatus[row.sim_status] }}</strong>
                                 </span>
-                                <span *ngIf="value == 3"> <strong
-                                    class="label label-primary">{{ SIMAndDeviceStatus[value] }}</strong>
+                                <span *ngIf="row.sim_status == 3"> <strong
+                                    class="label label-primary">{{ SIMAndDeviceStatus[row.sim_status] }}</strong>
                                 </span>
-                                <span *ngIf="value == 4"> <strong
-                                    class="label label-warning">{{ SIMAndDeviceStatus[value] }}</strong>
+                                <span *ngIf="row.sim_status == 4"> <strong
+                                    class="label label-warning">{{ SIMAndDeviceStatus[row.sim_status] }}</strong>
                                 </span>
-                                <span *ngIf="value == 5"> <strong
-                                    class="label label-danger">{{ SIMAndDeviceStatus[value] }}</strong>
+                                <span *ngIf="row.sim_status == 5"> <strong
+                                    class="label label-danger">{{ SIMAndDeviceStatus[row.sim_status] }}</strong>
                                 </span>
-                                <span *ngIf="value == 6"> <strong
-                                    class="label label-primary">{{ SIMAndDeviceStatus[value] }}</strong>
+                                <span *ngIf="row.sim_status == 6"> <strong
+                                    class="label label-primary">{{ SIMAndDeviceStatus[row.sim_status] }}</strong>
                                 </span>
-                                <span *ngIf="value == 7"> <strong
-                                    class="label label-primary">{{ SIMAndDeviceStatus[value] }}</strong>
+                                <span *ngIf="row.sim_status == 7"> <strong
+                                    class="label label-primary">{{ SIMAndDeviceStatus[row.sim_status] }}</strong>
                                 </span>
-                                <span *ngIf="value == 8"> <strong
-                                    class="label label-danger">{{ SIMAndDeviceStatus[value] }}</strong>
+                                <span *ngIf="row.sim_status == 8"> <strong
+                                    class="label label-danger">{{ SIMAndDeviceStatus[row.sim_status] }}</strong>
                                 </span>
-                                <span *ngIf="value == 9"> <strong
-                                    class="label label-warning">{{ SIMAndDeviceStatus[value] }}</strong>
+                                <span *ngIf="row.sim_status == 9"> <strong
+                                    class="label label-warning">{{ SIMAndDeviceStatus[row.sim_status] }}</strong>
                                 </span>
 
                               </ng-template>
@@ -1103,6 +1104,81 @@
             class="icofont icofont-close"></i> Close</button>
 
         <button class="btn btn-success btn-sm btn-outline-success float-right" (click)="onSubmitSIMReceive()">
+          <i class="icofont-save"></i> Receive
+        </button>
+
+      </div>
+
+    </div>
+  </ng-template>
+
+  <ng-template #templateSIMReplace>
+    <div class="modal-header ">
+      <h6 class="modal-title pull-left"> SIM Replace </h6>
+
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideSIMReplace()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body pb-0">
+      <app-card>
+
+        <div class="row mb-3" *ngIf="simObj">
+          <div class="col-md-6">
+            <p class="fs-14 mb-0">SIM CID No : <b>{{simObj.CID_no}}</b></p>
+            <p class="fs-14 mb-0">Phone Number : <b>{{simObj.phone_number}}</b></p>
+          </div>
+          <div class="col-md-6">
+            <p class="fs-14 mb-0">Current SIM ICCID : <b>{{simObj.ICCID_no}} </b></p>
+
+          </div>
+        </div>
+        <hr>
+        <form [formGroup]="replaceSIMForm">
+
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Select New SIM</label>
+            <div class="col-sm-8">
+              <!-- <input [ngClass]="{ 'is-invalid': submitted && rs.ICCID_no.errors}" formControlName="ICCID_no" type="text"
+                class="form-control"> -->
+
+                <ng-select [items]="simsBuffer" [clearable]="false" appendTo="body" (change)="onSIMChange($event)"
+                [ngClass]="{ 'is-invalid': submitted && res.sim_replace_id.errors}"
+                formControlName="sim" [clearOnBackspace]="false"
+                [virtualScroll]="true" [dropdownPosition]="'bottom'" [loading]="loadingSIM"
+                [typeahead]="simsInput$" (scroll)="onScrollSIM($event)"
+                (scrollToEnd)="onScrollToEndSIM()" bindLabel="CID_no" placeholder="Search..">
+                <ng-template ng-header-tmp>
+                  <small class="form-text text-muted">Loaded {{simsBuffer.length}} of
+                    {{pageSIM.totalElements}}</small>
+                </ng-template>
+
+
+                <ng-template ng-option-tmp let-item="item" let-index="index">
+                  <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no"> {{item.CID_no}} </p>
+                  <p class="card-text font-weight-bold" *ngIf="item.ICCID_no"> {{item.CID_no}}
+                    ({{item.ICCID_no}})</p>
+                </ng-template>
+
+              </ng-select>
+
+              <div *ngIf="submitted && res.sim_replace_id.errors" class="error-text">
+                <small *ngIf="res.sim_replace_id.errors.required" class="text-danger"> SIM is
+                  required</small>
+              </div>
+            </div>
+          </div>
+
+
+        </form>
+      </app-card>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideSIMReplace()"> <i
+            class="icofont icofont-close"></i> Close</button>
+
+        <button class="btn btn-success btn-sm btn-outline-success float-right" (click)="onSubmitSIMReplace()">
           <i class="icofont-save"></i> Receive
         </button>
 

@@ -53,6 +53,7 @@ export class HomeComponent implements OnInit {
   pieChartOptions: any;
   pieChartArray = [];
   showLoader = false;
+  billCollectionData = 0;
   constructor(
     private authService: AuthenticationService,
     private toastr: ToastrService,
@@ -243,6 +244,9 @@ export class HomeComponent implements OnInit {
             return;
           }
           this.billCollectionMethodData = res;
+
+          this.billCollectionData = Number(this.billCollectionMethodData.paid_by_cash_amount) + Number(this.billCollectionMethodData.paid_by_bank_amount) + Number(this.billCollectionMethodData.paid_from_balance_amount) + Number(this.billCollectionMethodData.paid_through_card_amount) + Number(this.billCollectionMethodData.paid_through_online_banking_amount) + Number(this.billCollectionMethodData.paid_through_system_amount);
+
           resolve(this.billCollectionMethodData);
           this.showLoader = false;
         },

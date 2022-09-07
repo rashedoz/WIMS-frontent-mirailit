@@ -33,6 +33,7 @@ export class CustomerDetailsComponent implements OnInit {
 
   entryForm: FormGroup;
   receiveSIMForm: FormGroup;
+  replaceSIMForm: FormGroup;
   balanceLoadForm: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
@@ -42,6 +43,7 @@ export class CustomerDetailsComponent implements OnInit {
   SIMAndDeviceStatus = SIMAndDeviceStatus;
   PaymentType = PaymentType;
   page = new Page();
+  pageSIM = new Page();
   pageTable = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
   rows:any[] = [];
@@ -100,7 +102,7 @@ export class CustomerDetailsComponent implements OnInit {
   methodList = [];
   selectedMethod = {id:1,name:'CASH'};
   isbalanceDeduct = false;
-
+  is_phone_sim = false
 
   currentTab = 'Bills Items';
   subscriptionHistoryList = [];
@@ -143,6 +145,16 @@ export class CustomerDetailsComponent implements OnInit {
   searchParamCustomer = '';
   input$ = new Subject<string>();
   customerType = 'all';
+
+
+    // for sim
+    sims = [];
+    simsBuffer = [];
+    simsBufferSize = 50;
+    loadingSIM = false;
+    simsCount = 1;
+    simsSearchParam = "";
+    simsInput$ = new Subject<string>();
 
 
   constructor(
@@ -223,8 +235,18 @@ export class CustomerDetailsComponent implements OnInit {
       ICCID_no: [null, [Validators.required]],
     });
 
+    this.replaceSIMForm = this.formBuilder.group({
+      id: [null, [Validators.required]],
+      sim_replace_id: [null, [Validators.required]],
+      sim_replace_iccid: [null, [Validators.required]],
+      sim_replace_phone_number: [null, [Validators.required]],
+    });
+
   }
 
+  get res() {
+    return this.replaceSIMForm.controls;
+  }
   get rs() {
     return this.receiveSIMForm.controls;
   }
@@ -959,6 +981,76 @@ selectTab(tabId: number) {
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 
+
+
+  modalHideSIMReplace() {
+    this.modalRef.hide();
+    this.simObj = null;
+    this.submitted = false;
+    this.simsBuffer = [];
+    this.replaceSIMForm.reset();
+  }
+
+  openModalSIMReplace(item, template: TemplateRef<any>) {
+    if(item.is_phone_sim){
+      this.is_phone_sim = true;
+    }else{
+      this.is_phone_sim = false;
+    }
+    this.simObj = item;
+    this.replaceSIMForm.controls['id'].setValue(item.id);
+    this.pageSIM.pageNumber = 1;
+    this.pageSIM.size = 50;
+
+    this.getSIM();
+    this.onSearchSIM();
+
+    this.modalRef = this.modalService.show(template, this.modalConfig);
+  }
+
+
+  onSubmitSIMReplace(){
+    this.submitted = true;
+    if (this.replaceSIMForm.invalid) {
+      return;
+    }
+    const obj = {
+      id:this.replaceSIMForm.value.id,
+      sim_replace_id:this.replaceSIMForm.value.sim_replace_id,
+      sim_replace_iccid:this.replaceSIMForm.value.sim_replace_iccid,
+      sim_replace_phone_number:this.replaceSIMForm.value.sim_replace_phone_number
+    };
+
+    this.confirmService.confirm('Are you sure?', 'You are replacing this sim.')
+    .subscribe(
+        result => {
+            if (result) {
+              this.blockUI.start('Saving...');
+              const request = this._service.post('bill/replace-sim', obj);
+              request.subscribe(
+                data => {
+                  this.blockUI.stop();
+                  if (data.IsReport == "Success") {
+                    this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+                    this.modalHideSIMReplace();
+                    this.getBillItemListWithPagination();
+                  } else if (data.IsReport == "Warning") {
+                    this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+                  } else {
+                    this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+                  }
+                },
+                err => {
+                  this.blockUI.stop();
+                  this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
+                }
+              );
+            }
+        },
+    );
+  }
+
+
   modalHideSIMRecieve() {
     this.modalRef.hide();
     this.simObj = null;
@@ -971,7 +1063,6 @@ selectTab(tabId: number) {
     this.receiveSIMForm.controls['id'].setValue(item.id);
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
-
 
   onSubmitSIMReceive(){
     this.submitted = true;
@@ -1306,5 +1397,200 @@ private fakeServiceCustomer(term) {
   );
 }
 
+
+
+
+
+
+
+
+
+  /// for SIM
+  onSearchSIM() {
+    this.simsInput$
+      .pipe(
+        debounceTime(200),
+        distinctUntilChanged(),
+        switchMap((term) => this.fakeServiceSIM(term))
+      )
+      .subscribe((data: any) => {
+        this.sims = data.results;
+        this.pageSIM.totalElements = data.count;
+        this.pageSIM.totalPages = Math.ceil(
+          this.pageSIM.totalElements / this.pageSIM.size
+        );
+
+      });
+  }
+
+  onScrollToEndSIM() {
+    this.fetchMoreSIM();
+  }
+
+  onScrollSIM({ end }) {
+    if (this.loadingSIM || this.sims.length <= this.simsBuffer.length) {
+      return;
+    }
+
+    if (
+      end + this.numberOfItemsFromEndBeforeFetchingMore >=
+      this.simsBuffer.length
+    ) {
+      this.fetchMoreSIM();
+    }
+  }
+
+  private fetchMoreSIM() {
+    let more;
+
+    if (this.simsCount < this.pageSIM.totalPages) {
+      this.simsCount++;
+      this.pageSIM.pageNumber = this.simsCount;
+      let obj;
+      if (this.simsSearchParam) {
+        obj = {
+          limit: this.pageSIM.size,
+          page: this.pageSIM.pageNumber,
+          search_param: this.simsSearchParam,
+        };
+      } else {
+        obj = {
+          limit: this.pageSIM.size,
+          page: this.pageSIM.pageNumber,
+        };
+      }
+
+      if(this.is_phone_sim){
+        obj.is_phone_sim = 1;
+      }else{
+        obj.is_phone_sim = 0;
+      }
+
+      this._service.get("stock/get-subscriptable-sim-list", obj).subscribe(
+        (res) => {
+          console.log(res);
+          more = res.results;
+          //  const more = this.customers.slice(len, this.bufferSize + len);
+          this.loadingSIM = true;
+          // using timeout here to simulate backend API delay
+          setTimeout(() => {
+            this.loadingSIM = false;
+            this.simsBuffer = this.simsBuffer.concat(more);
+          }, 100);
+        },
+        (err) => {}
+      );
+    }
+  }
+
+  getSIM() {
+    let obj;
+    if (this.simsSearchParam) {
+      obj = {
+        limit: this.pageSIM.size,
+        page: this.pageSIM.pageNumber,
+        search_param: this.simsSearchParam,
+      };
+    } else {
+      obj = {
+        limit: this.pageSIM.size,
+        page: this.pageSIM.pageNumber,
+      };
+    }
+
+    if(this.is_phone_sim){
+      obj.is_phone_sim = 1;
+    }else{
+      obj.is_phone_sim = 0;
+    }
+
+
+    this._service.get("stock/get-subscriptable-sim-list", obj).subscribe(
+      (res) => {
+        this.sims = res.results;
+        this.pageSIM.totalElements = res.count;
+        this.pageSIM.totalPages = Math.ceil(
+          this.pageSIM.totalElements / this.pageSIM.size
+        );
+        this.simsBuffer = this.sims.slice(0, this.simsBufferSize);
+      },
+      (err) => {}
+    );
+  }
+
+  private fakeServiceSIM(term) {
+    this.pageSIM.size = 50;
+    this.pageSIM.pageNumber = 1;
+    this.simsSearchParam = term;
+
+    let obj;
+    if (this.simsSearchParam) {
+      obj = {
+        limit: this.pageSIM.size,
+        page: this.pageSIM.pageNumber,
+        search_param: this.simsSearchParam,
+      };
+    } else {
+      obj = {
+        limit: this.pageSIM.size,
+        page: this.pageSIM.pageNumber,
+      };
+    }
+
+    if(this.is_phone_sim){
+      obj.is_phone_sim = 1;
+    }else{
+      obj.is_phone_sim = 0;
+    }
+
+    let params = new HttpParams();
+    if (obj) {
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          params = params.append(key, obj[key]);
+        }
+      }
+    }
+    return this.http
+      .get<any>(environment.apiUrl + "stock/get-subscriptable-sim-list", {
+        params,
+      })
+      .pipe(
+        map((res) => {
+          return res;
+        })
+      );
+  }
+
+
+  onSIMChange(e) {
+
+    // if (e) {
+    //   const simObj = this.simsBuffer.find(x=> x.id == e);
+    //   if (simObj.ICCID_no) {
+    //     item.controls["sim_iccid"].setValue(simObj.ICCID_no);
+    //     item.controls["sim_iccid"].disable();
+
+    //     if (simObj.phone_number) {
+    //       item.controls["phone_number"].setValue(simObj.phone_number);
+    //       item.controls["phone_number"].disable();
+    //     } else {
+    //       item.controls["phone_number"].setValue(null);
+    //       item.controls["phone_number"].enable();
+    //     }
+    //   } else {
+    //     item.controls["sim_iccid"].setValue(null);
+    //     item.controls["sim_iccid"].enable();
+
+    //     item.controls["phone_number"].setValue(null);
+    //     item.controls["phone_number"].enable();
+    //   }
+    // } else {
+    //   item.controls["sim_iccid"].setValue(null);
+    //   item.controls["phone_number"].setValue(null);
+    //   item.controls["sim_iccid"].disable();
+    //   item.controls["phone_number"].disable();
+    // }
+  }
 
 }

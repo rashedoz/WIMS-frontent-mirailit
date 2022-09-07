@@ -113,8 +113,6 @@
                           class="text-primary font-weight-bold">{{selectedCustomer.address_one }}
                           {{selectedCustomer.address_two }}</span></b></p>
 
-
-
                   </div>
                 </div>
               </div>
@@ -233,8 +231,8 @@
 
 
                                   <ng-option *ngFor="let item of devicesBuffer" [value]="item.id" [disabled]="item.disabled">
-                                    <p class="card-text font-weight-bold" *ngIf="!item.IMEI"> {{item.DID_no}} </p>
-                                    <p class="card-text font-weight-bold" *ngIf="item.IMEI"> {{item.DID_no}} ({{item.IMEI}})</p>
+                                    <p title="{{item.DID_no}}" class="card-text font-weight-bold" *ngIf="!item.IMEI"> {{item.DID_no}} </p>
+                                    <p title="{{item.DID_no}}" class="card-text font-weight-bold" *ngIf="item.IMEI"> {{item.DID_no}} ({{item.IMEI}})</p>
                                   </ng-option>
 
 
@@ -292,8 +290,8 @@
                                   </ng-template>
 
                                   <ng-option *ngFor="let item of simsBuffer" [value]="item.id" [disabled]="item.disabled">
-                                    <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no"> {{item.CID_no}} </p>
-                                    <p class="card-text font-weight-bold" *ngIf="item.ICCID_no"> {{item.CID_no}}({{item.ICCID_no}})</p>
+                                    <p title="{{item.ICCID_no}}" class="card-text font-weight-bold" *ngIf="!item.ICCID_no"> {{item.CID_no}} </p>
+                                    <p title="{{item.ICCID_no}}" class="card-text font-weight-bold" *ngIf="item.ICCID_no"> {{item.CID_no}}({{item.ICCID_no}})</p>
 
 
                                   </ng-option>

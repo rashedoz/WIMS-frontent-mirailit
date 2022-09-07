@@ -100,33 +100,33 @@
                   <tbody>
                     <tr>
                       <td>Cash</td>
-                      <td>{{billCollectionMethodData.paid_by_cash}}</td>
+                      <td>{{billCollectionMethodData.paid_by_cash}} ({{billCollectionMethodData.paid_by_cash_amount}})</td>
                     </tr>
                     <tr>
                       <td>Bank</td>
-                      <td>{{billCollectionMethodData.paid_by_bank}}</td>
+                      <td>{{billCollectionMethodData.paid_by_bank}} ({{billCollectionMethodData.paid_by_bank_amount}})</td>
                     </tr>
                     <tr>
                       <td>From Balance</td>
-                      <td>{{billCollectionMethodData.paid_from_balance}}</td>
+                      <td>{{billCollectionMethodData.paid_from_balance}} ({{billCollectionMethodData.paid_from_balance_amount}})</td>
                     </tr>
                     <tr>
                       <td>Card Payment</td>
-                      <td>{{billCollectionMethodData.paid_through_card}}</td>
+                      <td>{{billCollectionMethodData.paid_through_card}} ({{billCollectionMethodData.paid_through_card_amount}})</td>
                     </tr>
                     <tr>
                       <td>Online Banking</td>
-                      <td>{{billCollectionMethodData.paid_through_online_banking}}</td>
+                      <td>{{billCollectionMethodData.paid_through_online_banking}} ({{billCollectionMethodData.paid_through_online_banking_amount}})</td>
                     </tr>
                     <tr>
                       <td>Not Applicable</td>
-                      <td>{{billCollectionMethodData.paid_through_system}}</td>
+                      <td>{{billCollectionMethodData.paid_through_system}} ({{billCollectionMethodData.paid_through_system_amount}})</td>
                     </tr>
                   </tbody>
                   <tfoot class="text-primary">
                     <th>Total</th>
                     <th>
-                      {{billCollectionMethodData.paid_by_cash + billCollectionMethodData.paid_by_bank + billCollectionMethodData.paid_from_balance + billCollectionMethodData.paid_through_card +  billCollectionMethodData.paid_through_online_banking + billCollectionMethodData.paid_through_system}}
+                      {{billCollectionMethodData.paid_by_cash + billCollectionMethodData.paid_by_bank + billCollectionMethodData.paid_from_balance + billCollectionMethodData.paid_through_card +  billCollectionMethodData.paid_through_online_banking + billCollectionMethodData.paid_through_system}} ({{billCollectionData}})
                     </th>
                   </tfoot>
                 </table>
