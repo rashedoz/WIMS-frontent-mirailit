@@ -56,6 +56,7 @@ export class CustomerDetailsComponent implements OnInit {
   @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
   @ViewChild('profileTabs', { static: false }) profileTabs?: TabsetComponent;
   modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
+  modalConfigLg: any = { class: 'gray modal-lg', backdrop: 'static' };
   modalRef: BsModalRef;
   modalRefICCID: BsModalRef;
   simLifecycleDetails : Array<any> = [];
@@ -237,9 +238,10 @@ export class CustomerDetailsComponent implements OnInit {
 
     this.replaceSIMForm = this.formBuilder.group({
       id: [null, [Validators.required]],
+      sim: [null, [Validators.required]],
       sim_replace_id: [null, [Validators.required]],
       sim_replace_iccid: [null, [Validators.required]],
-      sim_replace_phone_number: [null, [Validators.required]],
+      sim_replace_phone_number: [null, [Validators.required]]
     });
 
   }
@@ -997,6 +999,7 @@ selectTab(tabId: number) {
     }else{
       this.is_phone_sim = false;
     }
+
     this.simObj = item;
     this.replaceSIMForm.controls['id'].setValue(item.id);
     this.pageSIM.pageNumber = 1;
@@ -1005,7 +1008,7 @@ selectTab(tabId: number) {
     this.getSIM();
     this.onSearchSIM();
 
-    this.modalRef = this.modalService.show(template, this.modalConfig);
+    this.modalRef = this.modalService.show(template, this.modalConfigLg);
   }
 
 
@@ -1398,6 +1401,40 @@ private fakeServiceCustomer(term) {
 }
 
 
+  onSIMChange(e) {
+    if (e) {
+      this.replaceSIMForm.controls["sim_replace_id"].setValue(e.id);
+    }
+
+    // if(e){
+    //   if (e.ICCID_no){
+    //     this.replaceSIMForm.controls["sim_replace_iccid"].setValue(e.ICCID_no);
+    //     this.replaceSIMForm.controls["sim_replace_iccid"].disable();
+
+    //     if (e.phone_number){
+    //      this.replaceSIMForm.controls["sim_replace_phone_number"].setValue(e.phone_number);
+    //      this.replaceSIMForm.controls["sim_replace_phone_number"].disable();
+    //     }else{
+    //      this.replaceSIMForm.controls["sim_replace_phone_number"].setValue(null);
+    //      this.replaceSIMForm.controls["sim_replace_phone_number"].enable();
+    //     }
+
+    //    }else {
+    //      this.replaceSIMForm.controls["sim_replace_iccid"].setValue(null);
+    //      this.replaceSIMForm.controls["sim_replace_iccid"].enable();
+
+    //      this.replaceSIMForm.controls["sim_replace_phone_number"].setValue(null);
+    //      this.replaceSIMForm.controls["sim_replace_phone_number"].enable();
+    //    }
+    // }else{
+    //   this.replaceSIMForm.controls["sim_replace_iccid"].setValue(null);
+    //   this.replaceSIMForm.controls["sim_replace_phone_number"].setValue(null);
+    //   this.replaceSIMForm.controls["sim_replace_iccid"].disable();
+    //   this.replaceSIMForm.controls["sim_replace_phone_number"].disable();
+    // }
+  }
+
+
 
 
 
@@ -1407,66 +1444,60 @@ private fakeServiceCustomer(term) {
 
   /// for SIM
   onSearchSIM() {
-    this.simsInput$
-      .pipe(
-        debounceTime(200),
-        distinctUntilChanged(),
-        switchMap((term) => this.fakeServiceSIM(term))
-      )
-      .subscribe((data: any) => {
-        this.sims = data.results;
-        this.pageSIM.totalElements = data.count;
-        this.pageSIM.totalPages = Math.ceil(
-          this.pageSIM.totalElements / this.pageSIM.size
-        );
-
-      });
+    this.simsInput$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      switchMap(term => this.fakeServiceSIM(term))
+    ).subscribe((data : any) => {
+      this.sims = data.results;
+      this.pageSIM.totalElements = data.count;
+      this.pageSIM.totalPages = Math.ceil(this.pageSIM.totalElements / this.pageSIM.size);
+      this.simsBuffer = this.sims.slice(0, this.simsBufferSize);
+      })
   }
 
-  onScrollToEndSIM() {
-    this.fetchMoreSIM();
-  }
-
-  onScrollSIM({ end }) {
-    if (this.loadingSIM || this.sims.length <= this.simsBuffer.length) {
-      return;
-    }
-
-    if (
-      end + this.numberOfItemsFromEndBeforeFetchingMore >=
-      this.simsBuffer.length
-    ) {
+ onScrollToEndSIM() {
       this.fetchMoreSIM();
-    }
   }
 
-  private fetchMoreSIM() {
+onScrollSIM({ end }) {
+    if (this.loadingSIM || this.sims.length <= this.simsBuffer.length) {
+        return;
+    }
+
+    if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.simsBuffer.length) {
+        this.fetchMoreSIM();
+    }
+}
+
+private fetchMoreSIM() {
+
     let more;
 
-    if (this.simsCount < this.pageSIM.totalPages) {
-      this.simsCount++;
-      this.pageSIM.pageNumber = this.simsCount;
-      let obj;
-      if (this.simsSearchParam) {
-        obj = {
-          limit: this.pageSIM.size,
-          page: this.pageSIM.pageNumber,
-          search_param: this.simsSearchParam,
-        };
-      } else {
-        obj = {
-          limit: this.pageSIM.size,
-          page: this.pageSIM.pageNumber,
-        };
-      }
+    if(this.simsCount < this.pageSIM.totalPages){
+    this.simsCount++;
+    this.pageSIM.pageNumber = this.simsCount;
+    let obj;
+    if(this.simsSearchParam){
+       obj = {
+        limit: this.pageSIM.size,
+        page: this.pageSIM.pageNumber,
+        search_param:this.simsSearchParam
+      };
+    }else{
+       obj = {
+        limit: this.pageSIM.size,
+        page: this.pageSIM.pageNumber
+      };
+    }
 
-      if(this.is_phone_sim){
-        obj.is_phone_sim = 1;
-      }else{
-        obj.is_phone_sim = 0;
-      }
+   if(this.is_phone_sim){
+      obj.is_phone_sim = 1;
+    }else{
+      obj.is_phone_sim = 0;
+    }
 
-      this._service.get("stock/get-subscriptable-sim-list", obj).subscribe(
+      this._service.get("stock/get-subscriptable-sim-list",obj).subscribe(
         (res) => {
           console.log(res);
           more = res.results;
@@ -1474,123 +1505,88 @@ private fakeServiceCustomer(term) {
           this.loadingSIM = true;
           // using timeout here to simulate backend API delay
           setTimeout(() => {
-            this.loadingSIM = false;
-            this.simsBuffer = this.simsBuffer.concat(more);
-          }, 100);
+              this.loadingSIM = false;
+              this.simsBuffer = this.simsBuffer.concat(more);
+          }, 100)
         },
         (err) => {}
       );
     }
+
+}
+
+
+getSIM(){
+  let obj;
+  if(this.simsSearchParam){
+     obj = {
+      limit: this.pageSIM.size,
+      page: this.pageSIM.pageNumber,
+      search_param:this.simsSearchParam
+    };
+  }else{
+     obj = {
+      limit: this.pageSIM.size,
+      page: this.pageSIM.pageNumber
+    };
   }
 
-  getSIM() {
-    let obj;
-    if (this.simsSearchParam) {
-      obj = {
-        limit: this.pageSIM.size,
-        page: this.pageSIM.pageNumber,
-        search_param: this.simsSearchParam,
-      };
-    } else {
-      obj = {
-        limit: this.pageSIM.size,
-        page: this.pageSIM.pageNumber,
-      };
-    }
-
-    if(this.is_phone_sim){
-      obj.is_phone_sim = 1;
-    }else{
-      obj.is_phone_sim = 0;
-    }
-
-
-    this._service.get("stock/get-subscriptable-sim-list", obj).subscribe(
-      (res) => {
-        this.sims = res.results;
-        this.pageSIM.totalElements = res.count;
-        this.pageSIM.totalPages = Math.ceil(
-          this.pageSIM.totalElements / this.pageSIM.size
-        );
-        this.simsBuffer = this.sims.slice(0, this.simsBufferSize);
-      },
-      (err) => {}
-    );
+  if(this.is_phone_sim){
+    obj.is_phone_sim = 1;
+  }else{
+    obj.is_phone_sim = 0;
   }
 
-  private fakeServiceSIM(term) {
-    this.pageSIM.size = 50;
-    this.pageSIM.pageNumber = 1;
-    this.simsSearchParam = term;
+  this._service.get("stock/get-subscriptable-sim-list",obj).subscribe(
+    (res) => {
+      this.sims = res.results;
+      this.pageSIM.totalElements = res.count;
+      this.pageSIM.totalPages = Math.ceil(this.pageSIM.totalElements / this.pageSIM.size);
+      this.simsBuffer = this.sims.slice(0, this.simsBufferSize);
+    },
+    (err) => {}
+  );
+}
 
-    let obj;
-    if (this.simsSearchParam) {
-      obj = {
-        limit: this.pageSIM.size,
-        page: this.pageSIM.pageNumber,
-        search_param: this.simsSearchParam,
-      };
-    } else {
-      obj = {
-        limit: this.pageSIM.size,
-        page: this.pageSIM.pageNumber,
-      };
-    }
+private fakeServiceSIM(term) {
 
-    if(this.is_phone_sim){
-      obj.is_phone_sim = 1;
-    }else{
-      obj.is_phone_sim = 0;
-    }
+  this.pageSIM.size = 50;
+  this.pageSIM.pageNumber = 1;
+  this.simsSearchParam = term;
 
-    let params = new HttpParams();
-    if (obj) {
-      for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          params = params.append(key, obj[key]);
-        }
+  let obj;
+  if(this.simsSearchParam){
+     obj = {
+      limit: this.pageSIM.size,
+      page: this.pageSIM.pageNumber,
+      search_param:this.simsSearchParam
+    };
+  }else{
+     obj = {
+      limit: this.pageSIM.size,
+      page: this.pageSIM.pageNumber
+    };
+  }
+
+  if(this.is_phone_sim){
+    obj.is_phone_sim = 1;
+  }else{
+    obj.is_phone_sim = 0;
+  }
+
+  let params = new HttpParams();
+  if (obj) {
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        params = params.append(key, obj[key]);
       }
     }
-    return this.http
-      .get<any>(environment.apiUrl + "stock/get-subscriptable-sim-list", {
-        params,
-      })
-      .pipe(
-        map((res) => {
-          return res;
-        })
-      );
   }
-
-
-  onSIMChange(e) {
-
-    // if (e) {
-    //   const simObj = this.simsBuffer.find(x=> x.id == e);
-    //   if (simObj.ICCID_no) {
-    //     item.controls["sim_iccid"].setValue(simObj.ICCID_no);
-    //     item.controls["sim_iccid"].disable();
-
-    //     if (simObj.phone_number) {
-    //       item.controls["phone_number"].setValue(simObj.phone_number);
-    //       item.controls["phone_number"].disable();
-    //     } else {
-    //       item.controls["phone_number"].setValue(null);
-    //       item.controls["phone_number"].enable();
-    //     }
-    //   } else {
-    //     item.controls["sim_iccid"].setValue(null);
-    //     item.controls["sim_iccid"].enable();
-
-    //     item.controls["phone_number"].setValue(null);
-    //     item.controls["phone_number"].enable();
-    //   }
-    // } else {
-    //   item.controls["sim_iccid"].setValue(null);
-    //   item.controls["phone_number"].setValue(null);
-    //   item.controls["sim_iccid"].disable();
-    //   item.controls["phone_number"].disable();
-    // }
-  }
+  return this.http.get<any>(environment.apiUrl + 'stock/get-subscriptable-sim-list', { params }).pipe(
+    map(res => {
+      return res;
+    })
+  );
+}
 
 }

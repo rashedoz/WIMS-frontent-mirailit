@@ -555,7 +555,6 @@ export class SellProductComponent implements OnInit {
       };
     }
     obj.is_phone_sim = 0;
-
     let params = new HttpParams();
     if (obj) {
       for (const key in obj) {
@@ -866,6 +865,8 @@ export class SellProductComponent implements OnInit {
     item.controls["device"].setValue(null);
     item.controls["IMEI"].setValue(null);
     item.controls["plan"].setValue(null);
+
+
 
 
 
