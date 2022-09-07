@@ -135,8 +135,8 @@
               <div class="col-lg-12">
 
                 <div class="form-group row">
-                  <label for="staticEmail" class="col-sm-1 col-form-label font-weight-bold ">Session : </label>
-                  <div class="col-sm-11">
+                  <label for="staticEmail" class="col-sm-2 col-form-label font-weight-bold ">Session : </label>
+                  <div class="col-sm-10">
                     <input type="text" readonly class="form-control-plaintext" id="staticEmail"
                       formControlName="session">
                   </div>
@@ -488,16 +488,18 @@
             <div class="col-sm-8">
 
               <div class="form-radio pt-1">
+
+               <div class="radio radio-inverse radio-inline">
+                  <label class="pt-1">
+                    <input formControlName="customerType" type="radio" name="customerType" value="Retailer">
+                    <i class="helper"></i>Retailer
+                  </label>
+                </div>
+
                 <div class="radio radio-inverse radio-inline">
                   <label class="pt-1">
                     <input formControlName="customerType" type="radio" name="customerType" value="Wholesaler">
                     <i class="helper"></i>Wholesaler
-                  </label>
-                </div>
-                <div class="radio radio-inverse radio-inline">
-                  <label class="pt-1">
-                    <input formControlName="customerType" type="radio" name="customerType" value="Retailer">
-                    <i class="helper"></i>Retailer
                   </label>
                 </div>
 
@@ -551,6 +553,13 @@
                 <th scope="row">Duration</th>
                 <td>
                   <span> {{packageObj.pckg_duration_name}}</span>
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Use Phone Sim Only</th>
+                <td>
+                  <span *ngIf="packageObj.has_phone_sim_dependency">Yes</span>
+                  <span *ngIf="!packageObj.has_phone_sim_dependency">No</span>
                 </td>
               </tr>
               <tr>

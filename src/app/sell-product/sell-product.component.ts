@@ -117,6 +117,7 @@ export class SellProductComponent implements OnInit {
 
   selectedSIMArray = [];
 
+  has_phone_sim_dependency = false;
   // this.selectedSIMArray.forEach((element,i) => {
   //   this.simsBuffer.splice(this.simsBuffer.indexOf(element),1);
   // });
@@ -168,7 +169,7 @@ export class SellProductComponent implements OnInit {
       mobile: [null, [Validators.required]],
       firstName: [null, [Validators.required]],
       lastName: [null, [Validators.required]],
-      customerType: ["Wholesaler"],
+      customerType: ["Retailer"]
     });
 
     this.entryForm.get("session").disable();
@@ -520,6 +521,8 @@ export class SellProductComponent implements OnInit {
       };
     }
 
+    if(this.has_phone_sim_dependency)obj.is_phone_sim = 1;
+
     this._service.get("stock/get-subscriptable-sim-list", obj).subscribe(
       (res) => {
         this.sims = res.results;
@@ -742,6 +745,7 @@ export class SellProductComponent implements OnInit {
       package: [null, [Validators.required]],
       package_item: [null],
       has_device_dependency: [true],
+      has_phone_sim_dependency: [true],
       platform: [null, [Validators.required]],
       sim: [null, [Validators.required]],
       phone_number: [null, [Validators.required]],
@@ -778,14 +782,14 @@ export class SellProductComponent implements OnInit {
   //   );
   // }
 
-  getSIMList() {
-    this._service.get("stock/get-subscriptable-sim-list").subscribe(
-      (res) => {
-        this.simList = res;
-      },
-      (err) => {}
-    );
-  }
+  // getSIMList() {
+  //   this._service.get("stock/get-subscriptable-sim-list").subscribe(
+  //     (res) => {
+  //       this.simList = res;
+  //     },
+  //     (err) => {}
+  //   );
+  // }
 
   getPackageList() {
     this._service.get("package/get-package-list",{limit: 1000000,page: 1}).subscribe(
@@ -863,12 +867,18 @@ export class SellProductComponent implements OnInit {
     item.controls["IMEI"].setValue(null);
     item.controls["plan"].setValue(null);
 
+
+
+
+
     if (e) {
       console.log(e);
 
       item.controls["package_item"].setValue(e);
       item.controls["plan"].setValue(e.plan);
       item.controls["has_device_dependency"].setValue(e.has_device_dependency);
+      item.controls["has_phone_sim_dependency"].setValue(e.has_phone_sim_dependency);
+      this.has_phone_sim_dependency = e.has_phone_sim_dependency;
       if (e.has_device_dependency) {
         item.controls["device"].setValidators([Validators.required]);
         item.controls["device"].updateValueAndValidity();
@@ -886,6 +896,9 @@ export class SellProductComponent implements OnInit {
     } else {
       item.controls["platform"].setValue(null);
     }
+
+    this.getSIM();
+    this.onSearchSIM();
   }
 
   onChangeDiscount(value) {
@@ -1135,7 +1148,7 @@ export class SellProductComponent implements OnInit {
   }
 
   openModalCustomer(template: TemplateRef<any>) {
-    this.RegistrerForm.controls["customerType"].setValue("Wholesaler");
+    this.RegistrerForm.controls["customerType"].setValue("Retailer");
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 
