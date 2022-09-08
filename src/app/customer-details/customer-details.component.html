@@ -1155,15 +1155,13 @@
               </ng-template>
 
                <ng-template ng-label-tmp let-item="item">
-                <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no"> {{item.CID_no}} </p>
-                <!-- <p class="card-text font-weight-bold" *ngIf="item.ICCID_no"> {{item.CID_no}}
-                  ({{item.ICCID_no}})</p> -->
+                <p class="card-text font-weight-bold"> {{item.CID_no}} </p>
                 </ng-template>
 
               <ng-template ng-option-tmp let-item="item" let-index="index">
                     <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no"> {{item.CID_no}} </p>
-                    <!-- <p class="card-text font-weight-bold" *ngIf="item.ICCID_no"> {{item.CID_no}}
-                      ({{item.ICCID_no}})</p> -->
+                    <p class="card-text font-weight-bold" *ngIf="item.ICCID_no"> {{item.CID_no}}
+                      ({{item.ICCID_no}})</p>
                   </ng-template>
 
 
@@ -1186,7 +1184,7 @@
               <input [ngClass]="{ 'is-invalid': submitted && res.sim_replace_iccid.errors}" formControlName="sim_replace_iccid" type="text"
                 class="form-control">
               <div *ngIf="submitted && res.sim_replace_iccid.errors" class="error-text">
-                <small *ngIf="res.sim_replace_iccid.errors.required" class="text-danger"> ICCID is
+                <small *ngIf="res.sim_replace_iccid.errors.required" class="text-danger"> ICCID no is
                   required</small>
               </div>
             </div>

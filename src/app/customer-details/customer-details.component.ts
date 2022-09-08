@@ -1019,10 +1019,11 @@ selectTab(tabId: number) {
     }
     const obj = {
       id:this.replaceSIMForm.value.id,
-      sim_replace_id:this.replaceSIMForm.value.sim_replace_id,
-      sim_replace_iccid:this.replaceSIMForm.value.sim_replace_iccid,
-      sim_replace_phone_number:this.replaceSIMForm.value.sim_replace_phone_number
+      sim_replace_id:this.replaceSIMForm.getRawValue().sim_replace_id,
+      sim_replace_iccid:this.replaceSIMForm.getRawValue().sim_replace_iccid,
+      sim_replace_phone_number:this.replaceSIMForm.getRawValue().sim_replace_phone_number
     };
+
 
     this.confirmService.confirm('Are you sure?', 'You are replacing this sim.')
     .subscribe(
@@ -1402,36 +1403,38 @@ private fakeServiceCustomer(term) {
 
 
   onSIMChange(e) {
-    if (e) {
-      this.replaceSIMForm.controls["sim_replace_id"].setValue(e.id);
-    }
 
-    // if(e){
-    //   if (e.ICCID_no){
-    //     this.replaceSIMForm.controls["sim_replace_iccid"].setValue(e.ICCID_no);
-    //     this.replaceSIMForm.controls["sim_replace_iccid"].disable();
-
-    //     if (e.phone_number){
-    //      this.replaceSIMForm.controls["sim_replace_phone_number"].setValue(e.phone_number);
-    //      this.replaceSIMForm.controls["sim_replace_phone_number"].disable();
-    //     }else{
-    //      this.replaceSIMForm.controls["sim_replace_phone_number"].setValue(null);
-    //      this.replaceSIMForm.controls["sim_replace_phone_number"].enable();
-    //     }
-
-    //    }else {
-    //      this.replaceSIMForm.controls["sim_replace_iccid"].setValue(null);
-    //      this.replaceSIMForm.controls["sim_replace_iccid"].enable();
-
-    //      this.replaceSIMForm.controls["sim_replace_phone_number"].setValue(null);
-    //      this.replaceSIMForm.controls["sim_replace_phone_number"].enable();
-    //    }
-    // }else{
-    //   this.replaceSIMForm.controls["sim_replace_iccid"].setValue(null);
-    //   this.replaceSIMForm.controls["sim_replace_phone_number"].setValue(null);
-    //   this.replaceSIMForm.controls["sim_replace_iccid"].disable();
-    //   this.replaceSIMForm.controls["sim_replace_phone_number"].disable();
+    // if (e) {
+    //   this.replaceSIMForm.controls["sim_replace_id"].setValue(e.id);
     // }
+
+    if(e){
+      this.replaceSIMForm.controls["sim_replace_id"].setValue(e.id);
+      if (e.ICCID_no){
+        this.replaceSIMForm.controls["sim_replace_iccid"].setValue(e.ICCID_no);
+        this.replaceSIMForm.controls["sim_replace_iccid"].disable();
+
+        if (e.phone_number){
+         this.replaceSIMForm.controls["sim_replace_phone_number"].setValue(e.phone_number);
+         this.replaceSIMForm.controls["sim_replace_phone_number"].disable();
+        }else{
+         this.replaceSIMForm.controls["sim_replace_phone_number"].setValue(null);
+         this.replaceSIMForm.controls["sim_replace_phone_number"].enable();
+        }
+
+       }else {
+         this.replaceSIMForm.controls["sim_replace_iccid"].setValue(null);
+         this.replaceSIMForm.controls["sim_replace_iccid"].enable();
+
+         this.replaceSIMForm.controls["sim_replace_phone_number"].setValue(null);
+         this.replaceSIMForm.controls["sim_replace_phone_number"].enable();
+       }
+    }else{
+      this.replaceSIMForm.controls["sim_replace_iccid"].setValue(null);
+      this.replaceSIMForm.controls["sim_replace_phone_number"].setValue(null);
+      this.replaceSIMForm.controls["sim_replace_iccid"].disable();
+      this.replaceSIMForm.controls["sim_replace_phone_number"].disable();
+    }
   }
 
 
