@@ -29,6 +29,7 @@ export class UpdatableSIMListComponent implements OnInit {
   modalTitleSIM = 'Add SIM Details';
   btnSaveText = 'Save';
   modalConfig: any = { class: 'modal-dialog-scrollable gray modal-lg', backdrop: 'static' };
+  modalConfigXL: any = { class: 'modal-dialog-scrollable gray modal-xl', backdrop: 'static' };
   modalRef: BsModalRef;
   StockStatus = StockStatus;
   page = new Page();
@@ -100,6 +101,8 @@ export class UpdatableSIMListComponent implements OnInit {
   }
 
   onSupplierChange(e) {
+    this.page.pageNumber = 0;
+    this.page.size = 10;
     if (e) {
       this.selectedSupplier = e;
       this.getList();
@@ -245,8 +248,8 @@ export class UpdatableSIMListComponent implements OnInit {
     this.loadingIndicator = true;
     let obj:any;
     obj = {
-      size: this.page.size,
-      pageNumber: this.page.pageNumber + 1,
+      limit: this.page.size,
+      page: this.page.pageNumber + 1
     };
 
     if(this.isPhoneSIM){
@@ -281,8 +284,8 @@ export class UpdatableSIMListComponent implements OnInit {
     this.loadingIndicator = true;
     let obj:any;
     obj = {
-      size: this.pageSIMUpdate.size,
-      pageNumber: this.pageSIMUpdate.pageNumber + 1,
+      limit: this.pageSIMUpdate.size,
+      page: this.pageSIMUpdate.pageNumber + 1
     };
 
     if(this.isPhoneSIM){
@@ -427,7 +430,7 @@ export class UpdatableSIMListComponent implements OnInit {
 
   openModalSIM(template: TemplateRef<any>) {
     this.getListForSIMUpdate();
-    this.modalRef = this.modalService.show(template, this.modalConfig);
+    this.modalRef = this.modalService.show(template, this.modalConfigXL);
   }
 
 }

@@ -44,6 +44,9 @@ export class PackageListComponent implements OnInit {
   isDeviceEnable = true;
   isPhoneSimEnable = false;
 
+  selectedOffer;
+  selectedDuration;
+
   constructor(
     private modalService: BsModalService,
     public formBuilder: FormBuilder,
@@ -91,7 +94,13 @@ export class PackageListComponent implements OnInit {
   onOfferTypeChange(e){
 
     this.entryForm.controls["pckg_duration"].setValue(null);
-    this.tempDurationList = this.durationList.filter((x)=> x.pckg_duration_in_month <= e.pckg_offer_month_covers);
+    // this.tempDurationList = this.durationList.filter((x)=> x.pckg_duration_in_month <= e.pckg_offer_month_covers);
+    this.selectedOffer = e;
+
+  }
+
+  onDurationChange(e){
+    this.selectedDuration = e;
   }
 
   onPhoneSIMChange(e){
@@ -268,6 +277,11 @@ export class PackageListComponent implements OnInit {
     }
 
 
+    if(this.selectedDuration.pckg_duration_in_month != this.selectedOffer.pckg_offer_month_covers){
+      this.toastr.error('Offer month and duration must be equal', 'Warning!', { timeOut: 2000 });
+      return;
+    }
+
 
   this.blockUI.start('Saving...');
 
@@ -325,6 +339,9 @@ export class PackageListComponent implements OnInit {
     this.submitted = false;
     this.modalTitle = 'Create Package';
     this.btnSaveText = 'Save';
+
+    this.selectedOffer = null;
+    this.selectedDuration = null;
   }
 
   openModal(template: TemplateRef<any>) {

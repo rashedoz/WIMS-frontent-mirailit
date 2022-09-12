@@ -96,6 +96,14 @@
                                     rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
                                     (page)="setPage($event)">
 
+                                    <ngx-datatable-column *ngIf="isPhoneSIM == true" [width]="10" name="SIM Type" [draggable]="false"
+                                    [sortable]="false">
+                                    <ng-template let-value="value" ngx-datatable-cell-template>
+                                      <span> <strong class="label label-warning">Phone Sim</strong>
+                                      </span>
+                                    </ng-template>
+                                  </ngx-datatable-column>
+
 
                                 <ngx-datatable-column [width]="80" name="SIM CID No" prop="CID_no" [draggable]="false" [sortable]="false">
                                     <ng-template let-row="row" ngx-datatable-cell-template>
@@ -197,6 +205,14 @@
                                 <span title="{{ value }}"> {{ value }} </span>
                             </ng-template>
                         </ngx-datatable-column>
+
+                        <ngx-datatable-column *ngIf="isPhoneSIM == true" [width]="10" name="SIM Type" [draggable]="false"
+                                    [sortable]="false">
+                                    <ng-template let-value="value" ngx-datatable-cell-template>
+                                      <span> <strong class="label label-warning">Phone Sim</strong>
+                                      </span>
+                                    </ng-template>
+                                  </ngx-datatable-column>
 
                         <!-- <ngx-datatable-column [width]="80" name="SIM CID No" prop="CID_no" [draggable]="false" [sortable]="false">
                             <ng-template let-value="value" ngx-datatable-cell-template>

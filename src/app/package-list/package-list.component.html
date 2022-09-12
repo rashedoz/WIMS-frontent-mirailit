@@ -41,21 +41,24 @@
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column [width]="100" name="Comes with Device" prop="has_device_dependency"
+                <ngx-datatable-column [width]="140" name="Comes with Device" prop="has_device_dependency"
                   [draggable]="false" [sortable]="false">
                   <ng-template let-value="value" ngx-datatable-cell-template>
 
-                    <strong *ngIf="value" class="label label-success">Yes</strong>
-                    <strong *ngIf="!value" class="label label-danger">No</strong>
+                    <strong *ngIf="value">Yes</strong>
+                    <strong *ngIf="!value">No</strong>
 
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column [width]="100" name="Has Phone SIM" prop="has_phone_sim_dependency"
+                <ngx-datatable-column [width]="80" name="SIM Type" prop="has_phone_sim_dependency"
                   [draggable]="false" [sortable]="false">
                   <ng-template let-value="value" ngx-datatable-cell-template>
-                    <strong *ngIf="value" class="label label-success">Yes</strong>
-                    <strong *ngIf="!value" class="label label-danger">No</strong>
+
+                    <span *ngIf="value"> <strong class="label label-warning">Phone Sim</strong>
+                    </span>
+                    <span *ngIf="!value"> -- </span>
+
                   </ng-template>
                 </ngx-datatable-column>
 
@@ -233,9 +236,9 @@
             <div class="form-group row">
               <label class="col-sm-3 col-form-label"> Duration </label>
               <div class="col-sm-9">
-                <ng-select [clearable]="false"  [clearOnBackspace]="false"
+                <ng-select [clearable]="false"  [clearOnBackspace]="false"  (change)="onDurationChange($event)"
                   [ngClass]="{ 'is-invalid': submitted && f.pckg_plan.errors}" formControlName="pckg_duration"
-                  [items]="tempDurationList" bindLabel="pckg_duration_name" bindValue="id" placeholder="Select a package duration"></ng-select>
+                  [items]="durationList" bindLabel="pckg_duration_name" bindValue="id" placeholder="Select a package duration"></ng-select>
 
                   <div *ngIf="submitted && f.pckg_duration.errors" class="error-text">
                     <small *ngIf="f.pckg_duration.errors.required"
