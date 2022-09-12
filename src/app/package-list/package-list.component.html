@@ -44,8 +44,18 @@
                 <ngx-datatable-column [width]="100" name="Comes with Device" prop="has_device_dependency"
                   [draggable]="false" [sortable]="false">
                   <ng-template let-value="value" ngx-datatable-cell-template>
-                    <span *ngIf="value"> Yes </span>
-                    <span *ngIf="!value"> No </span>
+
+                    <strong *ngIf="value" class="label label-success">Yes</strong>
+                    <strong *ngIf="!value" class="label label-danger">No</strong>
+
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column [width]="100" name="Has Phone SIM" prop="has_phone_sim_dependency"
+                  [draggable]="false" [sortable]="false">
+                  <ng-template let-value="value" ngx-datatable-cell-template>
+                    <strong *ngIf="value" class="label label-success">Yes</strong>
+                    <strong *ngIf="!value" class="label label-danger">No</strong>
                   </ng-template>
                 </ngx-datatable-column>
 

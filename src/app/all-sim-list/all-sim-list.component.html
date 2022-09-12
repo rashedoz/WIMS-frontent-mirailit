@@ -194,7 +194,7 @@
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="150" name="Status" [draggable]="false"
+                    <ngx-datatable-column [width]="200" name="Status" [draggable]="false"
                       [sortable]="false">
                       <ng-template let-row="row" ngx-datatable-cell-template>
                         <span *ngIf="row.status == 1"> <strong class="label label-success">{{ StockStatus[row.status] }}</strong>
@@ -215,6 +215,8 @@
                         </span>
 
                         <span *ngIf="row.is_frozen"> <strong class="label label-default">Frozen</strong>
+                        </span>
+                        <span *ngIf="tabType == 'Will Be Cancelled'"> <strong class="label label-default">Will Be Cancelled</strong>
                         </span>
 
 

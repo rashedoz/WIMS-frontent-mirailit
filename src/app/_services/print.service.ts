@@ -159,8 +159,8 @@ export class PrintService {
           imei: element.IMEI ? element.IMEI : 'N/A',
           package_name: element.pckg_name,
           note: element.sim_status == 9 ? 'Replaced' : element.pckg_expiry != null ? moment(element.pckg_expiry).format('MMMM Do YYYY') : 'Recurring'+ note,
-          amount_details: amount_details,
-          amount: element.current_month_price
+          amount_details: element.sim_status != 9 ? amount_details : 'N/A',
+          amount: element.sim_status != 9 ? element.current_month_price : 'N/A'
         });
         if(element.round == 1)roundCount++;
       });

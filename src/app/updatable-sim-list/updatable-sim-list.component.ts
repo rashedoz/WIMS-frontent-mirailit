@@ -32,6 +32,7 @@ export class UpdatableSIMListComponent implements OnInit {
   modalRef: BsModalRef;
   StockStatus = StockStatus;
   page = new Page();
+  pageSIMUpdate = new Page();
   pageSupplier = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
   rows = [];
@@ -39,8 +40,8 @@ export class UpdatableSIMListComponent implements OnInit {
   ColumnMode = ColumnMode;
   scrollBarHorizontal = (window.innerWidth < 1200);
 
-  SIMItemList: Array<any> = [];
-
+  SIMItemList = [];
+  isPhoneSIM = false;
 
   // for customer
   selectedSupplier = null;
@@ -64,6 +65,9 @@ export class UpdatableSIMListComponent implements OnInit {
   ) {
     this.page.pageNumber = 0;
     this.page.size = 10;
+
+    this.pageSIMUpdate.pageNumber = 0;
+    this.pageSIMUpdate.size = 20;
 
     this.pageSupplier.pageNumber = 1;
     this.pageSupplier.size = 50;
@@ -220,31 +224,93 @@ export class UpdatableSIMListComponent implements OnInit {
 
 
 
+  onPhoneSIMChange(e){
+    this.page.pageNumber = 0;
+    this.page.size = 10;
+    this.getList();
+  }
 
 
+  setPage(pageInfo) {
+    this.page.pageNumber = pageInfo.offset;
+    this.getList();
+  }
 
-  // setPage(pageInfo) {
-  //   this.page.pageNumber = pageInfo.offset;
-  //   this.getList();
-  // }
+  setPageSIMUpdate(pageInfo) {
+    this.pageSIMUpdate.pageNumber = pageInfo.offset;
+    this.getListForSIMUpdate();
+  }
 
   getList() {
     this.loadingIndicator = true;
-    // const obj = {
-    //   size: this.page.size,
-    //   pageNumber: this.page.pageNumber
-    // };
+    let obj:any;
+    obj = {
+      size: this.page.size,
+      pageNumber: this.page.pageNumber + 1,
+    };
+
+    if(this.isPhoneSIM){
+      obj.is_phone_sim = 1;
+    }else{
+      obj.is_phone_sim = 0;
+    }
 
     //stock/get-updatable-sim-list
-    this._service.get('stock/get-updatable-sim-list-by-supplierid/'+this.selectedSupplier.id).subscribe(res => {
+    this._service.get('stock/get-updatable-sim-list-by-supplierid/'+this.selectedSupplier.id, obj).subscribe(res => {
 
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
         return;
       }
-      this.rows = res.length > 0 ? res.reverse() : res;
-      // this.page.totalElements = res.Total;
-      // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+      this.rows = res.results;
+      this.page.totalElements = res.count;
+      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }, err => {
+      this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
+    }
+    );
+  }
+
+  getListForSIMUpdate() {
+    this.loadingIndicator = true;
+    let obj:any;
+    obj = {
+      size: this.pageSIMUpdate.size,
+      pageNumber: this.pageSIMUpdate.pageNumber + 1,
+    };
+
+    if(this.isPhoneSIM){
+      obj.is_phone_sim = 1;
+    }else{
+      obj.is_phone_sim = 0;
+    }
+
+    //stock/get-updatable-sim-list
+    this._service.get('stock/get-updatable-sim-list-by-supplierid/'+this.selectedSupplier.id, obj).subscribe(res => {
+
+      if (!res) {
+        this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
+        return;
+      }
+
+      // res.results.forEach(element => {
+      //   this.SIMItemList.push({
+      //     "id": element.id,
+      //     "CID_no": element.CID_no,
+      //     "ICCID_no": "",
+      //     "phone_number": "",
+      //   });
+      // });
+
+      this.SIMItemList = res.results;
+      this.pageSIMUpdate.totalElements = res.count;
+      this.pageSIMUpdate.totalPages = Math.ceil(this.pageSIMUpdate.totalElements / this.pageSIMUpdate.size);
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -262,29 +328,53 @@ export class UpdatableSIMListComponent implements OnInit {
   onFormSubmitSIM() {
 
     let sim_details = [];
-    this.blockUI.start('Updating...');
+
    let checkCID = [];
    let checkICCID = [];
+   let checkICCIDPhone = [];
    let checkPhoneNumber = [];
-   checkCID =  this.SIMItemList.filter(x => x.CID_no == '' && x.ICCID_no != '');
-   if(checkCID.length > 0){
-    this.toastr.warning('Some SIM CID No Not Added', 'Warning!', { timeOut: 4000 });
-    return;
-   }
+   let checkPhone = [];
+  //  checkCID =  this.SIMItemList.filter(x => x.CID_no == '' && x.ICCID_no != '');
+  //  if(checkCID.length > 0){
+  //   this.toastr.warning('Some SIM CID No Not Added', 'Warning!', { timeOut: 4000 });
+  //   return;
+  //  }
 
-   checkICCID =  this.SIMItemList.filter(x => x.CID_no != '' && x.ICCID_no == '');
+  //  checkICCID =  this.SIMItemList.filter(x => x.CID_no != '' && x.ICCID_no == '');
+  //  if(checkICCID.length > 0){
+  //   this.toastr.warning('Some SIM ICCID No Not Added', 'Warning!', { timeOut: 4000 });
+  //   return;
+  //  }
+
+  //  checkPhoneNumber =  this.SIMItemList.filter(x => (x.CID_no == '' && x.ICCID_no == '') && x.phone_number != '');
+  //  if(checkPhoneNumber.length > 0){
+  //   this.toastr.warning('With Phone Number You Must Add SIM CID No And ICCID No', 'Warning!', { timeOut: 4000 });
+  //   return;
+  //  }
+
+
+
+
+
+   checkICCID =  this.SIMItemList.filter(x => !x.ICCID_no && x.phone_number);
    if(checkICCID.length > 0){
-    this.toastr.warning('Some SIM ICCID No Not Added', 'Warning!', { timeOut: 4000 });
+    this.toastr.warning('Some SIM ICCID Not Added', 'Warning!', { timeOut: 4000 });
     return;
    }
 
-   checkPhoneNumber =  this.SIMItemList.filter(x => (x.CID_no == '' && x.ICCID_no == '') && x.phone_number != '');
-   if(checkPhoneNumber.length > 0){
-    this.toastr.warning('With Phone Number You Must Add SIM CID No And ICCID No', 'Warning!', { timeOut: 4000 });
+   checkPhone =  this.SIMItemList.filter(x => x.ICCID_no && !x.phone_number);
+   if(checkPhone.length > 0){
+    this.toastr.warning('Some Phone Number Not Added', 'Warning!', { timeOut: 4000 });
     return;
    }
 
-    this.SIMItemList.filter(x => x.ICCID_no != '' && x.CID_no != '').forEach(element => {
+  //  checkPhoneNumber =  this.SIMItemList.filter(x => (x.CID_no == null && x.ICCID_no == null) && x.phone_number != '');
+  //  if(checkPhoneNumber.length > 0){
+  //   this.toastr.warning('With Phone Number You Must Add SIM CID No And ICCID No', 'Warning!', { timeOut: 4000 });
+  //   return;
+  //  }
+
+    this.SIMItemList.filter(x => x.ICCID_no && x.phone_number).forEach(element => {
       sim_details.push({
         id: element.id,
         CID_no: element.CID_no,
@@ -297,7 +387,7 @@ export class UpdatableSIMListComponent implements OnInit {
       this.toastr.warning('No details added', 'Warning!', { timeOut: 4000 });
       return;
     }
-
+    this.blockUI.start('Updating...');
 
     const obj = {
       sim_details: sim_details
@@ -336,14 +426,7 @@ export class UpdatableSIMListComponent implements OnInit {
 
 
   openModalSIM(template: TemplateRef<any>) {
-    this.rows.forEach(element => {
-      this.SIMItemList.push({
-        "id": element.id,
-        "CID_no": "",
-        "ICCID_no": "",
-        "phone_number": "",
-      });
-    });
+    this.getListForSIMUpdate();
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 

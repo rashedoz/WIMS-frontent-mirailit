@@ -67,7 +67,7 @@ export class PackageListComponent implements OnInit {
       is_phone_sim: [false],
       has_device_dependency: [true],
       pckg_duration: [null, [Validators.required]],
-      device_deposit: [null],
+      device_deposit: [null, [Validators.required]],
       pckg_initial_fee: [null, [Validators.required]],
       pckg_shipping_charge: [null],
       pckg_price: [null, [Validators.required]],
