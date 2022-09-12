@@ -291,7 +291,7 @@
 
                                   <ng-option *ngFor="let item of simsBuffer" [value]="item.id" [disabled]="item.disabled">
                                     <p title="{{item.ICCID_no}}" class="card-text font-weight-bold" *ngIf="!item.ICCID_no"> {{item.CID_no}} </p>
-                                    <p title="{{item.ICCID_no}}" class="card-text font-weight-bold" *ngIf="item.ICCID_no"> {{item.CID_no}}({{item.ICCID_no}})</p>
+                                    <p title="{{item.ICCID_no}}" class="card-text font-weight-bold" *ngIf="item.ICCID_no"> {{item.CID_no}} -- ({{item.ICCID_no}})</p>
 
 
                                   </ng-option>
