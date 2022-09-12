@@ -278,7 +278,7 @@ export class PackageListComponent implements OnInit {
 
 
     if(this.selectedDuration.pckg_duration_in_month != this.selectedOffer.pckg_offer_month_covers){
-      this.toastr.error('Offer month and duration must be equal', 'Warning!', { timeOut: 2000 });
+      this.toastr.warning('Offer month and duration must be equal.', 'Warning!', { timeOut: 2000 });
       return;
     }
 
