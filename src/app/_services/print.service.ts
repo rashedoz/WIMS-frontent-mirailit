@@ -262,7 +262,6 @@ export class PrintService {
             }
         },
         willDrawCell: function (data) {
-
           if (data.row.section === 'body' && data.column.dataKey === 'note') {
             if (data.cell.raw == 'Replaced') {
               doc.setTextColor(231, 76, 60) // Red
@@ -270,7 +269,6 @@ export class PrintService {
           }
         }
         });
-
       }
 
 
