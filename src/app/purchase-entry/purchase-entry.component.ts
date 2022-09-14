@@ -7,7 +7,8 @@ import { CommonService } from './../_services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from './../_models/page';
-
+import { ProductType } from '../_models/enums';
+import { BsDatepickerConfig } from "ngx-bootstrap/datepicker";
 
 @Component({
   selector: 'app-purchase-entry',
@@ -17,12 +18,14 @@ import { Page } from './../_models/page';
 
 export class PurchaseEntryComponent implements OnInit {
 
+  ProductType = ProductType;
   entryFormSIM: FormGroup;
   entryFormDevice: FormGroup;
   entryFormSIMDevice: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
   @ViewChild('dataTable', { static: false }) table: any;
+  bsConfig: Partial<BsDatepickerConfig>;
 
   modalTitleSIM = 'Add SIM';
   modalTitleDevice = 'Add Device';
@@ -30,18 +33,23 @@ export class PurchaseEntryComponent implements OnInit {
   btnSaveText = 'Save';
 
   modalConfig: any = { class: 'gray modal-lg', backdrop: 'static' };
+  modalConfigXL: any = { class: 'gray modal-xl', backdrop: 'static' };
   modalRef: BsModalRef;
 
   page = new Page();
+  pageSupplementary = new Page();
   rows = [];
   loadingIndicator = false;
   ColumnMode = ColumnMode;
 
   scrollBarHorizontal = (window.innerWidth < 1200);
   supplierList : Array<any> = [];
+  supplementaryList : Array<any> = [];
   productTypeList : Array<any> = [];
   purchaseItemList : Array<any> = [];
   totalAmount: number;
+
+  selectedSupplier;
 
   constructor(
     private modalService: BsModalService,
@@ -50,17 +58,27 @@ export class PurchaseEntryComponent implements OnInit {
     private toastr: ToastrService,
     private router: Router
   ) {
-    // this.page.pageNumber = 0;
-    // this.page.size = 10;
+    this.page.pageNumber = 0;
+    this.page.size = 10;
+
     window.onresize = () => {
       this.scrollBarHorizontal = (window.innerWidth < 1200);
     };
+
+    this.bsConfig = Object.assign(
+      {},
+      {
+        dateInputFormat: "DD-MMM-YYYY ",
+      }
+    );
   }
 
 
   ngOnInit() {
     this.entryFormSIM = this.formBuilder.group({
       supplier: [null, [Validators.required]],
+      supplement: [null, [Validators.required]],
+      delivery_date: [null, [Validators.required]],
       is_phone_sim:[false]
     });
     this.entryFormDevice = this.formBuilder.group({
@@ -73,7 +91,7 @@ export class PurchaseEntryComponent implements OnInit {
 
     this.getList();
     this.getSupplierList();
-    this.getProductTypeList();
+   // this.getProductTypeList();
   }
 
   get s() {
@@ -101,20 +119,24 @@ export class PurchaseEntryComponent implements OnInit {
   }
 
   setPage(pageInfo) {
-   // this.page.pageNumber = pageInfo.offset;
+    this.page.pageNumber = pageInfo.offset;
     this.getList();
   }
 
   getList() {
     this.loadingIndicator = true;
-    this._service.get('purchase/get-purchase-list').subscribe(res => {
+    const obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber + 1
+    };
+    this._service.get('purchase/get-purchase-list',obj).subscribe(res => {
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
         return;
       }
-      this.rows = res;
-      // this.page.totalElements = res.Total;
-      // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
+      this.rows = res.results;
+      this.page.totalElements = res.count;
+      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
       setTimeout(() => {
         this.loadingIndicator = false;
       }, 1000);
@@ -126,6 +148,21 @@ export class PurchaseEntryComponent implements OnInit {
     }
     );
   }
+
+  getSupplementaryList() {
+    this._service.get('stock/get-supplementary-list?supplier_id='+this.selectedSupplier.id).subscribe(res => {
+      if (!res) {
+        this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
+        return;
+      }
+      this.supplementaryList = res.results;
+
+    }, err => {
+      this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
+    }
+    );
+  }
+
 
   toggleExpandRow(row) {
     if(!row.details) row.details = row.purchase_details;
@@ -310,6 +347,7 @@ export class PurchaseEntryComponent implements OnInit {
     this.btnSaveText = 'Save';
     this.purchaseItemList = [];
     this.totalAmount = 0;
+    this.selectedSupplier = null;
   }
 
   modalHideDevice() {
@@ -320,6 +358,7 @@ export class PurchaseEntryComponent implements OnInit {
     this.btnSaveText = 'Save';
     this.purchaseItemList = [];
     this.totalAmount = 0;
+    this.selectedSupplier = null;
   }
 
   modalHideSIMDevice() {
@@ -341,29 +380,53 @@ export class PurchaseEntryComponent implements OnInit {
 
   }
 
-  openModalSIM(template: TemplateRef<any>) {
-  let simProductList =  this.productTypeList.filter(x=> x.product_type === "SIM");
-  simProductList.forEach(element => {
+  onSupplierChange(e){
+    this.purchaseItemList = [];
+    this.entryFormSIM.controls['supplement'].setValue(null);
+    this.selectedSupplier = e;
+    if(this.selectedSupplier){
+      this.getSupplementaryList();
+    }
+
+  }
+
+  onSupplementChange(e){
+    this.purchaseItemList = [];
     this.purchaseItemList.push({
-      "product_type_id":element.id,
-      "product_type":element.product_type,
+      "product_type":1,
+      "model_name":e.model_name,
+      "plan_name":e.plan_name,
+      "plan_price_for_admin":e.plan_price_for_admin,
+      "reissue_cost_for_admin":e.reissue_cost_for_admin,
+      "payment_cycle_for_admin":e.payment_cycle_for_admin,
       "qty":0,
       "amount":0
     });
-  });
-  this.modalRef = this.modalService.show(template, this.modalConfig);
+  }
+
+  openModalSIM(template: TemplateRef<any>) {
+  // let simProductList =  this.productTypeList.filter(x=> x.product_type == 1);
+  // simProductList.forEach(element => {
+  //   this.purchaseItemList.push({
+  //     "product_type_id":element.id,
+  //     "product_type":element.product_type,
+  //     "qty":0,
+  //     "amount":0
+  //   });
+  // });
+     this.modalRef = this.modalService.show(template, this.modalConfigXL);
   }
 
   openModalDevice(template: TemplateRef<any>) {
-  let deviceProductList =  this.productTypeList.filter(x=> x.product_type  != "SIM");
-  deviceProductList.forEach(element => {
-    this.purchaseItemList.push({
-      "product_type_id":element.id,
-      "product_type":element.product_type,
-      "qty":0,
-      "amount":0
-    });
-  });
+  // let deviceProductList =  this.productTypeList.filter(x=> x.product_type  != 1);
+  // deviceProductList.forEach(element => {
+  //   this.purchaseItemList.push({
+  //     "product_type_id":element.id,
+  //     "product_type":element.product_type,
+  //     "qty":0,
+  //     "amount":0
+  //   });
+  // });
   this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 

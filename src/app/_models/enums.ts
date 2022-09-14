@@ -32,6 +32,11 @@ export enum StatusTypes {
     HELD = 3
   }
 
+  export enum ProductType {
+    SIM = 1,
+    DEVICE = 2
+  }
+
   export enum BillStatus {
     NOT_PAID_YET = 1,
     PARTIALLY_PAID = 2,

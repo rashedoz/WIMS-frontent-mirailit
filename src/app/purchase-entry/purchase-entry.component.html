@@ -7,8 +7,8 @@
                     <div class="card card-border-default">
                         <div class="card-header">
                             <!-- <h5>Purchase </h5> -->
-                            <button class="btn btn-primary btn-mini float-right" (click)="openModalSIMDevice(templateSIMDevice)"><i
-                                class=" icofont icofont-plus "></i> SIM & Device</button>
+                            <!-- <button class="btn btn-primary btn-mini float-right" (click)="openModalSIMDevice(templateSIMDevice)"><i
+                                class=" icofont icofont-plus "></i> SIM & Device</button> -->
                             <button class="btn btn-primary btn-mini float-right mr-2" (click)="openModalDevice(templateDevice)"><i
                                 class=" icofont icofont-plus "></i> Device</button>
                             <button class="btn btn-primary btn-mini float-right mr-2" (click)="openModalSIM(templateSIM)"><i
@@ -20,10 +20,16 @@
                         <div class="card-block ">
                             <div class="row ">
                                 <div class="col-lg-12">
-                                    <ngx-datatable #dataTable class="material table-bordered" [rows]="rows"
+                                    <!-- <ngx-datatable #dataTable class="material table-bordered" [rows]="rows"
                                     [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
                                     [headerHeight]="40" [footerHeight]="50" rowHeight="auto"  [limit]="10"
-                                  >
+                                  > -->
+
+                                <ngx-datatable #dataTable class="material table-bordered" [scrollbarH]="true" [rows]="rows"
+                                [loadingIndicator]="loadingIndicator" [externalPaging]="true" [columnMode]="ColumnMode.force"
+                                [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [count]="page.totalElements"
+                                [offset]="page.pageNumber" [limit]="page.size" (page)="setPage($event)">
+
                                 <!-- Row Detail Template -->
                                 <ngx-datatable-row-detail  [rowHeight]="'100%'">
                                     <ng-template let-row="row" let-expanded="expanded"
@@ -35,14 +41,14 @@
                                                     <tr>
                                                         <th width="40%" scope="col">Product Type</th>
                                                         <th width="30%" scope="col">Qty</th>
-                                                        <th width="30%" scope="col">Amount</th>
+                                                        <!-- <th width="30%" scope="col">Amount</th> -->
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr *ngFor="let item of row.details">
-                                                        <th>{{item.product_type}}</th>
+                                                        <th>{{ProductType[item.product_type]}}</th>
                                                         <th>{{item.qty}}</th>
-                                                        <th>{{item.total_amount}}</th>
+                                                        <!-- <th>{{item.total_amount}}</th> -->
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -110,7 +116,7 @@
                         <label class="col-sm-5 col-form-label">Supplier </label>
                         <div class="col-sm-7">
 
-                                <ng-select formControlName="supplier" [clearable]="false" [ngClass]="{ 'is-invalid': submitted && s.supplier.errors }"
+                                <ng-select formControlName="supplier" (change)="onSupplierChange($event)" [clearable]="false" [ngClass]="{ 'is-invalid': submitted && s.supplier.errors }"
                                     [clearOnBackspace]="false" [items]="supplierList" bindLabel="name" bindValue="id"
                                     placeholder="Select a supplier">
                                 </ng-select>
@@ -120,7 +126,7 @@
 
                             </div>
                         </div>
-                    </div>
+                     </div>
                     </div>
                     <div class="col-md-5">
                       <div class="form-group text-right">
@@ -134,6 +140,38 @@
                         </div>
                       </div>
                     </div>
+
+                    <div class="col-md-12">
+                      <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Supplement </label>
+                        <div class="col-sm-7 pl-2">
+                                <ng-select formControlName="supplement" (change)="onSupplementChange($event)" [clearable]="false" [ngClass]="{ 'is-invalid': submitted && s.supplement.errors }"
+                                    [clearOnBackspace]="false" [items]="supplementaryList" bindLabel="model_name"
+                                    placeholder="Select a supplement">
+                                </ng-select>
+
+                            <div *ngIf="submitted && s.supplement.errors" class="error-text">
+                                <span *ngIf="s.supplement.errors.required" class="text-danger"> Supplement is required</span>
+
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group row">
+                        <label class="col-sm-6 col-form-label">Delivery Date </label>
+                        <div class="col-sm-6 pl-2">
+                          <input type="text" class="form-control" readonly formControlName="delivery_date" [bsConfig]="bsConfig"
+                          bsDatepicker>
+
+                            <div *ngIf="submitted && s.delivery_date.errors" class="error-text">
+                                <span *ngIf="s.delivery_date.errors.required" class="text-danger"> Delivery Date is required</span>
+
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
                   </div>
 
 
@@ -149,14 +187,13 @@
                                         <th scope="col">#</th>
                                         <th scope="col">Product Type</th>
                                         <th scope="col">Qty</th>
-                                        <th scope="col">Amount</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
                                     <tr *ngFor="let item of purchaseItemList; let i=index">
                                         <th>{{i+1}}</th>
-                                        <th>{{item.product_type}}</th>
+                                        <th>{{ProductType[item.product_type]}}</th>
                                         <th><input type="text" numeric numericType="number" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.qty"  required /></th>
                                         <th><input type="text" numeric numericType="decimal" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.amount"  required /></th>
 

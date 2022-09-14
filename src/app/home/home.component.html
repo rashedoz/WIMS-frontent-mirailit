@@ -71,20 +71,22 @@
                 </div>
               </div>
 
-              <highcharts-chart *ngIf="!showLoader" [Highcharts]="highcharts" [options]="pieChartOptions"
+              <div *ngIf="pieChartOptions">
+                <highcharts-chart *ngIf="!showLoader" [Highcharts]="highcharts" [options]="pieChartOptions"
                 style="width: 100%; min-height: 245px; display: block;">
               </highcharts-chart>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-lg-6">
+    <div class="col-lg-6" >
       <div class="row mb-2">
         <div class="col-lg-12 col-sm-12">
           <div class="card card-border-primary">
             <div class="card-header">
-              <h5 class="title-custom" >Bill Collection Methods ({{billCollectionMethodData.bill_collection_ways_distinct}}) </h5>
+              <h5 class="title-custom" *ngIf="billCollectionMethodData">Bill Collection Methods ({{billCollectionMethodData.bill_collection_ways_distinct}}) </h5>
             </div>
 
             <div class="card-block pt-2">
@@ -96,7 +98,7 @@
               </div>
 
               <div class="table-responsive" *ngIf="!showLoader">
-                <table class="table table-sm">
+                <table class="table table-sm" *ngIf="billCollectionMethodData">
                   <tbody>
                     <tr>
                       <td>Cash</td>
