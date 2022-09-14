@@ -200,30 +200,32 @@
                         (page)="setPageSIMUpdate($event)">
 
 
-                        <ngx-datatable-column [width]="8" name="SL" prop="id" [draggable]="false" [sortable]="false">
+                        <ngx-datatable-column [width]="40" name="SL" prop="id" [draggable]="false" [sortable]="false">
                             <ng-template let-value="value" ngx-datatable-cell-template>
-                                <span title="{{ value }}"> {{ value }} </span>
+                                <span title="{{ value }}"> {{ value }}
+                                  <label *ngIf="isPhoneSIM == true" class="badge badge-warning badge-bottom-right"><i class="icofont icofont-mobile-phone"></i></label>
+                                </span>
                             </ng-template>
                         </ngx-datatable-column>
 
-                        <ngx-datatable-column *ngIf="isPhoneSIM == true" [width]="10" name="SIM Type" [draggable]="false"
+                        <!-- <ngx-datatable-column *ngIf="isPhoneSIM == true" [width]="10" name="SIM Type" [draggable]="false"
                                     [sortable]="false">
                                     <ng-template let-value="value" ngx-datatable-cell-template>
                                       <span> <strong class="label label-warning">Phone Sim</strong>
                                       </span>
                                     </ng-template>
-                                  </ngx-datatable-column>
+                                  </ngx-datatable-column> -->
 
                         <!-- <ngx-datatable-column [width]="80" name="SIM CID No" prop="CID_no" [draggable]="false" [sortable]="false">
                             <ng-template let-value="value" ngx-datatable-cell-template>
                                 <span title="{{ value }}"> {{ value }} </span>
                             </ng-template>
-                        </ngx-datatable-column>     -->
+                        </ngx-datatable-column>  -->
 
-                        <ngx-datatable-column [width]="100" name="SIM CID No" prop="CID_no" [draggable]="false"
+                        <ngx-datatable-column [width]="120" name="SIM CID No" prop="CID_no" [draggable]="false"
                             [sortable]="false">
                             <ng-template let-row="row" ngx-datatable-cell-template>
-                                <input type="text"class="form-control mt-2" readonly [(ngModel)]="row.CID_no"  required />
+                                <input type="text"class="form-control mt-2" readonly [(ngModel)]="row.CID_no" />
                             </ng-template>
                         </ngx-datatable-column>
 
@@ -234,12 +236,64 @@
                             </ng-template>
                         </ngx-datatable-column>
 
-                        <ngx-datatable-column [width]="150" name="Phone No" prop="phone_number" [draggable]="false"
+                        <ngx-datatable-column [width]="120" name="Phone No" prop="phone_number" [draggable]="false"
                         [sortable]="false">
                         <ng-template let-row="row" ngx-datatable-cell-template>
                             <input type="text"class="form-control mt-2" [(ngModel)]="row.phone_number"  required />
                         </ng-template>
                     </ngx-datatable-column>
+
+                      <ngx-datatable-column [width]="100" name="Delivery Date" prop="delivery_received_at" [draggable]="false"
+                        [sortable]="false">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          <span> {{ row.delivery_received_at | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a' }} </span>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                      <ngx-datatable-column [width]="100" name="Model Name" prop="model_name" [draggable]="false"
+                        [sortable]="false">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          <span> {{ row.model_name }} </span>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                        <ngx-datatable-column [width]="100" name="Plan Name" prop="plan_name" [draggable]="false"
+                        [sortable]="false">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          <span> {{ row.plan_name }} </span>
+
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                        <ngx-datatable-column [width]="100" name="Plan Price" prop="plan_price_for_admin" [draggable]="false"
+                        [sortable]="false">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          <span> {{ row.plan_price_for_admin }} </span>
+
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                        <ngx-datatable-column [width]="100" name="Reissue Cost" prop="reissue_cost_for_admin" [draggable]="false"
+                        [sortable]="false">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          <span> {{ row.reissue_cost_for_admin }} </span>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                        <ngx-datatable-column [width]="100" name="Payment Cycle" prop="payment_cycle_for_admin" [draggable]="false"
+                        [sortable]="false">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          <span> {{ row.payment_cycle_for_admin }} </span>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                        <ngx-datatable-column [width]="150" name="IMEI Pair" prop="IMEI_pair" [draggable]="false"
+                        [sortable]="false">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <input type="text"class="form-control mt-2" [(ngModel)]="row.IMEI_pair"  required />
+                        </ng-template>
+                    </ngx-datatable-column>
+
                     </ngx-datatable>
 
 

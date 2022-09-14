@@ -29,7 +29,7 @@ export class UpdatableSIMListComponent implements OnInit {
   modalTitleSIM = 'Add SIM Details';
   btnSaveText = 'Save';
   modalConfig: any = { class: 'modal-dialog-scrollable gray modal-lg', backdrop: 'static' };
-  modalConfigXL: any = { class: 'modal-dialog-scrollable gray modal-xl', backdrop: 'static' };
+  modalConfigXL: any = { class: 'modal-dialog-scrollable gray modal-xxl', backdrop: 'static' };
   modalRef: BsModalRef;
   StockStatus = StockStatus;
   page = new Page();
@@ -337,19 +337,19 @@ export class UpdatableSIMListComponent implements OnInit {
    let checkICCIDPhone = [];
    let checkPhoneNumber = [];
    let checkPhone = [];
-  //  checkCID =  this.SIMItemList.filter(x => x.CID_no == '' && x.ICCID_no != '');
+  //  checkCID =  this.SIMItemList.filter(x => !x.CID_no && x.ICCID_no);
   //  if(checkCID.length > 0){
   //   this.toastr.warning('Some SIM CID No Not Added', 'Warning!', { timeOut: 4000 });
   //   return;
   //  }
 
-  //  checkICCID =  this.SIMItemList.filter(x => x.CID_no != '' && x.ICCID_no == '');
+  //  checkICCID =  this.SIMItemList.filter(x => x.CID_no && !x.ICCID_no);
   //  if(checkICCID.length > 0){
   //   this.toastr.warning('Some SIM ICCID No Not Added', 'Warning!', { timeOut: 4000 });
   //   return;
   //  }
 
-  //  checkPhoneNumber =  this.SIMItemList.filter(x => (x.CID_no == '' && x.ICCID_no == '') && x.phone_number != '');
+  //  checkPhoneNumber =  this.SIMItemList.filter(x => (!x.CID_no && !x.ICCID_no') && x.phone_number);
   //  if(checkPhoneNumber.length > 0){
   //   this.toastr.warning('With Phone Number You Must Add SIM CID No And ICCID No', 'Warning!', { timeOut: 4000 });
   //   return;
@@ -358,6 +358,12 @@ export class UpdatableSIMListComponent implements OnInit {
 
 
 
+
+  checkCID =  this.SIMItemList.filter(x => !x.CID_no && (x.ICCID_no && x.phone_number ));
+   if(checkCID.length > 0){
+    this.toastr.warning('Some SIM CID Not Added', 'Warning!', { timeOut: 4000 });
+    return;
+   }
 
    checkICCID =  this.SIMItemList.filter(x => !x.ICCID_no && x.phone_number);
    if(checkICCID.length > 0){

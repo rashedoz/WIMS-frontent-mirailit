@@ -9,6 +9,8 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from './../_models/page';
 import { ProductType } from '../_models/enums';
 import { BsDatepickerConfig } from "ngx-bootstrap/datepicker";
+import { DatePipe } from '@angular/common';
+
 
 @Component({
   selector: 'app-purchase-entry',
@@ -47,15 +49,22 @@ export class PurchaseEntryComponent implements OnInit {
   supplementaryList : Array<any> = [];
   productTypeList : Array<any> = [];
   purchaseItemList : Array<any> = [];
+  typeList = [{'id':0,'name':"All"},{'id':1,'name':"SIM"},{'id':2,'name':"Device"}];
   totalAmount: number;
-
+  ptype = {'id':0,'name':"All"};
   selectedSupplier;
+  searchParamAll = null;
+
+  today: Date;
+  maxDate: Date;
+  minDate: Date;
 
   constructor(
     private modalService: BsModalService,
     public formBuilder: FormBuilder,
     private _service: CommonService,
     private toastr: ToastrService,
+    private datePipe: DatePipe,
     private router: Router
   ) {
     this.page.pageNumber = 0;
@@ -71,6 +80,9 @@ export class PurchaseEntryComponent implements OnInit {
         dateInputFormat: "DD-MMM-YYYY ",
       }
     );
+
+    this.today = new Date();
+    this.minDate =  this.today;
   }
 
 
@@ -123,12 +135,48 @@ export class PurchaseEntryComponent implements OnInit {
     this.getList();
   }
 
+  searchFilter(e) {
+
+    if(e){
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParamAll = e.target.value;
+      this.getList();
+    }
+  }
+
+  onProductTypeChange(e){
+    if(e){
+      this.ptype = e;
+      this.getList();
+    }
+  }
+
   getList() {
     this.loadingIndicator = true;
-    const obj = {
-      limit: this.page.size,
-      page: this.page.pageNumber + 1
-    };
+    // const obj = {
+    //   limit: this.page.size,
+    //   page: this.page.pageNumber + 1
+    // };
+
+    let obj
+    if(this.searchParamAll){
+      obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber + 1,
+        search_param:this.searchParamAll
+      };
+    }else{
+       obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber + 1
+      };
+    }
+
+    if(this.ptype.id != 0){
+      obj.product_type = this.ptype.id;
+    }
+
     this._service.get('purchase/get-purchase-list',obj).subscribe(res => {
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
@@ -180,27 +228,33 @@ export class PurchaseEntryComponent implements OnInit {
     let purchase_details = [];
 
 
-    this.purchaseItemList.filter(x=> Number(x.qty) != 0 && Number(x.amount) != 0).forEach(element => {
+    this.purchaseItemList.filter(x=> Number(x.qty) != 0).forEach(element => {
       purchase_details.push({
-        product_type:element.product_type_id,
         qty: Number(element.qty),
-        total_amount: Number(element.amount)
+        total_amount: 0
       });
     });
 
     if(purchase_details.length < 1 ){
-        this.toastr.warning("Qty and Amount can't be empty", 'Warning!', { closeButton: true, disableTimeOut: true });
+        this.toastr.warning("Qty can't be empty", 'Warning!', { closeButton: true, disableTimeOut: true });
         return;
     }
 
-    this.blockUI.start('Saving...');
+
     const obj = {
       supplier:this.entryFormSIM.value.supplier,
-      total_amount:this.totalAmount,
+      total_amount:0,
+      delivery_received_at: this.datePipe.transform(this.entryFormSIM.value.delivery_date, "yyyy-MM-dd"),
+      model_name:this.purchaseItemList[0].model_name,
+      plan_name:this.purchaseItemList[0].plan_name,
+      plan_price_for_admin:Number(this.purchaseItemList[0].plan_price_for_admin),
+      reissue_cost_for_admin:Number(this.purchaseItemList[0].reissue_cost_for_admin),
+      payment_cycle_for_admin: Number(this.purchaseItemList[0].payment_cycle_for_admin),
       purchase_details:purchase_details,
       is_phone_sim:this.entryFormSIM.value.is_phone_sim ? this.entryFormSIM.value.is_phone_sim : false
     };
 
+    this.blockUI.start('Saving...');
     this._service.post('purchase/entry-sim-purchase', obj).subscribe(
       data => {
         this.blockUI.stop();
@@ -230,16 +284,16 @@ export class PurchaseEntryComponent implements OnInit {
     }
     let purchase_details = [];
 
-    this.purchaseItemList.filter(x=> Number(x.qty) != 0 && Number(x.amount) != 0).forEach(element => {
+    this.purchaseItemList.filter(x=> Number(x.qty) != 0 ).forEach(element => {
       purchase_details.push({
-        product_type:element.product_type_id,
+
         qty: Number(element.qty),
-        total_amount: Number(element.amount)
+        total_amount: 0
       });
     });
 
     if(purchase_details.length < 1 ){
-        this.toastr.warning("Qty and Amount can't be empty", 'Warning!', { closeButton: true, disableTimeOut: true });
+        this.toastr.warning("Qty can't be empty", 'Warning!', { closeButton: true, disableTimeOut: true });
         return;
     }
 
@@ -247,7 +301,7 @@ export class PurchaseEntryComponent implements OnInit {
 
     const obj = {
       supplier:this.entryFormDevice.value.supplier,
-      total_amount: Number(this.totalAmount),
+      total_amount: 0, //Number(this.totalAmount),
       purchase_details:purchase_details
     };
 
@@ -419,14 +473,13 @@ export class PurchaseEntryComponent implements OnInit {
 
   openModalDevice(template: TemplateRef<any>) {
   // let deviceProductList =  this.productTypeList.filter(x=> x.product_type  != 1);
-  // deviceProductList.forEach(element => {
-  //   this.purchaseItemList.push({
-  //     "product_type_id":element.id,
-  //     "product_type":element.product_type,
-  //     "qty":0,
-  //     "amount":0
-  //   });
-  // });
+
+    this.purchaseItemList.push({
+
+      "product_type":2,
+      "qty":0
+    });
+
   this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 

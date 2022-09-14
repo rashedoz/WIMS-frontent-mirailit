@@ -24371,3 +24371,10 @@ bs-datepicker-container { z-index: 3000; }
     font-size: 20px !important;
     margin-bottom: 5px !important;
 }
+
+
+@media (min-width: 1200px){
+  .modal-xxl {
+    max-width: 1300px;
+}
+}

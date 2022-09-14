@@ -114,6 +114,13 @@ const MENUITEMS = [
         icon: 'ti-notepad',
         permission: 'is_superuser,is_staff',
       },
+      {
+        state: 'updatable-device-list',
+        name: 'Updatable Device List',
+        type: 'link',
+        icon: 'ti-export',
+        permission: 'is_superuser,is_staff',
+      },
     ]
   },
   {
