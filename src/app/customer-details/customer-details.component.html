@@ -38,14 +38,14 @@
                     <b>{{customerObj.acc_number}}</b></p>
                   <p class="fs-14 mb-0" *ngIf="customerObj.email">Email : <b>{{customerObj.email}}</b></p>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <p class="fs-14 mb-0" *ngIf="customerObj.mobile">Mobile : <b>{{customerObj.mobile}} </b></p>
                   <p class="fs-14 mb-0" *ngIf="customerObj.telephone">Telephone : <b>{{customerObj.telephone}} </b></p>
                   <p class="fs-14 mb-0" *ngIf="customerObj.gender">Gender :
                     <b>{{customerObj.gender == 1 ? "Not Set " : customerObj.gender == 2 ? "Male" : "Female" }} </b></p>
 
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <p class="fs-14 mb-0" *ngIf="customerObj.address_one">Address : <b>{{customerObj.address_one}}
                       {{customerObj.address_two}}</b></p>
                   <p class="fs-14 mb-0">
@@ -55,6 +55,9 @@
                   <!-- <p class="fs-14 mb-0" *ngIf="customerObj.preferred_payment_method"><b>Preferred Payment Method : {{PaymentType[customerObj.preferred_payment_method]}}</b></p> -->
                   <p class="fs-14 mb-0">Balance : <b><span
                         class="text-primary font-weight-bold">{{customerObj.balance }}</span></b></p>
+                </div>
+                <div class="col-md-2">
+                  <button (click)="onSubmitEndContract()" class="btn btn-danger btn-round"> End Contract</button>
                 </div>
               </div>
               <hr>

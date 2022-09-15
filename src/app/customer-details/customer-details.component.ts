@@ -1113,6 +1113,37 @@ selectTab(tabId: number) {
     );
   }
 
+  onSubmitEndContract(){
+
+    this.confirmService.confirm('Are you sure?', 'You are going to end this contract.')
+    .subscribe(
+        result => {
+            if (result) {
+              this.blockUI.start('Saving...');
+              const request = this._service.get('bill/end-contract/'+this.customer_id);
+              request.subscribe(
+                data => {
+                  this.blockUI.stop();
+                  if (data.IsReport == "Success") {
+                    this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+                    window.location.reload();
+                  } else if (data.IsReport == "Warning") {
+                    this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+                  } else {
+                    this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+                  }
+                },
+                err => {
+                  this.blockUI.stop();
+                  this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
+                }
+              );
+            }else{
+              this.blockUI.stop();
+            }
+        },
+    );
+   }
 
   onSubmitAction(type,action,row){
     let url = '';
