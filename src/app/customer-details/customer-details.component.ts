@@ -234,6 +234,7 @@ export class CustomerDetailsComponent implements OnInit {
     this.receiveSIMForm = this.formBuilder.group({
       id: [null, [Validators.required]],
       ICCID_no: [null, [Validators.required]],
+      phone_number: [null]
     });
 
     this.replaceSIMForm = this.formBuilder.group({
@@ -1073,8 +1074,14 @@ selectTab(tabId: number) {
     if (this.receiveSIMForm.invalid) {
       return;
     }
+
+    if(!this.receiveSIMForm.value.phone_number){
+      this.receiveSIMForm.controls['phone_number'].setValue(this.simObj.phone_number);
+    }
+
     const obj = {
-      ICCID_no:this.receiveSIMForm.value.ICCID_no.trim()
+      ICCID_no:this.receiveSIMForm.value.ICCID_no.trim(),
+      phone_number: this.receiveSIMForm.value.phone_number
     };
 
     this.confirmService.confirm('Are you sure?', 'You are receiving this sim from mother company.')

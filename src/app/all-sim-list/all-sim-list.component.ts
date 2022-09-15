@@ -42,6 +42,7 @@ export class AllSIMListComponent implements OnInit {
   scrollBarHorizontal = window.innerWidth < 1200;
   @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
   modalConfigMd: any = { class: "gray modal-md", backdrop: "static" };
+  modalConfigLg: any = { class: "gray modal-lg", backdrop: "static" };
   modalConfig: any = { class: "gray modal-xl", backdrop: "static" };
   modalRef: BsModalRef;
   modalRefICCID: BsModalRef;
@@ -78,6 +79,7 @@ export class AllSIMListComponent implements OnInit {
     this.receiveSIMForm = this.formBuilder.group({
       id: [null, [Validators.required]],
       ICCID_no: [null, [Validators.required]],
+      phone_number: [null]
     });
   }
 
@@ -339,9 +341,17 @@ export class AllSIMListComponent implements OnInit {
     if (this.receiveSIMForm.invalid) {
       return;
     }
+
+    if(!this.receiveSIMForm.value.phone_number){
+      this.receiveSIMForm.controls['phone_number'].setValue(this.simObj.phone_number);
+    }
+
     const obj = {
       ICCID_no: this.receiveSIMForm.value.ICCID_no.trim(),
+      phone_number: this.receiveSIMForm.value.phone_number
     };
+
+
 
     this.confirmService
       .confirm(
@@ -432,12 +442,12 @@ export class AllSIMListComponent implements OnInit {
   }
 
   openModalICCID(item, template: TemplateRef<any>) {
-    this._service.get("stock/get-sim-iccid-history/" + item.id).subscribe(
+    this._service.get("stock/get-sim-iccid-phone-history/" + item.id).subscribe(
       (res) => {
         this.iccidHistory = res;
         this.modalRefICCID = this.modalService.show(
           template,
-          this.modalConfigMd
+          this.modalConfigLg
         );
       },
       (err) => {}

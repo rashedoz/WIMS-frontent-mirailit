@@ -389,6 +389,7 @@ export class UpdatableSIMListComponent implements OnInit {
         CID_no: element.CID_no,
         ICCID_no: element.ICCID_no,
         phone_number: element.phone_number,
+        IMEI_pair: element.IMEI_pair
       });
     });
 
