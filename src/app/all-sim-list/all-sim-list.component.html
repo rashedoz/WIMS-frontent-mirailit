@@ -2,7 +2,105 @@
 
   <div class="row" *ngIf="stock">
 
-    <div class="col-md-2 mb-3">
+    <div class="col-md-6 col-xl-4">
+      <div class="card counter-card-1">
+        <div class="card-block-big">
+
+              <div class="row pb-1">
+                <div class="col-10"><h5 class="pt-1"><label class="label label-inverse-info-border"> Stock Quantity </label></h5></div>
+                <div class="col-2"><p class="text-right f-20 text-success font-weight-bold mb-0"> {{stock.stock_qty}}  </p></div>
+              </div>
+
+              <div class="row pb-1">
+                <div class="col-10"><h5 class="pt-1"><label class="label label-inverse-info-border"> Subscribed Quantity </label></h5></div>
+                <div class="col-2"><p class="text-right f-20 text-info font-weight-bold mb-0"> {{stock.subscribed_qty}}  </p></div>
+              </div>
+
+              <div class="row pb-1">
+                <div class="col-10"><h5 class="pt-1"><label class="label label-inverse-info-border"> Cancelled Quantity </label></h5></div>
+                <div class="col-2"><p class="text-right f-20 text-danger font-weight-bold mb-0"> {{stock.cancelled_qty}}  </p></div>
+              </div>
+
+              <div class="row pb-1">
+                <div class="col-10"><h5 class="pt-1"><label class="label label-inverse-info-border"> Available Stock Quantity </label></h5></div>
+                <div class="col-2"><p class="text-right f-20 text-success font-weight-bold mb-0"> {{stock.available_stock_qty}}  </p></div>
+              </div>
+
+              <div class="row pb-1">
+                <div class="col-10"><h5 class="pt-1"><label class="label label-inverse-info-border"> Reissued Quantity </label></h5></div>
+                <div class="col-2"><p class="text-right f-20 text-warning font-weight-bold mb-0"> {{stock.reissued_qty}}  </p></div>
+              </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-xl-4">
+      <div class="card counter-card-2">
+        <div class="card-block-big">
+
+              <div class="row pb-1">
+                <div class="col-10"><h5 class="pt-1"><label class="label label-inverse-info-border"> Wifi SIM Stock Quantity </label></h5></div>
+                <div class="col-2"><p class="text-right f-20 text-success font-weight-bold mb-0"> {{stock.wifi_sim_stock_qty}}  </p></div>
+              </div>
+
+              <div class="row pb-1">
+                <div class="col-10"><h5 class="pt-1"><label class="label label-inverse-info-border"> Wifi SIM Subscribed Quantity </label></h5></div>
+                <div class="col-2"><p class="text-right f-20 text-info font-weight-bold mb-0"> {{stock.wifi_sim_subscribed_qty}}  </p></div>
+              </div>
+
+              <div class="row pb-1">
+                <div class="col-10"><h5 class="pt-1"><label class="label label-inverse-info-border"> Wifi SIM Cancelled Quantity </label></h5></div>
+                <div class="col-2"><p class="text-right f-20 text-danger font-weight-bold mb-0"> {{stock.wifi_sim_cancelled_qty}}  </p></div>
+              </div>
+
+              <div class="row pb-1">
+                <div class="col-10"><h5 class="pt-1"><label class="label label-inverse-info-border"> Wifi SIM Available Stock Quantity </label></h5></div>
+                <div class="col-2"><p class="text-right f-20 text-success font-weight-bold mb-0"> {{stock.wifi_sim_available_stock_qty}}  </p></div>
+              </div>
+
+              <div class="row pb-1">
+                <div class="col-10"><h5 class="pt-1"> <label class="label label-inverse-info-border"> Wifi SIM Reissued Quantity </label></h5></div>
+                <div class="col-2"><p class="text-right f-20 text-warning font-weight-bold mb-0"> {{stock.wifi_sim_reissued_qty}}  </p></div>
+              </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-xl-4">
+      <div class="card client-blocks dark-primary-border">
+        <div class="card-block-big">
+
+              <div class="row pb-1">
+                <div class="col-10"><h5 class="pt-1  mb-0"><label class="label label-inverse-info-border"> Phone SIM Stock Quantity </label></h5></div>
+                <div class="col-2"><p class="text-right f-20 text-success font-weight-bold mb-0"> {{stock.phone_sim_stock_qty}}  </p></div>
+              </div>
+
+              <div class="row pb-1">
+                <div class="col-10"><h5 class="pt-1  mb-0"><label class="label label-inverse-info-border"> Phone SIM Subscribed Quantity </label></h5></div>
+                <div class="col-2"><p class="text-right f-20 text-info font-weight-bold mb-0"> {{stock.phone_sim_subscribed_qty}}  </p></div>
+              </div>
+
+              <div class="row pb-1">
+                <div class="col-10"><h5 class="pt-1  mb-0"><label class="label label-inverse-info-border"> Phone SIM Cancelled Quantity </label></h5></div>
+                <div class="col-2"><p class="text-right f-20 text-danger font-weight-bold mb-0"> {{stock.phone_sim_cancelled_qty}}  </p></div>
+              </div>
+
+              <div class="row pb-1">
+                <div class="col-10"><h5 class="pt-1  mb-0"><label class="label label-inverse-info-border"> Phone SIM Available Stock Quantity </label></h5></div>
+                <div class="col-2"><p class="text-right f-20 text-success font-weight-bold mb-0"> {{stock.phone_sim_available_stock_qty}}  </p></div>
+              </div>
+
+              <div class="row pb-1">
+                <div class="col-10"><h5 class="pt-1  mb-0"> <label class="label label-inverse-info-border"> Phone SIM Reissued Quantity </label></h5></div>
+                <div class="col-2"><p class="text-right f-20 text-warning font-weight-bold mb-0"> {{stock.phone_sim_reissued_qty}}  </p></div>
+              </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- <div class="col-md-2 mb-3">
       <div class="card client-blocks dark-primary-border">
         <div class="card-block">
           <h5 class="f-22">All Stock Quantity</h5>
@@ -78,11 +176,11 @@
           </ul>
         </div>
       </div>
-    </div>
+    </div>-->
 
   </div>
 
-  <div class="row">
+  <div class="row pt-3">
 
     <div class="col-lg-12">
       <div class="row">
@@ -135,11 +233,11 @@
                   </tabset>
                 </div>
                 <div class="col-lg-2">
-                  <div class="checkbox-fade fade-in-primary mt-2" >
+                  <div class="checkbox-fade fade-in-warning mt-2">
                     <label>
-                        <input type="checkbox" [(ngModel)]="isPhoneSIM" (ngModelChange)="onPhoneSIMChange($event)">
-                        <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
-                        <span class="text-inverse">Phone SIM</span>
+                      <input type="checkbox" [(ngModel)]="isPhoneSIM" (ngModelChange)="onPhoneSIMChange($event)">
+                      <span class="cr" style="width: 30px; height: 30px;"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                      <span class="text-inverse f-18 font-weight-bold" style="line-height: 30px;">Phone SIM</span>
                     </label>
 
                   </div>
@@ -194,29 +292,36 @@
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="200" name="Status" [draggable]="false"
-                      [sortable]="false">
+                    <ngx-datatable-column [width]="200" name="Status" [draggable]="false" [sortable]="false">
                       <ng-template let-row="row" ngx-datatable-cell-template>
-                        <span *ngIf="row.status == 1"> <strong class="label label-success">{{ StockStatus[row.status] }}</strong>
+                        <span *ngIf="row.status == 1"> <strong
+                            class="label label-success">{{ StockStatus[row.status] }}</strong>
                         </span>
-                        <span *ngIf="row.status == 2"> <strong class="label label-info">{{ StockStatus[row.status] }}</strong>
+                        <span *ngIf="row.status == 2"> <strong
+                            class="label label-info">{{ StockStatus[row.status] }}</strong>
                         </span>
                         <span *ngIf="row.status == 3"> <strong
                             class="label label-secondary">{{ StockStatus[row.status] }}</strong> </span>
-                        <span *ngIf="row.status == 4"> <strong class="label label-danger">{{ StockStatus[row.status] }}</strong>
+                        <span *ngIf="row.status == 4"> <strong
+                            class="label label-danger">{{ StockStatus[row.status] }}</strong>
                         </span>
-                        <span *ngIf="row.status == 5"> <strong class="label label-danger">{{ StockStatus[row.status] }}</strong>
+                        <span *ngIf="row.status == 5"> <strong
+                            class="label label-danger">{{ StockStatus[row.status] }}</strong>
                         </span>
-                        <span *ngIf="row.status == 6"> <strong class="label label-primary">{{ StockStatus[row.status] }}</strong>
+                        <span *ngIf="row.status == 6"> <strong
+                            class="label label-primary">{{ StockStatus[row.status] }}</strong>
                         </span>
-                        <span *ngIf="row.status == 7"> <strong class="label label-warning">{{ StockStatus[row.status] }}</strong>
+                        <span *ngIf="row.status == 7"> <strong
+                            class="label label-warning">{{ StockStatus[row.status] }}</strong>
                         </span>
-                        <span *ngIf="row.status == 8"> <strong class="label label-danger">{{ StockStatus[row.status] }}</strong>
+                        <span *ngIf="row.status == 8"> <strong
+                            class="label label-danger">{{ StockStatus[row.status] }}</strong>
                         </span>
 
                         <span *ngIf="row.is_frozen"> <strong class="label label-default">Frozen</strong>
                         </span>
-                        <span *ngIf="tabType == 'Will Be Cancelled'"> <strong class="label label-default">Will Be Cancelled</strong>
+                        <span *ngIf="tabType == 'Will Be Cancelled'"> <strong class="label label-default">Will Be
+                            Cancelled</strong>
                         </span>
 
 
@@ -279,16 +384,16 @@
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column *ngIf="tabType == 'Frozen' || tabType == 'Subscribed'" [width]="150" name="Last Frozen At"
-                      prop="last_frozen_at" [draggable]="false" [sortable]="false">
+                    <ngx-datatable-column *ngIf="tabType == 'Frozen' || tabType == 'Subscribed'" [width]="150"
+                      name="Last Frozen At" prop="last_frozen_at" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span *ngIf="!value"> -- </span>
                         <span *ngIf="value"> {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}}</span>
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column *ngIf="tabType == 'Will Be Cancelled'" [width]="180" name="Last Adv. Cancelled At"
-                      prop="last_adv_cancelled_at" [draggable]="false" [sortable]="false">
+                    <ngx-datatable-column *ngIf="tabType == 'Will Be Cancelled'" [width]="180"
+                      name="Last Adv. Cancelled At" prop="last_adv_cancelled_at" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span *ngIf="!value"> -- </span>
                         <span *ngIf="value"> {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}}</span>
@@ -312,7 +417,8 @@
                           Return
                         </button>
                         <button *ngIf="tabType == 'Frozen'" (click)="onSubmitAction('unfreeze',row)"
-                        class="btn btn-primary btn-mini mr-1"><i class="icofont icofont-unlocked"></i>Unfreeze</button>
+                          class="btn btn-primary btn-mini mr-1"><i
+                            class="icofont icofont-unlocked"></i>Unfreeze</button>
 
                         <button *ngIf="tabType == 'Cancelled'" class="btn btn-danger btn-mini mr-1"
                           (click)="onSubmitAction('permanently_cancelled',row)">
@@ -320,7 +426,8 @@
                         </button>
 
                         <button *ngIf="tabType == 'Will Be Cancelled'" (click)="onSubmitAction('undo-cacellation',row)"
-                          class="btn btn-success btn-mini mr-1"><i class="icofont icofont-reply-all"></i>Undo Cancellation</button>
+                          class="btn btn-success btn-mini mr-1"><i class="icofont icofont-reply-all"></i>Undo
+                          Cancellation</button>
 
                         <button class="btn btn-info btn-mini mr-1" (click)="openModal(row, template)">
                           See Life Cycle History

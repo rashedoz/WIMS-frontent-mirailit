@@ -8,6 +8,32 @@
               class=" icofont icofont-plus "></i> Create Package</button>
         </div>
         <div class="card-block ">
+
+          <div class="row">
+            <div class="col-lg-7">
+              <div class="form-group row">
+                <div class="col-sm-12">
+                  <input type="text" class="form-control" [(ngModel)]="searchParam"
+                    placeholder="Filtery by package name, offer ..."
+                    (keyup)="filterSearch($event)" />
+
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-2">
+              <div class="checkbox-fade fade-in-primary mt-2" >
+                <label>
+                    <input type="checkbox" [(ngModel)]="isPhoneSIM" (ngModelChange)="onPhoneSIMChangeFilter($event)">
+                    <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                    <span class="text-inverse">Phone SIM</span>
+                </label>
+
+              </div>
+            </div>
+
+          </div>
+
           <div class="row ">
             <div class="col-lg-12 ">
               <ngx-datatable #table class="material table-bordered" [scrollbarH]="true" [rows]="rows"

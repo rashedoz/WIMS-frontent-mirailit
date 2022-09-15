@@ -20,7 +20,7 @@ export class PackageListComponent implements OnInit {
   entryForm: FormGroup;
   planHistoryList: FormArray;
   planFormArray: any;
-
+  searchParam;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
   modalTitle = 'Create Package';
@@ -43,7 +43,7 @@ export class PackageListComponent implements OnInit {
 
   isDeviceEnable = true;
   isPhoneSimEnable = false;
-
+  isPhoneSIM = false;
   selectedOffer;
   selectedDuration;
 
@@ -221,13 +221,45 @@ export class PackageListComponent implements OnInit {
   }
 
 
+  filterSearch(e) {
+    if (e) {
+      this.page.pageNumber = 0;
+      this.page.size = 10;
+      this.searchParam = e.target.value;
+      this.getList();
+    }
+  }
+
+  onPhoneSIMChangeFilter(e){
+    this.page.pageNumber = 0;
+    this.page.size = 10;
+    this.getList();
+  }
 
   getList() {
     this.loadingIndicator = true;
-    const obj = {
-      limit: this.page.size,
-      page: this.page.pageNumber + 1
-    };
+
+
+    let obj;
+    if(this.searchParam){
+      obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber + 1,
+        search_param:this.searchParam
+      };
+    }else{
+       obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber + 1
+      };
+    }
+
+    if(this.isPhoneSIM){
+      obj.has_phone_sim_dependency = 1;
+    }else{
+      obj.has_phone_sim_dependency = 0;
+    }
+
     this._service.get('package/get-package-list',obj).subscribe(res => {
 
       if (!res) {
@@ -277,7 +309,7 @@ export class PackageListComponent implements OnInit {
     }
 
 
-    if(this.selectedDuration.pckg_duration_in_month != this.selectedOffer.pckg_offer_month_covers){
+    if(this.selectedDuration.pckg_duration_in_month < this.selectedOffer.pckg_offer_month_covers){
       this.toastr.warning('Offer month and duration must be equal.', 'Warning!', { timeOut: 2000 });
       return;
     }
