@@ -292,4 +292,146 @@
 
   </div>
 
+
+
+  <div class="row mb-2">
+    <div class="col-lg-6">
+
+      <div class="row mb-2">
+        <div class="col-lg-12 col-sm-12">
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5 class="title-custom" *ngIf="eligiblePhoneCount == 0"> Phone SIM Customer (0) </h5>
+              <h5  class="title-custom"*ngIf="eligiblePhoneCount > 0"> Phone SIM Customer ({{eligiblePhoneCount}}) </h5>
+            </div>
+            <div class="card-block">
+
+              <div class="row pt-2" *ngIf="showLoader">
+                <div class="col-sm-3 offset-sm-5">
+                  <mat-spinner color="primary" [diameter]="30"></mat-spinner>
+                </div>
+              </div>
+
+
+              <div class="table-responsive" *ngIf="!showLoader">
+                <table class="table table-sm">
+                  <tbody>
+                    <tr *ngIf="phoneBillRecords">
+                      <td>Phone SIM Collectable Bills Qty</td>
+                      <td>{{phoneBillRecords.phone_sim_collectable_bills}}</td>
+                    </tr>
+                    <tr *ngIf="phoneBillRecords">
+                      <td>Phone SIM Bill Collected Qty</td>
+                      <td>{{phoneBillRecords.phone_sim_collected_bills}}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 0 !important;" colspan="2">&nbsp;</td>
+                    </tr>
+                    <tr *ngIf="phoneBillRecords" >
+                      <td>Phone SIM Collectable Bill Amount</td>
+                      <td class="text-info">{{phoneBillRecords.phone_sim_collectable_bill_amount}}</td>
+                    </tr>
+                    <tr style="border-bottom: 2px solid black;" *ngIf="phoneBillRecords" >
+                      <td>Phone SIM Bill Collected Amount</td>
+                      <td class="text-success font-weight-bold">{{phoneBillRecords.phone_sim_collected_bill_amount}}</td>
+                    </tr>
+                    <tr *ngIf="phoneBillRecords" >
+                      <td>Phone SIM Due</td>
+                      <td>
+                        {{phoneBillRecords.phone_sim_collectable_bill_amount - phoneBillRecords.phone_sim_collected_bill_amount}}
+                      </td>
+                    </tr>
+                    <tr style="border-bottom: 2px solid black;" *ngIf="phoneBillRecords" >
+                      <td>Phone SIM Carryover Due</td>
+                      <td>{{phoneBillRecords.phone_sim_carry_over_due}}</td>
+                    </tr>
+
+                  </tbody>
+                  <tfoot *ngIf="phoneBillRecords">
+                    <th >Phone SIM Total Due</th>
+                    <th class="text-danger">
+                      {{ (phoneBillRecords.phone_sim_collectable_bill_amount - phoneBillRecords.phone_sim_collected_bill_amount) +  phoneBillRecords.phone_sim_carry_over_due}}
+                    </th>
+                  </tfoot>
+                </table>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+
+      <div class="row mb-2">
+        <div class="col-lg-12 col-sm-12">
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5 class="title-custom" *ngIf="eligibleWifiCount == 0"> Wifi SIM Customer (0) </h5>
+              <h5  class="title-custom"*ngIf="eligibleWifiCount > 0"> Wifi SIM Customer ({{eligibleWifiCount}}) </h5>
+            </div>
+            <div class="card-block">
+
+              <div class="row pt-2" *ngIf="showLoader">
+                <div class="col-sm-3 offset-sm-5">
+                  <mat-spinner color="primary" [diameter]="30"></mat-spinner>
+                </div>
+              </div>
+
+
+              <div class="table-responsive" *ngIf="!showLoader">
+                <table class="table table-sm">
+                  <tbody>
+                    <tr *ngIf="wifiBillRecords">
+                      <td>Wifi SIM Collectable Bills Qty</td>
+                      <td>{{wifiBillRecords.wifi_sim_collectable_bills}}</td>
+                    </tr>
+                    <tr *ngIf="wifiBillRecords">
+                      <td>Wifi SIM Bill Collected Qty</td>
+                      <td>{{wifiBillRecords.wifi_sim_collected_bills}}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 0 !important;" colspan="2">&nbsp;</td>
+                    </tr>
+                    <tr *ngIf="wifiBillRecords" >
+                      <td>Wifi SIM Collectable Bill Amount</td>
+                      <td class="text-info">{{wifiBillRecords.wifi_sim_collectable_bill_amount}}</td>
+                    </tr>
+                    <tr style="border-bottom: 2px solid black;" *ngIf="wifiBillRecords" >
+                      <td>Wifi SIM Bill Collected Amount</td>
+                      <td class="text-success font-weight-bold">{{wifiBillRecords.wifi_sim_collected_bill_amount}}</td>
+                    </tr>
+                    <tr *ngIf="wifiBillRecords" >
+                      <td>Wifi SIM Due</td>
+                      <td>
+                        {{wifiBillRecords.wifi_sim_collectable_bill_amount - wifiBillRecords.wifi_sim_collected_bill_amount}}
+                      </td>
+                    </tr>
+                    <tr style="border-bottom: 2px solid black;" *ngIf="wifiBillRecords" >
+                      <td>Wifi SIM Carryover Due</td>
+                      <td>{{wifiBillRecords.wifi_sim_carry_over_due}}</td>
+                    </tr>
+
+                  </tbody>
+                  <tfoot *ngIf="wifiBillRecords">
+                    <th >Wifi SIM Total Due</th>
+                    <th class="text-danger">
+                      {{ (wifiBillRecords.wifi_sim_collectable_bill_amount - wifiBillRecords.wifi_sim_collected_bill_amount) +  wifiBillRecords.wifi_sim_carry_over_due}}
+                    </th>
+                  </tfoot>
+                </table>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+
 </block-ui>

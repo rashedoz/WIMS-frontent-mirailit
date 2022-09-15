@@ -91,6 +91,15 @@
                         </div>
                       </div>
                     </div>
+
+                    <div class="col-sm-3 mt-2">
+                      <ng-select (change)="onBillTypeChange($event)" [(ngModel)]="selectedBillType" [clearable]="true" appendTo="body"
+                        [clearOnBackspace]="false" [items]="billTypeList" bindLabel="name"
+                        placeholder="Filter by bill type"></ng-select>
+
+                    </div>
+
+
                   </div>
                 </div>
               </div>

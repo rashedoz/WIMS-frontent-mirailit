@@ -50,6 +50,12 @@ export class HomeComponent implements OnInit {
   wholesalersPeripheralsCount = null;
   wholesalersBillRecords = null;
 
+  eligiblePhoneCount = 0;
+  phoneBillRecords = null;
+
+  eligibleWifiCount = 0;
+  wifiBillRecords = null;
+
   pieChartOptions: any;
   pieChartArray = [];
   showLoader = false;
@@ -98,6 +104,11 @@ export class HomeComponent implements OnInit {
         this.showPicChart();
   });
 
+  this.getBillEligiblePhoneCountData();
+  this.getPhoneBillRecordsData();
+
+  this.getBillEligibleWifiCountData();
+  this.getWifiBillRecordsData();
     // setTimeout(() => {
     //   this.showPicChart();
     // }, 1500);
@@ -941,4 +952,128 @@ export class HomeComponent implements OnInit {
       };
     }
   }
+
+
+  getBillEligiblePhoneCountData() {
+
+    let obj: any = {};
+
+    if (this.tabType == "Current Month") {
+      let monthLastDate = new Date(
+        this.bsMonthValue.getFullYear(),
+        this.bsMonthValue.getMonth() + 1,
+        0
+      );
+      (obj.billing_start_date = moment(this.bsMonthValue).format("YYYY-MM-DD")),
+        (obj.billing_end_date = moment(monthLastDate).format("YYYY-MM-DD"));
+    } else {
+      delete obj["billing_start_date"];
+      delete obj["billing_end_date"];
+    }
+
+    this._service
+      .get("bill-dashboard/phone-bill-eligible-customer-count", obj)
+      .subscribe(
+        (res) => {
+          this.eligiblePhoneCount = res.phone_sim_eligible_customer_count;
+        },
+        (err) => {
+
+        }
+      );
+  }
+
+
+  getPhoneBillRecordsData(){
+    this.showLoader = true;
+    let obj: any = {};
+
+    if (this.tabType == "Current Month") {
+      let monthLastDate = new Date(
+        this.bsMonthValue.getFullYear(),
+        this.bsMonthValue.getMonth() + 1,
+        0
+      );
+      (obj.billing_start_date = moment(this.bsMonthValue).format("YYYY-MM-DD")),
+        (obj.billing_end_date = moment(monthLastDate).format("YYYY-MM-DD"));
+    } else {
+      delete obj["billing_start_date"];
+      delete obj["billing_end_date"];
+    }
+
+    this._service.get("bill-dashboard/phone-bill-records", obj).subscribe(
+      (res) => {
+        this.phoneBillRecords = res;
+        this.showLoader = false;
+      },
+      (err) => {
+
+       this.showLoader = false;
+      }
+    );
+
+  }
+
+
+  getBillEligibleWifiCountData() {
+
+    let obj: any = {};
+
+    if (this.tabType == "Current Month") {
+      let monthLastDate = new Date(
+        this.bsMonthValue.getFullYear(),
+        this.bsMonthValue.getMonth() + 1,
+        0
+      );
+      (obj.billing_start_date = moment(this.bsMonthValue).format("YYYY-MM-DD")),
+        (obj.billing_end_date = moment(monthLastDate).format("YYYY-MM-DD"));
+    } else {
+      delete obj["billing_start_date"];
+      delete obj["billing_end_date"];
+    }
+
+    this._service
+      .get("bill-dashboard/wifi-bill-eligible-customer-count", obj)
+      .subscribe(
+        (res) => {
+          this.eligibleWifiCount = res.wifi_sim_eligible_customer_count;
+        },
+        (err) => {
+
+        }
+      );
+  }
+
+
+  getWifiBillRecordsData(){
+    this.showLoader = true;
+    let obj: any = {};
+
+    if (this.tabType == "Current Month") {
+      let monthLastDate = new Date(
+        this.bsMonthValue.getFullYear(),
+        this.bsMonthValue.getMonth() + 1,
+        0
+      );
+      (obj.billing_start_date = moment(this.bsMonthValue).format("YYYY-MM-DD")),
+        (obj.billing_end_date = moment(monthLastDate).format("YYYY-MM-DD"));
+    } else {
+      delete obj["billing_start_date"];
+      delete obj["billing_end_date"];
+    }
+
+    this._service.get("bill-dashboard/wifi-bill-records", obj).subscribe(
+      (res) => {
+        this.wifiBillRecords = res;
+        this.showLoader = false;
+      },
+      (err) => {
+
+       this.showLoader = false;
+      }
+    );
+
+  }
+
+
 }

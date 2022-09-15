@@ -24,6 +24,7 @@ import { ConfirmService } from "../_helpers/confirm-dialog/confirm.service";
 })
 export class AllSIMListComponent implements OnInit {
   entryForm: FormGroup;
+  updateSIMForm: FormGroup;
   receiveSIMForm: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
@@ -81,6 +82,22 @@ export class AllSIMListComponent implements OnInit {
       ICCID_no: [null, [Validators.required]],
       phone_number: [null]
     });
+
+    this.updateSIMForm = this.formBuilder.group({
+      id: [null, [Validators.required]],
+      IMEI_pair: [null],
+      model_name: [null],
+      plan_name: [null],
+      plan_price_for_admin: [null],
+      reissue_cost_for_admin: [null],
+      payment_cycle_for_admin: [null],
+      delivery_received_at: [null]
+    });
+
+  }
+
+  get us() {
+    return this.updateSIMForm.controls;
   }
 
   getSIMStockData() {
@@ -453,4 +470,82 @@ export class AllSIMListComponent implements OnInit {
       (err) => {}
     );
   }
+
+
+
+  modalHideSIMDetails() {
+    this.modalRef.hide();
+    this.simObj = null;
+    this.submitted = false;
+    this.updateSIMForm.reset();
+  }
+
+  openModalSIMDetailsUpdate(item, template: TemplateRef<any>) {
+    this.simObj = item;
+    this.updateSIMForm.controls["id"].setValue(item.id);
+    this.updateSIMForm.controls["IMEI_pair"].setValue(item.IMEI_pair);
+    this.updateSIMForm.controls["model_name"].setValue(item.model_name);
+    this.updateSIMForm.controls["plan_name"].setValue(item.plan_name);
+    this.updateSIMForm.controls["plan_price_for_admin"].setValue(item.plan_price_for_admin);
+    this.updateSIMForm.controls["reissue_cost_for_admin"].setValue(item.reissue_cost_for_admin);
+    this.updateSIMForm.controls["payment_cycle_for_admin"].setValue(item.payment_cycle_for_admin);
+    this.updateSIMForm.controls["delivery_received_at"].setValue(item.delivery_received_at);
+    this.modalRef = this.modalService.show(template, this.modalConfig);
+  }
+
+
+  onSubmitSIMDetails() {
+    this.submitted = true;
+    if (this.updateSIMForm.invalid) {
+      return;
+    }
+
+
+    const obj = {
+      IMEI_pair: this.updateSIMForm.value.IMEI_pair,
+      model_name: this.updateSIMForm.value.model_name,
+      plan_name: this.updateSIMForm.value.plan_name,
+      plan_price_for_admin: this.updateSIMForm.value.plan_price_for_admin ? Number(this.updateSIMForm.value.plan_price_for_admin) : this.updateSIMForm.value.plan_price_for_admin,
+      reissue_cost_for_admin: this.updateSIMForm.value.reissue_cost_for_admin ? Number(this.updateSIMForm.value.reissue_cost_for_admin) : this.updateSIMForm.value.reissue_cost_for_admin,
+      payment_cycle_for_admin: this.updateSIMForm.value.payment_cycle_for_admin ? Number(this.updateSIMForm.value.payment_cycle_for_admin): this.updateSIMForm.value.payment_cycle_for_admin
+    };
+
+        this.blockUI.start("Updating...");
+          const request = this._service.patch(
+            "stock/update-sim-detail/" +this.updateSIMForm.value.id, obj
+          );
+          request.subscribe(
+            (data) => {
+              this.blockUI.stop();
+              if (data.IsReport == "Success") {
+                this.toastr.success(data.Msg, "Success!", { timeOut: 2000 });
+                this.modalHideSIMDetails();
+                this.getList();
+              } else if (data.IsReport == "Warning") {
+                this.toastr.warning(data.Msg, "Warning!", {
+                  closeButton: true,
+                  disableTimeOut: true,
+                });
+              } else {
+                this.toastr.error(data.Msg, "Error!", {
+                  closeButton: true,
+                  disableTimeOut: true,
+                });
+              }
+            },
+            (err) => {
+              this.blockUI.stop();
+              this.toastr.error(err.Msg || err, "Error!", {
+                closeButton: true,
+                disableTimeOut: true,
+              });
+            }
+          );
+
+
+  }
+
+
+
+
 }

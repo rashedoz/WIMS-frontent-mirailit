@@ -1,55 +1,47 @@
 <block-ui>
-    <div class="row">
+  <div class="row">
 
+    <div class="col-lg-12">
+      <div class="row">
         <div class="col-lg-12">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card card-border-primary">
-                        <div class="card-header">
-                            <h5>SIM List </h5>
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5>SIM List </h5>
 
-                        </div>
-                        <div class="card-block ">
-                          <div class="row mb-3">
-                            <div class="col-lg-9">
+            </div>
+            <div class="card-block ">
+              <div class="row mb-3">
+                <div class="col-lg-9">
 
-                              <div class="row">
-                                <label class="col-sm-2 col-form-label">Supplier </label>
-                                <div class="col-sm-7">
+                  <div class="row">
+                    <label class="col-sm-2 col-form-label">Supplier </label>
+                    <div class="col-sm-7">
 
 
-                                <div class="d-flex flex-row">
+                      <div class="d-flex flex-row">
 
-                                  <ng-select [clearable]="true"
-                                          [items]="suppliersBuffer"
-                                          [virtualScroll]="true"
-                                          [dropdownPosition]="'bottom'"
-                                          [loading]="loading"
-                                          bindLabel="first_name"
-                                          bindValue="id"
-                                          placeholder="Select a supplier"
-                                          appendTo="body"
-                                          (change)="onSupplierChange($event)"
-                                          [typeahead]="input$"
-                                          (scroll)="onScroll($event)"
-                                          (scrollToEnd)="onScrollToEnd()" #select>
-                                    <ng-template ng-header-tmp>
-                                        <small class="form-text text-muted">Loaded {{suppliersBuffer.length}} of {{pageSupplier.totalElements}}</small>
-                                    </ng-template>
-                                    <ng-template ng-label-tmp let-item="item">
-                                       {{item.name}} - {{item.mobile}}
-                                  </ng-template>
+                        <ng-select [clearable]="true" [items]="suppliersBuffer" [virtualScroll]="true"
+                          [dropdownPosition]="'bottom'" [loading]="loading" bindLabel="first_name" bindValue="id"
+                          placeholder="Select a supplier" appendTo="body" (change)="onSupplierChange($event)"
+                          [typeahead]="input$" (scroll)="onScroll($event)" (scrollToEnd)="onScrollToEnd()" #select>
+                          <ng-template ng-header-tmp>
+                            <small class="form-text text-muted">Loaded {{suppliersBuffer.length}} of
+                              {{pageSupplier.totalElements}}</small>
+                          </ng-template>
+                          <ng-template ng-label-tmp let-item="item">
+                            {{item.name}} - {{item.mobile}}
+                          </ng-template>
 
-                                    <ng-template ng-option-tmp let-item="item"  let-index="index">
-                                      {{item.name}} - {{item.mobile}}
-                                    </ng-template>
-                                </ng-select>
+                          <ng-template ng-option-tmp let-item="item" let-index="index">
+                            {{item.name}} - {{item.mobile}}
+                          </ng-template>
+                        </ng-select>
 
-                              </div>
+                      </div>
 
 
 
-                              <!-- <div class="row blog-big-user m-t-10" *ngIf="selectedSupplier">
+                      <!-- <div class="row blog-big-user m-t-10" *ngIf="selectedSupplier">
                                 <div class="col-sm-10">
                                     <div>
                                         <h4 class="m-b-10 text-primary">{{selectedSupplier.first_name}} {{selectedSupplier.last_name}}</h4>
@@ -59,156 +51,176 @@
                                 </div>
                             </div> -->
 
-                                </div>
-                                <div class="col-sm-3" *ngIf="selectedSupplier">
-                                  <div class="checkbox-fade fade-in-primary mt-2" >
-                                    <label>
-                                        <input type="checkbox" [(ngModel)]="isPhoneSIM" (ngModelChange)="onPhoneSIMChange($event)">
-                                        <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
-                                        <span class="text-inverse">Phone SIM</span>
-                                    </label>
+                    </div>
+                    <div class="col-sm-3" *ngIf="selectedSupplier">
+                      <div class="checkbox-fade fade-in-primary mt-2">
+                        <label>
+                          <input type="checkbox" [(ngModel)]="isPhoneSIM" (ngModelChange)="onPhoneSIMChange($event)">
+                          <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                          <span class="text-inverse">Phone SIM</span>
+                        </label>
 
-                                  </div>
-                                </div>
+                      </div>
+                    </div>
 
-                              </div>
-
-
+                  </div>
 
 
-                            </div>
 
-                            <div class="col-lg-3" *ngIf="rows">
-                              <button *ngIf="rows.length != 0" class="btn btn-primary btn-sm float-right" (click)="openModalSIM(template)"><i
-                                class=" icofont icofont-plus "></i> Update SIM Details</button>
-                            </div>
 
-                          </div>
-                            <div class="row ">
-                                <div class="col-lg-12 ">
-                                  <!-- <ngx-datatable class="material table-bordered" [rows]="rows"
+                </div>
+
+                <div class="col-lg-3" *ngIf="rows">
+                  <button *ngIf="rows.length != 0" class="btn btn-primary btn-sm float-right"
+                    (click)="openModalSIM(template)"><i class=" icofont icofont-plus "></i> Update SIM Details</button>
+                </div>
+
+              </div>
+              <div class="row ">
+                <div class="col-lg-12 ">
+                  <!-- <ngx-datatable class="material table-bordered" [rows]="rows"
                                   [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
                                   [headerHeight]="40" [limit]="10" [footerHeight]="50" rowHeight="auto"> -->
 
-                                  <ngx-datatable #table class="material table-bordered"
-                                    [scrollbarH]="true" [rows]="rows" [loadingIndicator]="loadingIndicator"
-                                    [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
-                                    rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
-                                    (page)="setPage($event)">
+                  <ngx-datatable #table class="material table-bordered" [scrollbarH]="true" [rows]="rows"
+                    [loadingIndicator]="loadingIndicator" [externalPaging]="true" [columnMode]="ColumnMode.force"
+                    [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [count]="page.totalElements"
+                    [offset]="page.pageNumber" [limit]="page.size" (page)="setPage($event)">
 
-                                    <ngx-datatable-column *ngIf="isPhoneSIM == true" [width]="10" name="SIM Type" [draggable]="false"
-                                    [sortable]="false">
-                                    <ng-template let-value="value" ngx-datatable-cell-template>
-                                      <span> <strong class="label label-warning">Phone Sim</strong>
-                                      </span>
-                                    </ng-template>
-                                  </ngx-datatable-column>
+                    <ngx-datatable-column *ngIf="isPhoneSIM == true" [width]="10" name="SIM Type" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> <strong class="label label-warning">Phone Sim</strong>
+                        </span>
+                      </ng-template>
+                    </ngx-datatable-column>
 
 
-                                <ngx-datatable-column [width]="80" name="SIM CID No" prop="CID_no" [draggable]="false" [sortable]="false">
-                                    <ng-template let-row="row" ngx-datatable-cell-template>
-                                        <span > {{ row.id }} </span>
-                                    </ng-template>
-                                </ngx-datatable-column>
+                    <ngx-datatable-column [width]="80" name="SIM CID No" prop="CID_no" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span> {{ row.CID_no }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
 
-                                <!-- <ngx-datatable-column [width]="200" name="SIM Alias" prop="sim_auto_serial_no" [draggable]="false" [sortable]="false">
+                    <!-- <ngx-datatable-column [width]="200" name="SIM Alias" prop="sim_auto_serial_no" [draggable]="false" [sortable]="false">
                                     <ng-template let-row="row" ngx-datatable-cell-template>
                                         <span > {{ row.sim_auto_serial_no }} </span>
                                     </ng-template>
                                 </ngx-datatable-column> -->
 
-                                <ngx-datatable-column [width]="100" name="ICCID No" prop="ICCID_no" [draggable]="false"
-                                    [sortable]="false">
-                                    <ng-template let-value="value" ngx-datatable-cell-template>
-                                        <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>
-                                    </ng-template>
-                                </ngx-datatable-column>
+                    <ngx-datatable-column [width]="100" name="ICCID No" prop="ICCID_no" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
 
-                                <ngx-datatable-column [width]="100" name="Phone Number" prop="phone_number" [draggable]="false"
-                                    [sortable]="false">
-                                    <ng-template let-value="value" ngx-datatable-cell-template>
-                                        <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>
-                                    </ng-template>
-                                </ngx-datatable-column>
+                    <ngx-datatable-column [width]="100" name="Phone Number" prop="phone_number" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
 
-                                <ngx-datatable-column [width]="80" name="Status" prop="status" [draggable]="false"
-                                    [sortable]="false">
-                                    <ng-template let-value="value" ngx-datatable-cell-template>
-                                      <span *ngIf="value === 1" > <strong class="label label-success">{{ StockStatus[value] }}</strong> </span>
-                                      <span *ngIf="value === 2" > <strong class="label label-info">{{ StockStatus[value] }}</strong> </span>
-                                      <span *ngIf="value === 3" > <strong class="label label-secondary">{{ StockStatus[value] }}</strong> </span>
-                                      <span *ngIf="value === 4" > <strong class="label label-warning">{{ StockStatus[value] }}</strong> </span>
-                                      <span *ngIf="value === 5" > <strong class="label label-danger">{{ StockStatus[value] }}</strong> </span>
-                                      <span *ngIf="value === 6" > <strong class="label label-primary">{{ StockStatus[value] }}</strong> </span>
-                                      <span *ngIf="value === 7" > <strong class="label label-warning">{{ StockStatus[value] }}</strong> </span>
-                                      <span *ngIf="value === 8" > <strong class="label label-danger">{{ StockStatus[value] }}</strong> </span>
+                    <ngx-datatable-column [width]="80" name="Status" prop="status" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span *ngIf="value === 1"> <strong class="label label-success">{{ StockStatus[value] }}</strong>
+                        </span>
+                        <span *ngIf="value === 2"> <strong class="label label-info">{{ StockStatus[value] }}</strong>
+                        </span>
+                        <span *ngIf="value === 3"> <strong class="label label-secondary">{{ StockStatus[value]
+                            }}</strong> </span>
+                        <span *ngIf="value === 4"> <strong class="label label-warning">{{ StockStatus[value] }}</strong>
+                        </span>
+                        <span *ngIf="value === 5"> <strong class="label label-danger">{{ StockStatus[value] }}</strong>
+                        </span>
+                        <span *ngIf="value === 6"> <strong class="label label-primary">{{ StockStatus[value] }}</strong>
+                        </span>
+                        <span *ngIf="value === 7"> <strong class="label label-warning">{{ StockStatus[value] }}</strong>
+                        </span>
+                        <span *ngIf="value === 8"> <strong class="label label-danger">{{ StockStatus[value] }}</strong>
+                        </span>
 
-                                    </ng-template>
-                                </ngx-datatable-column>
+                      </ng-template>
+                    </ngx-datatable-column>
 
-                                <ngx-datatable-column  [sortable]="true" [width]="80" name="Purchase Date" prop="created_at" [draggable]="false"
-                                    [sortable]="false">
-                                    <ng-template let-value="value" ngx-datatable-cell-template>
-                                        <span >  {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
-                                    </ng-template>
-                                </ngx-datatable-column>
+                    <ngx-datatable-column [sortable]="true" [width]="80" name="Entry Date" prop="created_at"
+                      [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{value | amDateFormat:'DD-MMM-YYYY'}} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
 
-                              </ngx-datatable>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <ngx-datatable-column [sortable]="true" [width]="50" name="Action" [draggable]="false" [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <button class="btn btn-info btn-mini  mr-1"
+                          (click)="openModalSIMDetailsUpdate(row,templateSIMDetailsUpdate)">
+                          Edit
+                        </button>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                  </ngx-datatable>
                 </div>
+              </div>
             </div>
+          </div>
         </div>
-
+      </div>
     </div>
 
-  <ng-template #template>
-      <div class="modal-header ">
-          <h4 class="modal-title pull-left "> Update SIM</h4>
-          <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideSIM()">
-              <i class="icofont icofont-close"></i>
-          </button>
-      </div>
-      <div class="modal-body pb-0">
-          <app-card>
-            <div class="row">
+  </div>
 
+  <ng-template #template>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left "> Update SIM</h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideSIM()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body pb-0">
+      <app-card>
+        <div class="row">
+
+          <div class="col-md-12">
+
+            <div class="row blog-big-user m-t-10 mb-4" *ngIf="selectedSupplier">
+              <div class="col-sm-12">
+                <div>
+                  <h4 class="m-b-10 text-primary">{{selectedSupplier.name}} <span *ngIf="selectedSupplier.email"> || <i
+                        class="icofont icofont-envelope-open"></i> {{selectedSupplier.email}}</span> <span
+                      class="text-normal" style="font-size: 14px;"> || <i class="icofont icofont-phone"></i>
+                      {{selectedSupplier.mobile}}</span></h4>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
               <div class="col-md-12">
 
-                <div class="row blog-big-user m-t-10 mb-4" *ngIf="selectedSupplier">
-                  <div class="col-sm-12">
-                      <div>
-                          <h4 class="m-b-10 text-primary">{{selectedSupplier.name}} <span *ngIf="selectedSupplier.email"> || <i class="icofont icofont-envelope-open"></i> {{selectedSupplier.email}}</span> <span class="text-normal" style="font-size: 14px;"> || <i class="icofont icofont-phone"></i> {{selectedSupplier.mobile}}</span></h4>
-
-                      </div>
-                  </div>
-              </div>
-
-                <div class="row">
-                  <div class="col-md-12">
-
-                    <!-- <ngx-datatable  class="material table-bordered" [rows]="SIMItemList"
+                <!-- <ngx-datatable  class="material table-bordered" [rows]="SIMItemList"
                         [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
                         [headerHeight]="30" [footerHeight]="50" [limit]="10" rowHeight="auto" > -->
 
-                        <ngx-datatable class="material table-bordered"
-                        [scrollbarH]="true" [rows]="SIMItemList" [loadingIndicator]="loadingIndicator"
-                        [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
-                        rowHeight="auto" [count]="pageSIMUpdate.totalElements" [offset]="pageSIMUpdate.pageNumber" [limit]="pageSIMUpdate.size"
-                        (page)="setPageSIMUpdate($event)">
+                <ngx-datatable class="material table-bordered" [scrollbarH]="true" [rows]="SIMItemList"
+                  [loadingIndicator]="loadingIndicator" [externalPaging]="true" [columnMode]="ColumnMode.force"
+                  [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [count]="pageSIMUpdate.totalElements"
+                  [offset]="pageSIMUpdate.pageNumber" [limit]="pageSIMUpdate.size" (page)="setPageSIMUpdate($event)">
 
 
-                        <ngx-datatable-column [width]="40" name="SL" prop="id" [draggable]="false" [sortable]="false">
-                            <ng-template let-value="value" ngx-datatable-cell-template>
-                                <span title="{{ value }}"> {{ value }}
-                                  <label *ngIf="isPhoneSIM == true" class="badge badge-warning badge-bottom-right"><i class="icofont icofont-mobile-phone"></i></label>
-                                </span>
-                            </ng-template>
-                        </ngx-datatable-column>
+                  <ngx-datatable-column [width]="40" name="SL" prop="id" [draggable]="false" [sortable]="false">
+                    <ng-template let-value="value" ngx-datatable-cell-template>
+                      <span title="{{ value }}"> {{ value }}
+                        <label *ngIf="isPhoneSIM == true" class="badge badge-warning badge-bottom-right"><i
+                            class="icofont icofont-mobile-phone"></i></label>
+                      </span>
+                    </ng-template>
+                  </ngx-datatable-column>
 
-                        <!-- <ngx-datatable-column *ngIf="isPhoneSIM == true" [width]="10" name="SIM Type" [draggable]="false"
+                  <!-- <ngx-datatable-column *ngIf="isPhoneSIM == true" [width]="10" name="SIM Type" [draggable]="false"
                                     [sortable]="false">
                                     <ng-template let-value="value" ngx-datatable-cell-template>
                                       <span> <strong class="label label-warning">Phone Sim</strong>
@@ -216,88 +228,92 @@
                                     </ng-template>
                                   </ngx-datatable-column> -->
 
-                        <!-- <ngx-datatable-column [width]="80" name="SIM CID No" prop="CID_no" [draggable]="false" [sortable]="false">
+                  <!-- <ngx-datatable-column [width]="80" name="SIM CID No" prop="CID_no" [draggable]="false" [sortable]="false">
                             <ng-template let-value="value" ngx-datatable-cell-template>
                                 <span title="{{ value }}"> {{ value }} </span>
                             </ng-template>
                         </ngx-datatable-column>  -->
 
-                        <ngx-datatable-column [width]="120" name="SIM CID No" prop="CID_no" [draggable]="false"
-                            [sortable]="false">
-                            <ng-template let-row="row" ngx-datatable-cell-template>
-                                <input type="text"class="form-control mt-2" readonly [(ngModel)]="row.CID_no" />
-                            </ng-template>
-                        </ngx-datatable-column>
+                  <ngx-datatable-column [width]="180" name="SIM CID No" prop="CID_no" [draggable]="false"
+                    [sortable]="false">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <input type="text" class="form-control mt-2" [(ngModel)]="row.CID_no" />
+                    </ng-template>
+                  </ngx-datatable-column>
 
-                        <ngx-datatable-column [width]="120" name="ICCID No" prop="ICCID_no" [draggable]="false"
-                            [sortable]="false">
-                            <ng-template let-row="row" ngx-datatable-cell-template>
-                                <input type="text"class="form-control mt-2" [(ngModel)]="row.ICCID_no"  required />
-                            </ng-template>
-                        </ngx-datatable-column>
+                  <ngx-datatable-column [width]="180" name="ICCID No" prop="ICCID_no" [draggable]="false"
+                    [sortable]="false">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <input type="text" class="form-control mt-2" [(ngModel)]="row.ICCID_no" required />
+                    </ng-template>
+                  </ngx-datatable-column>
 
-                        <ngx-datatable-column [width]="120" name="Phone No" prop="phone_number" [draggable]="false"
-                        [sortable]="false">
-                        <ng-template let-row="row" ngx-datatable-cell-template>
-                            <input type="text"class="form-control mt-2" [(ngModel)]="row.phone_number"  required />
-                        </ng-template>
-                    </ngx-datatable-column>
+                  <ngx-datatable-column [width]="180" name="Phone No" prop="phone_number" [draggable]="false"
+                    [sortable]="false">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <input type="text" class="form-control mt-2" [(ngModel)]="row.phone_number" required />
+                    </ng-template>
+                  </ngx-datatable-column>
 
-                      <ngx-datatable-column [width]="100" name="Delivery Date" prop="delivery_received_at" [draggable]="false"
-                        [sortable]="false">
-                        <ng-template let-row="row" ngx-datatable-cell-template>
-                          <span> {{ row.delivery_received_at | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a' }} </span>
-                        </ng-template>
-                    </ngx-datatable-column>
+                  <ngx-datatable-column [width]="150" name="IMEI Pair" prop="IMEI_pair" [draggable]="false"
+                    [sortable]="false">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <input type="text" class="form-control mt-2" [(ngModel)]="row.IMEI_pair" required />
+                    </ng-template>
+                  </ngx-datatable-column>
 
-                      <ngx-datatable-column [width]="100" name="Model Name" prop="model_name" [draggable]="false"
-                        [sortable]="false">
-                        <ng-template let-row="row" ngx-datatable-cell-template>
-                          <span> {{ row.model_name }} </span>
-                        </ng-template>
-                    </ngx-datatable-column>
+                  <!-- <ngx-datatable-column [width]="100" name="Delivery Date" prop="delivery_received_at"
+                    [draggable]="false" [sortable]="false">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <span *ngIf="row.delivery_received_at"> {{ row.delivery_received_at | amFromUtc | amLocal |
+                        amDateFormat:'DD-MMM-YYYY, h:mm a' }} </span>
+                      <span *ngIf="!row.delivery_received_at"> -- </span>
+                    </ng-template>
+                  </ngx-datatable-column>
 
-                        <ngx-datatable-column [width]="100" name="Plan Name" prop="plan_name" [draggable]="false"
-                        [sortable]="false">
-                        <ng-template let-row="row" ngx-datatable-cell-template>
-                          <span> {{ row.plan_name }} </span>
+                  <ngx-datatable-column [width]="100" name="Model Name" prop="model_name" [draggable]="false"
+                    [sortable]="false">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <span> {{ row.model_name }} </span>
+                    </ng-template>
+                  </ngx-datatable-column>
 
-                        </ng-template>
-                    </ngx-datatable-column>
+                  <ngx-datatable-column [width]="100" name="Plan Name" prop="plan_name" [draggable]="false"
+                    [sortable]="false">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <span> {{ row.plan_name }} </span>
 
-                        <ngx-datatable-column [width]="100" name="Plan Price" prop="plan_price_for_admin" [draggable]="false"
-                        [sortable]="false">
-                        <ng-template let-row="row" ngx-datatable-cell-template>
-                          <span> {{ row.plan_price_for_admin }} </span>
+                    </ng-template>
+                  </ngx-datatable-column>
 
-                        </ng-template>
-                    </ngx-datatable-column>
+                  <ngx-datatable-column [width]="100" name="Plan Price" prop="plan_price_for_admin" [draggable]="false"
+                    [sortable]="false">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <span> {{ row.plan_price_for_admin }} </span>
 
-                        <ngx-datatable-column [width]="100" name="Reissue Cost" prop="reissue_cost_for_admin" [draggable]="false"
-                        [sortable]="false">
-                        <ng-template let-row="row" ngx-datatable-cell-template>
-                          <span> {{ row.reissue_cost_for_admin }} </span>
-                        </ng-template>
-                    </ngx-datatable-column>
+                    </ng-template>
+                  </ngx-datatable-column>
 
-                        <ngx-datatable-column [width]="100" name="Payment Cycle" prop="payment_cycle_for_admin" [draggable]="false"
-                        [sortable]="false">
-                        <ng-template let-row="row" ngx-datatable-cell-template>
-                          <span> {{ row.payment_cycle_for_admin }} </span>
-                        </ng-template>
-                    </ngx-datatable-column>
+                  <ngx-datatable-column [width]="100" name="Reissue Cost" prop="reissue_cost_for_admin"
+                    [draggable]="false" [sortable]="false">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <span> {{ row.reissue_cost_for_admin }} </span>
+                    </ng-template>
+                  </ngx-datatable-column>
 
-                        <ngx-datatable-column [width]="150" name="IMEI Pair" prop="IMEI_pair" [draggable]="false"
-                        [sortable]="false">
-                        <ng-template let-row="row" ngx-datatable-cell-template>
-                            <input type="text"class="form-control mt-2" [(ngModel)]="row.IMEI_pair"  required />
-                        </ng-template>
-                    </ngx-datatable-column>
-
-                    </ngx-datatable>
+                  <ngx-datatable-column [width]="100" name="Payment Cycle" prop="payment_cycle_for_admin"
+                    [draggable]="false" [sortable]="false">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <span> {{ row.payment_cycle_for_admin }} </span>
+                    </ng-template>
+                  </ngx-datatable-column> -->
 
 
-                  <!-- <div class="table-responsive">
+
+                </ngx-datatable>
+
+
+                <!-- <div class="table-responsive">
                       <table class="table table-xs table-hover table-bordered table-striped">
                           <thead>
                               <tr>
@@ -319,24 +335,114 @@
                       </table>
                       </div> -->
 
-                  </div>
-
               </div>
-              </div>
+
+            </div>
           </div>
+        </div>
 
-          </app-card>
+      </app-card>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideSIM()"> <i
+            class="icofont icofont-close"></i> Close</button>
+
+        <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmitSIM()"><i
+            class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
       </div>
-      <div class="modal-footer">
-          <div class="pr-4">
-              <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideSIM()"> <i
-                      class="icofont icofont-close"></i> Close</button>
 
-              <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmitSIM()"><i
-                      class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
-          </div>
-
-      </div>
+    </div>
   </ng-template>
+
+  <ng-template #templateSIMDetailsUpdate>
+    <div class="modal-header ">
+      <h6 class="modal-title pull-left"> SIM Details Update </h6>
+
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideSIMDetails()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body pb-0">
+      <app-card>
+
+
+        <div class="row mb-3" *ngIf="simObj">
+          <div class="col-md-6">
+            <p class="fs-14 mb-0">SIM CID No : <b>{{simObj.CID_no}}</b></p>
+            <!-- <p class="fs-14 mb-0">Phone Number : <b>{{simObj.phone_number}}</b></p> -->
+
+          </div>
+          <div class="col-md-6">
+            <!-- <p class="fs-14 mb-0">SIM ICCID : <b>{{simObj.ICCID_no}} </b></p> -->
+            <p class="fs-14 mb-0">Delivery Received: <b>{{simObj.delivery_received_at | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY'}}</b></p>
+
+          </div>
+        </div>
+        <hr>
+        <form [formGroup]="updateSIMForm">
+
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">IMEI Pair</label>
+            <div class="col-sm-8">
+              <input formControlName="IMEI_pair" type="text" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Model Name</label>
+            <div class="col-sm-8">
+              <input  formControlName="model_name" type="text"
+                class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Plan Name</label>
+            <div class="col-sm-8">
+              <input  formControlName="plan_name" type="text"
+                class="form-control">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Plan Price</label>
+            <div class="col-sm-8">
+              <input  formControlName="plan_price_for_admin" type="text"
+                class="form-control">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Reissue Cost</label>
+            <div class="col-sm-8">
+              <input  formControlName="reissue_cost_for_admin" type="text"
+                class="form-control">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Payment Cycle</label>
+            <div class="col-sm-8">
+              <input  formControlName="payment_cycle_for_admin" type="text"
+                class="form-control">
+            </div>
+          </div>
+
+
+        </form>
+      </app-card>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideSIMDetails()"> <i
+            class="icofont icofont-close"></i> Close</button>
+
+        <button class="btn btn-success btn-sm btn-outline-success float-right" (click)="onSubmitSIMDetails()">
+          <i class="icofont-save"></i> Update
+        </button>
+
+      </div>
+
+    </div>
+  </ng-template>
+
 
 </block-ui>

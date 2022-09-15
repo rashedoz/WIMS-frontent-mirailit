@@ -1,8 +1,124 @@
 <block-ui>
 
   <div class="row" *ngIf="stock">
+    <div class="col-md-4 col-xl-4 mb-2">
+      <div class="card client-blocks success-border">
+        <div class="card-block-big">
 
-    <div class="col-md-2 mb-3">
+              <div class="row pb-1">
+                <div class="col-9 px-0"><h5 class="pt-1 mb-0"><label class="label label-inverse-info-border"> Wifi SIM Stock Qty </label></h5></div>
+                <div class="col-3 px-0"><p class="text-right f-20 text-success font-weight-bold mb-0"> {{stock.wifi_sim_stock_qty}}  </p></div>
+              </div>
+
+              <div class="row pb-1">
+                <div class="col-9 px-0"><h5 class="pt-1  mb-0"><label class="label label-inverse-info-border"> Phone SIM Stock Qty </label></h5></div>
+                <div class="col-3 px-0"><p class="text-right f-20 text-success font-weight-bold mb-0"> {{stock.phone_sim_stock_qty}}  </p></div>
+              </div>
+
+              <div class="row pb-1">
+                <div class="col-9 px-0"><h5 class="pt-1 mb-0"><label class="label label-inverse-info-border">Total Stock Qty </label></h5></div>
+                <div class="col-3 px-0"><p class="text-right f-20 text-success font-weight-bold mb-0"> {{stock.stock_qty}}  </p></div>
+              </div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-xl-4 mb-2">
+      <div class="card client-blocks info-border">
+        <div class="card-block-big">
+
+              <div class="row pb-1">
+                <div class="col-9 px-0"><h5 class="pt-1 mb-0"><label class="label label-inverse-info-border"> Wifi SIM Subscribed Qty </label></h5></div>
+                <div class="col-3 px-0"><p class="text-right f-20 text-info font-weight-bold mb-0"> {{stock.wifi_sim_subscribed_qty}}  </p></div>
+              </div>
+
+              <div class="row pb-1">
+                <div class="col-9 px-0"><h5 class="pt-1  mb-0"><label class="label label-inverse-info-border"> Phone SIM Subscribed Qty </label></h5></div>
+                <div class="col-3 px-0"><p class="text-right f-20 text-info font-weight-bold mb-0"> {{stock.phone_sim_subscribed_qty}}  </p></div>
+              </div>
+
+              <div class="row pb-1">
+                <div class="col-9 px-0"><h5 class="pt-1 mb-0"><label class="label label-inverse-info-border">Total Subscribed Stock Qty </label></h5></div>
+                <div class="col-3 px-0"><p class="text-right f-20 text-info font-weight-bold mb-0"> {{stock.subscribed_qty}}  </p></div>
+              </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-xl-4 mb-2">
+      <div class="card client-blocks primary-border">
+        <div class="card-block-big">
+
+              <div class="row pb-1">
+                <div class="col-9 px-0"><h5 class="pt-1 mb-0"><label class="label label-inverse-info-border"> Wifi SIM Available Stock Qty </label></h5></div>
+                <div class="col-3 px-0"><p class="text-right f-20 text-primary font-weight-bold mb-0"> {{stock.wifi_sim_available_stock_qty}}  </p></div>
+              </div>
+
+              <div class="row pb-1">
+                <div class="col-9 px-0"><h5 class="pt-1  mb-0"><label class="label label-inverse-info-border"> Phone SIM Available Stock Qty </label></h5></div>
+                <div class="col-3 px-0"><p class="text-right f-20 text-primary font-weight-bold mb-0"> {{stock.phone_sim_available_stock_qty}}  </p></div>
+              </div>
+
+              <div class="row pb-1">
+                <div class="col-9 px-0"><h5 class="pt-1 mb-0"><label class="label label-inverse-info-border">Total Available Stock Qty </label></h5></div>
+                <div class="col-3 px-0"><p class="text-right f-20 text-primary font-weight-bold mb-0"> {{stock.available_stock_qty}}  </p></div>
+              </div>
+
+
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 col-xl-4 mb-2">
+      <div class="card card client-blocks warning-border">
+        <div class="card-block-big">
+
+            <div class="row pb-1">
+              <div class="col-9 px-0"><h5 class="pt-1 mb-0"> <label class="label label-inverse-info-border"> Wifi SIM Reissued Qty </label></h5></div>
+              <div class="col-3 px-0"><p class="text-right f-20 text-warning font-weight-bold mb-0"> {{stock.wifi_sim_reissued_qty}}  </p></div>
+            </div>
+
+            <div class="row pb-1">
+              <div class="col-9 px-0"><h5 class="pt-1  mb-0"> <label class="label label-inverse-info-border"> Phone SIM Reissued Qty </label></h5></div>
+              <div class="col-3 px-0"><p class="text-right f-20 text-warning font-weight-bold mb-0"> {{stock.phone_sim_reissued_qty}}  </p></div>
+            </div>
+
+              <div class="row pb-1">
+                <div class="col-9 px-0"><h5 class="pt-1 mb-0"><label class="label label-inverse-info-border">Total Reissued Qty </label></h5></div>
+                <div class="col-3 px-0"><p class="text-right f-20 text-warning font-weight-bold mb-0"> {{stock.reissued_qty}}  </p></div>
+              </div>
+
+
+
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 col-xl-4 mb-2">
+      <div class="card client-blocks danger-border">
+        <div class="card-block-big">
+
+          <div class="row pb-1">
+            <div class="col-9 px-0"><h5 class="pt-1 mb-0"><label class="label label-inverse-info-border"> Wifi SIM Cancelled Qty </label></h5></div>
+            <div class="col-3 px-0"><p class="text-right f-20 text-danger font-weight-bold mb-0"> {{stock.wifi_sim_cancelled_qty}}  </p></div>
+          </div>
+
+          <div class="row pb-1">
+            <div class="col-9 px-0"><h5 class="pt-1  mb-0"><label class="label label-inverse-info-border"> Phone SIM Cancelled Qty </label></h5></div>
+            <div class="col-3 px-0"><p class="text-right f-20 text-danger font-weight-bold mb-0"> {{stock.phone_sim_cancelled_qty}}  </p></div>
+          </div>
+
+            <div class="row pb-1">
+              <div class="col-9 px-0"><h5 class="pt-1 mb-0"><label class="label label-inverse-info-border">Total Cancelled Qty </label></h5></div>
+              <div class="col-3 px-0"><p class="text-right f-20 text-danger font-weight-bold mb-0"> {{stock.cancelled_qty}}  </p></div>
+            </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="col-md-2 mb-3">
       <div class="card client-blocks dark-primary-border">
         <div class="card-block">
           <h5 class="f-22">All Stock Quantity</h5>
@@ -78,7 +194,7 @@
           </ul>
         </div>
       </div>
-    </div>
+    </div> -->
 
   </div>
 
@@ -135,11 +251,11 @@
                   </tabset>
                 </div>
                 <div class="col-lg-2">
-                  <div class="checkbox-fade fade-in-primary mt-2" >
+                  <div class="checkbox-fade fade-in-warning mt-2">
                     <label>
-                        <input type="checkbox" [(ngModel)]="isPhoneSIM" (ngModelChange)="onPhoneSIMChange($event)">
-                        <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
-                        <span class="text-inverse">Phone SIM</span>
+                      <input type="checkbox" [(ngModel)]="isPhoneSIM" (ngModelChange)="onPhoneSIMChange($event)">
+                      <span class="cr" style="width: 30px; height: 30px;"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                      <span class="text-inverse f-18 font-weight-bold" style="line-height: 30px;">Phone SIM</span>
                     </label>
 
                   </div>
@@ -164,6 +280,8 @@
                     [loadingIndicator]="loadingIndicator" [externalPaging]="true" [columnMode]="ColumnMode.force"
                     [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [count]="page.totalElements"
                     [offset]="page.pageNumber" [limit]="page.size" (page)="setPage($event)">
+
+
 
                     <ngx-datatable-column *ngIf="isPhoneSIM == true" [width]="120" name="SIM Type" [draggable]="false"
                       [sortable]="false">
@@ -279,7 +397,7 @@
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column *ngIf="tabType == 'Frozen' || tabType == 'Subscribed'" [width]="150" name="Last Frozen At"
+                    <ngx-datatable-column *ngIf="tabType == 'Frozen' || tabType == 'Subscribed'" [width]="200" name="Last Frozen At"
                       prop="last_frozen_at" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span *ngIf="!value"> -- </span>
@@ -287,7 +405,7 @@
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column *ngIf="tabType == 'Will Be Cancelled'" [width]="180" name="Last Adv. Cancelled At"
+                    <ngx-datatable-column *ngIf="tabType == 'Will Be Cancelled'" [width]="200" name="Last Adv. Cancelled At"
                       prop="last_adv_cancelled_at" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span *ngIf="!value"> -- </span>
@@ -295,10 +413,14 @@
                       </ng-template>
                     </ngx-datatable-column>
 
-
-
                     <ngx-datatable-column [width]="500" name="Action" prop="id" [draggable]="false" [sortable]="false">
                       <ng-template let-row="row" ngx-datatable-cell-template>
+
+                      <button class="btn btn-info btn-mini  mr-1"
+                        (click)="openModalSIMDetailsUpdate(row,templateSIMDetailsUpdate)">
+                        Edit
+                      </button>
+
                         <button *ngIf="tabType == 'Cancelled'" class="btn btn-info btn-mini mr-1"
                           (click)="onSubmitAction('reissuance',row)">
                           Reissue
@@ -316,7 +438,7 @@
 
                         <button *ngIf="tabType == 'Cancelled'" class="btn btn-danger btn-mini mr-1"
                           (click)="onSubmitAction('permanently_cancelled',row)">
-                          Permanently Cancelled
+                          Cancel Permanently
                         </button>
 
                         <button *ngIf="tabType == 'Will Be Cancelled'" (click)="onSubmitAction('undo-cacellation',row)"
@@ -330,6 +452,10 @@
                         </button>
                       </ng-template>
                     </ngx-datatable-column>
+
+
+
+
 
                   </ngx-datatable>
                 </div>
@@ -564,6 +690,95 @@
 
         <button class="btn btn-success btn-sm btn-outline-success float-right" (click)="onSubmitSIMReceive()">
           <i class="icofont-save"></i> Receive
+        </button>
+
+      </div>
+
+    </div>
+  </ng-template>
+
+  <ng-template #templateSIMDetailsUpdate>
+    <div class="modal-header ">
+      <h6 class="modal-title pull-left"> SIM Details Update </h6>
+
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideSIMDetails()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body pb-0">
+      <app-card>
+
+
+        <div class="row mb-3" *ngIf="simObj">
+          <div class="col-md-6">
+            <p class="fs-14 mb-0">SIM CID No : <b>{{simObj.CID_no}}</b></p>
+            <p class="fs-14 mb-0">Phone Number : <b>{{simObj.phone_number}}</b></p>
+
+          </div>
+          <div class="col-md-6">
+            <p class="fs-14 mb-0">SIM ICCID : <b>{{simObj.ICCID_no}} </b></p>
+            <p class="fs-14 mb-0">Delivery Received: <b>{{simObj.delivery_received_at | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY'}}</b></p>
+
+          </div>
+        </div>
+        <hr>
+        <form [formGroup]="updateSIMForm">
+
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">IMEI Pair</label>
+            <div class="col-sm-8">
+              <input formControlName="IMEI_pair" type="text" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Model Name</label>
+            <div class="col-sm-8">
+              <input  formControlName="model_name" type="text"
+                class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Plan Name</label>
+            <div class="col-sm-8">
+              <input  formControlName="plan_name" type="text"
+                class="form-control">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Plan Price</label>
+            <div class="col-sm-8">
+              <input  formControlName="plan_price_for_admin" type="text"
+                class="form-control">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Reissue Cost</label>
+            <div class="col-sm-8">
+              <input  formControlName="reissue_cost_for_admin" type="text"
+                class="form-control">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Payment Cycle</label>
+            <div class="col-sm-8">
+              <input  formControlName="payment_cycle_for_admin" type="text"
+                class="form-control">
+            </div>
+          </div>
+
+
+        </form>
+      </app-card>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideSIMDetails()"> <i
+            class="icofont icofont-close"></i> Close</button>
+
+        <button class="btn btn-success btn-sm btn-outline-success float-right" (click)="onSubmitSIMDetails()">
+          <i class="icofont-save"></i> Update
         </button>
 
       </div>

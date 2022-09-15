@@ -65,6 +65,11 @@ export class BillComponent implements OnInit {
   customerType = 'all';
 
 
+  billTypeList = [{id:0,name:'All'},{id:1,name:'Phone SIM'},{id:2,name:'WiFi SIM'},{id:3,name:'Mixed'},{id:4,name:'Unknown'}]
+
+  selectedBillType = {id:0,name:'All'};
+
+
   constructor(
     public formBuilder: FormBuilder,
     private _service: CommonService,
@@ -176,6 +181,19 @@ export class BillComponent implements OnInit {
     this.getList();
   }
 
+  onBillTypeChange(e){
+    this.page.pageNumber = 0;
+    this.page.size = 10;
+    if(e){
+    this.selectedBillType = e;
+    this.getList();
+    }else{
+      this.selectedBillType = {id:0,name:'All'};
+      this.getList();
+    }
+  }
+
+
   goToPaymentCollection(id){
     this.router.navigate([]).then(result => { window.open('/payment-collection/'+ id, '_blank'); });
   }
@@ -229,6 +247,10 @@ export class BillComponent implements OnInit {
       }else{
         delete obj['payment_status'];
       }
+
+    if(this.selectedBillType.id != 0){
+      obj.bill_type = this.selectedBillType.id;
+    }
 
 
       if(this.bsBillRangeValue){

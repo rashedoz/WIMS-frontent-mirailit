@@ -171,8 +171,8 @@
 
                             <ngx-datatable-column [width]="100" name="SIM CID No" prop="CID_no" [draggable]="false"
                               [sortable]="false">
-                              <ng-template let-value="value" ngx-datatable-cell-template>
-                                <span> {{ value }} </span>
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span><label *ngIf="row.is_phone_sim" class="badge badge-warning badge-bottom-right"><i class="icofont icofont-mobile-phone"></i></label> {{ row.CID_no }} </span>
                               </ng-template>
                             </ngx-datatable-column>
 
@@ -193,7 +193,8 @@
                             <ngx-datatable-column [width]="130" name="IMEI" prop="IMEI" [draggable]="false"
                               [sortable]="false">
                               <ng-template let-value="value" ngx-datatable-cell-template>
-                                <span> {{ value }} </span>
+                                <span *ngIf="value"> {{ value }} </span>
+                                <span *ngIf="!value"> N/A </span>
                               </ng-template>
                             </ngx-datatable-column>
 
@@ -315,7 +316,7 @@
 
                                     <button (click)="onSubmitAction('sim','permanently_cancelled',row)" *ngIf="row.sim_status == 4"
                                       class="btn btn-danger btn-mini mr-1"><i
-                                        class="icofont icofont-paper-plane"></i>Permanently Cancelled</button>
+                                        class="icofont icofont-brand-nexus"></i>Cancel Permanently</button>
 
                                     <button (click)="openModalSIMRecieve(row,templateSIMReceive)"
                                       *ngIf="row.sim_status == 6" class="btn btn-success btn-mini mr-1"><i
@@ -340,7 +341,8 @@
                             <ngx-datatable-column [width]="150" name="IMEI" prop="IMEI" [draggable]="false"
                               [sortable]="false">
                               <ng-template let-value="value" ngx-datatable-cell-template>
-                                <span> {{ value }} </span>
+                                <span *ngIf="value"> {{ value }} </span>
+                                <span *ngIf="!value"> N/A </span>
                               </ng-template>
                             </ngx-datatable-column>
 
@@ -1169,8 +1171,8 @@
                 </ng-template>
 
               <ng-template ng-option-tmp let-item="item" let-index="index">
-                    <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no"> {{item.CID_no}} </p>
-                    <p class="card-text font-weight-bold" *ngIf="item.ICCID_no"> {{item.CID_no}}
+                    <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no"><label *ngIf="item.is_phone_sim" class="badge badge-warning badge-bottom-right"><i class="icofont icofont-mobile-phone"></i></label> {{item.CID_no}} </p>
+                    <p class="card-text font-weight-bold" *ngIf="item.ICCID_no"><label *ngIf="item.is_phone_sim" class="badge badge-warning badge-bottom-right"><i class="icofont icofont-mobile-phone"></i></label> {{item.CID_no}}
                       ({{item.ICCID_no}})</p>
                   </ng-template>
 
