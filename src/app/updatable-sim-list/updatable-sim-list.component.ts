@@ -88,6 +88,8 @@ export class UpdatableSIMListComponent implements OnInit {
     this.updateSIMForm = this.formBuilder.group({
       id: [null, [Validators.required]],
       IMEI_pair: [null],
+      ssid: [null],
+      wifi_password: [null],
       model_name: [null],
       plan_name: [null],
       plan_price_for_admin: [null],
@@ -399,13 +401,15 @@ export class UpdatableSIMListComponent implements OnInit {
   //   return;
   //  }
 
-    this.SIMItemList.filter(x => x.ICCID_no && x.phone_number).forEach(element => {
+    this.SIMItemList.filter(x => x.CID_no && x.ICCID_no && x.phone_number).forEach(element => {
       sim_details.push({
         id: element.id,
         CID_no: element.CID_no,
         ICCID_no: element.ICCID_no,
         phone_number: element.phone_number,
-        IMEI_pair: element.IMEI_pair
+        IMEI_pair: element.IMEI_pair,
+        ssid: element.ssid,
+        wifi_password: element.wifi_password
       });
     });
 
@@ -469,6 +473,8 @@ export class UpdatableSIMListComponent implements OnInit {
     this.simObj = item;
     this.updateSIMForm.controls["id"].setValue(item.id);
     this.updateSIMForm.controls["IMEI_pair"].setValue(item.IMEI_pair);
+    this.updateSIMForm.controls["ssid"].setValue(item.ssid);
+    this.updateSIMForm.controls["wifi_password"].setValue(item.wifi_password);
     this.updateSIMForm.controls["model_name"].setValue(item.model_name);
     this.updateSIMForm.controls["plan_name"].setValue(item.plan_name);
     this.updateSIMForm.controls["plan_price_for_admin"].setValue(item.plan_price_for_admin);
@@ -488,6 +494,8 @@ export class UpdatableSIMListComponent implements OnInit {
 
     const obj = {
       IMEI_pair: this.updateSIMForm.value.IMEI_pair,
+      ssid: this.updateSIMForm.value.ssid,
+      wifi_password: this.updateSIMForm.value.wifi_password,
       model_name: this.updateSIMForm.value.model_name,
       plan_name: this.updateSIMForm.value.plan_name,
       plan_price_for_admin: this.updateSIMForm.value.plan_price_for_admin ? Number(this.updateSIMForm.value.plan_price_for_admin) : this.updateSIMForm.value.plan_price_for_admin,

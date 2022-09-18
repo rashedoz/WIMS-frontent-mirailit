@@ -147,6 +147,13 @@
                       </ng-template>
                     </ngx-datatable-column>
 
+                    <ngx-datatable-column [width]="130" name="Billing  Month" prop="billing_month"
+                    [draggable]="false" [sortable]="false">
+                    <ng-template let-value="value" ngx-datatable-cell-template>
+                      <span> {{ value | date:'MMMM, y'}} </span>
+                    </ng-template>
+                  </ngx-datatable-column>
+
                     <ngx-datatable-column [width]="150" name="Payment Status" prop="payment_status" [draggable]="false"
                       [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>

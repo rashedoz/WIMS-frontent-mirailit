@@ -234,7 +234,7 @@
                             </ng-template>
                         </ngx-datatable-column>  -->
 
-                  <ngx-datatable-column [width]="180" name="SIM CID No" prop="CID_no" [draggable]="false"
+                  <ngx-datatable-column [width]="150" name="SIM CID No" prop="CID_no" [draggable]="false"
                     [sortable]="false">
                     <ng-template let-row="row" ngx-datatable-cell-template>
                       <input type="text" class="form-control mt-2" [(ngModel)]="row.CID_no" />
@@ -248,7 +248,7 @@
                     </ng-template>
                   </ngx-datatable-column>
 
-                  <ngx-datatable-column [width]="180" name="Phone No" prop="phone_number" [draggable]="false"
+                  <ngx-datatable-column [width]="150" name="Phone No" prop="phone_number" [draggable]="false"
                     [sortable]="false">
                     <ng-template let-row="row" ngx-datatable-cell-template>
                       <input type="text" class="form-control mt-2" [(ngModel)]="row.phone_number" required />
@@ -259,6 +259,20 @@
                     [sortable]="false">
                     <ng-template let-row="row" ngx-datatable-cell-template>
                       <input type="text" class="form-control mt-2" [(ngModel)]="row.IMEI_pair" required />
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-column [width]="150" name="SSID"  [draggable]="false"
+                    [sortable]="false">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <input type="text" class="form-control mt-2" [(ngModel)]="row.ssid" required />
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-column [width]="150" name="Wifi Password" [draggable]="false"
+                    [sortable]="false">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <input type="text" class="form-control mt-2" [(ngModel)]="row.wifi_password" required />
                     </ng-template>
                   </ngx-datatable-column>
 
@@ -386,6 +400,18 @@
             <label class="col-sm-4 col-form-label">IMEI Pair</label>
             <div class="col-sm-8">
               <input formControlName="IMEI_pair" type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">SSID</label>
+            <div class="col-sm-8">
+              <input formControlName="ssid" type="text" class="form-control">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Wifi Password</label>
+            <div class="col-sm-8">
+              <input formControlName="wifi_password" type="text" class="form-control">
             </div>
           </div>
 

@@ -104,10 +104,10 @@ export class HomeComponent implements OnInit {
         this.showPicChart();
   });
 
-  this.getBillEligiblePhoneCountData();
+  // this.getBillEligiblePhoneCountData();
   this.getPhoneBillRecordsData();
 
-  this.getBillEligibleWifiCountData();
+  // this.getBillEligibleWifiCountData();
   this.getWifiBillRecordsData();
     // setTimeout(() => {
     //   this.showPicChart();
@@ -154,6 +154,9 @@ export class HomeComponent implements OnInit {
          // console.log(values);
             this.showPicChart();
       });
+
+          this.getPhoneBillRecordsData();
+          this.getWifiBillRecordsData();
       this.bsMonthValue = null;
         break;
       case "Current Month":
@@ -183,7 +186,8 @@ export class HomeComponent implements OnInit {
          // console.log(values);
             this.showPicChart();
       });
-
+      this.getPhoneBillRecordsData();
+      this.getWifiBillRecordsData();
         break;
 
       default:
@@ -219,6 +223,9 @@ export class HomeComponent implements OnInit {
      // console.log(values);
         this.showPicChart();
   });
+
+  this.getPhoneBillRecordsData();
+  this.getWifiBillRecordsData();
 
   }
 
