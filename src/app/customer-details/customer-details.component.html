@@ -37,6 +37,11 @@
                   <p class="fs-14 mb-0" *ngIf="customerObj.acc_number">Account Number :
                     <b>{{customerObj.acc_number}}</b></p>
                   <p class="fs-14 mb-0" *ngIf="customerObj.email">Email : <b>{{customerObj.email}}</b></p>
+                  <p class="fs-14 mb-0" *ngIf="customerObj.contract_status == 1">Contact Status :
+
+                    <strong  class="label label-success">{{ContractStatus[customerObj.contract_status]}}</strong>
+
+                  </p>
                 </div>
                 <div class="col-md-3">
                   <p class="fs-14 mb-0" *ngIf="customerObj.mobile">Mobile : <b>{{customerObj.mobile}} </b></p>
@@ -57,7 +62,9 @@
                         class="text-primary font-weight-bold">{{customerObj.balance }}</span></b></p>
                 </div>
                 <div class="col-md-2">
-                  <button (click)="onSubmitEndContract()" class="btn btn-danger btn-round"> End Contract</button>
+                  <button *ngIf="customerObj.contract_status == 1" (click)="onSubmitEndContract()" class="btn btn-danger btn-round"> End Contract</button>
+
+                  <button *ngIf="customerObj.contract_status == 2" (click)="onSubmitUndoContract()" class="btn btn-success btn-round"> Undo-End Contract</button>
                 </div>
               </div>
               <hr>

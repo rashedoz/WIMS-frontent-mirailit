@@ -74,3 +74,10 @@ export enum StatusTypes {
     MALE = 2,
     FEMALE = 3
   }
+
+  export enum ContractStatus{
+    NOT_SET = 0,
+    ACTIVE = 1,
+    SET_AS_TERMINABLE = 2,
+    CLOSED = 3
+  }

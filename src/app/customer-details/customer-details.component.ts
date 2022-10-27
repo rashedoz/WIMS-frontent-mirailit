@@ -6,7 +6,7 @@ import { CommonService } from '../_services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
-import { BillStatus, StockStatus } from '../_models/enums';
+import { BillStatus, StockStatus,ContractStatus } from '../_models/enums';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 // import { jsPDF } from "jspdf";
 // import 'jspdf-autotable';
@@ -40,6 +40,7 @@ export class CustomerDetailsComponent implements OnInit {
   SubscriptionStatus = SubscriptionStatus;
   StatusTypes = StatusTypes;
   StockStatus = StockStatus;
+  ContractStatus = ContractStatus;
   SIMAndDeviceStatus = SIMAndDeviceStatus;
   PaymentType = PaymentType;
   page = new Page();
@@ -1115,18 +1116,57 @@ selectTab(tabId: number) {
 
   onSubmitEndContract(){
 
-    this.confirmService.confirm('Are you sure?', 'You are going to end this contract.')
+    this.confirmService.confirm('Are you sure?', 'You are going to end the contract.')
     .subscribe(
         result => {
             if (result) {
               this.blockUI.start('Saving...');
-              const request = this._service.get('bill/end-contract/'+this.customer_id);
+              const request = this._service.patch('bill/end-contract/'+this.customer_id,{});
               request.subscribe(
                 data => {
                   this.blockUI.stop();
                   if (data.IsReport == "Success") {
-                    this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
-                    window.location.reload();
+                    this.toastr.success(data.Msg, 'Success!', { timeOut: 4000 });
+
+                    this.url = 'get-user-detail/';
+                    this.getCustomer();
+
+
+                  } else if (data.IsReport == "Warning") {
+                    this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+                  } else {
+                    this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
+                  }
+                },
+                err => {
+                  this.blockUI.stop();
+                  this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
+                }
+              );
+            }else{
+              this.blockUI.stop();
+            }
+        },
+    );
+   }
+
+   onSubmitUndoContract(){
+
+    this.confirmService.confirm('Are you sure?', 'You are going to undo this contract.')
+    .subscribe(
+        result => {
+            if (result) {
+              this.blockUI.start('Saving...');
+              const request = this._service.patch('bill/undo-end-contract/'+this.customer_id,{});
+              request.subscribe(
+                data => {
+                  this.blockUI.stop();
+                  if (data.IsReport == "Success") {
+                    this.toastr.success(data.Msg, 'Success!', { timeOut: 4000 });
+
+                    this.url = 'get-user-detail/';
+                    this.getCustomer();
+
                   } else if (data.IsReport == "Warning") {
                     this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
                   } else {
