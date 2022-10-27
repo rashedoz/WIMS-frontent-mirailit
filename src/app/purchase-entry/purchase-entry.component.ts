@@ -198,7 +198,13 @@ export class PurchaseEntryComponent implements OnInit {
   }
 
   getSupplementaryList() {
-    this._service.get('stock/get-supplementary-list?supplier_id='+this.selectedSupplier.id).subscribe(res => {
+    const obj = {
+      supplier_id: this.selectedSupplier.id,
+      limit: 10000,
+      page: 1
+    };
+
+    this._service.get('stock/get-supplementary-list',obj).subscribe(res => {
       if (!res) {
         this.toastr.error(res.Message, 'Error!', { timeOut: 2000 });
         return;
