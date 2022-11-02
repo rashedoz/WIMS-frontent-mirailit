@@ -13,23 +13,34 @@
             <div class="col-lg-7">
               <div class="form-group row">
                 <div class="col-sm-12">
+                  <div class="form-group">
+                    <label><b>Filter</b></label>
                   <input type="text" class="form-control" [(ngModel)]="searchParam"
                     placeholder="Filtery by package name, offer ..."
                     (keyup)="filterSearch($event)" />
+                  </div>
 
                 </div>
               </div>
             </div>
 
             <div class="col-lg-2">
-              <div class="checkbox-fade fade-in-primary mt-2" >
+
+              <div class="form-group">
+                <label><b>SIM Type</b></label>
+                <ng-select (change)="onSimTypeChange($event)" [(ngModel)]="selectedSimType" [clearable]="true" appendTo="body"
+                [clearOnBackspace]="false" [items]="simTypeList" bindLabel="name"
+                placeholder="Filter by sim type"></ng-select>
+              </div>
+
+              <!-- <div class="checkbox-fade fade-in-primary mt-2" >
                 <label>
                     <input type="checkbox" [(ngModel)]="isPhoneSIM" (ngModelChange)="onPhoneSIMChangeFilter($event)">
                     <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
                     <span class="text-inverse">Phone SIM</span>
                 </label>
 
-              </div>
+              </div> -->
             </div>
 
           </div>
@@ -54,20 +65,20 @@
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column [width]="180" name="Offer Type" prop="pckg_offer_name" [draggable]="false"
+                <ngx-datatable-column [width]="200" name="Offer Type" prop="pckg_offer_name" [draggable]="false"
                   [sortable]="false">
                   <ng-template let-value="value" ngx-datatable-cell-template>
                     <span title="{{ value }}"> {{ value }} </span>
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column [width]="60" name="Plan" prop="plan" [draggable]="false" [sortable]="false">
+                <ngx-datatable-column [width]="80" name="Plan" prop="plan" [draggable]="false" [sortable]="false">
                   <ng-template let-value="value" ngx-datatable-cell-template>
                     <span title="{{ value }}"> {{ value }} </span>
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column [width]="140" name="Comes with Device" prop="has_device_dependency"
+                <!-- <ngx-datatable-column [width]="140" name="Comes with Device" prop="has_device_dependency"
                   [draggable]="false" [sortable]="false">
                   <ng-template let-value="value" ngx-datatable-cell-template>
 
@@ -75,15 +86,16 @@
                     <strong *ngIf="!value">No</strong>
 
                   </ng-template>
-                </ngx-datatable-column>
+                </ngx-datatable-column> -->
 
-                <ngx-datatable-column [width]="80" name="SIM Type" prop="has_phone_sim_dependency"
+                <ngx-datatable-column [width]="30" name="SIM Type" prop="sim_type"
                   [draggable]="false" [sortable]="false">
                   <ng-template let-value="value" ngx-datatable-cell-template>
 
-                    <span *ngIf="value"> <strong class="label label-warning">Phone Sim</strong>
-                    </span>
-                    <span *ngIf="!value"> -- </span>
+                    <span *ngIf="value == 1"> <i style="font-size: 2rem;" class="icofont icofont-memory-card text-primary"></i></span>
+                    <span *ngIf="value == 2"> <i style="font-size: 2rem;" class="icofont icofont-ui-wifi text-info"></i></span>
+                    <span *ngIf="value == 3"> <i style="font-size: 2rem;" class="icofont icofont-ipod-nano text-warning"></i> </span>
+
 
                   </ng-template>
                 </ngx-datatable-column>
@@ -136,19 +148,20 @@
                 </td>
               </tr>
               <tr>
-                <th scope="row">Use Phone Sim Only</th>
+                <th scope="row">Sim Type</th>
                 <td>
-                  <span *ngIf="packageObj.has_phone_sim_dependency">Yes</span>
-                  <span *ngIf="!packageObj.has_phone_sim_dependency">No</span>
+                  <span *ngIf="packageObj.sim_type == 1"> <i style="font-size: 1.3rem;" class="icofont icofont-memory-card text-primary"></i></span>
+                  <span *ngIf="packageObj.sim_type == 2"> <i style="font-size: 1.3rem;" class="icofont icofont-ui-wifi text-info"></i></span>
+                  <span *ngIf="packageObj.sim_type == 3"> <i style="font-size: 1.3rem;" class="icofont icofont-ipod-nano text-warning"></i> </span>
                 </td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <th scope="row">Comes with Device</th>
                 <td>
                   <span *ngIf="packageObj.has_device_dependency">Yes</span>
                   <span *ngIf="!packageObj.has_device_dependency">No</span>
                 </td>
-              </tr>
+              </tr> -->
               <tr *ngIf="packageObj.has_device_dependency">
                 <th scope="row">Device Charge / Deposit</th>
                 <td>{{packageObj.device_deposit}}</td>
@@ -281,6 +294,14 @@
             <div class="col-md-6">
 
               <div class="form-group row">
+                <label class="col-sm-7 col-form-label"> SIM Type </label>
+                <div class="col-sm-5 mt-2">
+                  <ng-select formControlName="sim_type" (change)="onCeatePackageSimTypeChange($event)"  [clearable]="false" [clearOnBackspace]="false" [items]="ceatePackageSimTypeList" bindLabel="name"
+                placeholder="Select sim type"></ng-select>
+                </div>
+              </div>
+
+              <!-- <div class="form-group row">
                 <label class="col-sm-7 col-form-label"> Use Phone Sim Only </label>
                 <div class="col-sm-5 mt-2">
                   <div class="checkbox-fade fade-in-default" >
@@ -291,14 +312,16 @@
 
                   </div>
                 </div>
-              </div>
+              </div> -->
+
+
 
               <div class="form-group row" *ngIf="!isPhoneSimEnable">
                 <label class="col-sm-7 col-form-label"> Comes with Device  </label>
                 <div class="col-sm-5 mt-2">
                   <div class="checkbox-fade fade-in-default" >
                     <label>
-                        <input type="checkbox" (change)="onDeviceChange($event.target.checked)" formControlName="has_device_dependency">
+                        <input type="checkbox" (change)="onDeviceChange($event.target.checked)" formControlName="has_device_dependency" disabled>
                         <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
                     </label>
 

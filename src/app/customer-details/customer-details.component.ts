@@ -170,6 +170,7 @@ export class CustomerDetailsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     public printService: PrintService
+
   ) {
 
     this.router.routeReuseStrategy.shouldReuseRoute = function () {

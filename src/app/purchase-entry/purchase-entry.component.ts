@@ -59,6 +59,8 @@ export class PurchaseEntryComponent implements OnInit {
   maxDate: Date;
   minDate: Date;
 
+  simTypeList = [{id:1,name:'Phone SIM'},{id:2,name:'WiFi SIM '},{id:3,name:'Device Only'}]
+
   constructor(
     private modalService: BsModalService,
     public formBuilder: FormBuilder,
@@ -91,7 +93,8 @@ export class PurchaseEntryComponent implements OnInit {
       supplier: [null, [Validators.required]],
       supplement: [null, [Validators.required]],
       delivery_date: [null, [Validators.required]],
-      is_phone_sim:[false]
+      sim_type: [null, [Validators.required]]
+     // is_phone_sim:[false]
     });
     this.entryFormDevice = this.formBuilder.group({
       supplier: [null, [Validators.required]]
@@ -242,7 +245,7 @@ export class PurchaseEntryComponent implements OnInit {
     });
 
     if(purchase_details.length < 1 ){
-        this.toastr.warning("Qty can't be empty", 'Warning!', { closeButton: true, disableTimeOut: true });
+        this.toastr.warning("Qty can't be empty", 'Warning!', { timeOut: 4000 });
         return;
     }
 
@@ -257,11 +260,12 @@ export class PurchaseEntryComponent implements OnInit {
       reissue_cost_for_admin:Number(this.purchaseItemList[0].reissue_cost_for_admin),
       payment_cycle_for_admin: Number(this.purchaseItemList[0].payment_cycle_for_admin),
       purchase_details:purchase_details,
-      is_phone_sim:this.entryFormSIM.value.is_phone_sim ? this.entryFormSIM.value.is_phone_sim : false
+      sim_type:this.entryFormSIM.value.sim_type.id
+     // is_phone_sim:this.entryFormSIM.value.is_phone_sim ? this.entryFormSIM.value.is_phone_sim : false
     };
 
     this.blockUI.start('Saving...');
-    this._service.post('purchase/entry-sim-purchase', obj).subscribe(
+    this._service.post('purchase/entry-sim-purchase-v2', obj).subscribe(
       data => {
         this.blockUI.stop();
         if (data.IsReport == "Success") {
@@ -474,6 +478,8 @@ export class PurchaseEntryComponent implements OnInit {
   //     "amount":0
   //   });
   // });
+    this.entryFormSIM.controls["sim_type"].setValue({id:1,name:'Phone SIM'});
+
      this.modalRef = this.modalService.show(template, this.modalConfigXL);
   }
 

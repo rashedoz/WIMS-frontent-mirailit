@@ -133,10 +133,10 @@
             <app-card class="px-0">
                 <form [formGroup]="entryFormSIM" class="col-sm-12">
                   <div class="row">
-                    <div class="col-md-7">
+                    <div class="col-md-12">
                       <div class="form-group row">
-                        <label class="col-sm-5 col-form-label">Supplier </label>
-                        <div class="col-sm-7">
+                        <label class="col-sm-3 col-form-label">Supplier </label>
+                        <div class="col-sm-9">
 
                                 <ng-select formControlName="supplier" (change)="onSupplierChange($event)" [clearable]="false" [ngClass]="{ 'is-invalid': submitted && s.supplier.errors }"
                                     [clearOnBackspace]="false" [items]="supplierList" bindLabel="name" bindValue="id"
@@ -150,7 +150,7 @@
                         </div>
                      </div>
                     </div>
-                    <div class="col-md-5">
+                    <!-- <div class="col-md-5">
                       <div class="form-group text-right">
                         <div class="checkbox-fade fade-in-primary">
                           <label>
@@ -161,8 +161,23 @@
                           </label>
                         </div>
                       </div>
-                    </div>
+                    </div> -->
 
+                    <div class="col-md-12">
+                      <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">SIM Type </label>
+                        <div class="col-sm-4 pl-2">
+                          <ng-select formControlName="sim_type"  [clearable]="false"
+                          [clearOnBackspace]="false" [items]="simTypeList" bindLabel="name"
+                          placeholder="Select by sim type"></ng-select>
+
+                            <div *ngIf="submitted && s.sim_type.errors" class="error-text">
+                                <span *ngIf="s.sim_type.errors.required" class="text-danger"> SIM type is required</span>
+
+                            </div>
+                        </div>
+                    </div>
+                    </div>
                     <div class="col-md-12">
                       <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Supplement </label>

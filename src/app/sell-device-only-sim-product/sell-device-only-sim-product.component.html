@@ -104,7 +104,7 @@
                   </div>
                   <div class="col-sm-4 mt-3 pt-3">
                     <p class="m-b-5 fs-14" *ngIf="selectedCustomer.gender">Gender :
-                      <b>{{selectedCustomer.gender == 1 ? "Not Set " : selectedCustomer.gender == 2 ? "Male" : "Female"}}</b></p>
+                      <b>{{selectedCustomer.gender == 1 ? "Not Set " : selectedCustomer.gender == 2 ? "Male" : "Female" }}</b></p>
                     <p class="m-b-5 fs-14 ">Balance : <b><span
                           class="text-primary font-weight-bold">{{selectedCustomer.balance }}</span></b></p>
                     <p class="m-b-5 fs-14 mb-5" *ngIf="selectedCustomer.Account Number">Mobile :
@@ -112,6 +112,8 @@
                     <p class="m-t-5 fs-14 mb-5" *ngIf="selectedCustomer.address_one">Address : <b><span
                           class="text-primary font-weight-bold">{{selectedCustomer.address_one }}
                           {{selectedCustomer.address_two }}</span></b></p>
+
+
 
                   </div>
                 </div>
@@ -132,29 +134,13 @@
             <div class="row ">
               <div class="col-lg-12">
 
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group row">
-                      <label for="staticEmail" class="col-sm-2 col-form-label font-weight-bold ">Session : </label>
-                      <div class="col-sm-10">
-                        <input type="text" readonly class="form-control-plaintext" id="staticEmail"
-                          formControlName="session">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <button class="btn btn-warning btn-sm w-40 float-right" [routerLink]="['/sell-device-only-sim-product']" ><i class="icofont icofont-ipod-nano"></i>  Sell Device-Only SIM </button>
-
-                    <button class="btn btn-primary btn-sm w-40 float-right mr-2" [routerLink]="['/sell-phone-sim-product']" ><i class="icofont icofont-memory-card"></i> Sell Phone SIM </button>
-
-
-
-
+                <div class="form-group row">
+                  <label for="staticEmail" class="col-sm-2 col-form-label font-weight-bold ">Session : </label>
+                  <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                      formControlName="session">
                   </div>
                 </div>
-
-
-
 
                 <div class="table-responsive">
                   <table class="table table-xs table-bordered table-striped">
@@ -235,8 +221,8 @@
 
 
                                   <ng-option *ngFor="let item of devicesBuffer" [value]="item.id" [disabled]="item.disabled">
-                                    <p title="{{item.DID_no}}" class="card-text font-weight-bold" *ngIf="!item.IMEI"> {{item.DID_no}} </p>
-                                    <p title="{{item.DID_no}}" class="card-text font-weight-bold" *ngIf="item.IMEI"> {{item.DID_no}} ({{item.IMEI}})</p>
+                                    <p class="card-text font-weight-bold" *ngIf="!item.IMEI"> {{item.DID_no}} </p>
+                                    <p class="card-text font-weight-bold" *ngIf="item.IMEI"> {{item.DID_no}} ({{item.IMEI}})</p>
                                   </ng-option>
 
 
@@ -294,9 +280,8 @@
                                   </ng-template>
 
                                   <ng-option *ngFor="let item of simsBuffer" [value]="item.id" [disabled]="item.disabled">
-                                    <p title="{{item.ICCID_no}}" class="card-text font-weight-bold" *ngIf="!item.ICCID_no"> {{item.CID_no}} </p>
-                                    <p title="{{item.ICCID_no}}" class="card-text font-weight-bold" *ngIf="item.ICCID_no"> {{item.CID_no}} -- ({{item.ICCID_no}})</p>
-
+                                    <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no"> <label class="badge badge-warning badge-bottom-right"><i class="icofont icofont-mobile-phone"></i></label> {{item.CID_no}} </p>
+                                    <p class="card-text font-weight-bold" *ngIf="item.ICCID_no"><label class="badge badge-warning badge-bottom-right"><i class="icofont icofont-mobile-phone"></i></label> {{item.CID_no}} -- ({{item.ICCID_no}})</p>
 
                                   </ng-option>
 
@@ -574,20 +559,19 @@
                 </td>
               </tr>
               <tr>
-                <th scope="row">Sim Type</th>
+                <th scope="row">Use Phone Sim Only</th>
                 <td>
-                  <span *ngIf="packageObj.sim_type == 1"> <i style="font-size: 1.3rem;" class="icofont icofont-memory-card text-primary"></i></span>
-                  <span *ngIf="packageObj.sim_type == 2"> <i style="font-size: 1.3rem;" class="icofont icofont-ui-wifi text-info"></i></span>
-                  <span *ngIf="packageObj.sim_type == 3"> <i style="font-size: 1.3rem;" class="icofont icofont-ipod-nano text-warning"></i> </span>
+                  <span *ngIf="packageObj.has_phone_sim_dependency">Yes</span>
+                  <span *ngIf="!packageObj.has_phone_sim_dependency">No</span>
                 </td>
               </tr>
-              <!-- <tr>
+              <tr>
                 <th scope="row">Comes with Device</th>
                 <td>
                   <span *ngIf="packageObj.has_device_dependency">Yes</span>
                   <span *ngIf="!packageObj.has_device_dependency">No</span>
                 </td>
-              </tr> -->
+              </tr>
               <tr *ngIf="packageObj.has_device_dependency">
                 <th scope="row">Device Charge / Deposit</th>
                 <td>{{packageObj.device_deposit}}</td>

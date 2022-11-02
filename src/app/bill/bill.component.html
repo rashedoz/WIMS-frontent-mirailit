@@ -92,11 +92,22 @@
                       </div>
                     </div>
 
-                    <div class="col-sm-3 mt-2">
-                      <ng-select (change)="onBillTypeChange($event)" [(ngModel)]="selectedBillType" [clearable]="true" appendTo="body"
+                    <!-- <div class="col-sm-3 mt-4">
+                      <div class="form-group">
+                        <label><b>Bill Type</b></label>
+                        <ng-select (change)="onBillTypeChange($event)" [(ngModel)]="selectedBillType" [clearable]="true" appendTo="body"
                         [clearOnBackspace]="false" [items]="billTypeList" bindLabel="name"
                         placeholder="Filter by bill type"></ng-select>
+                      </div>
+                    </div> -->
 
+                    <div class="col-sm-3 mt-4">
+                      <div class="form-group">
+                        <label><b>SIM Type</b></label>
+                        <ng-select (change)="onSimTypeChange($event)" [(ngModel)]="selectedSimType" [clearable]="true" appendTo="body"
+                        [clearOnBackspace]="false" [items]="simTypeList" bindLabel="name"
+                        placeholder="Filter by sim type"></ng-select>
+                      </div>
                     </div>
 
 

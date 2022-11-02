@@ -16,6 +16,8 @@ import { Page } from "../_models/page";
 import { StockStatus, SubscriptionStatus } from "../_models/enums";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 import { ConfirmService } from "../_helpers/confirm-dialog/confirm.service";
+import { BsDatepickerConfig, BsDaterangepickerConfig } from "ngx-bootstrap/datepicker";
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: "app-all-sim-list",
@@ -28,7 +30,7 @@ export class AllSIMListComponent implements OnInit {
   receiveSIMForm: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
-
+  bsConfig: Partial<BsDatepickerConfig>;
   StockStatus = StockStatus;
   SubscriptionStatus = SubscriptionStatus;
   page = new Page();
@@ -57,12 +59,16 @@ export class AllSIMListComponent implements OnInit {
   isFrozen = false;
   isPhoneSIM = false;
 
+  simTypeList = [{id:0,name:'All'},{id:1,name:'Phone SIM'},{id:2,name:'WiFi SIM '},{id:3,name:'Device Only'}]
+  selectedSimType = {id:0,name:'All'};
+
   constructor(
     public formBuilder: FormBuilder,
     private _service: CommonService,
     private toastr: ToastrService,
     private modalService: BsModalService,
     private router: Router,
+    private datePipe: DatePipe,
     private confirmService: ConfirmService
   ) {
     this.page.pageNumber = 0;
@@ -75,6 +81,16 @@ export class AllSIMListComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.bsConfig = Object.assign(
+
+      {
+
+        rangeInputFormat: 'DD/MM/YYYY',
+        adaptivePosition: true,
+      }
+    );
+
     this.getSIMStockData();
     this.getList();
     this.receiveSIMForm = this.formBuilder.group({
@@ -93,6 +109,9 @@ export class AllSIMListComponent implements OnInit {
       plan_price_for_admin: [null],
       reissue_cost_for_admin: [null],
       payment_cycle_for_admin: [null],
+      sn: [null],
+      service_start_date: [null],
+      inventory_reg_date: [null],
       delivery_received_at: [null]
     });
 
@@ -111,12 +130,26 @@ export class AllSIMListComponent implements OnInit {
     );
   }
 
-  onPhoneSIMChange(e){
+  // onPhoneSIMChange(e){
+  //   this.searchParam = "";
+  //   this.page.pageNumber = 0;
+  //   this.page.size = 10;
+  //   this.getList();
+  // }
+
+  onSimTypeChange(e){
     this.searchParam = "";
     this.page.pageNumber = 0;
     this.page.size = 10;
+    if(e){
+    this.selectedSimType = e;
     this.getList();
+    }else{
+      this.selectedSimType = {id:0,name:'All'};
+      this.getList();
+    }
   }
+
 
   // 'Available', 'Subscribed', 'Cancelled', 'Permanently Cancelled'
 
@@ -204,10 +237,13 @@ export class AllSIMListComponent implements OnInit {
       obj.is_adv_cancelled = 1;
     }
 
-    if(this.isPhoneSIM){
-      obj.is_phone_sim = 1;
-    }else{
-      obj.is_phone_sim = 0;
+    // if(this.isPhoneSIM){
+    //   obj.is_phone_sim = 1;
+    // }else{
+    //   obj.is_phone_sim = 0;
+    // }
+    if(this.selectedSimType.id != 0){
+      obj.sim_type = this.selectedSimType.id;
     }
 
     this._service.get("stock/get-sim-list", obj).subscribe(
@@ -494,6 +530,9 @@ export class AllSIMListComponent implements OnInit {
     this.updateSIMForm.controls["reissue_cost_for_admin"].setValue(item.reissue_cost_for_admin);
     this.updateSIMForm.controls["payment_cycle_for_admin"].setValue(item.payment_cycle_for_admin);
     this.updateSIMForm.controls["delivery_received_at"].setValue(item.delivery_received_at);
+    this.updateSIMForm.controls["sn"].setValue(item.sn);
+    this.updateSIMForm.controls["service_start_date"].setValue(item.service_start_date ? new Date(item.service_start_date) : null);;
+    this.updateSIMForm.controls["inventory_reg_date"].setValue(item.inventory_reg_date ? new Date(item.inventory_reg_date) : null);;
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 
@@ -511,6 +550,9 @@ export class AllSIMListComponent implements OnInit {
       wifi_password: this.updateSIMForm.value.wifi_password,
       model_name: this.updateSIMForm.value.model_name,
       plan_name: this.updateSIMForm.value.plan_name,
+      sn: this.updateSIMForm.value.sn,
+      service_start_date: this.updateSIMForm.value.service_start_date ? this.datePipe.transform(this.updateSIMForm.value.service_start_date, "yyyy-MM-dd") : null,
+      inventory_reg_date: this.updateSIMForm.value.inventory_reg_date ? this.datePipe.transform(this.updateSIMForm.value.inventory_reg_date, "yyyy-MM-dd") : null,
       plan_price_for_admin: this.updateSIMForm.value.plan_price_for_admin ? Number(this.updateSIMForm.value.plan_price_for_admin) : this.updateSIMForm.value.plan_price_for_admin,
       reissue_cost_for_admin: this.updateSIMForm.value.reissue_cost_for_admin ? Number(this.updateSIMForm.value.reissue_cost_for_admin) : this.updateSIMForm.value.reissue_cost_for_admin,
       payment_cycle_for_admin: this.updateSIMForm.value.payment_cycle_for_admin ? Number(this.updateSIMForm.value.payment_cycle_for_admin): this.updateSIMForm.value.payment_cycle_for_admin

@@ -124,7 +124,7 @@ const MENUITEMS = [
     ]
   },
   {
-    label: 'Stack Holders',
+    label: 'Stakeholders',
     permission: 'is_superuser,is_staff',
     main: [
       {

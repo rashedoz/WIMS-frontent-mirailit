@@ -6,7 +6,7 @@ export const SellProductRoutes: Routes = [{
   path: '',
   component: SellProductComponent,
   data: {
-    breadcrumb: 'Sell Product',
+    breadcrumb: 'Sell Wifi SIM',
     icon: 'icofont-home bg-c-blue',
     status: false
   }
