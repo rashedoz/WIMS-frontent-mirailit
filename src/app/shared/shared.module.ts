@@ -16,7 +16,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SpinnerComponent} from '../spinner/spinner.component';
 import {GoTopButtonModule} from 'ng-go-top-button';
 import {SimpleNotificationsModule} from 'angular2-notifications';
-import {TagInputModule} from 'ngx-chips';
+//import {TagInputModule} from 'ngx-chips';
 import {ClickOutsideModule} from 'ng-click-outside';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -33,7 +33,7 @@ import { UploadDialogComponent } from './../_helpers/upload-dialog/dialog.compon
 import { UploadService } from './../_services/upload.service';
 import { UiSwitchModule } from 'ngx-toggle-switch';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
-import { NgxSmartModalModule } from 'ngx-smart-modal';
+//import { NgxSmartModalModule } from 'ngx-smart-modal';
 
 // import { MatCheckboxModule } from '@angular/material/checkbox';
 // import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -56,7 +56,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
       ReactiveFormsModule,
       PaginationModule.forRoot(),
       SimpleNotificationsModule.forRoot(),
-      TagInputModule,
+     // TagInputModule,
       ClickOutsideModule,
       GoTopButtonModule,
       NgxDatatableModule,
@@ -64,7 +64,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
       BlockUIModule.forRoot(),
       BsDatepickerModule.forRoot(),
       TabsModule.forRoot(),
-      NgxSmartModalModule.forRoot(),
+    //  NgxSmartModalModule.forRoot(),
       NgSelectModule,
       UiSwitchModule,
       FlexLayoutModule,
@@ -111,21 +111,21 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
       FormsModule,
       ReactiveFormsModule,
       SimpleNotificationsModule,
-      TagInputModule,
+      //TagInputModule,
       ClickOutsideModule,
       GoTopButtonModule,
       NgxDatatableModule,
       ModalModule,
       MomentModule,
       TabsModule,
-      NgxSmartModalModule,
+    //  NgxSmartModalModule,
       NgSelectModule,
       BlockUIModule,
       UiSwitchModule,
       FlexLayoutModule,
       BsDatepickerModule,
       TimepickerModule,
-      NgxSmartModalModule,
+      
       // NgxMatDatetimePickerModule,
       // NgxMatTimepickerModule,
       BsDropdownModule,

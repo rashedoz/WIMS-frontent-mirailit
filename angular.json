@@ -37,7 +37,7 @@
               "node_modules/@swimlane/ngx-datatable/assets/icons.css",
               "node_modules/@ng-select/ng-select/themes/default.theme.css",
               "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
-              "node_modules/ngx-smart-modal/ngx-smart-modal.css",
+              //"node_modules/ngx-smart-modal/ngx-smart-modal.css",
               "node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/styles.css",
               "src/assets/css/custom.css"

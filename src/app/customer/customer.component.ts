@@ -10,7 +10,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from './../_models/page';
 import { MustMatch } from './../_helpers/must-match.validator';
 import { SubscriptionStatus,SubsItemsStaus } from '../_models/enums';
-import { NgxSmartModalService } from 'ngx-smart-modal';
+//import { NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({
   selector: 'app-customer',
@@ -73,7 +73,7 @@ export class CustomerComponent implements OnInit {
     public formBuilder: FormBuilder,
     private _service: CommonService,
     private toastr: ToastrService,
-    public ngxSmartModalService: NgxSmartModalService,
+   // public ngxSmartModalService: NgxSmartModalService,
     private authService: AuthenticationService,
     private router: Router
   ) {
@@ -281,7 +281,7 @@ setPageDue(pageInfo) {
       }
 
       this.historyList = res;
-      this.ngxSmartModalService.create('historyModal', this.tpl).open();
+     // this.ngxSmartModalService.create('historyModal', this.tpl).open();
 
       // this.page.totalElements = res.Total;
       // this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
@@ -691,7 +691,7 @@ changePassword(row, template: TemplateRef<any>) {
       this.page.pageNumber = 0;
       this.page.size = 10;
       this.searchParamDue = e.target.value;
-      this.getCustomerDueList();
+      this.getCustomerDueList();  
     }
   }
 
@@ -726,7 +726,7 @@ changePassword(row, template: TemplateRef<any>) {
 
   modalHideHistory() {
     // this.ngxSmartModalService.closeAll();
-    this.ngxSmartModalService.getModal('historyModal').close();
+   // this.ngxSmartModalService.getModal('historyModal').close();
   }
 
 
