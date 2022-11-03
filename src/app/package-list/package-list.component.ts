@@ -41,11 +41,18 @@ export class PackageListComponent implements OnInit {
   packageObj = null;
   scrollBarHorizontal = (window.innerWidth < 1200);
 
-  isDeviceEnable = true;
-  isPhoneSimEnable = false;
-  isPhoneSIM = false;
+  isDeviceEnable = false;
+  isPhoneSimEnable = true;
   selectedOffer;
   selectedDuration;
+
+  simTypeList = [{id:0,name:'All'},{id:1,name:'Phone SIM'},{id:2,name:'WiFi SIM '},{id:3,name:'Device Only'}]
+
+  ceatePackageSimTypeList = [{id:1,name:'Phone SIM'},{id:2,name:'WiFi SIM '},{id:3,name:'Device Only'}]
+
+  selectedCeatePackageSimType = {id:1,name:'Phone SIM'};
+
+  selectedSimType = {id:0,name:'All'};
 
   constructor(
     private modalService: BsModalService,
@@ -79,6 +86,7 @@ export class PackageListComponent implements OnInit {
       pckg_recurring_bill_amount: [null, [Validators.required]],
       pckg_cancellation_fee: [null],
       pckg_refundable_deposit: [null],
+      sim_type:[null, [Validators.required]]
 
     });
     this.getList();
@@ -103,10 +111,13 @@ export class PackageListComponent implements OnInit {
     this.selectedDuration = e;
   }
 
-  onPhoneSIMChange(e){
-    this.isPhoneSimEnable = e;
+
+  onCeatePackageSimTypeChange(e){
     if(e){
+    this.selectedCeatePackageSimType = e;
+      if(e.id == 1){
       this.isDeviceEnable = false;
+      this.isPhoneSimEnable = true;
 
       this.entryForm.controls["has_device_dependency"].setValue(false);
       this.entryForm.controls["device_deposit"].setValidators(null);
@@ -115,8 +126,8 @@ export class PackageListComponent implements OnInit {
       this.entryForm.controls["pckg_refundable_deposit"].setValidators(null);
       this.entryForm.controls["pckg_refundable_deposit"].updateValueAndValidity();
 
-
-    }else{
+      }else{
+      this.isPhoneSimEnable = false;
       this.isDeviceEnable = true;
       this.entryForm.controls["has_device_dependency"].setValue(true);
 
@@ -126,9 +137,35 @@ export class PackageListComponent implements OnInit {
       this.entryForm.controls["pckg_refundable_deposit"].setValidators([Validators.required]);
       this.entryForm.controls["pckg_refundable_deposit"].updateValueAndValidity();
 
-
+      }
 
     }
+  }
+
+  // onPhoneSIMChange(e){
+    // this.isPhoneSimEnable = e;
+    // if(e){
+    //   this.isDeviceEnable = false;
+
+    //   this.entryForm.controls["has_device_dependency"].setValue(false);
+    //   this.entryForm.controls["device_deposit"].setValidators(null);
+    //   this.entryForm.controls["device_deposit"].updateValueAndValidity();
+
+    //   this.entryForm.controls["pckg_refundable_deposit"].setValidators(null);
+    //   this.entryForm.controls["pckg_refundable_deposit"].updateValueAndValidity();
+
+
+    // }else{
+    //   this.isDeviceEnable = true;
+    //   this.entryForm.controls["has_device_dependency"].setValue(true);
+
+    //   this.entryForm.controls["device_deposit"].setValidators([Validators.required]);
+    //   this.entryForm.controls["device_deposit"].updateValueAndValidity();
+
+    //   this.entryForm.controls["pckg_refundable_deposit"].setValidators([Validators.required]);
+    //   this.entryForm.controls["pckg_refundable_deposit"].updateValueAndValidity();
+
+    // }
 
 
     // if(!this.isDeviceEnable){
@@ -145,7 +182,7 @@ export class PackageListComponent implements OnInit {
     //   this.entryForm.controls["pckg_refundable_deposit"].updateValueAndValidity();
     // }
 
-  }
+  // }
 
   onDeviceChange(e){
     this.entryForm.controls['device_deposit'].setValue(null);
@@ -236,9 +273,20 @@ export class PackageListComponent implements OnInit {
     this.getList();
   }
 
+  onSimTypeChange(e){
+    this.page.pageNumber = 0;
+    this.page.size = 10;
+    if(e){
+    this.selectedSimType = e;
+    this.getList();
+    }else{
+      this.selectedSimType = {id:0,name:'All'};
+      this.getList();
+    }
+  }
+
   getList() {
     this.loadingIndicator = true;
-
 
     let obj;
     if(this.searchParam){
@@ -254,11 +302,15 @@ export class PackageListComponent implements OnInit {
       };
     }
 
-    if(this.isPhoneSIM){
-      obj.has_phone_sim_dependency = 1;
-    }else{
-      obj.has_phone_sim_dependency = 0;
+    if(this.selectedSimType.id != 0){
+      obj.sim_type = this.selectedSimType.id;
     }
+
+    // if(this.isPhoneSIM){
+    //   obj.has_phone_sim_dependency = 1;
+    // }else{
+    //   obj.has_phone_sim_dependency = 0;
+    // }
 
     this._service.get('package/get-package-list',obj).subscribe(res => {
 
@@ -333,14 +385,14 @@ export class PackageListComponent implements OnInit {
       pckg_cancellation_fee: this.entryForm.value.pckg_cancellation_fee ? Number(this.entryForm.value.pckg_cancellation_fee) : 0,
       pckg_refundable_deposit: this.entryForm.value.pckg_refundable_deposit ? Number(this.entryForm.value.pckg_refundable_deposit) : 0,
       pckg_duration: this.entryForm.value.pckg_duration,
-      has_phone_sim_dependency:this.entryForm.value.is_phone_sim ? this.entryForm.value.is_phone_sim : false
+      has_phone_sim_dependency:this.isPhoneSimEnable,
+      sim_type:this.entryForm.value.sim_type.id
     };
 
     packageArray.push(packageObj);
     const obj = {
       packages: packageArray
     };
-
 
       const request = this._service.post('package/save-package', obj);
 
@@ -374,11 +426,16 @@ export class PackageListComponent implements OnInit {
 
     this.selectedOffer = null;
     this.selectedDuration = null;
+    this.selectedCeatePackageSimType = null;
   }
 
   openModal(template: TemplateRef<any>) {
       this.entryForm.controls["has_device_dependency"].setValue(true);
-      this.isDeviceEnable = true;
+      this.isDeviceEnable = false;
+      this.isPhoneSimEnable = true;
+      this.entryForm.controls["sim_type"].setValue({id:1,name:'Phone SIM'});
+      this.selectedCeatePackageSimType = {id:1,name:'Phone SIM'};
+
       this.modalRef = this.modalService.show(template, this.modalConfigLg);
   }
 

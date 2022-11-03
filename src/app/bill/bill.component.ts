@@ -67,7 +67,11 @@ export class BillComponent implements OnInit {
 
   billTypeList = [{id:0,name:'All'},{id:1,name:'Phone SIM'},{id:2,name:'WiFi SIM'},{id:3,name:'Mixed'},{id:4,name:'Unknown'}]
 
+  simTypeList = [{id:0,name:'All'},{id:1,name:'Phone SIM'},{id:2,name:'WiFi SIM '},{id:3,name:'Device Only'},{id:4,name:'Mixed'},{id:5,name:'Unknown'}]
+
+
   selectedBillType = {id:0,name:'All'};
+  selectedSimType = {id:0,name:'All'};
 
 
   constructor(
@@ -193,6 +197,18 @@ export class BillComponent implements OnInit {
     }
   }
 
+  onSimTypeChange(e){
+    this.page.pageNumber = 0;
+    this.page.size = 10;
+    if(e){
+    this.selectedSimType = e;
+    this.getList();
+    }else{
+      this.selectedSimType = {id:0,name:'All'};
+      this.getList();
+    }
+  }
+
 
   goToPaymentCollection(id){
     this.router.navigate([]).then(result => { window.open('/payment-collection/'+ id, '_blank'); });
@@ -250,6 +266,10 @@ export class BillComponent implements OnInit {
 
     if(this.selectedBillType.id != 0){
       obj.bill_type = this.selectedBillType.id;
+    }
+
+    if(this.selectedSimType.id != 0){
+      obj.sim_type = this.selectedSimType.id;
     }
 
 

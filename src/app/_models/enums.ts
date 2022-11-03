@@ -81,3 +81,11 @@ export enum StatusTypes {
     SET_AS_TERMINABLE = 2,
     CLOSED = 3
   }
+
+  export enum SIMType{
+    phone_sim = 1,
+    wifi_sim = 2,
+    device_only_sim = 3,
+    mixed = 4,
+    unknown = 5
+  }

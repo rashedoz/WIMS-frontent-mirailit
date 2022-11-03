@@ -488,7 +488,7 @@ export class SellPhoneSIMProductComponent implements OnInit {
           page: this.pageSIM.pageNumber,
         };
       }
-      obj.is_phone_sim = 1;
+      obj.sim_type = 2;
       this._service.get("stock/get-subscriptable-sim-list", obj).subscribe(
         (res) => {
           console.log(res);
@@ -790,7 +790,7 @@ export class SellPhoneSIMProductComponent implements OnInit {
   // }
 
   getPackageList() {
-    this._service.get("package/get-package-list",{limit: 1000000,page: 1,has_phone_sim_dependency:1}).subscribe(
+    this._service.get("package/get-package-list",{limit: 1000000,page: 1,sim_type:2}).subscribe(
       (res) => {
         this.packageList = res.results;
       },
