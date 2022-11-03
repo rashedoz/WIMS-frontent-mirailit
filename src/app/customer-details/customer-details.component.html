@@ -43,6 +43,7 @@
                     <strong *ngIf="customerObj.contract_status == 1" class="label label-success">{{ContractStatus[customerObj.contract_status]}}</strong>
                     <strong *ngIf="customerObj.contract_status == 2" class="label label-warning">{{ContractStatus[customerObj.contract_status]}}</strong>
                     <strong *ngIf="customerObj.contract_status == 3" class="label label-danger">{{ContractStatus[customerObj.contract_status]}}</strong>
+                    <strong *ngIf="customerObj.contract_status == 4" class="label label-danger">{{ContractStatus[customerObj.contract_status]}}</strong>
 
                   </p>
                 </div>
@@ -1202,9 +1203,27 @@
                 <p class="card-text font-weight-bold"> {{item.CID_no}} </p>
                 </ng-template>
 
+                <!-- <span *ngIf="value == 1"> <i style="font-size: 1.3rem;" class="icofont icofont-memory-card text-primary"></i></span>
+                <span *ngIf="value == 2"> <i style="font-size: 1.3rem;" class="icofont icofont-ui-wifi text-info"></i></span>
+                <span *ngIf="value == 3"> <i style="font-size: 1.3rem;" class="icofont icofont-ipod-nano text-warning"></i> </span> -->
+
               <ng-template ng-option-tmp let-item="item" let-index="index">
-                    <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no"><label *ngIf="item.is_phone_sim" class="badge badge-warning badge-bottom-right"><i class="icofont icofont-mobile-phone"></i></label> {{item.CID_no}} </p>
-                    <p class="card-text font-weight-bold" *ngIf="item.ICCID_no"><label *ngIf="item.is_phone_sim" class="badge badge-warning badge-bottom-right"><i class="icofont icofont-mobile-phone"></i></label> {{item.CID_no}}
+                    <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no">
+
+                <span *ngIf="simType == 1"> <i style="font-size: 1rem;" class="icofont icofont-memory-card text-primary"></i></span>
+                <span *ngIf="simType == 2"> <i style="font-size: 1rem;" class="icofont icofont-ui-wifi text-info"></i></span>
+                <span *ngIf="simType == 3"> <i style="font-size: 1rem;" class="icofont icofont-ipod-nano text-warning"></i> </span>
+
+                      <!-- <label *ngIf="item.is_phone_sim" class="badge badge-warning badge-bottom-right"><i class="icofont icofont-mobile-phone"></i></label> -->
+                      
+                      {{item.CID_no}} </p>
+                    <p class="card-text font-weight-bold" *ngIf="item.ICCID_no">
+
+                      <span *ngIf="simType == 1"> <i style="font-size: 1rem;" class="icofont icofont-memory-card text-primary"></i></span>
+                      <span *ngIf="simType == 2"> <i style="font-size: 1rem;" class="icofont icofont-ui-wifi text-info"></i></span>
+                      <span *ngIf="simType == 3"> <i style="font-size: 1rem;" class="icofont icofont-ipod-nano text-warning"></i> </span>
+
+                       {{item.CID_no}}
                       ({{item.ICCID_no}})</p>
                   </ng-template>
 

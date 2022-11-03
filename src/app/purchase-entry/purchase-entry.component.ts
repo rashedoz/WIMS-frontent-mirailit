@@ -265,7 +265,7 @@ export class PurchaseEntryComponent implements OnInit {
     };
 
     this.blockUI.start('Saving...');
-    this._service.post('purchase/entry-sim-purchase-v2', obj).subscribe(
+    this._service.post('purchase/entry-sim-purchase', obj).subscribe(
       data => {
         this.blockUI.stop();
         if (data.IsReport == "Success") {

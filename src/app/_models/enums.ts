@@ -80,7 +80,9 @@ export enum StatusTypes {
     NOT_SET = 0,
     ACTIVE = 1,
     SET_AS_TERMINABLE = 2,
-    CLOSED = 3
+    ENDED = 3,
+    CLOSED = 4
+
   }
 
   export enum SIMType{

@@ -280,8 +280,8 @@
                                   </ng-template>
 
                                   <ng-option *ngFor="let item of simsBuffer" [value]="item.id" [disabled]="item.disabled">
-                                    <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no"> <label class="badge badge-warning badge-bottom-right"><i class="icofont icofont-mobile-phone"></i></label> {{item.CID_no}} </p>
-                                    <p class="card-text font-weight-bold" *ngIf="item.ICCID_no"><label class="badge badge-warning badge-bottom-right"><i class="icofont icofont-mobile-phone"></i></label> {{item.CID_no}} -- ({{item.ICCID_no}})</p>
+                                    <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no"> <i class="icofont icofont-memory-card text-primary"></i> {{item.CID_no}} </p>
+                                    <p class="card-text font-weight-bold" *ngIf="item.ICCID_no"><i class="icofont icofont-memory-card text-primary"></i> {{item.CID_no}} -- ({{item.ICCID_no}})</p>
 
                                   </ng-option>
 
