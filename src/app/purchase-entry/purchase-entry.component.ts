@@ -59,7 +59,7 @@ export class PurchaseEntryComponent implements OnInit {
   maxDate: Date;
   minDate: Date;
 
-  simTypeList = [{id:1,name:'Phone SIM'},{id:2,name:'WiFi SIM '},{id:3,name:'Device Only'}]
+  simTypeList = [{id:2,name:'WiFi SIM'},{id:1,name:'Phone SIM'},{id:3,name:'Device Only'}]
 
   constructor(
     private modalService: BsModalService,
@@ -92,7 +92,7 @@ export class PurchaseEntryComponent implements OnInit {
     this.entryFormSIM = this.formBuilder.group({
       supplier: [null, [Validators.required]],
       supplement: [null, [Validators.required]],
-      delivery_date: [null, [Validators.required]],
+      delivery_date: [null],
       sim_type: [null, [Validators.required]]
      // is_phone_sim:[false]
     });
@@ -478,7 +478,7 @@ export class PurchaseEntryComponent implements OnInit {
   //     "amount":0
   //   });
   // });
-    this.entryFormSIM.controls["sim_type"].setValue({id:1,name:'Phone SIM'});
+    this.entryFormSIM.controls["sim_type"].setValue({id:2,name:'WiFi SIM'});
 
      this.modalRef = this.modalService.show(template, this.modalConfigXL);
   }

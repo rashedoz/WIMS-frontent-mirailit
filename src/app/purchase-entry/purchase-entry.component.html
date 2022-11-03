@@ -136,7 +136,7 @@
                     <div class="col-md-12">
                       <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Supplier </label>
-                        <div class="col-sm-9">
+                        <div class="col-sm-9 pl-2">
 
                                 <ng-select formControlName="supplier" (change)="onSupplierChange($event)" [clearable]="false" [ngClass]="{ 'is-invalid': submitted && s.supplier.errors }"
                                     [clearOnBackspace]="false" [items]="supplierList" bindLabel="name" bindValue="id"
@@ -162,22 +162,7 @@
                         </div>
                       </div>
                     </div> -->
-
-                    <div class="col-md-12">
-                      <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">SIM Type </label>
-                        <div class="col-sm-4 pl-2">
-                          <ng-select formControlName="sim_type"  [clearable]="false"
-                          [clearOnBackspace]="false" [items]="simTypeList" bindLabel="name"
-                          placeholder="Select by sim type"></ng-select>
-
-                            <div *ngIf="submitted && s.sim_type.errors" class="error-text">
-                                <span *ngIf="s.sim_type.errors.required" class="text-danger"> SIM type is required</span>
-
-                            </div>
-                        </div>
-                    </div>
-                    </div>
+                    
                     <div class="col-md-12">
                       <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Supplement </label>
@@ -194,6 +179,21 @@
                         </div>
                     </div>
                     </div>
+                    <div class="col-md-12">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">SIM Type </label>
+                          <div class="col-sm-4 pl-2">
+                            <ng-select formControlName="sim_type"  [clearable]="false"
+                            [clearOnBackspace]="false" [items]="simTypeList" bindLabel="name"
+                            placeholder="Select by sim type"></ng-select>
+  
+                              <div *ngIf="submitted && s.sim_type.errors" class="error-text">
+                                  <span *ngIf="s.sim_type.errors.required" class="text-danger"> SIM type is required</span>
+  
+                              </div>
+                          </div>
+                      </div>
+                      </div>
                     <div class="col-md-6">
                       <div class="form-group row">
                         <label class="col-sm-6 col-form-label">Delivery Date </label>
@@ -201,10 +201,10 @@
                           <input type="text" class="form-control" readonly formControlName="delivery_date" [bsConfig]="bsConfig"
                           bsDatepicker>
 
-                            <div *ngIf="submitted && s.delivery_date.errors" class="error-text">
+                            <!-- <div *ngIf="submitted && s.delivery_date.errors" class="error-text">
                                 <span *ngIf="s.delivery_date.errors.required" class="text-danger"> Delivery Date is required</span>
 
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     </div>

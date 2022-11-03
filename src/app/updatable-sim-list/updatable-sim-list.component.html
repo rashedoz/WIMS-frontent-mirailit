@@ -11,7 +11,7 @@
             </div>
             <div class="card-block ">
               <div class="row mb-3">
-                <div class="col-lg-9">
+                <div class="col-lg-8">
 
                   <div class="row">
                     <label class="col-sm-2 col-form-label">Supplier </label>
@@ -53,14 +53,10 @@
 
                     </div>
                     <div class="col-sm-3" *ngIf="selectedSupplier">
-                      <div class="checkbox-fade fade-in-primary mt-2">
-                        <label>
-                          <input type="checkbox" [(ngModel)]="isPhoneSIM" (ngModelChange)="onPhoneSIMChange($event)">
-                          <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
-                          <span class="text-inverse">Phone SIM</span>
-                        </label>
-
-                      </div>
+                      <ng-select (change)="onSimTypeChange($event)" [(ngModel)]="selectedSimType" [clearable]="false" appendTo="body"
+                      [clearOnBackspace]="false" [items]="simTypeList" bindLabel="name"
+                      placeholder="Filter by sim type"></ng-select>
+                      
                     </div>
 
                   </div>
@@ -234,6 +230,7 @@
                             </ng-template>
                         </ngx-datatable-column>  -->
 
+                 
                   <ngx-datatable-column [width]="150" name="SIM CID No" prop="CID_no" [draggable]="false"
                     [sortable]="false">
                     <ng-template let-row="row" ngx-datatable-cell-template>
@@ -254,11 +251,18 @@
                       <input type="text" class="form-control mt-2" [(ngModel)]="row.phone_number" required />
                     </ng-template>
                   </ngx-datatable-column>
-
+                  
                   <ngx-datatable-column [width]="150" name="IMEI Pair" prop="IMEI_pair" [draggable]="false"
                     [sortable]="false">
                     <ng-template let-row="row" ngx-datatable-cell-template>
                       <input type="text" class="form-control mt-2" [(ngModel)]="row.IMEI_pair" required />
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-column [width]="300" name="Model Name" prop="model_name" [draggable]="false"
+                    [sortable]="false">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <input type="text" class="form-control mt-2" [(ngModel)]="row.model_name" required />
                     </ng-template>
                   </ngx-datatable-column>
 
@@ -275,6 +279,13 @@
                       <input type="text" class="form-control mt-2" [(ngModel)]="row.wifi_password" required />
                     </ng-template>
                   </ngx-datatable-column>
+                  
+                  <ngx-datatable-column [width]="250" name="SN" prop="sn" [draggable]="false"
+                  [sortable]="false">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <input type="text" class="form-control mt-2" [(ngModel)]="row.sn" />
+                  </ng-template>
+                </ngx-datatable-column>
 
                   <!-- <ngx-datatable-column [width]="100" name="Delivery Date" prop="delivery_received_at"
                     [draggable]="false" [sortable]="false">
@@ -397,6 +408,13 @@
         <form [formGroup]="updateSIMForm">
 
           <div class="form-group row">
+            <label class="col-sm-4 col-form-label">SN</label>
+            <div class="col-sm-8">
+              <input formControlName="sn" type="text" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group row">
             <label class="col-sm-4 col-form-label">IMEI Pair</label>
             <div class="col-sm-8">
               <input formControlName="IMEI_pair" type="text" class="form-control">
@@ -449,6 +467,20 @@
             <div class="col-sm-8">
               <input  formControlName="payment_cycle_for_admin" type="text"
                 class="form-control">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label"> Service Start Date</label>
+            <div class="col-sm-8">
+             <input type="text" class="form-control" readonly formControlName="service_start_date" [bsConfig]="bsConfig"
+                    bsDatepicker>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label"> Inventory Reg. Date</label>
+            <div class="col-sm-8">
+             <input type="text" class="form-control" readonly formControlName="inventory_reg_date" [bsConfig]="bsConfig"
+                    bsDatepicker>
             </div>
           </div>
 

@@ -521,7 +521,7 @@ export class SellDeviceOnlySimProductComponent implements OnInit {
       };
     }
 
-    obj.is_phone_sim = 1;
+    obj.sim_type = 3;
     this._service.get("stock/get-subscriptable-sim-list", obj).subscribe(
       (res) => {
         this.sims = res.results;
@@ -553,7 +553,7 @@ export class SellDeviceOnlySimProductComponent implements OnInit {
         page: this.pageSIM.pageNumber,
       };
     }
-    obj.is_phone_sim = 1;
+    obj.sim_type = 3;
     let params = new HttpParams();
     if (obj) {
       for (const key in obj) {

@@ -37,9 +37,12 @@
                   <p class="fs-14 mb-0" *ngIf="customerObj.acc_number">Account Number :
                     <b>{{customerObj.acc_number}}</b></p>
                   <p class="fs-14 mb-0" *ngIf="customerObj.email">Email : <b>{{customerObj.email}}</b></p>
-                  <p class="fs-14 mb-0" *ngIf="customerObj.contract_status == 1">Contact Status :
+                  <p class="fs-14 mb-0" >Contact Status :
 
-                    <strong  class="label label-success">{{ContractStatus[customerObj.contract_status]}}</strong>
+                    <strong *ngIf="customerObj.contract_status == 0" class="label label-default">{{ContractStatus[customerObj.contract_status]}}</strong>
+                    <strong *ngIf="customerObj.contract_status == 1" class="label label-success">{{ContractStatus[customerObj.contract_status]}}</strong>
+                    <strong *ngIf="customerObj.contract_status == 2" class="label label-warning">{{ContractStatus[customerObj.contract_status]}}</strong>
+                    <strong *ngIf="customerObj.contract_status == 3" class="label label-danger">{{ContractStatus[customerObj.contract_status]}}</strong>
 
                   </p>
                 </div>
@@ -183,9 +186,9 @@
                               [draggable]="false" [sortable]="false">
                               <ng-template let-value="value" ngx-datatable-cell-template>
 
-                                <span *ngIf="value == 1"> <i style="font-size: 2rem;" class="icofont icofont-memory-card text-primary"></i></span>
-                                <span *ngIf="value == 2"> <i style="font-size: 2rem;" class="icofont icofont-ui-wifi text-info"></i></span>
-                                <span *ngIf="value == 3"> <i style="font-size: 2rem;" class="icofont icofont-ipod-nano text-warning"></i> </span>
+                                <span *ngIf="value == 1"> <i style="font-size: 1.3rem;" class="icofont icofont-memory-card text-primary"></i></span>
+                                <span *ngIf="value == 2"> <i style="font-size: 1.3rem;" class="icofont icofont-ui-wifi text-info"></i></span>
+                                <span *ngIf="value == 3"> <i style="font-size: 1.3rem;" class="icofont icofont-ipod-nano text-warning"></i> </span>
 
 
                               </ng-template>
@@ -435,7 +438,7 @@
                       </ng-template>
                       <hr>
                       <div class="row">
-                        <div class="col-lg-4 mb-4">
+                        <div class="col-lg-8 mb-4">
                           <tabset [justified]="false" id="bill-details-tab" type="pills" #billDetailTabs>
 
                             <tab (selectTab)="changeTabBillDetailsItem('All',$event)">
@@ -528,6 +531,12 @@
                                 }}</strong>
                                 </span>
                                 <span *ngIf="value == 3"> <strong class="label label-success">{{ billStatus[value]
+                                }}</strong></span>
+                                <span *ngIf="value == 4"> <strong class="label label-success">{{ billStatus[value]
+                                }}</strong></span>
+                                <span *ngIf="value == 5"> <strong class="label label-success">{{ billStatus[value]
+                                }}</strong></span>
+                                <span *ngIf="value == 6"> <strong class="label label-default">{{ billStatus[value]
                                 }}</strong>
                                 </span>
                               </ng-template>

@@ -488,7 +488,7 @@ export class SellPhoneSIMProductComponent implements OnInit {
           page: this.pageSIM.pageNumber,
         };
       }
-      obj.sim_type = 2;
+      obj.sim_type = 1;
       this._service.get("stock/get-subscriptable-sim-list", obj).subscribe(
         (res) => {
           console.log(res);
@@ -521,7 +521,7 @@ export class SellPhoneSIMProductComponent implements OnInit {
       };
     }
 
-    obj.is_phone_sim = 1;
+    obj.sim_type = 1;
     this._service.get("stock/get-subscriptable-sim-list", obj).subscribe(
       (res) => {
         this.sims = res.results;
@@ -553,7 +553,7 @@ export class SellPhoneSIMProductComponent implements OnInit {
         page: this.pageSIM.pageNumber,
       };
     }
-    obj.is_phone_sim = 1;
+    obj.sim_type = 1;
     let params = new HttpParams();
     if (obj) {
       for (const key in obj) {
@@ -790,7 +790,7 @@ export class SellPhoneSIMProductComponent implements OnInit {
   // }
 
   getPackageList() {
-    this._service.get("package/get-package-list",{limit: 1000000,page: 1,sim_type:2}).subscribe(
+    this._service.get("package/get-package-list",{limit: 1000000,page: 1,sim_type:1}).subscribe(
       (res) => {
         this.packageList = res.results;
       },

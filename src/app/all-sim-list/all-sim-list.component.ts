@@ -531,8 +531,8 @@ export class AllSIMListComponent implements OnInit {
     this.updateSIMForm.controls["payment_cycle_for_admin"].setValue(item.payment_cycle_for_admin);
     this.updateSIMForm.controls["delivery_received_at"].setValue(item.delivery_received_at);
     this.updateSIMForm.controls["sn"].setValue(item.sn);
-    this.updateSIMForm.controls["service_start_date"].setValue(item.service_start_date ? new Date(item.service_start_date) : null);;
-    this.updateSIMForm.controls["inventory_reg_date"].setValue(item.inventory_reg_date ? new Date(item.inventory_reg_date) : null);;
+    this.updateSIMForm.controls["service_start_date"].setValue(item.service_start_date ? new Date(item.service_start_date) : null);
+    this.updateSIMForm.controls["inventory_reg_date"].setValue(item.inventory_reg_date ? new Date(item.inventory_reg_date) : null);
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 

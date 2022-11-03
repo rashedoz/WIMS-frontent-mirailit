@@ -488,7 +488,7 @@ export class SellProductComponent implements OnInit {
           page: this.pageSIM.pageNumber,
         };
       }
-      obj.sim_type = 1;
+      obj.sim_type = 2;
       this._service.get("stock/get-subscriptable-sim-list", obj).subscribe(
         (res) => {
           console.log(res);
@@ -521,7 +521,7 @@ export class SellProductComponent implements OnInit {
       };
     }
 
-    obj.is_phone_sim = 0;
+    obj.sim_type = 2;
 
     this._service.get("stock/get-subscriptable-sim-list", obj).subscribe(
       (res) => {
@@ -554,7 +554,7 @@ export class SellProductComponent implements OnInit {
         page: this.pageSIM.pageNumber,
       };
     }
-    obj.is_phone_sim = 0;
+    obj.sim_type = 2;
     let params = new HttpParams();
     if (obj) {
       for (const key in obj) {
@@ -791,7 +791,7 @@ export class SellProductComponent implements OnInit {
   // }
 
   getPackageList() {
-    this._service.get("package/get-package-list",{limit: 1000000,page: 1,sim_type:1}).subscribe(
+    this._service.get("package/get-package-list",{limit: 1000000,page: 1,sim_type:2}).subscribe(
       (res) => {
         this.packageList = res.results;
       },

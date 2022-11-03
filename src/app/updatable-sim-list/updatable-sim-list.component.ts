@@ -8,12 +8,14 @@ import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
 import { StockStatus } from '../_models/enums';
-
+import { DatePipe } from '@angular/common';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Subject, Observable, of, concat } from 'rxjs';
 import { distinctUntilChanged, debounceTime, switchMap, tap, catchError, filter, map } from 'rxjs/operators';
+import { BsDatepickerConfig, BsDaterangepickerConfig } from "ngx-bootstrap/datepicker";
+
 
 @Component({
   selector: 'app-updatable-sim-list',
@@ -34,6 +36,7 @@ export class UpdatableSIMListComponent implements OnInit {
   modalRef: BsModalRef;
   StockStatus = StockStatus;
   page = new Page();
+  bsConfig: Partial<BsDatepickerConfig>;
   pageSIMUpdate = new Page();
   pageSupplier = new Page();
   emptyGuid = '00000000-0000-0000-0000-000000000000';
@@ -58,12 +61,18 @@ export class UpdatableSIMListComponent implements OnInit {
 
   simObj = null;
 
+  simTypeList = [{id:2,name:'WiFi SIM'},{id:1,name:'Phone SIM'},{id:3,name:'Device Only'}]
+
+  selectedSimType = {id:2,name:'WiFi SIM'};
+
+
   constructor(
     private modalService: BsModalService,
     public formBuilder: FormBuilder,
     private _service: CommonService,
     private toastr: ToastrService,
     private http: HttpClient,
+    private datePipe: DatePipe,
     private router: Router
   ) {
     this.page.pageNumber = 0;
@@ -85,6 +94,13 @@ export class UpdatableSIMListComponent implements OnInit {
     this.getSupplier();
     this.onSearch();
 
+    this.bsConfig = Object.assign(
+      {
+        rangeInputFormat: 'DD/MM/YYYY',
+        adaptivePosition: true,
+      }
+    );
+
     this.updateSIMForm = this.formBuilder.group({
       id: [null, [Validators.required]],
       IMEI_pair: [null],
@@ -95,6 +111,9 @@ export class UpdatableSIMListComponent implements OnInit {
       plan_price_for_admin: [null],
       reissue_cost_for_admin: [null],
       payment_cycle_for_admin: [null],
+      sn: [null],
+      service_start_date: [null],
+      inventory_reg_date: [null],
       delivery_received_at: [null]
     });
 
@@ -245,10 +264,19 @@ export class UpdatableSIMListComponent implements OnInit {
 
 
 
-  onPhoneSIMChange(e){
+  // onPhoneSIMChange(e){
+  //   this.page.pageNumber = 0;
+  //   this.page.size = 10;
+  //   this.getList();
+  // }
+
+  onSimTypeChange(e){
     this.page.pageNumber = 0;
     this.page.size = 10;
+    if(e){
+    this.selectedSimType = e;
     this.getList();
+    }
   }
 
 
@@ -270,11 +298,15 @@ export class UpdatableSIMListComponent implements OnInit {
       page: this.page.pageNumber + 1
     };
 
-    if(this.isPhoneSIM){
-      obj.is_phone_sim = 1;
-    }else{
-      obj.is_phone_sim = 0;
-    }
+    // if(this.isPhoneSIM){
+    //   obj.is_phone_sim = 1;
+    // }else{
+    //   obj.is_phone_sim = 0;
+    // }
+
+   
+    obj.sim_type = this.selectedSimType.id;
+    
 
     //stock/get-updatable-sim-list
     this._service.get('stock/get-updatable-sim-list-by-supplierid/'+this.selectedSupplier.id, obj).subscribe(res => {
@@ -306,11 +338,12 @@ export class UpdatableSIMListComponent implements OnInit {
       page: this.pageSIMUpdate.pageNumber + 1
     };
 
-    if(this.isPhoneSIM){
-      obj.is_phone_sim = 1;
-    }else{
-      obj.is_phone_sim = 0;
-    }
+    // if(this.isPhoneSIM){
+    //   obj.is_phone_sim = 1;
+    // }else{
+    //   obj.is_phone_sim = 0;
+    // }
+    obj.sim_type = this.selectedSimType.id;
 
     //stock/get-updatable-sim-list
     this._service.get('stock/get-updatable-sim-list-by-supplierid/'+this.selectedSupplier.id, obj).subscribe(res => {
@@ -405,9 +438,11 @@ export class UpdatableSIMListComponent implements OnInit {
       sim_details.push({
         id: element.id,
         CID_no: element.CID_no,
+        sn: element.sn,
         ICCID_no: element.ICCID_no,
         phone_number: element.phone_number,
         IMEI_pair: element.IMEI_pair,
+        model_name: element.model_name,
         ssid: element.ssid,
         wifi_password: element.wifi_password
       });
@@ -480,6 +515,9 @@ export class UpdatableSIMListComponent implements OnInit {
     this.updateSIMForm.controls["plan_price_for_admin"].setValue(item.plan_price_for_admin);
     this.updateSIMForm.controls["reissue_cost_for_admin"].setValue(item.reissue_cost_for_admin);
     this.updateSIMForm.controls["payment_cycle_for_admin"].setValue(item.payment_cycle_for_admin);
+    this.updateSIMForm.controls["sn"].setValue(item.sn);
+    this.updateSIMForm.controls["service_start_date"].setValue(item.service_start_date ? new Date(item.service_start_date) : null);
+    this.updateSIMForm.controls["inventory_reg_date"].setValue(item.inventory_reg_date ? new Date(item.inventory_reg_date) : null);
     this.updateSIMForm.controls["delivery_received_at"].setValue(item.delivery_received_at);
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
@@ -498,6 +536,9 @@ export class UpdatableSIMListComponent implements OnInit {
       wifi_password: this.updateSIMForm.value.wifi_password,
       model_name: this.updateSIMForm.value.model_name,
       plan_name: this.updateSIMForm.value.plan_name,
+      sn: this.updateSIMForm.value.sn,
+      service_start_date: this.updateSIMForm.value.service_start_date ? this.datePipe.transform(this.updateSIMForm.value.service_start_date, "yyyy-MM-dd") : null,
+      inventory_reg_date: this.updateSIMForm.value.inventory_reg_date ? this.datePipe.transform(this.updateSIMForm.value.inventory_reg_date, "yyyy-MM-dd") : null,
       plan_price_for_admin: this.updateSIMForm.value.plan_price_for_admin ? Number(this.updateSIMForm.value.plan_price_for_admin) : this.updateSIMForm.value.plan_price_for_admin,
       reissue_cost_for_admin: this.updateSIMForm.value.reissue_cost_for_admin ? Number(this.updateSIMForm.value.reissue_cost_for_admin) : this.updateSIMForm.value.reissue_cost_for_admin,
       payment_cycle_for_admin: this.updateSIMForm.value.payment_cycle_for_admin ? Number(this.updateSIMForm.value.payment_cycle_for_admin): this.updateSIMForm.value.payment_cycle_for_admin

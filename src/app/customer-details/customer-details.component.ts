@@ -158,6 +158,8 @@ export class CustomerDetailsComponent implements OnInit {
     simsSearchParam = "";
     simsInput$ = new Subject<string>();
 
+    simType;
+
 
   constructor(
     private confirmService: ConfirmService,
@@ -997,11 +999,8 @@ selectTab(tabId: number) {
   }
 
   openModalSIMReplace(item, template: TemplateRef<any>) {
-    if(item.is_phone_sim){
-      this.is_phone_sim = true;
-    }else{
-      this.is_phone_sim = false;
-    }
+    
+    this.simType = item.sim_type;
 
     this.simObj = item;
     this.replaceSIMForm.controls['id'].setValue(item.id);
@@ -1573,11 +1572,12 @@ private fetchMoreSIM() {
       };
     }
 
-   if(this.is_phone_sim){
-      obj.is_phone_sim = 1;
-    }else{
-      obj.is_phone_sim = 0;
-    }
+  //  if(this.is_phone_sim){
+  //     obj.is_phone_sim = 1;
+  //   }else{
+  //     obj.is_phone_sim = 0;
+  //   }
+   obj.sim_type = this.simType;
 
       this._service.get("stock/get-subscriptable-sim-list",obj).subscribe(
         (res) => {
@@ -1613,11 +1613,7 @@ getSIM(){
     };
   }
 
-  if(this.is_phone_sim){
-    obj.is_phone_sim = 1;
-  }else{
-    obj.is_phone_sim = 0;
-  }
+  obj.sim_type = this.simType;
 
   this._service.get("stock/get-subscriptable-sim-list",obj).subscribe(
     (res) => {
@@ -1650,11 +1646,7 @@ private fakeServiceSIM(term) {
     };
   }
 
-  if(this.is_phone_sim){
-    obj.is_phone_sim = 1;
-  }else{
-    obj.is_phone_sim = 0;
-  }
+  obj.sim_type = this.simType;
 
   let params = new HttpParams();
   if (obj) {

@@ -42,6 +42,7 @@ export enum StatusTypes {
     PARTIALLY_PAID = 2,
     PAID = 3,
     FULLY_PAID_WITH_REFUND = 4,
+    PAYMENT_CONFIRMED = 5,
     NOT_APPLICABLE = 6
   }
 
@@ -65,7 +66,7 @@ export enum StatusTypes {
     RETURNED = 5,
     SENT_FOR_REISSUANCE = 6,
     RECEIVED_FROM_MC = 7,
-    UNSETTLED = 8,
+    PERMANENTLY_CANCELLED = 8,
     REPLACED = 9
   }
 
