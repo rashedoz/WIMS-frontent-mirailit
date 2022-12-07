@@ -1,5 +1,6 @@
 <block-ui>
 
+
   <div class="row" *ngIf="stock">
     <div class="col-md-4 col-xl-4 mb-2">
       <div class="card client-blocks success-border">
@@ -20,6 +21,15 @@
             </div>
             <div class="col-3 px-0">
               <p class="text-right f-20 text-success font-weight-bold mb-0"> {{stock.phone_sim_stock_qty}} </p>
+            </div>
+          </div>
+
+          <div class="row pb-1">
+            <div class="col-9 px-0">
+              <h5 class="pt-1  mb-0"><label class="label label-inverse-info-border"> Device Only SIM Stock Qty </label></h5>
+            </div>
+            <div class="col-3 px-0">
+              <p class="text-right f-20 text-success font-weight-bold mb-0"> {{stock.device_only_sim_stock_qty}} </p>
             </div>
           </div>
 
@@ -58,6 +68,16 @@
             </div>
             <div class="col-3 px-0">
               <p class="text-right f-20 text-info font-weight-bold mb-0"> {{stock.phone_sim_subscribed_qty}} </p>
+            </div>
+          </div>
+
+          <div class="row pb-1">
+            <div class="col-9 px-0">
+              <h5 class="pt-1  mb-0"><label class="label label-inverse-info-border"> Device Only SIM Subscribed Qty </label>
+              </h5>
+            </div>
+            <div class="col-3 px-0">
+              <p class="text-right f-20 text-info font-weight-bold mb-0"> {{stock.device_only_sim_subscribed_qty}} </p>
             </div>
           </div>
 
@@ -102,6 +122,17 @@
 
           <div class="row pb-1">
             <div class="col-9 px-0">
+              <h5 class="pt-1  mb-0"><label class="label label-inverse-info-border"> Device Only SIM Available Stock Qty
+                </label></h5>
+            </div>
+            <div class="col-3 px-0">
+              <p class="text-right f-20 text-primary font-weight-bold mb-0"> {{stock.device_only_sim_available_stock_qty}}
+              </p>
+            </div>
+          </div>
+
+          <div class="row pb-1">
+            <div class="col-9 px-0">
               <h5 class="pt-1 mb-0"><label class="label label-inverse-info-border">Total Available Stock Qty </label>
               </h5>
             </div>
@@ -114,6 +145,7 @@
         </div>
       </div>
     </div>
+
     <div class="col-md-4 col-xl-4 mb-2">
       <div class="card card client-blocks warning-border">
         <div class="card-block-big">
@@ -134,6 +166,16 @@
             </div>
             <div class="col-3 px-0">
               <p class="text-right f-20 text-warning font-weight-bold mb-0"> {{stock.phone_sim_reissued_qty}} </p>
+            </div>
+          </div>
+
+          <div class="row pb-1">
+            <div class="col-9 px-0">
+              <h5 class="pt-1  mb-0"> <label class="label label-inverse-info-border"> Device Only SIM Reissued Qty </label>
+              </h5>
+            </div>
+            <div class="col-3 px-0">
+              <p class="text-right f-20 text-warning font-weight-bold mb-0"> {{stock.device_only_sim_reissued_qty}} </p>
             </div>
           </div>
 
@@ -171,6 +213,16 @@
             </div>
             <div class="col-3 px-0">
               <p class="text-right f-20 text-danger font-weight-bold mb-0"> {{stock.phone_sim_cancelled_qty}} </p>
+            </div>
+          </div>
+
+          <div class="row pb-1">
+            <div class="col-9 px-0">
+              <h5 class="pt-1  mb-0"><label class="label label-inverse-info-border"> Device Only SIM Cancelled Qty </label>
+              </h5>
+            </div>
+            <div class="col-3 px-0">
+              <p class="text-right f-20 text-danger font-weight-bold mb-0"> {{stock.device_only_sim_cancelled_qty}} </p>
             </div>
           </div>
 
@@ -804,7 +856,7 @@
           </div>
           <div class="col-md-6">
             <p class="fs-14 mb-0">SIM ICCID : <b>{{simObj.ICCID_no}} </b></p>
-            <p class="fs-14 mb-0">Delivery Received: <b>{{simObj.delivery_received_at | amFromUtc | amLocal |
+            <p class="fs-14 mb-0">Delivery Received: <b *ngIf="simObj.delivery_received_at">{{simObj.delivery_received_at | amFromUtc | amLocal |
                 amDateFormat:'DD-MMM-YYYY'}}</b></p>
 
           </div>
@@ -874,14 +926,14 @@
           <div class="form-group row">
             <label class="col-sm-4 col-form-label"> Service Start Date</label>
             <div class="col-sm-8">
-             <input type="text" class="form-control" readonly formControlName="service_start_date" [bsConfig]="bsConfig"
+             <input type="text" class="form-control" readonly formControlName="service_start_date" placement="top" [bsConfig]="bsConfig"
                     bsDatepicker>
             </div>
           </div>
           <div class="form-group row">
             <label class="col-sm-4 col-form-label"> Inventory Reg. Date</label>
             <div class="col-sm-8">
-             <input type="text" class="form-control" readonly formControlName="inventory_reg_date" [bsConfig]="bsConfig"
+             <input type="text" class="form-control" readonly formControlName="inventory_reg_date" placement="top" [bsConfig]="bsConfig"
                     bsDatepicker>
             </div>
           </div>

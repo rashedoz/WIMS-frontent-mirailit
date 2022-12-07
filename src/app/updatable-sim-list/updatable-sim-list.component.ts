@@ -95,9 +95,9 @@ export class UpdatableSIMListComponent implements OnInit {
     this.onSearch();
 
     this.bsConfig = Object.assign(
+      {},
       {
-        rangeInputFormat: 'DD/MM/YYYY',
-        adaptivePosition: true,
+        dateInputFormat: "DD-MMM-YYYY ",
       }
     );
 
@@ -518,7 +518,7 @@ export class UpdatableSIMListComponent implements OnInit {
     this.updateSIMForm.controls["sn"].setValue(item.sn);
     this.updateSIMForm.controls["service_start_date"].setValue(item.service_start_date ? new Date(item.service_start_date) : null);
     this.updateSIMForm.controls["inventory_reg_date"].setValue(item.inventory_reg_date ? new Date(item.inventory_reg_date) : null);
-    this.updateSIMForm.controls["delivery_received_at"].setValue(item.delivery_received_at);
+    this.updateSIMForm.controls["delivery_received_at"].setValue(item.delivery_received_at ? new Date(item.delivery_received_at) : null);
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 

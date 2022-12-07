@@ -155,13 +155,13 @@
                   <span *ngIf="packageObj.sim_type == 3"> <i style="font-size: 1.3rem;" class="icofont icofont-ipod-nano text-warning"></i> </span>
                 </td>
               </tr>
-              <!-- <tr>
+              <tr>
                 <th scope="row">Comes with Device</th>
                 <td>
                   <span *ngIf="packageObj.has_device_dependency">Yes</span>
                   <span *ngIf="!packageObj.has_device_dependency">No</span>
                 </td>
-              </tr> -->
+              </tr>
               <tr *ngIf="packageObj.has_device_dependency">
                 <th scope="row">Device Charge / Deposit</th>
                 <td>{{packageObj.device_deposit}}</td>
@@ -321,7 +321,7 @@
                 <div class="col-sm-5 mt-2">
                   <div class="checkbox-fade fade-in-default" >
                     <label>
-                        <input type="checkbox" (change)="onDeviceChange($event.target.checked)" formControlName="has_device_dependency" disabled>
+                        <input type="checkbox" (change)="onDeviceChange($event.target.checked)" formControlName="has_device_dependency">
                         <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
                     </label>
 

@@ -83,11 +83,9 @@ export class AllSIMListComponent implements OnInit {
   ngOnInit() {
 
     this.bsConfig = Object.assign(
-
+      {},
       {
-
-        rangeInputFormat: 'DD/MM/YYYY',
-        adaptivePosition: true,
+        dateInputFormat: "DD-MMM-YYYY ",
       }
     );
 
@@ -529,7 +527,7 @@ export class AllSIMListComponent implements OnInit {
     this.updateSIMForm.controls["plan_price_for_admin"].setValue(item.plan_price_for_admin);
     this.updateSIMForm.controls["reissue_cost_for_admin"].setValue(item.reissue_cost_for_admin);
     this.updateSIMForm.controls["payment_cycle_for_admin"].setValue(item.payment_cycle_for_admin);
-    this.updateSIMForm.controls["delivery_received_at"].setValue(item.delivery_received_at);
+    this.updateSIMForm.controls["delivery_received_at"].setValue(item.delivery_received_at ? new Date(item.delivery_received_at) : null);
     this.updateSIMForm.controls["sn"].setValue(item.sn);
     this.updateSIMForm.controls["service_start_date"].setValue(item.service_start_date ? new Date(item.service_start_date) : null);
     this.updateSIMForm.controls["inventory_reg_date"].setValue(item.inventory_reg_date ? new Date(item.inventory_reg_date) : null);

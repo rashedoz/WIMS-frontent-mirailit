@@ -400,7 +400,7 @@
           </div>
           <div class="col-md-6">
             <!-- <p class="fs-14 mb-0">SIM ICCID : <b>{{simObj.ICCID_no}} </b></p> -->
-            <p class="fs-14 mb-0">Delivery Received: <b>{{simObj.delivery_received_at | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY'}}</b></p>
+            <p class="fs-14 mb-0">Delivery Received: <b *ngIf="simObj.delivery_received_at">{{simObj.delivery_received_at | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY'}}</b></p>
 
           </div>
         </div>
