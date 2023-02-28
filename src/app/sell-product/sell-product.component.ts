@@ -100,7 +100,7 @@ export class SellProductComponent implements OnInit {
   // for sim
   sims = [];
   simsBuffer = [];
-  simsBufferSize = 50;
+  simsBufferSize = 100;
   loadingSIM = false;
   simsCount = 1;
   simsSearchParam = "";
@@ -109,7 +109,7 @@ export class SellProductComponent implements OnInit {
   // for device
   devices = [];
   devicesBuffer = [];
-  devicesBufferSize = 50;
+  devicesBufferSize = 100;
   loadingDevice = false;
   devicesCount = 1;
   devicesSearchParam = "";
@@ -133,13 +133,13 @@ export class SellProductComponent implements OnInit {
     public printService: PrintService
   ) {
     this.page.pageNumber = 1;
-    this.page.size = 50;
+    this.page.size = 100;
 
     this.pageSIM.pageNumber = 1;
-    this.pageSIM.size = 50;
+    this.pageSIM.size = 100;
 
     this.pageDevice.pageNumber = 1;
-    this.pageDevice.size = 50;
+    this.pageDevice.size = 100;
 
     window.onresize = () => {
       this.scrollBarHorizontal = window.innerWidth < 1200;

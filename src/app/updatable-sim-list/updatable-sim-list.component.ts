@@ -76,7 +76,7 @@ export class UpdatableSIMListComponent implements OnInit {
     private router: Router
   ) {
     this.page.pageNumber = 0;
-    this.page.size = 10;
+    this.page.size = 100;
 
     this.pageSIMUpdate.pageNumber = 0;
     this.pageSIMUpdate.size = 20;
@@ -139,7 +139,7 @@ export class UpdatableSIMListComponent implements OnInit {
 
   onSupplierChange(e) {
     this.page.pageNumber = 0;
-    this.page.size = 10;
+    this.page.size = 100;
     if (e) {
       this.selectedSupplier = e;
       this.getList();
@@ -272,7 +272,7 @@ export class UpdatableSIMListComponent implements OnInit {
 
   onSimTypeChange(e){
     this.page.pageNumber = 0;
-    this.page.size = 10;
+    this.page.size = 100;
     if(e){
     this.selectedSimType = e;
     this.getList();
@@ -304,9 +304,9 @@ export class UpdatableSIMListComponent implements OnInit {
     //   obj.is_phone_sim = 0;
     // }
 
-   
+
     obj.sim_type = this.selectedSimType.id;
-    
+
 
     //stock/get-updatable-sim-list
     this._service.get('stock/get-updatable-sim-list-by-supplierid/'+this.selectedSupplier.id, obj).subscribe(res => {

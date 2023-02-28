@@ -78,7 +78,7 @@ export class CustomerComponent implements OnInit {
     private router: Router
   ) {
     this.page.pageNumber = 0;
-    this.page.size = 10;
+    this.page.size = 100;
     window.onresize = () => {
       this.scrollBarHorizontal = (window.innerWidth < 1200);
     };
@@ -187,20 +187,20 @@ setPageDue(pageInfo) {
       case 0:
         this.searchParamAll = '';
         this.page.pageNumber = 0;
-        this.page.size = 10;
+        this.page.size = 100;
         this.getList();
         break;
       case 1:
         this.searchParamWholesaler = '';
         this.page.pageNumber = 0;
-        this.page.size = 10;
+        this.page.size = 100;
         this.getWholesalerList();
         break;
       case 2:
 
         this.searchParamRetailer = '';
         this.page.pageNumber = 0;
-        this.page.size = 10;
+        this.page.size = 100;
         this.getRetailerList();
         break;
       // case 3:
@@ -587,7 +587,7 @@ changePassword(row, template: TemplateRef<any>) {
   updateFilter(e) {
     if(e){
       this.page.pageNumber = 0;
-      this.page.size = 10;
+      this.page.size = 100;
       this.searchParamAll = e.target.value;
       this.getList();
     }
@@ -622,7 +622,7 @@ changePassword(row, template: TemplateRef<any>) {
 
     if(e){
       this.page.pageNumber = 0;
-      this.page.size = 10;
+      this.page.size = 100;
       this.searchParamWholesaler = e.target.value;
       this.getWholesalerList();
     }
@@ -655,7 +655,7 @@ changePassword(row, template: TemplateRef<any>) {
   updateFilterRetailer(e) {
     if(e){
       this.page.pageNumber = 0;
-      this.page.size = 10;
+      this.page.size = 100;
       this.searchParamRetailer = e.target.value;
       this.getRetailerList();
     }
@@ -689,9 +689,9 @@ changePassword(row, template: TemplateRef<any>) {
   updateFilterDue(e) {
     if(e){
       this.page.pageNumber = 0;
-      this.page.size = 10;
+      this.page.size = 100;
       this.searchParamDue = e.target.value;
-      this.getCustomerDueList();  
+      this.getCustomerDueList();
     }
   }
 

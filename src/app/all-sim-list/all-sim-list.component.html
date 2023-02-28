@@ -436,10 +436,17 @@
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="150" name="Phone Number" prop="phone_number" [draggable]="false"
+                    <ngx-datatable-column [width]="170" name="Phone Number" prop="phone_number" [draggable]="false"
                       [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span title="{{ value }}"> {{ value ? value : "_ _ _"}} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="250" name="Supplier" prop="supplier_name" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value }} </span>
                       </ng-template>
                     </ngx-datatable-column>
 
@@ -487,7 +494,7 @@
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column *ngIf="tabType == 'Subscribed'" [width]="150" name="Current Customer"
+                    <ngx-datatable-column *ngIf="tabType == 'Subscribed'" [width]="200" name="Current Customer"
                       prop="customer_full_name" [draggable]="false" [sortable]="false">
                       <ng-template let-row="row" ngx-datatable-cell-template>
                         <a [routerLink]="['/customer-details/'+row.current_owner]" routerLinkActive="router-link-active"
@@ -495,7 +502,7 @@
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column *ngIf="tabType == 'Will Be Cancelled'" [width]="150" name="Current Customer"
+                    <ngx-datatable-column *ngIf="tabType == 'Will Be Cancelled'" [width]="200" name="Current Customer"
                       prop="customer_full_name" [draggable]="false" [sortable]="false">
                       <ng-template let-row="row" ngx-datatable-cell-template>
                         <a [routerLink]="['/customer-details/'+row.current_owner]" routerLinkActive="router-link-active"
@@ -519,7 +526,7 @@
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column *ngIf="tabType == 'Available'" [width]="120" name="Last Returned At"
+                    <ngx-datatable-column *ngIf="tabType == 'Available'" [width]="180" name="Last Returned At"
                       prop="last_returned_at" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span *ngIf="!value"> -- </span>
@@ -527,7 +534,7 @@
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column *ngIf="tabType == 'Available'" [width]="120" name="Last Received From MC"
+                    <ngx-datatable-column *ngIf="tabType == 'Available'" [width]="200" name="Last Received From MC"
                       prop="last_received_from_mc_at" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span *ngIf="!value"> -- </span>
@@ -551,7 +558,7 @@
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="500" name="Action" prop="id" [draggable]="false" [sortable]="false">
+                    <ngx-datatable-column [width]="580" name="Action" prop="id" [draggable]="false" [sortable]="false">
                       <ng-template let-row="row" ngx-datatable-cell-template>
 
                         <button class="btn btn-info btn-mini  mr-1"
@@ -567,10 +574,12 @@
                           (click)="openModalSIMRecieve(row,templateSIMReceive)">
                           Receive
                         </button>
-                        <button *ngIf="tabType == 'Cancelled'" class="btn btn-info btn-mini mr-1"
-                          (click)="onSubmitAction('return',row)">
-                          Return
-                        </button>
+                        <button *ngIf="tabType == 'Cancelled' || tabType == 'Will Be Cancelled'" class="btn btn-success btn-mini mr-1"
+                          (click)="onSubmitAction('return',row)"><i
+                          class="icofont icofont-arrow-left"></i>Return
+                        To Stock
+                      </button>
+
                         <button *ngIf="tabType == 'Frozen'" (click)="onSubmitAction('unfreeze',row)"
                           class="btn btn-primary btn-mini mr-1"><i
                             class="icofont icofont-unlocked"></i>Unfreeze</button>

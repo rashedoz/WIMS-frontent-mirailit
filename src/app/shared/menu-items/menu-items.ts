@@ -203,6 +203,20 @@ const MENUITEMS = [
       },
     ]
   },
+  {
+    label: 'Logs',
+    permission: 'is_superuser,is_staff',
+    main: [
+      {
+        state: 'invoice-log',
+        name: 'Invoice Log',
+        type: 'link',
+        icon: 'ti-layout-list-thumb',
+        permission: 'is_superuser,is_staff',
+      }
+
+    ]
+  },
   // {
   //   label: 'Quick Actions',
   //   permission: 'is_superuser,is_staff',

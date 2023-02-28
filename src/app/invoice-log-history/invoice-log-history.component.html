@@ -1,0 +1,195 @@
+<block-ui>
+  <div class="row">
+
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card card-border-primary">
+            <!-- <div class="card-header">
+              <h5>Bill </h5>
+            </div> -->
+            <div class="card-block ">
+              <div class="row p-3" *ngIf="logObj">
+                <div class="col-md-6">
+
+                  <div class="form-group row mb-0">
+                    <label class="col-md-4 col-form-label font-weight-bold">Month</label>
+                    <div class="col-md-8 mt-1">
+                      {{logObj.invoice_month | date:'MMMM, y'}}
+                    </div>
+                  </div>
+
+                  <div class="form-group row mb-0">
+                    <label class="col-md-4 col-form-label font-weight-bold">Invoices To Generate</label>
+                    <div class="col-md-8 mt-1">
+                      {{logObj.invoice_to_generate}}
+                    </div>
+                  </div>
+
+                  <div class="form-group row mb-0">
+                    <label class="col-md-4 col-form-label font-weight-bold">Generated</label>
+                    <div class="col-md-8 mt-1">
+                      {{logObj.invoice_generated}}
+                    </div>
+                  </div>
+
+                  <div class="form-group row mb-0">
+                    <label class="col-md-4 col-form-label font-weight-bold">Remaining</label>
+                    <div class="col-md-8 mt-1">
+                      {{logObj.invoice_remaining}}
+                    </div>
+                  </div>
+
+                  <div class="form-group row mb-0">
+                    <label class="col-md-4 col-form-label font-weight-bold">Created On</label>
+                    <div class="col-md-8 mt-1">
+                      {{logObj.created_at | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}}
+                    </div>
+                  </div>
+
+                  <div class="form-group row mb-0">
+                    <label class="col-md-4 col-form-label font-weight-bold">Status</label>
+                    <div class="col-md-8 mt-1">
+                      <span *ngIf="logObj.status == 0"><strong class="label label-warning">{{ InvoiceLogStatus[logObj.status]
+                          }}</strong>
+                      </span>
+                      <span *ngIf="logObj.status == 1"> <strong class="label label-default">{{ InvoiceLogStatus[logObj.status]
+                          }}</strong>
+                      </span>
+                      <span *ngIf="logObj.status == 2"> <strong class="label label-info">{{ InvoiceLogStatus[logObj.status]
+                          }}</strong>
+                      </span>
+                      <span *ngIf="logObj.status == 3"> <strong class="label label-success">{{ InvoiceLogStatus[logObj.status]
+                          }}</strong>
+                      </span>
+                      <span *ngIf="logObj.status == 4"> <strong class="label label-danger">{{ InvoiceLogStatus[logObj.status]
+                          }}</strong>
+                      </span>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="font-weight-bold" >Log ID (alias from backend)</label>
+                    <p>{{logObj.alias}}</p>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="font-weight-bold" >Notes</label>
+                    <p>{{logObj.notes}}</p>
+                  </div>
+                </div>
+
+                <button class="btn btn-info m-3" style="font-size: 22px;" (click)="reCallList()"><i class="icofont icofont-recycle-alt"></i></button>
+              </div>
+
+              <hr>
+
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="row">
+
+                    <div class="col-md-4 mt-2">
+                      <div class="form-group">
+                        <label><b>Filter by status</b></label>
+                        <ng-select (change)="onInvStatusChange($event)" [(ngModel)]="selectedInvStatus"
+                          [clearable]="false" appendTo="body" [clearOnBackspace]="false" [items]="invStatusList"
+                          bindLabel="name" placeholder="Filter by status"></ng-select>
+                      </div>
+                    </div>
+                    <div class="col-md-8 mt-2">
+                      <div class="form-group">
+                        <label><b>Search</b></label>
+                        <input type="text" [(ngModel)]="searchParam" class="form-control"
+                        placeholder="Filter by customer name, mobile number, email.." (keyup)="filterSearch($event)" />
+                      </div>
+                    </div>
+
+
+                  </div>
+                </div>
+              </div>
+              <div class="row ">
+                <div class="col-lg-12 ">
+
+
+                  <ngx-datatable #table class="material table-bordered" [scrollbarH]="true" [rows]="rows"
+                    [loadingIndicator]="loadingIndicator" [externalPaging]="true" [columnMode]="ColumnMode.force"
+                    [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [count]="page.totalElements"
+                    [offset]="page.pageNumber" [limit]="page.size" (page)="setPage($event)">
+
+
+                    <ngx-datatable-column [width]="250" name="Customer" prop="customer_full_name" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <a [routerLink]="['/customer-details/'+row.customer]" routerLinkActive="router-link-active"
+                          target="_blank"> {{ row.customer_full_name }} </a>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="150" name="Month" prop="invoice_month" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <!-- <a [routerLink]="['/customer-details/'+row.customer]" routerLinkActive="router-link-active"
+                          target="_blank"> {{ row.customer_full_name }} </a> -->
+                        <span> {{ value | date:'MMMM, y'}} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+
+                    <ngx-datatable-column [width]="80" name="Status" prop="status" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+
+                        <span *ngIf="value == 0"><strong class="label label-warning">{{ InvoiceLogStatus[value]
+                            }}</strong>
+                        </span>
+                        <span *ngIf="value == 1"> <strong class="label label-default">{{ InvoiceLogStatus[value]
+                            }}</strong>
+                        </span>
+                        <span *ngIf="value == 2"> <strong class="label label-info">{{ InvoiceLogStatus[value]
+                            }}</strong>
+                        </span>
+                        <span *ngIf="value == 3"> <strong class="label label-success">{{ InvoiceLogStatus[value]
+                            }}</strong>
+                        </span>
+                        <span *ngIf="value == 4"> <strong class="label label-danger">{{ InvoiceLogStatus[value]
+                            }}</strong>
+                        </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="380" name="Notes" prop="notes" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="80" name="Action" prop="id" [draggable]="false" [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+
+                        <button *ngIf="row.status == 4" class="btn btn-info btn-mini mr-2" (click)="onReGenerateAction(row)"><i
+                            class="icofont icofont-refresh"></i>Re-generate</button>
+                            <p *ngIf="row.status != 4">----</p>
+
+
+                      </ng-template>
+                    </ngx-datatable-column>
+
+
+                  </ngx-datatable>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+</block-ui>

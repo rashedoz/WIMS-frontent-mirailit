@@ -42,7 +42,7 @@ export class UpdatableDeviceListComponent implements OnInit {
     private router: Router
   ) {
     this.page.pageNumber = 0;
-    this.page.size = 10;
+    this.page.size = 100;
     window.onresize = () => {
       this.scrollBarHorizontal = (window.innerWidth < 1200);
     };

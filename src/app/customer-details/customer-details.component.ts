@@ -266,14 +266,21 @@ export class CustomerDetailsComponent implements OnInit {
   }
 
 getCustomer(){
- // this.blockUI.start('Getting Data...');
   this._service.get(this.url+this.customer_id).subscribe(
     (res) => {
       this.customerObj = res;
-    //  this.blockUI.stop();
     },
     (err) => {
-      //this.blockUI.stop();
+    }
+  );
+}
+
+getCustomerDetails(){
+  this._service.get('get-user-detail/'+this.customer_id).subscribe(
+    (res) => {
+      this.customerObj = res;
+    },
+    (err) => {
     }
   );
 }
@@ -999,7 +1006,7 @@ selectTab(tabId: number) {
   }
 
   openModalSIMReplace(item, template: TemplateRef<any>) {
-    
+
     this.simType = item.sim_type;
 
     this.simObj = item;
@@ -1128,8 +1135,7 @@ selectTab(tabId: number) {
                   if (data.IsReport == "Success") {
                     this.toastr.success(data.Msg, 'Success!', { timeOut: 4000 });
 
-                    this.url = 'get-user-detail/';
-                    this.getCustomer();
+                    this.getCustomerDetails();
 
 
                   } else if (data.IsReport == "Warning") {
@@ -1164,8 +1170,8 @@ selectTab(tabId: number) {
                   if (data.IsReport == "Success") {
                     this.toastr.success(data.Msg, 'Success!', { timeOut: 4000 });
 
-                    this.url = 'get-user-detail/';
-                    this.getCustomer();
+                    this.getCustomerDetails();
+                    //window.location.reload();
 
                   } else if (data.IsReport == "Warning") {
                     this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
@@ -1254,6 +1260,7 @@ selectTab(tabId: number) {
                   if (data.IsReport == "Success") {
                     this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
                     this.getBillItemListWithPagination();
+                    this.getCustomerSIMDeviceCount();
                   } else if (data.IsReport == "Warning") {
                     this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
                   } else {

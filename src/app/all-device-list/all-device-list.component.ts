@@ -49,9 +49,9 @@ export class AllDeviceListComponent implements OnInit {
     private router: Router
   ) {
     this.page.pageNumber = 0;
-    this.page.size = 10;
+    this.page.size = 100;
     this.pageLifeCycle.pageNumber = 0;
-    this.pageLifeCycle.size = 10;
+    this.pageLifeCycle.size = 100;
     window.onresize = () => {
       this.scrollBarHorizontal = (window.innerWidth < 1200);
     };
@@ -67,7 +67,7 @@ export class AllDeviceListComponent implements OnInit {
   filterDeviceLifecycleSearch(e) {
     if (e) {
       this.pageLifeCycle.pageNumber = 0;
-      this.pageLifeCycle.size = 10;
+      this.pageLifeCycle.size = 100;
       this.searchParam = e.target.value;
       this.getDeviceLifeCycle();
     }
@@ -94,11 +94,11 @@ setLifeCyclePage(pageInfo) {
 changeTab(type, e) {
   this.searchParam = "";
   this.page.pageNumber = 0;
-  this.page.size = 10;
+  this.page.size = 100;
 
 
   this.pageLifeCycle.pageNumber = 0;
-  this.pageLifeCycle.size = 10;
+  this.pageLifeCycle.size = 100;
 
   switch (type) {
     case "Available":
@@ -211,7 +211,7 @@ onSubmitAction(action,row){
   filterSearch(e){
     if(e){
       this.page.pageNumber = 0;
-      this.page.size = 10;
+      this.page.size = 100;
       this.searchParam = e.target.value;
       this.getList();
     }
@@ -228,7 +228,7 @@ onSubmitAction(action,row){
     this.searchParam = '';
     this.deviceObj = item;
     this.pageLifeCycle.pageNumber = 0;
-    this.pageLifeCycle.size = 10;
+    this.pageLifeCycle.size = 100;
     this.modalRef = this.modalService.show(template, this.modalConfig);
     this.getDeviceLifeCycle();
   }

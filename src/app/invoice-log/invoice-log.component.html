@@ -1,0 +1,178 @@
+<block-ui>
+  <div class="row">
+
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card card-border-primary">
+            <!-- <div class="card-header">
+              <h5>Bill </h5>
+            </div> -->
+            <div class="card-block ">
+
+              <!-- <div class="row mb-4">
+                <div class="col-lg-12">
+                  <tabset [justified]="false" type="pills">
+
+                    <tab (selectTab)="changeTab('All',$event)">
+                      <ng-template tabHeading>
+                        All
+                      </ng-template>
+                    </tab>
+
+                    <tab (selectTab)="changeTab('Unpaid',$event)">
+                      <ng-template tabHeading>
+                        Unpaid
+                      </ng-template>
+                    </tab>
+                    <tab (selectTab)="changeTab('Partially Paid',$event)">
+                      <ng-template tabHeading>
+                        Partially Paid
+                      </ng-template>
+                    </tab>
+                    <tab (selectTab)="changeTab('Fully Paid',$event)">
+                      <ng-template tabHeading>
+                        Fully Paid
+                      </ng-template>
+                    </tab>
+                    <tab (selectTab)="changeTab('Not Applicable',$event)">
+                      <ng-template tabHeading>
+                        Not Applicable
+                      </ng-template>
+                    </tab>
+
+                  </tabset>
+                </div>
+              </div> -->
+
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="row">
+
+                    <div class="col-sm-12">
+                      <input type="text" placeholder="Filter by date range" class="form-control"
+                        (ngModelChange)="onLogsDateValueChange($event)" [(ngModel)]="bsLogRangeValue" bsDaterangepicker
+                        [bsConfig]="bsConfig">
+                    </div>
+
+                    <div class="col-sm-12 mt-2">
+                      <div class="form-group">
+                        <label><b>Log Status</b></label>
+                        <ng-select (change)="onInvStatusChange($event)" [(ngModel)]="selectedInvStatus"
+                          [clearable]="false" appendTo="body" [clearOnBackspace]="false" [items]="invStatusList"
+                          bindLabel="name" placeholder="Filter by status"></ng-select>
+                      </div>
+                    </div>
+
+
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="text-center">
+                  <button (click)="onGenerateAction()" class="btn btn-primary btn-square"><i class="icofont icofont-file-text"></i> Generate Bill</button>
+                  <p><b>This will generate invoices for all currently active customers for the current month.</b></p>
+                </div>
+              </div>
+            </div>
+            <div class="row ">
+              <div class="col-lg-12 ">
+
+
+                <ngx-datatable #table class="material table-bordered" [scrollbarH]="true" [rows]="rows"
+                  [loadingIndicator]="loadingIndicator" [externalPaging]="true" [columnMode]="ColumnMode.force"
+                  [headerHeight]="40" [footerHeight]="50" rowHeight="auto" [count]="page.totalElements"
+                  [offset]="page.pageNumber" [limit]="page.size" (page)="setPage($event)">
+
+                  <ngx-datatable-column [width]="220" name="Action" prop="id" [draggable]="false" [sortable]="false">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+
+                      <a [routerLink]="['/invoice-log-history/'+row.id]" routerLinkActive="router-link-active"
+                        target="_blank"> See Details </a>
+                      <!-- <button *ngIf="row.payment_status == 1 || row.payment_status == 2" class="btn btn-info btn-mini mr-2"  (click)="goToPaymentCollection(row.id)"><i
+                            class="icofont icofont-checked"></i>Collect Payment</button> -->
+
+
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-column [width]="150" name="Month" prop="invoice_month" [draggable]="false"
+                    [sortable]="false">
+                    <ng-template let-value="value" ngx-datatable-cell-template>
+                      <!-- <a [routerLink]="['/customer-details/'+row.customer]" routerLinkActive="router-link-active"
+                          target="_blank"> {{ row.customer_full_name }} </a> -->
+                      <span> {{ value | date:'MMMM, y'}} </span>
+                    </ng-template>
+                  </ngx-datatable-column>
+
+
+                  <ngx-datatable-column [width]="150" name="Status" prop="status" [draggable]="false"
+                    [sortable]="false">
+                    <ng-template let-value="value" ngx-datatable-cell-template>
+
+                      <span *ngIf="value == 0"><strong class="label label-warning">{{ InvoiceLogStatus[value]
+                          }}</strong>
+                      </span>
+                      <span *ngIf="value == 1"> <strong class="label label-default">{{ InvoiceLogStatus[value]
+                          }}</strong>
+                      </span>
+                      <span *ngIf="value == 2"> <strong class="label label-info">{{ InvoiceLogStatus[value]
+                          }}</strong>
+                      </span>
+                      <span *ngIf="value == 3"> <strong class="label label-success">{{ InvoiceLogStatus[value]
+                          }}</strong>
+                      </span>
+                      <span *ngIf="value == 4"> <strong class="label label-danger">{{ InvoiceLogStatus[value]
+                          }}</strong>
+                      </span>
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-column [width]="350" name="Notes" prop="notes" [draggable]="false" [sortable]="false">
+                    <ng-template let-value="value" ngx-datatable-cell-template>
+                      <span> {{ value }} </span>
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-column [width]="180" name="Invoices To Generate" prop="invoice_to_generate"
+                    [draggable]="false" [sortable]="false">
+                    <ng-template let-value="value" ngx-datatable-cell-template>
+                      <span> {{ value }} </span>
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column [width]="100" name="Generate" prop="invoice_generated" [draggable]="false"
+                    [sortable]="false">
+                    <ng-template let-value="value" ngx-datatable-cell-template>
+                      <span> {{ value }} </span>
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column [width]="100" name="Remaining" prop="invoice_remaining" [draggable]="false"
+                    [sortable]="false">
+                    <ng-template let-value="value" ngx-datatable-cell-template>
+                      <span> {{ value }} </span>
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-column [width]="190" name="Created On" prop="created_at" [draggable]="false"
+                    [sortable]="false">
+                    <ng-template let-value="value" ngx-datatable-cell-template>
+                      <span> {{value | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'}} </span>
+                    </ng-template>
+                  </ngx-datatable-column>
+
+
+
+
+                </ngx-datatable>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+
+</block-ui>

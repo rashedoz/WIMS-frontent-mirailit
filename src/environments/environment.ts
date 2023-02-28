@@ -5,6 +5,6 @@
 
 export const environment = {
   production: false,
-   apiUrl: 'https://warehouse-mng-app.herokuapp.com/api/',
-   baseUrl: 'https://warehouse-mng-app.herokuapp.com/',
+   apiUrl: 'http://localhost:8000/api/',
+   baseUrl: 'http://localhost:8000/',
 };

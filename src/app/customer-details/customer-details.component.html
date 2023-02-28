@@ -54,7 +54,7 @@
                     <b>{{customerObj.gender == 1 ? "Not Set " : customerObj.gender == 2 ? "Male" : "Female" }} </b></p>
 
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                   <p class="fs-14 mb-0" *ngIf="customerObj.address_one">Address : <b>{{customerObj.address_one}}
                       {{customerObj.address_two}}</b></p>
                   <p class="fs-14 mb-0">
@@ -65,10 +65,10 @@
                   <p class="fs-14 mb-0">Balance : <b><span
                         class="text-primary font-weight-bold">{{customerObj.balance }}</span></b></p>
                 </div>
-                <div class="col-md-2">
-                  <button *ngIf="customerObj.contract_status == 1" (click)="onSubmitEndContract()" class="btn btn-danger btn-round"> End Contract</button>
+                <div class="col-md-3">
+                  <button *ngIf="customerObj.contract_status == 1" (click)="onSubmitEndContract()" class="btn btn-danger btn-round"><i class="icofont icofont-warning"></i> Terminate Contract</button>
 
-                  <button *ngIf="customerObj.contract_status == 2" (click)="onSubmitUndoContract()" class="btn btn-success btn-round"> Undo-End Contract</button>
+                  <button *ngIf="customerObj.contract_status == 2" (click)="onSubmitUndoContract()" class="btn btn-success btn-round"><i class="icofont icofont-refresh"></i> Undo Termination</button>
                 </div>
               </div>
               <hr>
@@ -180,10 +180,10 @@
                             [scrollbarH]="true" [rows]="billItemDetailList" [loadingIndicator]="loadingIndicator"
                             [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40"
                             [footerHeight]="50" rowHeight="auto" [count]="pageTable.totalElements"
-                            [offset]="pageTable.pageNumber" [limit]="page.size"
+                            [offset]="pageTable.pageNumber" [limit]="pageTable.size"
                             (page)="setBillItemPageWithPagination($event)">
 
-                            <ngx-datatable-column [width]="100" name="SIM Type" prop="sim_type"
+                            <ngx-datatable-column [width]="80" name="SIM Type" prop="sim_type"
                               [draggable]="false" [sortable]="false">
                               <ng-template let-value="value" ngx-datatable-cell-template>
 
@@ -203,21 +203,21 @@
                               </ng-template>
                             </ngx-datatable-column>
 
-                            <ngx-datatable-column [width]="120" name="SIM ICCID No" prop="ICCID_no" [draggable]="false"
+                            <ngx-datatable-column [width]="170" name="SIM ICCID No" prop="ICCID_no" [draggable]="false"
                               [sortable]="false">
                               <ng-template let-value="value" ngx-datatable-cell-template>
                                 <span> {{ value }} </span>
                               </ng-template>
                             </ngx-datatable-column>
 
-                            <ngx-datatable-column [width]="100" name="Phone Number" prop="phone_number"
+                            <ngx-datatable-column [width]="130" name="Phone Number" prop="phone_number"
                               [draggable]="false" [sortable]="false">
                               <ng-template let-value="value" ngx-datatable-cell-template>
                                 <span> {{ value }} </span>
                               </ng-template>
                             </ngx-datatable-column>
 
-                            <ngx-datatable-column [width]="130" name="IMEI" prop="IMEI" [draggable]="false"
+                            <ngx-datatable-column [width]="150" name="IMEI" prop="IMEI" [draggable]="false"
                               [sortable]="false">
                               <ng-template let-value="value" ngx-datatable-cell-template>
                                 <span *ngIf="value"> {{ value }} </span>
@@ -225,7 +225,7 @@
                               </ng-template>
                             </ngx-datatable-column>
 
-                            <ngx-datatable-column [width]="140" name="SIM Status" prop="sim_status" [draggable]="false"
+                            <ngx-datatable-column [width]="160" name="SIM Status" prop="sim_status" [draggable]="false"
                               [sortable]="false">
                               <ng-template let-row="row" ngx-datatable-cell-template>
                                 <!-- <span> {{ SIMAndDeviceStatus[value] }} </span> -->
@@ -263,7 +263,7 @@
 
                               </ng-template>
                             </ngx-datatable-column>
-                            <ngx-datatable-column [width]="200" name="Note(s)" prop="sim_status_desc"
+                            <ngx-datatable-column [width]="250" name="Note(s)" prop="sim_status_desc"
                               [draggable]="false" [sortable]="false">
                               <ng-template let-value="value" ngx-datatable-cell-template>
                                 <span *ngIf="value"> {{ value }} </span>
@@ -273,7 +273,7 @@
 
 
 
-                            <ngx-datatable-column [width]="350" name="Action" prop="id" [draggable]="false"
+                            <ngx-datatable-column [width]="400" name="Action" prop="id" [draggable]="false"
                               [sortable]="false">
                               <ng-template let-row="row" ngx-datatable-cell-template>
 
@@ -290,20 +290,20 @@
                                         class="icofont icofont-unlock"></i>Freeze</button>
 
                                     <button (click)="onSubmitAction('sim','advance-cacellation',row)"
-                                      *ngIf="row.sim_status == 1" class="btn btn-danger btn-mini"><i
+                                      *ngIf="row.sim_status == 1" class="btn btn-danger btn-mini mr-1"><i
                                         class="icofont icofont-ban"></i>Cancel From Next Month</button>
 
                                     <button (click)="onSubmitAction('sim','unfreeze',row)" *ngIf="row.sim_status == 2"
                                       class="btn btn-primary btn-mini mr-1"><i
                                         class="icofont icofont-unlocked"></i>Unfreeze</button>
 
-                                    <button (click)="onSubmitAction('sim','return',row)" *ngIf="row.sim_status == 4"
-                                      class="btn btn-success btn-mini mr-1"><i
-                                        class="icofont icofont-arrow-left"></i>Return
-                                      To Stock</button>
+                                        <button (click)="onSubmitAction('sim','return',row)" *ngIf="row.sim_status == 1 || row.sim_status == 3 || row.sim_status == 4"
+                                        class="btn btn-success btn-mini mr-1"><i
+                                          class="icofont icofont-arrow-left"></i>Return
+                                        To Stock</button>
 
                                     <button (click)="onSubmitAction('sim','reissue',row)" *ngIf="row.sim_status == 4"
-                                      class="btn btn-info btn-mini mr-1"><i
+                                      class="btn btn-info btn-mini mr-1 ml-1"><i
                                         class="icofont icofont-paper-plane"></i>Reissue</button>
 
                                     <button (click)="openModalSIMRecieve(row,templateSIMReceive)"
@@ -325,14 +325,14 @@
                                         class="icofont icofont-unlock"></i>Freeze</button>
 
                                     <button (click)="onSubmitAction('sim','advance-cacellation',row)"
-                                      *ngIf="row.sim_status == 1" class="btn btn-danger btn-mini"><i
+                                      *ngIf="row.sim_status == 1" class="btn btn-danger btn-mini mr-1"><i
                                         class="icofont icofont-ban"></i>Cancel From Next Month</button>
 
                                     <button (click)="onSubmitAction('sim','unfreeze',row)" *ngIf="row.sim_status == 2"
                                       class="btn btn-primary btn-mini mr-1"><i
                                         class="icofont icofont-unlocked"></i>Unfreeze</button>
 
-                                    <button (click)="onSubmitAction('sim','return',row)" *ngIf="row.sim_status == 4"
+                                    <button (click)="onSubmitAction('sim','return',row)" *ngIf="row.sim_status == 1 || row.sim_status == 3 || row.sim_status == 4"
                                       class="btn btn-success btn-mini mr-1"><i
                                         class="icofont icofont-arrow-left"></i>Return
                                       To Stock</button>
@@ -361,7 +361,7 @@
                             [scrollbarH]="true" [rows]="billItemDetailList" [loadingIndicator]="loadingIndicator"
                             [externalPaging]="true" [columnMode]="ColumnMode.force" [headerHeight]="40"
                             [footerHeight]="50" rowHeight="auto" [count]="pageTable.totalElements"
-                            [offset]="pageTable.pageNumber" [limit]="page.size"
+                            [offset]="pageTable.pageNumber" [limit]="pageTable.size"
                             (page)="setBillItemPageWithPagination($event)">
 
 
@@ -492,7 +492,7 @@
                           <ngx-datatable class="material table-bordered" [scrollbarH]="true" [rows]="billDetailList"
                             [loadingIndicator]="loadingIndicator" [externalPaging]="true"
                             [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" rowHeight="auto"
-                            [count]="pageTable.totalElements" [offset]="pageTable.pageNumber" [limit]="page.size"
+                            [count]="pageTable.totalElements" [offset]="pageTable.pageNumber" [limit]="pageTable.size"
                             (page)="setBillDetailsPageWithPagination($event)">
 
                             <ngx-datatable-column [width]="220" name="Action" prop="id" [draggable]="false"
@@ -1215,7 +1215,7 @@
                 <span *ngIf="simType == 3"> <i style="font-size: 1rem;" class="icofont icofont-ipod-nano text-warning"></i> </span>
 
                       <!-- <label *ngIf="item.is_phone_sim" class="badge badge-warning badge-bottom-right"><i class="icofont icofont-mobile-phone"></i></label> -->
-                      
+
                       {{item.CID_no}} </p>
                     <p class="card-text font-weight-bold" *ngIf="item.ICCID_no">
 

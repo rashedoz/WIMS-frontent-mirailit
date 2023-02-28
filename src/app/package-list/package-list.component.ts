@@ -62,7 +62,7 @@ export class PackageListComponent implements OnInit {
     private router: Router
   ) {
     this.page.pageNumber = 0;
-    this.page.size = 10;
+    this.page.size = 100;
     window.onresize = () => {
       this.scrollBarHorizontal = (window.innerWidth < 1200);
     };
@@ -261,7 +261,7 @@ export class PackageListComponent implements OnInit {
   filterSearch(e) {
     if (e) {
       this.page.pageNumber = 0;
-      this.page.size = 10;
+      this.page.size = 100;
       this.searchParam = e.target.value;
       this.getList();
     }
@@ -269,13 +269,13 @@ export class PackageListComponent implements OnInit {
 
   onPhoneSIMChangeFilter(e){
     this.page.pageNumber = 0;
-    this.page.size = 10;
+    this.page.size = 100;
     this.getList();
   }
 
   onSimTypeChange(e){
     this.page.pageNumber = 0;
-    this.page.size = 10;
+    this.page.size = 100;
     if(e){
     this.selectedSimType = e;
     this.getList();

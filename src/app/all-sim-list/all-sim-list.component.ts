@@ -72,7 +72,7 @@ export class AllSIMListComponent implements OnInit {
     private confirmService: ConfirmService
   ) {
     this.page.pageNumber = 0;
-    this.page.size = 10;
+    this.page.size = 100;
     this.pageLifeCycle.pageNumber = 0;
     this.pageLifeCycle.size = 10;
     window.onresize = () => {
@@ -138,7 +138,7 @@ export class AllSIMListComponent implements OnInit {
   onSimTypeChange(e){
     this.searchParam = "";
     this.page.pageNumber = 0;
-    this.page.size = 10;
+    this.page.size = 100;
     if(e){
     this.selectedSimType = e;
     this.getList();
@@ -154,7 +154,7 @@ export class AllSIMListComponent implements OnInit {
   changeTab(type, e) {
     this.searchParam = "";
     this.page.pageNumber = 0;
-    this.page.size = 10;
+    this.page.size = 100;
 
     this.pageLifeCycle.pageNumber = 0;
     this.pageLifeCycle.size = 10;
@@ -278,7 +278,7 @@ export class AllSIMListComponent implements OnInit {
   filterSearch(e) {
     if (e) {
       this.page.pageNumber = 0;
-      this.page.size = 10;
+      this.page.size = 100;
       this.searchParam = e.target.value;
       this.getList();
     }

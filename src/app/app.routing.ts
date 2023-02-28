@@ -348,10 +348,15 @@ export const AppRoutes: Routes = [
         canActivate: [AuthGuard]
       },
       {
-        path: 'sell-device-only-sim-product',
-        loadChildren: () => import('./sell-device-only-sim-product/sell-device-only-sim-product.module').then(m => m.SellDeviceOnlySimProductModule),
+        path: 'invoice-log',
+        loadChildren: () => import('./invoice-log/invoice-log.module').then(m => m.InvoiceLogModule),
         canActivate: [AuthGuard]
       },
+      {
+        path: 'invoice-log-history/:id',
+        loadChildren: () => import('./invoice-log-history/invoice-log-history.module').then(m => m.InvoiceLogHistoryModule),
+        canActivate: [AuthGuard]
+      }
     ]
   }, {
     path: '**',

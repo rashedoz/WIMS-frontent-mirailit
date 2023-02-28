@@ -60,7 +60,7 @@ export class MemberListComponent implements OnInit {
       adaptivePosition: true
     });
     this.page.pageNumber = 0;
-    this.page.size = 10;
+    this.page.size = 100;
     window.onresize = () => {
       this.scrollBarHorizontal = (window.innerWidth < 1200);
     };
@@ -421,7 +421,7 @@ modalHideChangePassword() {
 filterSearch(e){
   if(e){
     this.page.pageNumber = 0;
-    this.page.size = 10;
+    this.page.size = 100;
     this.searchParam = e.target.value;
     this.getList();
   }

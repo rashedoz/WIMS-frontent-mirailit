@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild, ElementRef, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, TemplateRef, ViewChild, ElementRef, ViewEncapsulation, OnInit, AfterViewInit } from '@angular/core';
 import { ColumnMode,DatatableComponent } from '@swimlane/ngx-datatable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -14,6 +14,7 @@ import { DatePipe } from '@angular/common';
 import { PrintService } from '../_services/print.service';
 import { BsDatepickerConfig, BsDaterangepickerConfig } from "ngx-bootstrap/datepicker";
 import * as moment from 'moment';
+import { TabsetComponent } from 'ngx-bootstrap/tabs';
 
 @Component({
   selector: 'app-bill',
@@ -21,8 +22,8 @@ import * as moment from 'moment';
   encapsulation: ViewEncapsulation.None
 })
 
-export class BillComponent implements OnInit {
-
+export class BillComponent implements AfterViewInit, OnInit {
+  @ViewChild('staticTabs', { static: false }) staticTabs?: TabsetComponent;
   entryForm: FormGroup;
   submitted = false;
   @BlockUI() blockUI: NgBlockUI;
@@ -45,8 +46,8 @@ export class BillComponent implements OnInit {
   searchParam = '';
   bsConfig: Partial<BsDaterangepickerConfig>;
   date = new Date();
-  firstDay = new Date(this.date.getFullYear(), this.date.getMonth(), 1);
-  lastDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0);
+  firstDay = null;
+  lastDay = null;
   billType = 'All';
   remarks = null;
   billItem;
@@ -84,7 +85,7 @@ export class BillComponent implements OnInit {
     public printService: PrintService
   ) {
     this.page.pageNumber = 0;
-    this.page.size = 10;
+    this.page.size = 100;
     window.onresize = () => {
       this.scrollBarHorizontal = (window.innerWidth < 1200);
     };
@@ -105,7 +106,16 @@ export class BillComponent implements OnInit {
 
 
   ngOnInit() {
-    this.getList();
+   // this.getList();
+    setTimeout(() => {
+      this.staticTabs.tabs[1].active = true;
+    }, 300);
+  }
+
+  ngAfterViewInit() {
+    // if (this.staticTabs?.tabs[1]) {
+    //   this.staticTabs.tabs[1].active = true;
+    // }
   }
 
 
@@ -131,7 +141,7 @@ export class BillComponent implements OnInit {
 
     this.searchParam = '';
     this.page.pageNumber = 0;
-    this.page.size = 10;
+    this.page.size = 100;
 
     switch (type) {
       case 'All':
@@ -170,7 +180,7 @@ export class BillComponent implements OnInit {
   filterSearch(e){
     if(e){
       this.page.pageNumber = 0;
-      this.page.size = 10;
+      this.page.size = 100;
       this.searchParam = e.target.value;
       this.getList();
     }
@@ -199,7 +209,7 @@ export class BillComponent implements OnInit {
 
   onSimTypeChange(e){
     this.page.pageNumber = 0;
-    this.page.size = 10;
+    this.page.size = 100;
     if(e){
     this.selectedSimType = e;
     this.getList();
@@ -273,8 +283,8 @@ export class BillComponent implements OnInit {
     }
 
 
-      if(this.bsBillRangeValue){
-        obj.billing_start_date = moment(this.bsBillRangeValue[0]).format('YYYY-MM-DD'),
+      if(this.bsBillRangeValue[0]){
+        obj.billing_start_date =  moment(this.bsBillRangeValue[0]).format('YYYY-MM-DD'),
         obj.billing_end_date = moment(this.bsBillRangeValue[1]).format('YYYY-MM-DD')
       }
 
