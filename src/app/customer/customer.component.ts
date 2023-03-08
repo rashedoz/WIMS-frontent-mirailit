@@ -370,6 +370,7 @@ setPageDue(pageInfo) {
     this.modalRef = this.modalService.show(template, this.modalConfig);
 
 }
+
 changePassword(row, template: TemplateRef<any>) {
 
   this.modalTitle = 'Change Password';

@@ -8,24 +8,24 @@
             <div class="card-header">
               <div class="row">
                 <div class="col-md-6 offset-md-6">
-                    <ng-select [(ngModel)]="selectedCustomer"  [clearable]="false" [items]="customersBuffer"
-                      [virtualScroll]="true" [dropdownPosition]="'bottom'" [loading]="loading" bindLabel="first_name"
-                      bindValue="id" placeholder="Select a customer" appendTo="body" (change)="onCustomerChange($event)"
-                      [typeahead]="input$" (scroll)="onScroll($event)" (scrollToEnd)="onScrollToEnd()" #select>
-                      <ng-template ng-header-tmp>
-                        <small class="form-text text-muted">Loaded {{customersBuffer.length}} of
-                          {{page.totalElements}}</small>
-                      </ng-template>
-                      <ng-template ng-label-tmp let-item="item">
-                        {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}} -
-                        {{item.customer_type}}
-                      </ng-template>
+                  <ng-select [(ngModel)]="selectedCustomer" [clearable]="false" [items]="customersBuffer"
+                    [virtualScroll]="true" [dropdownPosition]="'bottom'" [loading]="loading" bindLabel="first_name"
+                    bindValue="id" placeholder="Select a customer" appendTo="body" (change)="onCustomerChange($event)"
+                    [typeahead]="input$" (scroll)="onScroll($event)" (scrollToEnd)="onScrollToEnd()" #select>
+                    <ng-template ng-header-tmp>
+                      <small class="form-text text-muted">Loaded {{customersBuffer.length}} of
+                        {{page.totalElements}}</small>
+                    </ng-template>
+                    <ng-template ng-label-tmp let-item="item">
+                      {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}} -
+                      {{item.customer_type}}
+                    </ng-template>
 
-                      <ng-template ng-option-tmp let-item="item" let-index="index">
-                        {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}} -
-                        {{item.customer_type}}
-                      </ng-template>
-                    </ng-select>
+                    <ng-template ng-option-tmp let-item="item" let-index="index">
+                      {{item.customer_code}} - {{item.first_name}} {{item.last_name}} - {{item.mobile}} -
+                      {{item.customer_type}}
+                    </ng-template>
+                  </ng-select>
                 </div>
               </div>
             </div>
@@ -35,15 +35,21 @@
                 <div class="col-md-4">
                   <p class="fs-14 mb-0">Customer Name : <b>{{customerObj.first_name}} {{customerObj.last_name}}</b></p>
                   <p class="fs-14 mb-0" *ngIf="customerObj.acc_number">Account Number :
-                    <b>{{customerObj.acc_number}}</b></p>
+                    <b>{{customerObj.acc_number}}</b>
+                  </p>
                   <p class="fs-14 mb-0" *ngIf="customerObj.email">Email : <b>{{customerObj.email}}</b></p>
-                  <p class="fs-14 mb-0" >Contact Status :
+                  <p class="fs-14 mb-0">Contact Status :
 
-                    <strong *ngIf="customerObj.contract_status == 0" class="label label-default">{{ContractStatus[customerObj.contract_status]}}</strong>
-                    <strong *ngIf="customerObj.contract_status == 1" class="label label-success">{{ContractStatus[customerObj.contract_status]}}</strong>
-                    <strong *ngIf="customerObj.contract_status == 2" class="label label-warning">{{ContractStatus[customerObj.contract_status]}}</strong>
-                    <strong *ngIf="customerObj.contract_status == 3" class="label label-danger">{{ContractStatus[customerObj.contract_status]}}</strong>
-                    <strong *ngIf="customerObj.contract_status == 4" class="label label-danger">{{ContractStatus[customerObj.contract_status]}}</strong>
+                    <strong *ngIf="customerObj.contract_status == 0"
+                      class="label label-default">{{ContractStatus[customerObj.contract_status]}}</strong>
+                    <strong *ngIf="customerObj.contract_status == 1"
+                      class="label label-success">{{ContractStatus[customerObj.contract_status]}}</strong>
+                    <strong *ngIf="customerObj.contract_status == 2"
+                      class="label label-warning">{{ContractStatus[customerObj.contract_status]}}</strong>
+                    <strong *ngIf="customerObj.contract_status == 3"
+                      class="label label-danger">{{ContractStatus[customerObj.contract_status]}}</strong>
+                    <strong *ngIf="customerObj.contract_status == 4"
+                      class="label label-danger">{{ContractStatus[customerObj.contract_status]}}</strong>
 
                   </p>
                 </div>
@@ -51,7 +57,8 @@
                   <p class="fs-14 mb-0" *ngIf="customerObj.mobile">Mobile : <b>{{customerObj.mobile}} </b></p>
                   <p class="fs-14 mb-0" *ngIf="customerObj.telephone">Telephone : <b>{{customerObj.telephone}} </b></p>
                   <p class="fs-14 mb-0" *ngIf="customerObj.gender">Gender :
-                    <b>{{customerObj.gender == 1 ? "Not Set " : customerObj.gender == 2 ? "Male" : "Female" }} </b></p>
+                    <b>{{customerObj.gender == 1 ? "Not Set " : customerObj.gender == 2 ? "Male" : "Female" }} </b>
+                  </p>
 
                 </div>
                 <div class="col-md-2">
@@ -62,13 +69,15 @@
                     <strong *ngIf="!customerObj.is_wholesaler" class="label label-success">Retailer</strong>
                   </p>
                   <!-- <p class="fs-14 mb-0" *ngIf="customerObj.preferred_payment_method"><b>Preferred Payment Method : {{PaymentType[customerObj.preferred_payment_method]}}</b></p> -->
-                  <p class="fs-14 mb-0">Balance : <b><span
-                        class="text-primary font-weight-bold">{{customerObj.balance }}</span></b></p>
+                  <p class="fs-14 mb-0">Balance : <b><span class="text-primary font-weight-bold">{{customerObj.balance
+                        }}</span></b></p>
                 </div>
                 <div class="col-md-3">
-                  <button *ngIf="customerObj.contract_status == 1" (click)="onSubmitEndContract()" class="btn btn-danger btn-round"><i class="icofont icofont-warning"></i> Terminate Contract</button>
+                  <button *ngIf="customerObj.contract_status == 1" (click)="onSubmitEndContract()"
+                    class="btn btn-danger btn-round"><i class="icofont icofont-warning"></i> Terminate Contract</button>
 
-                  <button *ngIf="customerObj.contract_status == 2" (click)="onSubmitUndoContract()" class="btn btn-success btn-round"><i class="icofont icofont-refresh"></i> Undo Termination</button>
+                  <button *ngIf="customerObj.contract_status == 2" (click)="onSubmitUndoContract()"
+                    class="btn btn-success btn-round"><i class="icofont icofont-refresh"></i> Undo Termination</button>
                 </div>
               </div>
               <hr>
@@ -183,13 +192,16 @@
                             [offset]="pageTable.pageNumber" [limit]="pageTable.size"
                             (page)="setBillItemPageWithPagination($event)">
 
-                            <ngx-datatable-column [width]="80" name="SIM Type" prop="sim_type"
-                              [draggable]="false" [sortable]="false">
+                            <ngx-datatable-column [width]="80" name="SIM Type" prop="sim_type" [draggable]="false"
+                              [sortable]="false">
                               <ng-template let-value="value" ngx-datatable-cell-template>
 
-                                <span *ngIf="value == 1"> <i style="font-size: 1.3rem;" class="icofont icofont-memory-card text-primary"></i></span>
-                                <span *ngIf="value == 2"> <i style="font-size: 1.3rem;" class="icofont icofont-ui-wifi text-info"></i></span>
-                                <span *ngIf="value == 3"> <i style="font-size: 1.3rem;" class="icofont icofont-ipod-nano text-warning"></i> </span>
+                                <span *ngIf="value == 1"> <i style="font-size: 1.3rem;"
+                                    class="icofont icofont-memory-card text-primary"></i></span>
+                                <span *ngIf="value == 2"> <i style="font-size: 1.3rem;"
+                                    class="icofont icofont-ui-wifi text-info"></i></span>
+                                <span *ngIf="value == 3"> <i style="font-size: 1.3rem;"
+                                    class="icofont icofont-ipod-nano text-warning"></i> </span>
 
 
                               </ng-template>
@@ -199,7 +211,8 @@
                             <ngx-datatable-column [width]="100" name="SIM CID No" prop="CID_no" [draggable]="false"
                               [sortable]="false">
                               <ng-template let-row="row" ngx-datatable-cell-template>
-                                <span><label *ngIf="row.is_phone_sim" class="badge badge-warning badge-bottom-right"><i class="icofont icofont-mobile-phone"></i></label> {{ row.CID_no }} </span>
+                                <span><label *ngIf="row.is_phone_sim" class="badge badge-warning badge-bottom-right"><i
+                                      class="icofont icofont-mobile-phone"></i></label> {{ row.CID_no }} </span>
                               </ng-template>
                             </ngx-datatable-column>
 
@@ -229,36 +242,39 @@
                               [sortable]="false">
                               <ng-template let-row="row" ngx-datatable-cell-template>
                                 <!-- <span> {{ SIMAndDeviceStatus[value] }} </span> -->
-                                <span *ngIf="row.sim_status == 0"> <strong
-                                    class="label label-default">{{ SIMAndDeviceStatus[row.sim_status] }}</strong>
+                                <span *ngIf="row.sim_status == 0"> <strong class="label label-default">{{
+                                    SIMAndDeviceStatus[row.sim_status] }}</strong>
                                 </span>
-                                <span *ngIf="row.sim_status == 1"> <strong
-                                    class="label label-success">{{ SIMAndDeviceStatus[row.sim_status] }}</strong>
-                                    <button (click)="openModalSIMReplace(row,templateSIMReplace)" tooltip="Replace This SIM" placement="top" [adaptivePosition]="false" class="btn btn-primary btn-mini py-1" type="button"><i class="icofont-spinner-alt-5"></i></button>
+                                <span *ngIf="row.sim_status == 1"> <strong class="label label-success">{{
+                                    SIMAndDeviceStatus[row.sim_status] }}</strong>
+                                  <button (click)="openModalSIMReplace(row,templateSIMReplace)"
+                                    tooltip="Replace This SIM" placement="top" [adaptivePosition]="false"
+                                    class="btn btn-primary btn-mini py-1" type="button"><i
+                                      class="icofont-spinner-alt-5"></i></button>
                                 </span>
-                                <span *ngIf="row.sim_status == 2"> <strong
-                                    class="label label-info">{{ SIMAndDeviceStatus[row.sim_status] }}</strong>
+                                <span *ngIf="row.sim_status == 2"> <strong class="label label-info">{{
+                                    SIMAndDeviceStatus[row.sim_status] }}</strong>
                                 </span>
-                                <span *ngIf="row.sim_status == 3"> <strong
-                                    class="label label-primary">{{ SIMAndDeviceStatus[row.sim_status] }}</strong>
+                                <span *ngIf="row.sim_status == 3"> <strong class="label label-primary">{{
+                                    SIMAndDeviceStatus[row.sim_status] }}</strong>
                                 </span>
-                                <span *ngIf="row.sim_status == 4"> <strong
-                                    class="label label-warning">{{ SIMAndDeviceStatus[row.sim_status] }}</strong>
+                                <span *ngIf="row.sim_status == 4"> <strong class="label label-warning">{{
+                                    SIMAndDeviceStatus[row.sim_status] }}</strong>
                                 </span>
-                                <span *ngIf="row.sim_status == 5"> <strong
-                                    class="label label-danger">{{ SIMAndDeviceStatus[row.sim_status] }}</strong>
+                                <span *ngIf="row.sim_status == 5"> <strong class="label label-danger">{{
+                                    SIMAndDeviceStatus[row.sim_status] }}</strong>
                                 </span>
-                                <span *ngIf="row.sim_status == 6"> <strong
-                                    class="label label-primary">{{ SIMAndDeviceStatus[row.sim_status] }}</strong>
+                                <span *ngIf="row.sim_status == 6"> <strong class="label label-primary">{{
+                                    SIMAndDeviceStatus[row.sim_status] }}</strong>
                                 </span>
-                                <span *ngIf="row.sim_status == 7"> <strong
-                                    class="label label-primary">{{ SIMAndDeviceStatus[row.sim_status] }}</strong>
+                                <span *ngIf="row.sim_status == 7"> <strong class="label label-primary">{{
+                                    SIMAndDeviceStatus[row.sim_status] }}</strong>
                                 </span>
-                                <span *ngIf="row.sim_status == 8"> <strong
-                                    class="label label-danger">{{ SIMAndDeviceStatus[row.sim_status] }}</strong>
+                                <span *ngIf="row.sim_status == 8"> <strong class="label label-danger">{{
+                                    SIMAndDeviceStatus[row.sim_status] }}</strong>
                                 </span>
-                                <span *ngIf="row.sim_status == 9"> <strong
-                                    class="label label-warning">{{ SIMAndDeviceStatus[row.sim_status] }}</strong>
+                                <span *ngIf="row.sim_status == 9"> <strong class="label label-warning">{{
+                                    SIMAndDeviceStatus[row.sim_status] }}</strong>
                                 </span>
 
                               </ng-template>
@@ -297,10 +313,11 @@
                                       class="btn btn-primary btn-mini mr-1"><i
                                         class="icofont icofont-unlocked"></i>Unfreeze</button>
 
-                                        <button (click)="onSubmitAction('sim','return',row)" *ngIf="row.sim_status == 1 || row.sim_status == 3 || row.sim_status == 4"
-                                        class="btn btn-success btn-mini mr-1"><i
-                                          class="icofont icofont-arrow-left"></i>Return
-                                        To Stock</button>
+                                    <button (click)="onSubmitAction('sim','return',row)"
+                                      *ngIf="row.sim_status == 1 || row.sim_status == 3 || row.sim_status == 4"
+                                      class="btn btn-success btn-mini mr-1"><i
+                                        class="icofont icofont-arrow-left"></i>Return
+                                      To Stock</button>
 
                                     <button (click)="onSubmitAction('sim','reissue',row)" *ngIf="row.sim_status == 4"
                                       class="btn btn-info btn-mini mr-1 ml-1"><i
@@ -332,7 +349,8 @@
                                       class="btn btn-primary btn-mini mr-1"><i
                                         class="icofont icofont-unlocked"></i>Unfreeze</button>
 
-                                    <button (click)="onSubmitAction('sim','return',row)" *ngIf="row.sim_status == 1 || row.sim_status == 3 || row.sim_status == 4"
+                                    <button (click)="onSubmitAction('sim','return',row)"
+                                      *ngIf="row.sim_status == 1 || row.sim_status == 3 || row.sim_status == 4"
                                       class="btn btn-success btn-mini mr-1"><i
                                         class="icofont icofont-arrow-left"></i>Return
                                       To Stock</button>
@@ -341,8 +359,8 @@
                                       class="btn btn-info btn-mini mr-1"><i
                                         class="icofont icofont-paper-plane"></i>Reissue</button>
 
-                                    <button (click)="onSubmitAction('sim','permanently_cancelled',row)" *ngIf="row.sim_status == 4"
-                                      class="btn btn-danger btn-mini mr-1"><i
+                                    <button (click)="onSubmitAction('sim','permanently_cancelled',row)"
+                                      *ngIf="row.sim_status == 4" class="btn btn-danger btn-mini mr-1"><i
                                         class="icofont icofont-brand-nexus"></i>Cancel Permanently</button>
 
                                     <button (click)="openModalSIMRecieve(row,templateSIMReceive)"
@@ -377,29 +395,29 @@
                               [sortable]="false">
                               <ng-template let-value="value" ngx-datatable-cell-template>
                                 <!-- <span> {{ SIMAndDeviceStatus[value] }} </span> -->
-                                <span *ngIf="value == 1"> <strong
-                                    class="label label-success">{{ SIMAndDeviceStatus[value] }}</strong>
+                                <span *ngIf="value == 1"> <strong class="label label-success">{{
+                                    SIMAndDeviceStatus[value] }}</strong>
                                 </span>
-                                <span *ngIf="value == 2"> <strong
-                                    class="label label-info">{{ SIMAndDeviceStatus[value] }}</strong>
+                                <span *ngIf="value == 2"> <strong class="label label-info">{{ SIMAndDeviceStatus[value]
+                                    }}</strong>
                                 </span>
-                                <span *ngIf="value == 3"> <strong
-                                    class="label label-primary">{{ SIMAndDeviceStatus[value] }}</strong>
+                                <span *ngIf="value == 3"> <strong class="label label-primary">{{
+                                    SIMAndDeviceStatus[value] }}</strong>
                                 </span>
-                                <span *ngIf="value == 4"> <strong
-                                    class="label label-warning">{{ SIMAndDeviceStatus[value] }}</strong>
+                                <span *ngIf="value == 4"> <strong class="label label-warning">{{
+                                    SIMAndDeviceStatus[value] }}</strong>
                                 </span>
-                                <span *ngIf="value == 5"> <strong
-                                    class="label label-danger">{{ SIMAndDeviceStatus[value] }}</strong>
+                                <span *ngIf="value == 5"> <strong class="label label-danger">{{
+                                    SIMAndDeviceStatus[value] }}</strong>
                                 </span>
-                                <span *ngIf="value == 6"> <strong
-                                    class="label label-primary">{{ SIMAndDeviceStatus[value] }}</strong>
+                                <span *ngIf="value == 6"> <strong class="label label-primary">{{
+                                    SIMAndDeviceStatus[value] }}</strong>
                                 </span>
-                                <span *ngIf="value == 7"> <strong
-                                    class="label label-primary">{{ SIMAndDeviceStatus[value] }}</strong>
+                                <span *ngIf="value == 7"> <strong class="label label-primary">{{
+                                    SIMAndDeviceStatus[value] }}</strong>
                                 </span>
-                                <span *ngIf="value == 8"> <strong
-                                    class="label label-danger">{{ SIMAndDeviceStatus[value] }}</strong>
+                                <span *ngIf="value == 8"> <strong class="label label-danger">{{
+                                    SIMAndDeviceStatus[value] }}</strong>
                                 </span>
 
                               </ng-template>
@@ -526,19 +544,19 @@
                               [draggable]="false" [sortable]="false">
                               <ng-template let-value="value" ngx-datatable-cell-template>
                                 <span *ngIf="value == 1"> <strong class="label label-danger">{{ billStatus[value]
-                                }}</strong>
+                                    }}</strong>
                                 </span>
                                 <span *ngIf="value == 2"><strong class="label label-warning">{{ billStatus[value]
-                                }}</strong>
+                                    }}</strong>
                                 </span>
                                 <span *ngIf="value == 3"> <strong class="label label-success">{{ billStatus[value]
-                                }}</strong></span>
+                                    }}</strong></span>
                                 <span *ngIf="value == 4"> <strong class="label label-success">{{ billStatus[value]
-                                }}</strong></span>
+                                    }}</strong></span>
                                 <span *ngIf="value == 5"> <strong class="label label-success">{{ billStatus[value]
-                                }}</strong></span>
+                                    }}</strong></span>
                                 <span *ngIf="value == 6"> <strong class="label label-default">{{ billStatus[value]
-                                }}</strong>
+                                    }}</strong>
                                 </span>
                               </ng-template>
                             </ngx-datatable-column>
@@ -704,7 +722,8 @@
                               [draggable]="false" [sortable]="false">
                               <ng-template let-row="row" ngx-datatable-cell-template>
                                 <span *ngIf="row.payment_confirmed_on">
-                                  {{ row.payment_confirmed_on | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a' }}
+                                  {{ row.payment_confirmed_on | amFromUtc | amLocal | amDateFormat:'DD-MMM-YYYY, h:mm a'
+                                  }}
                                 </span>
                                 <span *ngIf="!row.payment_confirmed_on"> N/A </span>
                               </ng-template>
@@ -799,6 +818,12 @@
                         Basic Details
                       </ng-template>
                       <hr>
+                      <div class="col-md-12 text-right" *ngIf="customerObj">
+                        <button (click)="getItem(customerObj,templateEditProfile)" class="btn btn-primary"><i
+                            class="icofont icofont-edit"></i>Edit
+                          Profile</button>
+                      </div>
+
                       <div class="row mt-3">
                         <div class="col-md-12">
 
@@ -1132,8 +1157,7 @@
           <div class="form-group row">
             <label class="col-sm-4 col-form-label">New Phone Number</label>
             <div class="col-sm-8">
-              <input  formControlName="phone_number" type="text"
-                class="form-control">
+              <input formControlName="phone_number" type="text" class="form-control">
 
             </div>
           </div>
@@ -1185,57 +1209,60 @@
             <label class="col-sm-4 col-form-label">Select New SIM</label>
             <div class="col-sm-8">
 
-                <ng-select [clearable]="false" (change)="onSIMChange($event)" [ngClass]="{ 'is-invalid': submitted && res.sim.errors}" formControlName="sim" [clearOnBackspace]="false"
-                [items]="simsBuffer"
-                [virtualScroll]="true"
-                [dropdownPosition]="'bottom'"
-                [loading]="loadingSIM"
-                [typeahead]="simsInput$"
-                (scroll)="onScrollSIM($event)"
-                (scrollToEnd)="onScrollToEndSIM()"
-                bindLabel="CID_no"
-                placeholder="Search by sim cid">
+              <ng-select [clearable]="false" (change)="onSIMChange($event)"
+                [ngClass]="{ 'is-invalid': submitted && res.sim.errors}" formControlName="sim"
+                [clearOnBackspace]="false" [items]="simsBuffer" [virtualScroll]="true" [dropdownPosition]="'bottom'"
+                [loading]="loadingSIM" [typeahead]="simsInput$" (scroll)="onScrollSIM($event)"
+                (scrollToEnd)="onScrollToEndSIM()" bindLabel="CID_no" placeholder="Search by sim cid">
                 <ng-template ng-header-tmp>
                   <small class="form-text text-muted">Loaded {{simsBuffer.length}} of {{pageSIM.totalElements}}</small>
-              </ng-template>
+                </ng-template>
 
-               <ng-template ng-label-tmp let-item="item">
-                <p class="card-text font-weight-bold"> {{item.CID_no}} </p>
+                <ng-template ng-label-tmp let-item="item">
+                  <p class="card-text font-weight-bold"> {{item.CID_no}} </p>
                 </ng-template>
 
                 <!-- <span *ngIf="value == 1"> <i style="font-size: 1.3rem;" class="icofont icofont-memory-card text-primary"></i></span>
                 <span *ngIf="value == 2"> <i style="font-size: 1.3rem;" class="icofont icofont-ui-wifi text-info"></i></span>
                 <span *ngIf="value == 3"> <i style="font-size: 1.3rem;" class="icofont icofont-ipod-nano text-warning"></i> </span> -->
 
-              <ng-template ng-option-tmp let-item="item" let-index="index">
-                    <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no">
+                <ng-template ng-option-tmp let-item="item" let-index="index">
+                  <p class="card-text font-weight-bold" *ngIf="!item.ICCID_no">
 
-                <span *ngIf="simType == 1"> <i style="font-size: 1rem;" class="icofont icofont-memory-card text-primary"></i></span>
-                <span *ngIf="simType == 2"> <i style="font-size: 1rem;" class="icofont icofont-ui-wifi text-info"></i></span>
-                <span *ngIf="simType == 3"> <i style="font-size: 1rem;" class="icofont icofont-ipod-nano text-warning"></i> </span>
+                    <span *ngIf="simType == 1"> <i style="font-size: 1rem;"
+                        class="icofont icofont-memory-card text-primary"></i></span>
+                    <span *ngIf="simType == 2"> <i style="font-size: 1rem;"
+                        class="icofont icofont-ui-wifi text-info"></i></span>
+                    <span *ngIf="simType == 3"> <i style="font-size: 1rem;"
+                        class="icofont icofont-ipod-nano text-warning"></i> </span>
 
-                      <!-- <label *ngIf="item.is_phone_sim" class="badge badge-warning badge-bottom-right"><i class="icofont icofont-mobile-phone"></i></label> -->
+                    <!-- <label *ngIf="item.is_phone_sim" class="badge badge-warning badge-bottom-right"><i class="icofont icofont-mobile-phone"></i></label> -->
 
-                      {{item.CID_no}} </p>
-                    <p class="card-text font-weight-bold" *ngIf="item.ICCID_no">
+                    {{item.CID_no}}
+                  </p>
+                  <p class="card-text font-weight-bold" *ngIf="item.ICCID_no">
 
-                      <span *ngIf="simType == 1"> <i style="font-size: 1rem;" class="icofont icofont-memory-card text-primary"></i></span>
-                      <span *ngIf="simType == 2"> <i style="font-size: 1rem;" class="icofont icofont-ui-wifi text-info"></i></span>
-                      <span *ngIf="simType == 3"> <i style="font-size: 1rem;" class="icofont icofont-ipod-nano text-warning"></i> </span>
+                    <span *ngIf="simType == 1"> <i style="font-size: 1rem;"
+                        class="icofont icofont-memory-card text-primary"></i></span>
+                    <span *ngIf="simType == 2"> <i style="font-size: 1rem;"
+                        class="icofont icofont-ui-wifi text-info"></i></span>
+                    <span *ngIf="simType == 3"> <i style="font-size: 1rem;"
+                        class="icofont icofont-ipod-nano text-warning"></i> </span>
 
-                       {{item.CID_no}}
-                      ({{item.ICCID_no}})</p>
-                  </ng-template>
+                    {{item.CID_no}}
+                    ({{item.ICCID_no}})
+                  </p>
+                </ng-template>
 
 
 
-            </ng-select>
+              </ng-select>
 
-                <div *ngIf="submitted && res.sim.errors" class="error-text">
-                  <small *ngIf="res.sim.errors.required" class="text-danger"> SIM
-                    is required</small>
+              <div *ngIf="submitted && res.sim.errors" class="error-text">
+                <small *ngIf="res.sim.errors.required" class="text-danger"> SIM
+                  is required</small>
 
-                </div>
+              </div>
 
 
 
@@ -1244,8 +1271,8 @@
           <div class="form-group row">
             <label class="col-sm-4 col-form-label">ICCID No</label>
             <div class="col-sm-8">
-              <input [ngClass]="{ 'is-invalid': submitted && res.sim_replace_iccid.errors}" formControlName="sim_replace_iccid" type="text"
-                class="form-control">
+              <input [ngClass]="{ 'is-invalid': submitted && res.sim_replace_iccid.errors}"
+                formControlName="sim_replace_iccid" type="text" class="form-control">
               <div *ngIf="submitted && res.sim_replace_iccid.errors" class="error-text">
                 <small *ngIf="res.sim_replace_iccid.errors.required" class="text-danger"> ICCID no is
                   required</small>
@@ -1255,10 +1282,11 @@
           <div class="form-group row">
             <label class="col-sm-4 col-form-label">Phone Number</label>
             <div class="col-sm-8">
-              <input [ngClass]="{ 'is-invalid': submitted && res.sim_replace_phone_number.errors}" formControlName="sim_replace_phone_number" type="text"
-                class="form-control">
+              <input [ngClass]="{ 'is-invalid': submitted && res.sim_replace_phone_number.errors}"
+                formControlName="sim_replace_phone_number" type="text" class="form-control">
               <div *ngIf="submitted && res.sim_replace_phone_number.errors" class="error-text">
-                <small *ngIf="res.sim_replace_phone_number.errors.required" class="text-danger"> Phone number is required</small>
+                <small *ngIf="res.sim_replace_phone_number.errors.required" class="text-danger"> Phone number is
+                  required</small>
               </div>
             </div>
           </div>
@@ -1275,6 +1303,163 @@
         <button class="btn btn-success btn-sm btn-outline-success float-right" (click)="onSubmitSIMReplace()">
           <i class="icofont-save"></i> Replace
         </button>
+
+      </div>
+
+    </div>
+  </ng-template>
+
+  <ng-template #templateEditProfile>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left "> Update Profile</h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideProfile()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+      <app-card>
+        <form [formGroup]="RegistrerForm" class="col-sm-12">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Customer Code </label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="customer_code" type="text" class="form-control" />
+
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">First Name </label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="firstName"
+                    [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" type="text" class="form-control" />
+
+                  <div *ngIf="submitted && f.firstName.errors" class="error-text">
+                    <span *ngIf="f.firstName.errors.required" class="text-danger"> Member first name
+                      is required</span>
+
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Last Name </label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="lastName"
+                    [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" type="text" class="form-control" />
+
+                  <div *ngIf="submitted && f.lastName.errors" class="error-text">
+                    <span *ngIf="f.lastName.errors.required" class="text-danger"> Member last name
+                      is required</span>
+
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Email </label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+                    type="text" class="form-control" />
+
+                  <div *ngIf="submitted && f.email.errors" class="error-text">
+                    <span *ngIf="f.email.errors.required" class="text-danger"> Email is
+                      required</span>
+
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Mobile </label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="mobile" [ngClass]="{ 'is-invalid': submitted && f.mobile.errors }"
+                    type="text" class="form-control" />
+
+                  <div *ngIf="submitted && f.mobile.errors" class="error-text">
+                    <span *ngIf="f.mobile.errors.required" class="text-danger"> Mobile number is
+                      required</span>
+
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Alternative Mobile </label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="alternative_mobile" type="text" class="form-control" />
+
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Telephone </label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="telephone" type="text" class="form-control" />
+
+                </div>
+              </div>
+
+
+
+
+            </div>
+            <div class="col-sm-6">
+
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Fax </label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="fax" type="text" class="form-control" />
+
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">NID </label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="nid" type="text" class="form-control" />
+
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Account Number </label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="acc_number" type="text" class="form-control" />
+
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Address 1</label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="address_one" type="text" class="form-control" />
+
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Address 2</label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="address_two" type="text" class="form-control" />
+
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Preferred Payment Method</label>
+                <div class="col-sm-8">
+                  <input type="text" formControlName="preferred_payment_method" type="text" class="form-control" />
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </form>
+
+
+      </app-card>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+
+        <button class="btn btn-danger btn-sm btn-outline-danger mr-2" (click)="modalHideProfile()"> <i
+            class="icofont icofont-close"></i> Close</button>
+
+        <button class="btn btn-success btn-sm btn-outline-success" (click)="onFormSubmitProfile()"><i
+            class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
 
       </div>
 

@@ -26,7 +26,8 @@
 
           <div class="row pb-1">
             <div class="col-9 px-0">
-              <h5 class="pt-1  mb-0"><label class="label label-inverse-info-border"> Device Only SIM Stock Qty </label></h5>
+              <h5 class="pt-1  mb-0"><label class="label label-inverse-info-border"> Device Only SIM Stock Qty </label>
+              </h5>
             </div>
             <div class="col-3 px-0">
               <p class="text-right f-20 text-success font-weight-bold mb-0"> {{stock.device_only_sim_stock_qty}} </p>
@@ -73,7 +74,8 @@
 
           <div class="row pb-1">
             <div class="col-9 px-0">
-              <h5 class="pt-1  mb-0"><label class="label label-inverse-info-border"> Device Only SIM Subscribed Qty </label>
+              <h5 class="pt-1  mb-0"><label class="label label-inverse-info-border"> Device Only SIM Subscribed Qty
+                </label>
               </h5>
             </div>
             <div class="col-3 px-0">
@@ -126,7 +128,8 @@
                 </label></h5>
             </div>
             <div class="col-3 px-0">
-              <p class="text-right f-20 text-primary font-weight-bold mb-0"> {{stock.device_only_sim_available_stock_qty}}
+              <p class="text-right f-20 text-primary font-weight-bold mb-0">
+                {{stock.device_only_sim_available_stock_qty}}
               </p>
             </div>
           </div>
@@ -171,7 +174,8 @@
 
           <div class="row pb-1">
             <div class="col-9 px-0">
-              <h5 class="pt-1  mb-0"> <label class="label label-inverse-info-border"> Device Only SIM Reissued Qty </label>
+              <h5 class="pt-1  mb-0"> <label class="label label-inverse-info-border"> Device Only SIM Reissued Qty
+                </label>
               </h5>
             </div>
             <div class="col-3 px-0">
@@ -218,7 +222,8 @@
 
           <div class="row pb-1">
             <div class="col-9 px-0">
-              <h5 class="pt-1  mb-0"><label class="label label-inverse-info-border"> Device Only SIM Cancelled Qty </label>
+              <h5 class="pt-1  mb-0"><label class="label label-inverse-info-border"> Device Only SIM Cancelled Qty
+                </label>
               </h5>
             </div>
             <div class="col-3 px-0">
@@ -384,8 +389,8 @@
                     <label class="col-sm-4 col-form-label"><b>SIM Type</b></label>
                     <div class="col-sm-8">
                       <ng-select (change)="onSimTypeChange($event)" [(ngModel)]="selectedSimType" [clearable]="true"
-                      appendTo="body" [clearOnBackspace]="false" [items]="simTypeList" bindLabel="name"
-                      placeholder="Filter by sim type"></ng-select>
+                        appendTo="body" [clearOnBackspace]="false" [items]="simTypeList" bindLabel="name"
+                        placeholder="Filter by sim type"></ng-select>
                     </div>
                   </div>
 
@@ -416,9 +421,12 @@
                     <ngx-datatable-column [width]="100" name="SIM Type" prop="sim_type" [draggable]="false"
                       [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
-                        <span *ngIf="value == 1"> <i style="font-size: 1.3rem;" class="icofont icofont-memory-card text-primary"></i></span>
-                    <span *ngIf="value == 2"> <i style="font-size: 1.3rem;" class="icofont icofont-ui-wifi text-info"></i></span>
-                    <span *ngIf="value == 3"> <i style="font-size: 1.3rem;" class="icofont icofont-ipod-nano text-warning"></i> </span>
+                        <span *ngIf="value == 1"> <i style="font-size: 1.3rem;"
+                            class="icofont icofont-memory-card text-primary"></i></span>
+                        <span *ngIf="value == 2"> <i style="font-size: 1.3rem;"
+                            class="icofont icofont-ui-wifi text-info"></i></span>
+                        <span *ngIf="value == 3"> <i style="font-size: 1.3rem;"
+                            class="icofont icofont-ipod-nano text-warning"></i> </span>
                       </ng-template>
                     </ngx-datatable-column>
 
@@ -566,7 +574,7 @@
                           Edit
                         </button>
 
-                        <button *ngIf="tabType == 'Cancelled'" class="btn btn-info btn-mini mr-1"
+                        <button *ngIf="tabType == 'Available' || tabType == 'Cancelled'" class="btn btn-info btn-mini mr-1"
                           (click)="onSubmitAction('reissuance',row)">
                           Reissue
                         </button>
@@ -574,11 +582,12 @@
                           (click)="openModalSIMRecieve(row,templateSIMReceive)">
                           Receive
                         </button>
-                        <button *ngIf="tabType == 'Cancelled' || tabType == 'Will Be Cancelled'" class="btn btn-success btn-mini mr-1"
-                          (click)="onSubmitAction('return',row)"><i
-                          class="icofont icofont-arrow-left"></i>Return
-                        To Stock
-                      </button>
+                        <button
+                          *ngIf=" tabType == 'Cancelled' || tabType == 'Will Be Cancelled'"
+                          class="btn btn-success btn-mini mr-1" (click)="onSubmitAction('return',row)"><i
+                            class="icofont icofont-arrow-left"></i>Return
+                          To Stock
+                        </button>
 
                         <button *ngIf="tabType == 'Frozen'" (click)="onSubmitAction('unfreeze',row)"
                           class="btn btn-primary btn-mini mr-1"><i
@@ -865,7 +874,8 @@
           </div>
           <div class="col-md-6">
             <p class="fs-14 mb-0">SIM ICCID : <b>{{simObj.ICCID_no}} </b></p>
-            <p class="fs-14 mb-0">Delivery Received: <b *ngIf="simObj.delivery_received_at">{{simObj.delivery_received_at | amFromUtc | amLocal |
+            <p class="fs-14 mb-0">Delivery Received: <b
+                *ngIf="simObj.delivery_received_at">{{simObj.delivery_received_at | amFromUtc | amLocal |
                 amDateFormat:'DD-MMM-YYYY'}}</b></p>
 
           </div>
@@ -935,15 +945,15 @@
           <div class="form-group row">
             <label class="col-sm-4 col-form-label"> Service Start Date</label>
             <div class="col-sm-8">
-             <input type="text" class="form-control" readonly formControlName="service_start_date" placement="top" [bsConfig]="bsConfig"
-                    bsDatepicker>
+              <input type="text" class="form-control" readonly formControlName="service_start_date" placement="top"
+                [bsConfig]="bsConfig" bsDatepicker>
             </div>
           </div>
           <div class="form-group row">
             <label class="col-sm-4 col-form-label"> Inventory Reg. Date</label>
             <div class="col-sm-8">
-             <input type="text" class="form-control" readonly formControlName="inventory_reg_date" placement="top" [bsConfig]="bsConfig"
-                    bsDatepicker>
+              <input type="text" class="form-control" readonly formControlName="inventory_reg_date" placement="top"
+                [bsConfig]="bsConfig" bsDatepicker>
             </div>
           </div>
 

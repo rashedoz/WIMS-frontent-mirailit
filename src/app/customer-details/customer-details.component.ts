@@ -1,36 +1,59 @@
-import { Component, TemplateRef, ViewChild, ElementRef, ViewEncapsulation, OnInit } from '@angular/core';
-import { ColumnMode,DatatableComponent } from '@swimlane/ngx-datatable';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { CommonService } from '../_services/common.service';
-import { ToastrService } from 'ngx-toastr';
-import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { Page } from '../_models/page';
-import { BillStatus, StockStatus,ContractStatus } from '../_models/enums';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import {
+  Component,
+  TemplateRef,
+  ViewChild,
+  ElementRef,
+  ViewEncapsulation,
+  OnInit,
+} from "@angular/core";
+import { ColumnMode, DatatableComponent } from "@swimlane/ngx-datatable";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
+import { CommonService } from "../_services/common.service";
+import { ToastrService } from "ngx-toastr";
+import { BlockUI, NgBlockUI } from "ng-block-ui";
+import { Page } from "../_models/page";
+import { BillStatus, StockStatus, ContractStatus } from "../_models/enums";
+import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 // import { jsPDF } from "jspdf";
 // import 'jspdf-autotable';
-import { DatePipe } from '@angular/common';
-import { SubscriptionStatus,SubsItemsStaus,PaymentType,StatusTypes,SIMAndDeviceStatus } from '../_models/enums';
-import { TabsetComponent } from 'ngx-bootstrap/tabs';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { environment } from '../../environments/environment';
-import { Subject, Observable, of, concat } from 'rxjs';
-import { distinctUntilChanged, debounceTime, switchMap, tap, catchError, filter, map } from 'rxjs/operators';
-import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
-import { PrintService } from '../_services/print.service';
-import * as moment from 'moment';
-import { BsDatepickerConfig, BsDaterangepickerConfig } from "ngx-bootstrap/datepicker";
+import { DatePipe } from "@angular/common";
+import {
+  SubscriptionStatus,
+  SubsItemsStaus,
+  PaymentType,
+  StatusTypes,
+  SIMAndDeviceStatus,
+} from "../_models/enums";
+import { TabsetComponent } from "ngx-bootstrap/tabs";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
+import { environment } from "../../environments/environment";
+import { Subject, Observable, of, concat } from "rxjs";
+import {
+  distinctUntilChanged,
+  debounceTime,
+  switchMap,
+  tap,
+  catchError,
+  filter,
+  map,
+} from "rxjs/operators";
+import { ConfirmService } from "../_helpers/confirm-dialog/confirm.service";
+import { PrintService } from "../_services/print.service";
+import * as moment from "moment";
+import {
+  BsDatepickerConfig,
+  BsDaterangepickerConfig,
+} from "ngx-bootstrap/datepicker";
 
 @Component({
-  selector: 'app-customer-details',
-  templateUrl: './customer-details.component.html',
-  styleUrls: ['./customer-details.component.css'],
-  encapsulation: ViewEncapsulation.None
+  selector: "app-customer-details",
+  templateUrl: "./customer-details.component.html",
+  styleUrls: ["./customer-details.component.css"],
+  encapsulation: ViewEncapsulation.None,
 })
-
 export class CustomerDetailsComponent implements OnInit {
-
+  RegistrerForm: FormGroup;
   entryForm: FormGroup;
   receiveSIMForm: FormGroup;
   replaceSIMForm: FormGroup;
@@ -46,24 +69,24 @@ export class CustomerDetailsComponent implements OnInit {
   page = new Page();
   pageSIM = new Page();
   pageTable = new Page();
-  emptyGuid = '00000000-0000-0000-0000-000000000000';
-  rows:any[] = [];
+  emptyGuid = "00000000-0000-0000-0000-000000000000";
+  rows: any[] = [];
   tempRows = [];
-  columnsWithSearch : string[] = [];
+  columnsWithSearch: string[] = [];
   loadingIndicator = false;
-  iccidHistory:any = null;
+  iccidHistory: any = null;
   ColumnMode = ColumnMode;
-  scrollBarHorizontal = (window.innerWidth < 1200);
+  scrollBarHorizontal = window.innerWidth < 1200;
   @ViewChild(DatatableComponent, { static: false }) table: DatatableComponent;
-  @ViewChild('profileTabs', { static: false }) profileTabs?: TabsetComponent;
-  modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
-  modalConfigLg: any = { class: 'gray modal-lg', backdrop: 'static' };
+  @ViewChild("profileTabs", { static: false }) profileTabs?: TabsetComponent;
+  modalConfig: any = { class: "gray modal-md", backdrop: "static" };
+  modalConfigLg: any = { class: "gray modal-lg", backdrop: "static" };
   modalRef: BsModalRef;
   modalRefICCID: BsModalRef;
-  simLifecycleDetails : Array<any> = [];
-  url = 'get-user-detail/';
+  simLifecycleDetails: Array<any> = [];
+  url = "get-user-detail/";
   billStatus = BillStatus;
-  searchParam = '';
+  searchParam = "";
   customer_id;
   customerObj = null;
   customerSIMDeviceCount = null;
@@ -100,22 +123,33 @@ export class CustomerDetailsComponent implements OnInit {
   firstDay = new Date(this.date.getFullYear(), this.date.getMonth(), 1);
   lastDay = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0);
 
-  paymentMethodList = [{id:1,name:'CASH'},{id:2,name:'FROM BALANCE'},{id:3,name:'CARD PAYMENT'},{id:4,name:'ONLINE BANKING'}]
+  paymentMethodList = [
+    { id: 1, name: "CASH" },
+    { id: 2, name: "FROM BALANCE" },
+    { id: 3, name: "CARD PAYMENT" },
+    { id: 4, name: "ONLINE BANKING" },
+  ];
   methodList = [];
-  selectedMethod = {id:1,name:'CASH'};
+  selectedMethod = { id: 1, name: "CASH" };
   isbalanceDeduct = false;
-  is_phone_sim = false
+  is_phone_sim = false;
 
-  currentTab = 'Bills Items';
+  currentTab = "Bills Items";
   subscriptionHistoryList = [];
   balanceHistoryList = [];
-  @ViewChild('tablePaymentDetailsList', { static: false }) tablePaymentDetailsList: any;
-  @ViewChild('tableDeviceSalesHistory', { static: false }) tableDeviceSalesHistory: any;
-  @ViewChild('billItemsDetailTabs', { static: false }) billItemsDetailTabs: any;
-  @ViewChild('billDetailTabs', { static: false }) billDetailTabs: any;
+  @ViewChild("tablePaymentDetailsList", { static: false })
+  tablePaymentDetailsList: any;
+  @ViewChild("tableDeviceSalesHistory", { static: false })
+  tableDeviceSalesHistory: any;
+  @ViewChild("billItemsDetailTabs", { static: false }) billItemsDetailTabs: any;
+  @ViewChild("billDetailTabs", { static: false }) billDetailTabs: any;
 
   rowItems = [];
-  methodListWithoutFrom = [{"id":1,"name":"CASH"},{"id":3,"name":"CARD_PAYMENT"},{"id":4,"name":"ONLINE_BANKING"}]
+  methodListWithoutFrom = [
+    { id: 1, name: "CASH" },
+    { id: 3, name: "CARD_PAYMENT" },
+    { id: 4, name: "ONLINE_BANKING" },
+  ];
   billItemDetailList = [];
   billDetailList = [];
   paymentDetailList = [];
@@ -123,8 +157,8 @@ export class CustomerDetailsComponent implements OnInit {
 
   activeDeviceCount = 0;
 
-  billType = 'Unpaid';
-  billItemType = 'All Items';
+  billType = "Unpaid";
+  billItemType = "All Items";
   simBillItemStatus = null;
   deviceBillItemStatus = null;
   simObj = null;
@@ -135,7 +169,6 @@ export class CustomerDetailsComponent implements OnInit {
   selectedPaymentMethod = null;
   paymentConfirmableCount = 0;
 
-
   // for customer
   selectedCustomer = null;
   customers = [];
@@ -143,23 +176,21 @@ export class CustomerDetailsComponent implements OnInit {
   bufferSize = 50;
   numberOfItemsFromEndBeforeFetchingMore = 10;
   loading = false;
-  count=1;
-  searchParamCustomer = '';
+  count = 1;
+  searchParamCustomer = "";
   input$ = new Subject<string>();
-  customerType = 'all';
+  customerType = "all";
 
+  // for sim
+  sims = [];
+  simsBuffer = [];
+  simsBufferSize = 50;
+  loadingSIM = false;
+  simsCount = 1;
+  simsSearchParam = "";
+  simsInput$ = new Subject<string>();
 
-    // for sim
-    sims = [];
-    simsBuffer = [];
-    simsBufferSize = 50;
-    loadingSIM = false;
-    simsCount = 1;
-    simsSearchParam = "";
-    simsInput$ = new Subject<string>();
-
-    simType;
-
+  simType;
 
   constructor(
     private confirmService: ConfirmService,
@@ -172,9 +203,7 @@ export class CustomerDetailsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     public printService: PrintService
-
   ) {
-
     this.router.routeReuseStrategy.shouldReuseRoute = function () {
       return false;
     };
@@ -185,41 +214,52 @@ export class CustomerDetailsComponent implements OnInit {
     this.pageTable.pageNumber = 0;
     this.pageTable.size = 10;
 
-    this.customer_id = this.route.snapshot.params['id'];
+    this.customer_id = this.route.snapshot.params["id"];
 
     window.onresize = () => {
-      this.scrollBarHorizontal = (window.innerWidth < 1200);
+      this.scrollBarHorizontal = window.innerWidth < 1200;
     };
     // this.bsPaymentRangeValue = [];
-     // console.log([this.firstDay,this.lastDay]);
+    // console.log([this.firstDay,this.lastDay]);
   }
-
-
 
   ngOnInit() {
 
-    this.bsConfig = Object.assign(
+    this.RegistrerForm = this.formBuilder.group({
+      id:[null,],
+      customer_code: [{value: null, disabled: true}],
+      nid: [null],
+      fax: [null],
+      telephone: [null],
+      acc_number: [null],
+      email: [null, [Validators.required, Validators.email, Validators.maxLength(50)]],
+      mobile: [null, [Validators.required]],
+      alternative_mobile: [null],
+      address_one: [null],
+      address_two: [null],
+      preferred_payment_method: [null],
+      firstName: [null, [Validators.required]],
+      lastName: [null, [Validators.required]]
+      // password: ['', [Validators.required, Validators.minLength(6)]],
+      // confirmPassword: ['', Validators.required]
+    });
 
-      {
 
-        rangeInputFormat: 'DD/MM/YYYY',
-        adaptivePosition: true,
-        showClearButton: true,
-        clearPosition: 'right'
-      }
-    );
-    this.bsConfigMonth = Object.assign(
-      {
-        dateInputFormat: 'MMMM',
-        adaptivePosition: true,
-        minMode :'month'
-      }
-    );
+    this.bsConfig = Object.assign({
+      rangeInputFormat: "DD/MM/YYYY",
+      adaptivePosition: true,
+      showClearButton: true,
+      clearPosition: "right",
+    });
+    this.bsConfigMonth = Object.assign({
+      dateInputFormat: "MMMM",
+      adaptivePosition: true,
+      minMode: "month",
+    });
 
     this.bsBillItemValue = this.firstDay;
 
-
-    if(this.customer_id){
+    if (this.customer_id) {
       this.getCustomer();
       this.getAllCustomer();
       this.onSearch();
@@ -227,18 +267,18 @@ export class CustomerDetailsComponent implements OnInit {
       this.selectedCustomer = Number(this.customer_id);
     }
 
-    this.url = 'bill/customer-billing-items';
+    this.url = "bill/customer-billing-items";
     this.getBillItemListWithPagination();
 
     this.balanceLoadForm = this.formBuilder.group({
       amount: [null, [Validators.required]],
-      payment_method: [null, [Validators.required]]
+      payment_method: [null, [Validators.required]],
     });
 
     this.receiveSIMForm = this.formBuilder.group({
       id: [null, [Validators.required]],
       ICCID_no: [null, [Validators.required]],
-      phone_number: [null]
+      phone_number: [null],
     });
 
     this.replaceSIMForm = this.formBuilder.group({
@@ -246,9 +286,12 @@ export class CustomerDetailsComponent implements OnInit {
       sim: [null, [Validators.required]],
       sim_replace_id: [null, [Validators.required]],
       sim_replace_iccid: [null, [Validators.required]],
-      sim_replace_phone_number: [null, [Validators.required]]
+      sim_replace_phone_number: [null, [Validators.required]],
     });
+  }
 
+  get f() {
+    return this.RegistrerForm.controls;
   }
 
   get res() {
@@ -261,244 +304,245 @@ export class CustomerDetailsComponent implements OnInit {
     return this.balanceLoadForm.controls;
   }
 
-  newPrint(id){
+  newPrint(id) {
     this.printService.printInv(id);
   }
 
-getCustomer(){
-  this._service.get(this.url+this.customer_id).subscribe(
-    (res) => {
-      this.customerObj = res;
-    },
-    (err) => {
-    }
-  );
-}
-
-getCustomerDetails(){
-  this._service.get('get-user-detail/'+this.customer_id).subscribe(
-    (res) => {
-      this.customerObj = res;
-    },
-    (err) => {
-    }
-  );
-}
-
-onPaymentMethodChange(e){
-  if(e){
-    this.selectedPaymentMethod = e.id;
-  }else{
-    this.selectedPaymentMethod = null;
+  getCustomer() {
+    this._service.get(this.url + this.customer_id).subscribe(
+      (res) => {
+        this.customerObj = res;
+      },
+      (err) => {}
+    );
   }
-  this.getListWithPagination()
-}
 
-getCustomerSIMDeviceCount(){
- // this.blockUI.start('Getting Data...');
-  this._service.get('bill/customer-sim-and-device-counts/'+this.customer_id).subscribe(
-    (res) => {
-      this.customerSIMDeviceCount = res;
-    //  this.blockUI.stop();
-    },
-    (err) => {
-      //this.blockUI.stop();
-    }
-  );
-}
-
-selectTab(tabId: number) {
-  if (this.profileTabs?.tabs[tabId]) {
-    this.profileTabs.tabs[tabId].active = true;
+  getCustomerDetails() {
+    this._service.get("get-user-detail/" + this.customer_id).subscribe(
+      (res) => {
+        this.customerObj = res;
+      },
+      (err) => {}
+    );
   }
-}
+
+  onPaymentMethodChange(e) {
+    if (e) {
+      this.selectedPaymentMethod = e.id;
+    } else {
+      this.selectedPaymentMethod = null;
+    }
+    this.getListWithPagination();
+  }
+
+  getCustomerSIMDeviceCount() {
+    // this.blockUI.start('Getting Data...');
+    this._service
+      .get("bill/customer-sim-and-device-counts/" + this.customer_id)
+      .subscribe(
+        (res) => {
+          this.customerSIMDeviceCount = res;
+          //  this.blockUI.stop();
+        },
+        (err) => {
+          //this.blockUI.stop();
+        }
+      );
+  }
+
+  selectTab(tabId: number) {
+    if (this.profileTabs?.tabs[tabId]) {
+      this.profileTabs.tabs[tabId].active = true;
+    }
+  }
 
   // 'Available', 'Subscribed', 'Cancelled', 'Permanently Cancelled'
 
-  changeTab(type,e) {
-
-
+  changeTab(type, e) {
     this.bsBillItemValue = this.firstDay;
     this.bsBillDetailsRangeValue = [];
     this.bsPaymentRangeValue = [];
-   // this.searchParam = '';
+    // this.searchParam = '';
     this.pageTable.pageNumber = 0;
     this.pageTable.size = 10;
     this.currentTab = type;
-    this.searchParam = '';
+    this.searchParam = "";
     this.rowItems = [];
     switch (type) {
-      case 'Bills Items':
-      this.url = 'bill/customer-billing-items';
-      this.billItemType = 'All Items';
-      this.getBillItemListWithPagination();
-       this.billItemsDetailTabs.tabs[0].active = true;
+      case "Bills Items":
+        this.url = "bill/customer-billing-items";
+        this.billItemType = "All Items";
+        this.getBillItemListWithPagination();
+        this.billItemsDetailTabs.tabs[0].active = true;
         break;
-      case 'Bills Details':
-        this.url = 'bill/get-bill-list';
-        this.billType = 'All';
+      case "Bills Details":
+        this.url = "bill/get-bill-list";
+        this.billType = "All";
         this.getBillDetailsListWithPagination();
         this.billDetailTabs.tabs[0].active = true;
         break;
-      case 'Payment Details':
-        this.url = 'payment/get-payment-list';
+      case "Payment Details":
+        this.url = "payment/get-payment-list";
         this.getListWithPagination();
         break;
       // case 'Balance':
       //   this.url = 'get-user-detail/';
       //   this.getCustomer();
       //   break;
-      case 'Balance':
-        this.url = 'get-customer-balance-loading-history/';
+      case "Balance":
+        this.url = "get-customer-balance-loading-history/";
         this.getBalanceLoadList();
         break;
-      case 'Basic Details':
-          this.url = 'get-user-detail/';
-          this.getCustomer();
-          break;
-      default:
-        this.url = 'get-user-detail/';
+      case "Basic Details":
+        this.url = "get-user-detail/";
         this.getCustomer();
         break;
-      }
- }
+      default:
+        this.url = "get-user-detail/";
+        this.getCustomer();
+        break;
+    }
+  }
 
- changeTabBillDetailsItem(type,e) {
-//  this.bsBillDetailsRangeValue = [this.firstDay,this.lastDay];
-   this.searchParam = '';
-   this.pageTable.pageNumber = 0;
-   this.pageTable.size = 10;
-   switch (type) {
-     case 'All':
-       this.url = 'bill/get-bill-list';
-       this.billType = type;
-       this.getBillDetailsListWithPagination();
-       break;
-     case 'Unpaid':
-       this.url = 'bill/get-bill-list';
-       this.billType = type;
-       this.getBillDetailsListWithPagination();
+  changeTabBillDetailsItem(type, e) {
+    //  this.bsBillDetailsRangeValue = [this.firstDay,this.lastDay];
+    this.searchParam = "";
+    this.pageTable.pageNumber = 0;
+    this.pageTable.size = 10;
+    switch (type) {
+      case "All":
+        this.url = "bill/get-bill-list";
+        this.billType = type;
+        this.getBillDetailsListWithPagination();
+        break;
+      case "Unpaid":
+        this.url = "bill/get-bill-list";
+        this.billType = type;
+        this.getBillDetailsListWithPagination();
 
-       break;
-     case 'Partially Paid':
-       this.url = 'bill/get-bill-list';
-       this.billType = type;
-       this.getBillDetailsListWithPagination();
+        break;
+      case "Partially Paid":
+        this.url = "bill/get-bill-list";
+        this.billType = type;
+        this.getBillDetailsListWithPagination();
 
-       break;
-     case 'Fully Paid':
-      this.url = 'bill/get-bill-list';
-      this.billType = type;
-       this.getBillDetailsListWithPagination();
+        break;
+      case "Fully Paid":
+        this.url = "bill/get-bill-list";
+        this.billType = type;
+        this.getBillDetailsListWithPagination();
 
-       break;
+        break;
 
-     default:
-       this.billType = type;
-       break;
-     }
+      default:
+        this.billType = type;
+        break;
+    }
+  }
 
-}
+  changeTabBillItem(type, e) {
+    this.searchParam = "";
+    this.pageTable.pageNumber = 0;
+    this.pageTable.size = 10;
+    this.simBillItemStatus = null;
+    this.deviceBillItemStatus = null;
 
+    switch (type) {
+      case "All Items":
+        this.url = "bill/customer-billing-items";
+        this.billItemType = type;
+        this.getBillItemListWithPagination();
+        break;
+      case "Frozen SIMs":
+        this.url = "bill/customer-billing-items";
+        this.simBillItemStatus = 2;
+        this.billItemType = type;
+        this.getBillItemListWithPagination();
+        break;
+      case "Cancelled SIMs":
+        this.url = "bill/customer-billing-items";
+        this.simBillItemStatus = 4;
+        this.billItemType = type;
+        this.getBillItemListWithPagination();
+        break;
+      case "Reissued SIMs":
+        this.url = "bill/customer-billing-items";
+        this.simBillItemStatus = 6;
+        this.billItemType = type;
+        this.getBillItemListWithPagination();
+        break;
+      case "Cancelled Devices":
+        this.deviceBillItemStatus = 4;
+        this.url = "bill/customer-billing-items";
+        this.billItemType = type;
+        this.getBillItemListWithPagination();
 
- changeTabBillItem(type,e) {
+        break;
+      default:
+        this.billItemType = type;
+        break;
+    }
+  }
 
-   this.searchParam = '';
-   this.pageTable.pageNumber = 0;
-   this.pageTable.size = 10;
-   this.simBillItemStatus = null;
-   this.deviceBillItemStatus = null;
+  //  toggleExpandRow(row) {
+  //     this._service.get('subscription/get-subscription-detail/'+row.id).subscribe(res => {
+  //       row.details = res;
+  //     }, err => { });
 
-   switch (type) {
-     case 'All Items':
-       this.url = 'bill/customer-billing-items';
-       this.billItemType = type;
-       this.getBillItemListWithPagination();
-       break;
-     case 'Frozen SIMs':
-       this.url = 'bill/customer-billing-items';
-       this.simBillItemStatus = 2;
-       this.billItemType = type;
-       this.getBillItemListWithPagination();
-       break;
-     case 'Cancelled SIMs':
-      this.url = 'bill/customer-billing-items';
-       this.simBillItemStatus = 4;
-       this.billItemType = type;
-       this.getBillItemListWithPagination();
-       break;
-     case 'Reissued SIMs':
-      this.url = 'bill/customer-billing-items';
-      this.simBillItemStatus = 6;
-      this.billItemType = type;
-       this.getBillItemListWithPagination();
-       break;
-     case 'Cancelled Devices':
-      this.deviceBillItemStatus = 4;
-      this.url = 'bill/customer-billing-items';
-      this.billItemType = type;
-      this.getBillItemListWithPagination();
+  //   this.tableSubscriptionHistory.rowDetail.toggleExpandRow(row);
 
-       break;
-     default:
-       this.billItemType = type;
-       break;
-     }
-
-}
-
-//  toggleExpandRow(row) {
-//     this._service.get('subscription/get-subscription-detail/'+row.id).subscribe(res => {
-//       row.details = res;
-//     }, err => { });
-
-//   this.tableSubscriptionHistory.rowDetail.toggleExpandRow(row);
-
-//   }
+  //   }
 
   loadItems(row) {
-    this._service.get('subscription/get-subscription-detail/'+row.id).subscribe(res => {
-      this.rowItems = res;
-    }, err => { });
+    this._service
+      .get("subscription/get-subscription-detail/" + row.id)
+      .subscribe(
+        (res) => {
+          this.rowItems = res;
+        },
+        (err) => {}
+      );
   }
 
- toggleExpandRowDevice(row) {
-    this._service.get('get-device-sales-detail-subscriptionid/'+row.id).subscribe(res => {
-      row.details = res;
-    }, err => { });
+  toggleExpandRowDevice(row) {
+    this._service
+      .get("get-device-sales-detail-subscriptionid/" + row.id)
+      .subscribe(
+        (res) => {
+          row.details = res;
+        },
+        (err) => {}
+      );
 
-  this.tableDeviceSalesHistory.rowDetail.toggleExpandRowDevice(row);
-
+    this.tableDeviceSalesHistory.rowDetail.toggleExpandRowDevice(row);
   }
 
-  onBillItemDateValueChange(e){
-
-    if(e){
+  onBillItemDateValueChange(e) {
+    if (e) {
       this.bsBillItemValue = e;
-    }else{
-      this.bsBillItemValue = null
+    } else {
+      this.bsBillItemValue = null;
     }
     this.getBillItemListWithPagination();
   }
 
-  onBillDetailsDateValueChange(e){
-    if(e){
-      this.bsBillDetailsRangeValue = [e[0],e[1]];
-    }else{
-      this.bsBillDetailsRangeValue = null
+  onBillDetailsDateValueChange(e) {
+    if (e) {
+      this.bsBillDetailsRangeValue = [e[0], e[1]];
+    } else {
+      this.bsBillDetailsRangeValue = null;
     }
     this.getBillDetailsListWithPagination();
   }
 
-  onPaymentDetailsDateValueChange(e){
-    if(e){
-      this.bsPaymentRangeValue = [e[0],e[1]];
-    }else{
+  onPaymentDetailsDateValueChange(e) {
+    if (e) {
+      this.bsPaymentRangeValue = [e[0], e[1]];
+    } else {
       this.bsPaymentRangeValue = null;
     }
-      this.getListWithPagination();
+    this.getListWithPagination();
   }
-
 
   setPage(pageInfo) {
     this.pageTable.pageNumber = pageInfo.offset;
@@ -520,8 +564,8 @@ selectTab(tabId: number) {
     this.getBillDetailsListWithPagination();
   }
 
-  filterSearch(e){
-    if(e){
+  filterSearch(e) {
+    if (e) {
       this.pageTable.pageNumber = 0;
       this.pageTable.size = 10;
       this.searchParam = e.target.value;
@@ -529,8 +573,8 @@ selectTab(tabId: number) {
     }
   }
 
-    filterBillDetailsSearch(e){
-    if(e){
+  filterBillDetailsSearch(e) {
+    if (e) {
       this.pageTable.pageNumber = 0;
       this.pageTable.size = 10;
       this.searchParam = e.target.value;
@@ -538,154 +582,186 @@ selectTab(tabId: number) {
     }
   }
 
-  paymentCheck(row){
-
-     this.confirmService.confirm('Are you sure?', 'You are confirming the payment.')
-     .subscribe(
-         result => {
-             if (result) {
-               const request = this._service.patch('payment/confirm-payment-receival/' + row.id, {});
-               request.subscribe(
-                 data => {
-
-                   if (data.IsReport == "Success") {
-                     this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
-                     this.getListWithPagination();
-                   } else if (data.IsReport == "Warning") {
-                     this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-                   } else {
-                     this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
-                   }
-                 },
-                 err => {
-
-                   this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
-                 }
-               );
-             }
-         },
-     );
+  paymentCheck(row) {
+    this.confirmService
+      .confirm("Are you sure?", "You are confirming the payment.")
+      .subscribe((result) => {
+        if (result) {
+          const request = this._service.patch(
+            "payment/confirm-payment-receival/" + row.id,
+            {}
+          );
+          request.subscribe(
+            (data) => {
+              if (data.IsReport == "Success") {
+                this.toastr.success(data.Msg, "Success!", { timeOut: 2000 });
+                this.getListWithPagination();
+              } else if (data.IsReport == "Warning") {
+                this.toastr.warning(data.Msg, "Warning!", {
+                  closeButton: true,
+                  disableTimeOut: true,
+                });
+              } else {
+                this.toastr.error(data.Msg, "Error!", {
+                  closeButton: true,
+                  disableTimeOut: true,
+                });
+              }
+            },
+            (err) => {
+              this.toastr.error(err.Msg || err, "Error!", {
+                closeButton: true,
+                disableTimeOut: true,
+              });
+            }
+          );
+        }
+      });
   }
 
   getListWithPagination() {
-
     this.loadingIndicator = true;
-    const obj:any = {
-      customer_id : this.customer_id,
+    const obj: any = {
+      customer_id: this.customer_id,
       limit: this.pageTable.size,
       page: this.pageTable.pageNumber + 1,
-      search_param: this.searchParam
+      search_param: this.searchParam,
     };
 
-    if(this.bsPaymentRangeValue && this.bsPaymentRangeValue.length > 0){
-      obj.payment_entry_start_date = moment(this.bsPaymentRangeValue[0]).format('YYYY-MM-DD'),
-      obj.payment_entry_end_date = moment(this.bsPaymentRangeValue[1]).format('YYYY-MM-DD')
-    }else{
-        delete obj['payment_entry_start_date'];
-        delete obj['payment_entry_end_date'];
+    if (this.bsPaymentRangeValue && this.bsPaymentRangeValue.length > 0) {
+      (obj.payment_entry_start_date = moment(
+        this.bsPaymentRangeValue[0]
+      ).format("YYYY-MM-DD")),
+        (obj.payment_entry_end_date = moment(
+          this.bsPaymentRangeValue[1]
+        ).format("YYYY-MM-DD"));
+    } else {
+      delete obj["payment_entry_start_date"];
+      delete obj["payment_entry_end_date"];
     }
 
-
-    if(this.selectedPaymentMethod){
+    if (this.selectedPaymentMethod) {
       obj.payment_method = this.selectedPaymentMethod;
     }
 
-
-    this._service.get(this.url,obj).subscribe(res => {
-
-      if (!res) {
-        this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
-        return;
-      }
-      this.paymentDetailList = res.results;
+    this._service.get(this.url, obj).subscribe(
+      (res) => {
+        if (!res) {
+          this.toastr.error(res.Message, "Error!", {
+            closeButton: true,
+            disableTimeOut: true,
+          });
+          return;
+        }
+        this.paymentDetailList = res.results;
         this.pageTable.totalElements = res.count;
-      this.pageTable.totalPages = Math.ceil(this.pageTable.totalElements / this.pageTable.size);
+        this.pageTable.totalPages = Math.ceil(
+          this.pageTable.totalElements / this.pageTable.size
+        );
 
-      this.paymentConfirmableCount = 0;
-      this.paymentDetailList.forEach(element => {
-        if(!element.is_payment_confirmed)this.paymentConfirmableCount++;
-      });
+        this.paymentConfirmableCount = 0;
+        this.paymentDetailList.forEach((element) => {
+          if (!element.is_payment_confirmed) this.paymentConfirmableCount++;
+        });
 
-      setTimeout(() => {
-        this.loadingIndicator = false;
-      }, 1000);
-    }, err => {
-      this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
-      setTimeout(() => {
-        this.loadingIndicator = false;
-      }, 1000);
-    }
+        setTimeout(() => {
+          this.loadingIndicator = false;
+        }, 1000);
+      },
+      (err) => {
+        this.toastr.error(err.Msg || err, "Error!", {
+          closeButton: true,
+          disableTimeOut: true,
+        });
+        setTimeout(() => {
+          this.loadingIndicator = false;
+        }, 1000);
+      }
     );
   }
 
   getBillItemListWithPagination() {
-
     this.loadingIndicator = true;
-    const obj:any ={
-    customer_id : this.customer_id,
-    limit : this.pageTable.size,
-    page : this.pageTable.pageNumber + 1,
-    search_param : this.searchParam
-    }
-    if(this.simBillItemStatus){
+    const obj: any = {
+      customer_id: this.customer_id,
+      limit: this.pageTable.size,
+      page: this.pageTable.pageNumber + 1,
+      search_param: this.searchParam,
+    };
+    if (this.simBillItemStatus) {
       obj.sim_status = this.simBillItemStatus;
     }
 
-    if(this.deviceBillItemStatus){
+    if (this.deviceBillItemStatus) {
       obj.device_status = this.deviceBillItemStatus;
     }
 
-
-    if( this.billItemType == 'All Items' || this.billItemType == 'Frozen SIMs'){
-      if(this.bsBillItemValue){
-        let monthLastDate = new Date(this.bsBillItemValue.getFullYear(), this.bsBillItemValue.getMonth() + 1, 0);
-        obj.billing_start_date = moment(this.bsBillItemValue).format('YYYY-MM-DD'),
-        obj.billing_end_date = moment(monthLastDate).format('YYYY-MM-DD')
+    if (
+      this.billItemType == "All Items" ||
+      this.billItemType == "Frozen SIMs"
+    ) {
+      if (this.bsBillItemValue) {
+        let monthLastDate = new Date(
+          this.bsBillItemValue.getFullYear(),
+          this.bsBillItemValue.getMonth() + 1,
+          0
+        );
+        (obj.billing_start_date = moment(this.bsBillItemValue).format(
+          "YYYY-MM-DD"
+        )),
+          (obj.billing_end_date = moment(monthLastDate).format("YYYY-MM-DD"));
       }
-    } else{
-      delete obj['billing_start_date'];
-      delete obj['billing_end_date'];
+    } else {
+      delete obj["billing_start_date"];
+      delete obj["billing_end_date"];
     }
 
-
-    this._service.get(this.url,obj).subscribe(res => {
-
-      if (!res) {
-        this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
-        return;
-      }
-      this.billItemDetailList = res.results;
+    this._service.get(this.url, obj).subscribe(
+      (res) => {
+        if (!res) {
+          this.toastr.error(res.Message, "Error!", {
+            closeButton: true,
+            disableTimeOut: true,
+          });
+          return;
+        }
+        this.billItemDetailList = res.results;
         this.pageTable.totalElements = res.count;
-      this.pageTable.totalPages = Math.ceil(this.pageTable.totalElements / this.pageTable.size);
-      setTimeout(() => {
-        this.loadingIndicator = false;
-      }, 1000);
-    }, err => {
-      this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
-      setTimeout(() => {
-        this.loadingIndicator = false;
-      }, 1000);
-    }
+        this.pageTable.totalPages = Math.ceil(
+          this.pageTable.totalElements / this.pageTable.size
+        );
+        setTimeout(() => {
+          this.loadingIndicator = false;
+        }, 1000);
+      },
+      (err) => {
+        this.toastr.error(err.Msg || err, "Error!", {
+          closeButton: true,
+          disableTimeOut: true,
+        });
+        setTimeout(() => {
+          this.loadingIndicator = false;
+        }, 1000);
+      }
     );
   }
 
   getBillDetailsListWithPagination() {
-
     let status = null;
     switch (this.billType) {
-      case 'All':
+      case "All":
         status = null;
         break;
 
-      case 'Unpaid':
+      case "Unpaid":
         status = 1;
         break;
 
-      case 'Partially Paid':
+      case "Partially Paid":
         status = 2;
         break;
 
-      case 'Fully Paid':
+      case "Fully Paid":
         status = 3;
         break;
 
@@ -694,77 +770,98 @@ selectTab(tabId: number) {
     }
 
     this.loadingIndicator = true;
-    const obj:any ={
-    customer_id : this.customer_id,
-    limit : this.pageTable.size,
-    page : this.pageTable.pageNumber + 1,
-    search_param : this.searchParam
-    }
+    const obj: any = {
+      customer_id: this.customer_id,
+      limit: this.pageTable.size,
+      page: this.pageTable.pageNumber + 1,
+      search_param: this.searchParam,
+    };
 
-    if(status){
+    if (status) {
       obj.payment_status = status;
-    }else{
-      delete obj['payment_status'];
+    } else {
+      delete obj["payment_status"];
     }
 
-    if(this.bsBillDetailsRangeValue && this.bsBillDetailsRangeValue.length > 0){
-      obj.billing_start_date = moment(this.bsBillDetailsRangeValue[0]).format('YYYY-MM-DD'),
-      obj.billing_end_date = moment(this.bsBillDetailsRangeValue[1]).format('YYYY-MM-DD')
-    } else{
-      delete obj['billing_start_date'];
-      delete obj['billing_end_date'];
+    if (
+      this.bsBillDetailsRangeValue &&
+      this.bsBillDetailsRangeValue.length > 0
+    ) {
+      (obj.billing_start_date = moment(this.bsBillDetailsRangeValue[0]).format(
+        "YYYY-MM-DD"
+      )),
+        (obj.billing_end_date = moment(this.bsBillDetailsRangeValue[1]).format(
+          "YYYY-MM-DD"
+        ));
+    } else {
+      delete obj["billing_start_date"];
+      delete obj["billing_end_date"];
     }
 
-    this._service.get(this.url,obj).subscribe(res => {
-      if (!res) {
-        this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
-        return;
-      }
-      this.billDetailList = res.results;
+    this._service.get(this.url, obj).subscribe(
+      (res) => {
+        if (!res) {
+          this.toastr.error(res.Message, "Error!", {
+            closeButton: true,
+            disableTimeOut: true,
+          });
+          return;
+        }
+        this.billDetailList = res.results;
         this.pageTable.totalElements = res.count;
-      this.pageTable.totalPages = Math.ceil(this.pageTable.totalElements / this.pageTable.size);
-      setTimeout(() => {
-        this.loadingIndicator = false;
-      }, 1000);
-    }, err => {
-      this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
-      setTimeout(() => {
-        this.loadingIndicator = false;
-      }, 1000);
-    }
+        this.pageTable.totalPages = Math.ceil(
+          this.pageTable.totalElements / this.pageTable.size
+        );
+        setTimeout(() => {
+          this.loadingIndicator = false;
+        }, 1000);
+      },
+      (err) => {
+        this.toastr.error(err.Msg || err, "Error!", {
+          closeButton: true,
+          disableTimeOut: true,
+        });
+        setTimeout(() => {
+          this.loadingIndicator = false;
+        }, 1000);
+      }
     );
   }
 
-
   getBalanceLoadList() {
-
     this.loadingIndicator = true;
     // const obj = {
     //   limit: this.pageTable.size,
     //   page: this.pageTable.pageNumber + 1
     // };
-    this._service.get(this.url+this.customer_id).subscribe(res => {
-
-      if (!res) {
-        this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
-        return;
+    this._service.get(this.url + this.customer_id).subscribe(
+      (res) => {
+        if (!res) {
+          this.toastr.error(res.Message, "Error!", {
+            closeButton: true,
+            disableTimeOut: true,
+          });
+          return;
+        }
+        // this.tempRows = res;
+        this.balanceHistoryList = res.balance_history;
+        // this.pageTable.totalElements = res.count;
+        // this.pageTable.totalPages = Math.ceil(this.pageTable.totalElements / this.pageTable.size);
+        setTimeout(() => {
+          this.loadingIndicator = false;
+        }, 1000);
+      },
+      (err) => {
+        this.toastr.error(err.Msg || err, "Error!", {
+          closeButton: true,
+          disableTimeOut: true,
+        });
+        setTimeout(() => {
+          this.loadingIndicator = false;
+        }, 1000);
       }
-     // this.tempRows = res;
-      this.balanceHistoryList =  res.balance_history;
-      // this.pageTable.totalElements = res.count;
-      // this.pageTable.totalPages = Math.ceil(this.pageTable.totalElements / this.pageTable.size);
-      setTimeout(() => {
-        this.loadingIndicator = false;
-      }, 1000);
-    }, err => {
-      this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
-      setTimeout(() => {
-        this.loadingIndicator = false;
-      }, 1000);
-    }
     );
   }
-
 
   // openModalBalanceLoad(template: TemplateRef<any>) {
   //   this.modalRef = this.modalService.show(template, this.modalConfig);
@@ -775,25 +872,24 @@ selectTab(tabId: number) {
   //   this.balanceLoadForm.reset();
   // }
 
-
   onBalanceLoadFormSubmit() {
     this.submitted = true;
     if (this.balanceLoadForm.invalid) {
       return;
     }
 
-    this.blockUI.start('Saving...');
+    this.blockUI.start("Saving...");
     const obj = {
       customer: this.customer_id,
       paid_amount: Number(this.balanceLoadForm.value.amount),
-      payment_method: this.balanceLoadForm.value.payment_method
+      payment_method: this.balanceLoadForm.value.payment_method,
     };
 
-    this._service.post('load-customer-balance', obj).subscribe(
-      data => {
+    this._service.post("load-customer-balance", obj).subscribe(
+      (data) => {
         this.blockUI.stop();
         if (data.IsReport == "Success") {
-          this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
+          this.toastr.success(data.Msg, "Success!", { timeOut: 2000 });
           this.modalHideLoadBalance();
 
           // if(this.pageType == 'Balance'){
@@ -804,131 +900,151 @@ selectTab(tabId: number) {
           //   this.getBalanceLoadList();
           // }
 
-          this.url = 'get-customer-balance-loading-history/';
+          this.url = "get-customer-balance-loading-history/";
           this.getBalanceLoadList();
 
           setTimeout(() => {
-            this.url = 'get-user-detail/';
+            this.url = "get-user-detail/";
             this.getCustomer();
           }, 500);
-
         } else if (data.IsReport == "Warning") {
-          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+          this.toastr.warning(data.Msg, "Warning!", {
+            closeButton: true,
+            disableTimeOut: true,
+          });
         } else {
-          this.toastr.error(data.Msg, 'Error!', { timeOut: 2000 });
+          this.toastr.error(data.Msg, "Error!", { timeOut: 2000 });
         }
       },
-      err => {
+      (err) => {
         this.blockUI.stop();
-        this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
+        this.toastr.error(err.Msg || err, "Error!", { timeOut: 2000 });
       }
     );
-
   }
 
-
   getList() {
-
     this.loadingIndicator = true;
     // const obj = {
     //   limit: this.pageTable.size,
     //   page: this.pageTable.pageNumber + 1
     // };
-    this._service.get(this.url+this.customer_id).subscribe(res => {
-
-      if (!res) {
-        this.toastr.error(res.Message, 'Error!', { closeButton: true, disableTimeOut: true });
-        return;
+    this._service.get(this.url + this.customer_id).subscribe(
+      (res) => {
+        if (!res) {
+          this.toastr.error(res.Message, "Error!", {
+            closeButton: true,
+            disableTimeOut: true,
+          });
+          return;
+        }
+        // this.tempRows = res;
+        this.rows = res;
+        // this.pageTable.totalElements = res.count;
+        // this.pageTable.totalPages = Math.ceil(this.pageTable.totalElements / this.pageTable.size);
+        setTimeout(() => {
+          this.loadingIndicator = false;
+        }, 1000);
+      },
+      (err) => {
+        this.toastr.error(err.Msg || err, "Error!", {
+          closeButton: true,
+          disableTimeOut: true,
+        });
+        setTimeout(() => {
+          this.loadingIndicator = false;
+        }, 1000);
       }
-     // this.tempRows = res;
-      this.rows =  res;
-      // this.pageTable.totalElements = res.count;
-      // this.pageTable.totalPages = Math.ceil(this.pageTable.totalElements / this.pageTable.size);
-      setTimeout(() => {
-        this.loadingIndicator = false;
-      }, 1000);
-    }, err => {
-      this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
-      setTimeout(() => {
-        this.loadingIndicator = false;
-      }, 1000);
-    }
     );
   }
-
 
   onFormSubmit() {
     this.submitted = true;
 
-
     if (Number(this.paidAmount) == 0) {
-      this.toastr.warning("Paid amount can't be empty", 'Warning!', { timeOut: 4000 });
+      this.toastr.warning("Paid amount can't be empty", "Warning!", {
+        timeOut: 4000,
+      });
       return;
     }
-
 
     if (Number(this.paidAmount) > this.newTotal) {
-      this.toastr.warning("Paid amount can't be greater then payable amount!", 'Warning!', { timeOut: 4000 });
+      this.toastr.warning(
+        "Paid amount can't be greater then payable amount!",
+        "Warning!",
+        { timeOut: 4000 }
+      );
       return;
     }
 
-   this.blockUI.start('Saving...');
+    this.blockUI.start("Saving...");
     const obj = {
       customer: this.billItem.customer_id,
       bill: this.billItem.id,
       transaction_type: "Payment In",
       payment_method: this.selectedMethod.id,
       session: this.billItem.session,
-      discount: 0,//Number(this.discount),
+      discount: 0, //Number(this.discount),
       paid_amount: Number(this.paidAmount),
       refund_amount: 0,
       due: 0,
       balance: 0,
-      remarks: this.remarks
+      remarks: this.remarks,
     };
 
-    this._service.post('payment/save-payment', obj).subscribe(
-      data => {
+    this._service.post("payment/save-payment", obj).subscribe(
+      (data) => {
         this.blockUI.stop();
         if (data.IsReport == "Success") {
-          this.toastr.success(data.Msg, 'Success!', { closeButton: true, disableTimeOut: true });
+          this.toastr.success(data.Msg, "Success!", {
+            closeButton: true,
+            disableTimeOut: true,
+          });
           this.modalHide();
           this.getList();
         } else if (data.IsReport == "Warning") {
-          this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
+          this.toastr.warning(data.Msg, "Warning!", {
+            closeButton: true,
+            disableTimeOut: true,
+          });
         } else {
-          this.toastr.error(data.Msg, 'Error!', { closeButton: true, disableTimeOut: true });
+          this.toastr.error(data.Msg, "Error!", {
+            closeButton: true,
+            disableTimeOut: true,
+          });
         }
       },
-      err => {
+      (err) => {
         this.blockUI.stop();
-        this.toastr.error(err.Msg || err, 'Error!', { timeOut: 2000 });
+        this.toastr.error(err.Msg || err, "Error!", { timeOut: 2000 });
       }
     );
-
   }
 
-  filterSearchPaymentDetails(e){
-    if(e){
+  filterSearchPaymentDetails(e) {
+    if (e) {
       this.pageTable.pageNumber = 0;
       this.pageTable.size = 10;
       this.searchParam = e.target.value;
-      this.url = 'payment/get-payment-list';
+      this.url = "payment/get-payment-list";
       this.getListWithPagination();
     }
   }
 
-  inputFocused(event: any){
-    event.target.select()
+  inputFocused(event: any) {
+    event.target.select();
   }
 
   onChangePaid(value) {
     if (parseFloat(value) > this.newTotal) {
-      this.toastr.warning("Paid amount can't be greater then payable amount!", 'Warning!', { timeOut: 4000 });
+      this.toastr.warning(
+        "Paid amount can't be greater then payable amount!",
+        "Warning!",
+        { timeOut: 4000 }
+      );
       return;
     }
   }
-
 
   onChangePayBalance(e) {
     this.isPayBalanceEnable = e.id == 2 ? true : false;
@@ -944,7 +1060,7 @@ selectTab(tabId: number) {
       }
     } else {
       this.paidAmount = 0;
-      if(this.isbalanceDeduct){
+      if (this.isbalanceDeduct) {
         this.tempPaidAmount = 0;
         this.balance = Number(this.balanceObj.balance);
       }
@@ -953,11 +1069,10 @@ selectTab(tabId: number) {
     }
   }
 
-
   modalHide() {
     this.modalRef.hide();
     this.submitted = false;
-    this.btnSaveText = 'Save';
+    this.btnSaveText = "Save";
     this.billItem = {};
     this.newTotal = 0;
     this.subTotal = 0;
@@ -972,30 +1087,32 @@ selectTab(tabId: number) {
   }
 
   openModal(row, template: TemplateRef<any>) {
-    this.selectedMethod = {id:1,name:'CASH'};
+    this.selectedMethod = { id: 1, name: "CASH" };
     this.subTotal = row.payable_amount;
     this.billItem = row;
-    let so_far_paid = Number(this.billItem.so_far_paid) - Number(this.billItem.parent_refund_amount);
+    let so_far_paid =
+      Number(this.billItem.so_far_paid) -
+      Number(this.billItem.parent_refund_amount);
     this.newTotal = Number(this.subTotal) - so_far_paid;
     //  this.discount = row.discount;
-    this._service.get('get-customer-current-balance/' + row.customer_id).subscribe(
-      res => {
-        this.balanceObj = res;
-        this.balance = res.balance;
-        if (Number(this.balanceObj.balance) == 0) {
-          this.isPayBalanceEnableShow = false;
-          this.methodList = this.paymentMethodList.filter(x => x.id !== 2);
-        }else {
-          this.methodList = this.paymentMethodList;
-        }
-      },
-      err => { }
-    );
+    this._service
+      .get("get-customer-current-balance/" + row.customer_id)
+      .subscribe(
+        (res) => {
+          this.balanceObj = res;
+          this.balance = res.balance;
+          if (Number(this.balanceObj.balance) == 0) {
+            this.isPayBalanceEnableShow = false;
+            this.methodList = this.paymentMethodList.filter((x) => x.id !== 2);
+          } else {
+            this.methodList = this.paymentMethodList;
+          }
+        },
+        (err) => {}
+      );
 
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
-
-
 
   modalHideSIMReplace() {
     this.modalRef.hide();
@@ -1006,11 +1123,10 @@ selectTab(tabId: number) {
   }
 
   openModalSIMReplace(item, template: TemplateRef<any>) {
-
     this.simType = item.sim_type;
 
     this.simObj = item;
-    this.replaceSIMForm.controls['id'].setValue(item.id);
+    this.replaceSIMForm.controls["id"].setValue(item.id);
     this.pageSIM.pageNumber = 1;
     this.pageSIM.size = 50;
 
@@ -1020,49 +1136,55 @@ selectTab(tabId: number) {
     this.modalRef = this.modalService.show(template, this.modalConfigLg);
   }
 
-
-  onSubmitSIMReplace(){
+  onSubmitSIMReplace() {
     this.submitted = true;
     if (this.replaceSIMForm.invalid) {
       return;
     }
     const obj = {
-      id:this.replaceSIMForm.value.id,
-      sim_replace_id:this.replaceSIMForm.getRawValue().sim_replace_id,
-      sim_replace_iccid:this.replaceSIMForm.getRawValue().sim_replace_iccid,
-      sim_replace_phone_number:this.replaceSIMForm.getRawValue().sim_replace_phone_number
+      id: this.replaceSIMForm.value.id,
+      sim_replace_id: this.replaceSIMForm.getRawValue().sim_replace_id,
+      sim_replace_iccid: this.replaceSIMForm.getRawValue().sim_replace_iccid,
+      sim_replace_phone_number:
+        this.replaceSIMForm.getRawValue().sim_replace_phone_number,
     };
 
-
-    this.confirmService.confirm('Are you sure?', 'You are replacing this sim.')
-    .subscribe(
-        result => {
-            if (result) {
-              this.blockUI.start('Saving...');
-              const request = this._service.post('bill/replace-sim', obj);
-              request.subscribe(
-                data => {
-                  this.blockUI.stop();
-                  if (data.IsReport == "Success") {
-                    this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
-                    this.modalHideSIMReplace();
-                    this.getBillItemListWithPagination();
-                  } else if (data.IsReport == "Warning") {
-                    this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-                  } else {
-                    this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
-                  }
-                },
-                err => {
-                  this.blockUI.stop();
-                  this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
-                }
-              );
+    this.confirmService
+      .confirm("Are you sure?", "You are replacing this sim.")
+      .subscribe((result) => {
+        if (result) {
+          this.blockUI.start("Saving...");
+          const request = this._service.post("bill/replace-sim", obj);
+          request.subscribe(
+            (data) => {
+              this.blockUI.stop();
+              if (data.IsReport == "Success") {
+                this.toastr.success(data.Msg, "Success!", { timeOut: 2000 });
+                this.modalHideSIMReplace();
+                this.getBillItemListWithPagination();
+              } else if (data.IsReport == "Warning") {
+                this.toastr.warning(data.Msg, "Warning!", {
+                  closeButton: true,
+                  disableTimeOut: true,
+                });
+              } else {
+                this.toastr.error(data.Msg, "Error!", {
+                  closeButton: true,
+                  disableTimeOut: true,
+                });
+              }
+            },
+            (err) => {
+              this.blockUI.stop();
+              this.toastr.error(err.Msg || err, "Error!", {
+                closeButton: true,
+                disableTimeOut: true,
+              });
             }
-        },
-    );
+          );
+        }
+      });
   }
-
 
   modalHideSIMRecieve() {
     this.modalRef.hide();
@@ -1073,174 +1195,209 @@ selectTab(tabId: number) {
 
   openModalSIMRecieve(item, template: TemplateRef<any>) {
     this.simObj = item;
-    this.receiveSIMForm.controls['id'].setValue(item.id);
+    this.receiveSIMForm.controls["id"].setValue(item.id);
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 
-  onSubmitSIMReceive(){
+  onSubmitSIMReceive() {
     this.submitted = true;
     if (this.receiveSIMForm.invalid) {
       return;
     }
 
-    if(!this.receiveSIMForm.value.phone_number){
-      this.receiveSIMForm.controls['phone_number'].setValue(this.simObj.phone_number);
+    if (!this.receiveSIMForm.value.phone_number) {
+      this.receiveSIMForm.controls["phone_number"].setValue(
+        this.simObj.phone_number
+      );
     }
 
     const obj = {
-      ICCID_no:this.receiveSIMForm.value.ICCID_no.trim(),
-      phone_number: this.receiveSIMForm.value.phone_number
+      ICCID_no: this.receiveSIMForm.value.ICCID_no.trim(),
+      phone_number: this.receiveSIMForm.value.phone_number,
     };
 
-    this.confirmService.confirm('Are you sure?', 'You are receiving this sim from mother company.')
-    .subscribe(
-        result => {
-            if (result) {
-              this.blockUI.start('Saving...');
-              const request = this._service.patch('bill/receive-sim-from-mother-company/'+this.receiveSIMForm.value.id, obj);
-              request.subscribe(
-                data => {
-                  this.blockUI.stop();
-                  if (data.IsReport == "Success") {
-                    this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
-                    this.modalHideSIMRecieve();
-                    this.getBillItemListWithPagination();
-                  } else if (data.IsReport == "Warning") {
-                    this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-                  } else {
-                    this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
-                  }
-                },
-                err => {
-                  this.blockUI.stop();
-                  this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
-                }
-              );
+    this.confirmService
+      .confirm(
+        "Are you sure?",
+        "You are receiving this sim from mother company."
+      )
+      .subscribe((result) => {
+        if (result) {
+          this.blockUI.start("Saving...");
+          const request = this._service.patch(
+            "bill/receive-sim-from-mother-company/" +
+              this.receiveSIMForm.value.id,
+            obj
+          );
+          request.subscribe(
+            (data) => {
+              this.blockUI.stop();
+              if (data.IsReport == "Success") {
+                this.toastr.success(data.Msg, "Success!", { timeOut: 2000 });
+                this.modalHideSIMRecieve();
+                this.getBillItemListWithPagination();
+              } else if (data.IsReport == "Warning") {
+                this.toastr.warning(data.Msg, "Warning!", {
+                  closeButton: true,
+                  disableTimeOut: true,
+                });
+              } else {
+                this.toastr.error(data.Msg, "Error!", {
+                  closeButton: true,
+                  disableTimeOut: true,
+                });
+              }
+            },
+            (err) => {
+              this.blockUI.stop();
+              this.toastr.error(err.Msg || err, "Error!", {
+                closeButton: true,
+                disableTimeOut: true,
+              });
             }
-        },
-    );
+          );
+        }
+      });
   }
 
-  onSubmitEndContract(){
-
-    this.confirmService.confirm('Are you sure?', 'You are going to end the contract.')
-    .subscribe(
-        result => {
-            if (result) {
-              this.blockUI.start('Saving...');
-              const request = this._service.patch('bill/end-contract/'+this.customer_id,{});
-              request.subscribe(
-                data => {
-                  this.blockUI.stop();
-                  if (data.IsReport == "Success") {
-                    this.toastr.success(data.Msg, 'Success!', { timeOut: 4000 });
-
-                    this.getCustomerDetails();
-
-
-                  } else if (data.IsReport == "Warning") {
-                    this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-                  } else {
-                    this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
-                  }
-                },
-                err => {
-                  this.blockUI.stop();
-                  this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
-                }
-              );
-            }else{
+  onSubmitEndContract() {
+    this.confirmService
+      .confirm("Are you sure?", "You are going to end the contract.")
+      .subscribe((result) => {
+        if (result) {
+          this.blockUI.start("Saving...");
+          const request = this._service.patch(
+            "bill/end-contract/" + this.customer_id,
+            {}
+          );
+          request.subscribe(
+            (data) => {
               this.blockUI.stop();
-            }
-        },
-    );
-   }
+              if (data.IsReport == "Success") {
+                this.toastr.success(data.Msg, "Success!", { timeOut: 4000 });
 
-   onSubmitUndoContract(){
-
-    this.confirmService.confirm('Are you sure?', 'You are going to undo this contract.')
-    .subscribe(
-        result => {
-            if (result) {
-              this.blockUI.start('Saving...');
-              const request = this._service.patch('bill/undo-end-contract/'+this.customer_id,{});
-              request.subscribe(
-                data => {
-                  this.blockUI.stop();
-                  if (data.IsReport == "Success") {
-                    this.toastr.success(data.Msg, 'Success!', { timeOut: 4000 });
-
-                    this.getCustomerDetails();
-                    //window.location.reload();
-
-                  } else if (data.IsReport == "Warning") {
-                    this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-                  } else {
-                    this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
-                  }
-                },
-                err => {
-                  this.blockUI.stop();
-                  this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
-                }
-              );
-            }else{
+                this.getCustomerDetails();
+              } else if (data.IsReport == "Warning") {
+                this.toastr.warning(data.Msg, "Warning!", {
+                  closeButton: true,
+                  disableTimeOut: true,
+                });
+              } else {
+                this.toastr.error(data.Msg, "Error!", {
+                  closeButton: true,
+                  disableTimeOut: true,
+                });
+              }
+            },
+            (err) => {
               this.blockUI.stop();
+              this.toastr.error(err.Msg || err, "Error!", {
+                closeButton: true,
+                disableTimeOut: true,
+              });
             }
-        },
-    );
-   }
+          );
+        } else {
+          this.blockUI.stop();
+        }
+      });
+  }
 
-  onSubmitAction(type,action,row){
-    let url = '';
-    let txt = '';
-    if(type == 'sim'){
+  onSubmitUndoContract() {
+    this.confirmService
+      .confirm("Are you sure?", "You are going to undo this contract.")
+      .subscribe((result) => {
+        if (result) {
+          this.blockUI.start("Saving...");
+          const request = this._service.patch(
+            "bill/undo-end-contract/" + this.customer_id,
+            {}
+          );
+          request.subscribe(
+            (data) => {
+              this.blockUI.stop();
+              if (data.IsReport == "Success") {
+                this.toastr.success(data.Msg, "Success!", { timeOut: 4000 });
+
+                this.getCustomerDetails();
+                //window.location.reload();
+              } else if (data.IsReport == "Warning") {
+                this.toastr.warning(data.Msg, "Warning!", {
+                  closeButton: true,
+                  disableTimeOut: true,
+                });
+              } else {
+                this.toastr.error(data.Msg, "Error!", {
+                  closeButton: true,
+                  disableTimeOut: true,
+                });
+              }
+            },
+            (err) => {
+              this.blockUI.stop();
+              this.toastr.error(err.Msg || err, "Error!", {
+                closeButton: true,
+                disableTimeOut: true,
+              });
+            }
+          );
+        } else {
+          this.blockUI.stop();
+        }
+      });
+  }
+
+  onSubmitAction(type, action, row) {
+    let url = "";
+    let txt = "";
+    if (type == "sim") {
       switch (action) {
-        case 'freeze':
-          url = 'bill/freeze-unfreeze-billing-item/'+row.id;
-          txt = 'You are going to freeze this sim.';
+        case "freeze":
+          url = "bill/freeze-unfreeze-billing-item/" + row.id;
+          txt = "You are going to freeze this sim.";
           break;
-        case 'unfreeze':
-          url = 'bill/freeze-unfreeze-billing-item/'+row.id;
-          txt = 'You are going to unfreeze this sim.';
+        case "unfreeze":
+          url = "bill/freeze-unfreeze-billing-item/" + row.id;
+          txt = "You are going to unfreeze this sim.";
           break;
-        case 'advance-cacellation':
-          url = 'bill/cancel-billing-items-in-advance/'+row.id;
-          txt = 'You are going to cancel this sim in advance. The sim will not appear next month.';
+        case "advance-cacellation":
+          url = "bill/cancel-billing-items-in-advance/" + row.id;
+          txt =
+            "You are going to cancel this sim in advance. The sim will not appear next month.";
           break;
-        case 'undo-cacellation':
-          url = 'bill/undo-billing-items-cacellation/'+row.id;
-          txt = 'You are reverting your decision.';
+        case "undo-cacellation":
+          url = "bill/undo-billing-items-cacellation/" + row.id;
+          txt = "You are reverting your decision.";
           break;
-        case 'return':
-          url = 'bill/return-sim-to-stock/'+row.id;
-          txt = 'The sim will be added to your stock.';
+        case "return":
+          url = "bill/return-sim-to-stock/" + row.id;
+          txt = "The sim will be added to your stock.";
           break;
-        case 'reissue':
-          url = 'bill/send-sim-for-reissuance/'+row.id;
-          txt = 'You are sending this sim for reissuance.';
+        case "reissue":
+          url = "bill/send-sim-for-reissuance/" + row.id;
+          txt = "You are sending this sim for reissuance.";
           break;
-        case 'receive':
-          url = 'bill/receive-sim-from-mother-company/'+row.id;
-          txt = 'You are receiving this sim from mother company.';
+        case "receive":
+          url = "bill/receive-sim-from-mother-company/" + row.id;
+          txt = "You are receiving this sim from mother company.";
           break;
-          case "permanently_cancelled":
-            url = "bill/cancel-sim-permanently/" + row.id;
-            txt = "This sim will be Permanently Cancelled.";
-            break;
+        case "permanently_cancelled":
+          url = "bill/cancel-sim-permanently/" + row.id;
+          txt = "This sim will be Permanently Cancelled.";
+          break;
 
         default:
           break;
       }
-    }else{
+    } else {
       switch (action) {
-        case 'return':
-          url = 'bill/return-device-to-stock/'+row.id;
-          txt = 'You are returning this device to stock.';
+        case "return":
+          url = "bill/return-device-to-stock/" + row.id;
+          txt = "You are returning this device to stock.";
           break;
-        case 'permanently_cancel':
-          url = 'bill/cancel-device-permanently/'+row.id;
-          txt = 'You are marking this device as permanently cancelled.';
+        case "permanently_cancel":
+          url = "bill/cancel-device-permanently/" + row.id;
+          txt = "You are marking this device as permanently cancelled.";
           break;
 
         default:
@@ -1248,38 +1405,42 @@ selectTab(tabId: number) {
       }
     }
 
-    this.blockUI.start('Saving...');
-    this.confirmService.confirm('Are you sure?', txt)
-    .subscribe(
-        result => {
-            if (result) {
-              const request = this._service.patch(url, {});
-              request.subscribe(
-                data => {
-                  this.blockUI.stop();
-                  if (data.IsReport == "Success") {
-                    this.toastr.success(data.Msg, 'Success!', { timeOut: 2000 });
-                    this.getBillItemListWithPagination();
-                    this.getCustomerSIMDeviceCount();
-                  } else if (data.IsReport == "Warning") {
-                    this.toastr.warning(data.Msg, 'Warning!', { closeButton: true, disableTimeOut: true });
-                  } else {
-                    this.toastr.error(data.Msg, 'Error!',  { closeButton: true, disableTimeOut: true });
-                  }
-                },
-                err => {
-                  this.blockUI.stop();
-                  this.toastr.error(err.Msg || err, 'Error!', { closeButton: true, disableTimeOut: true });
-                }
-              );
-            }else{
-              this.blockUI.stop();
+    this.blockUI.start("Saving...");
+    this.confirmService.confirm("Are you sure?", txt).subscribe((result) => {
+      if (result) {
+        const request = this._service.patch(url, {});
+        request.subscribe(
+          (data) => {
+            this.blockUI.stop();
+            if (data.IsReport == "Success") {
+              this.toastr.success(data.Msg, "Success!", { timeOut: 2000 });
+              this.getBillItemListWithPagination();
+              this.getCustomerSIMDeviceCount();
+            } else if (data.IsReport == "Warning") {
+              this.toastr.warning(data.Msg, "Warning!", {
+                closeButton: true,
+                disableTimeOut: true,
+              });
+            } else {
+              this.toastr.error(data.Msg, "Error!", {
+                closeButton: true,
+                disableTimeOut: true,
+              });
             }
-        },
-    );
+          },
+          (err) => {
+            this.blockUI.stop();
+            this.toastr.error(err.Msg || err, "Error!", {
+              closeButton: true,
+              disableTimeOut: true,
+            });
+          }
+        );
+      } else {
+        this.blockUI.stop();
+      }
+    });
   }
-
-
 
   modalHideLoadBalance() {
     this.balanceLoadForm.reset();
@@ -1287,234 +1448,238 @@ selectTab(tabId: number) {
     this.submitted = false;
   }
 
-  openModalLoadBalance(template: TemplateRef<any>,type) {
+  openModalLoadBalance(template: TemplateRef<any>, type) {
     this.pageType = type;
     this.modalRef = this.modalService.show(template, this.modalConfig);
   }
 
-
-
   ///////////////////////////// For Customer Search //////////////////////
 
   onSearch() {
-    this.input$.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
-      switchMap(term => this.fakeServiceCustomer(term))
-    ).subscribe((data : any) => {
-      this.customers = data.results;
-      this.page.totalElements = data.count;
-      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-      this.customersBuffer = this.customers.slice(0, this.bufferSize);
-      })
+    this.input$
+      .pipe(
+        debounceTime(200),
+        distinctUntilChanged(),
+        switchMap((term) => this.fakeServiceCustomer(term))
+      )
+      .subscribe((data: any) => {
+        this.customers = data.results;
+        this.page.totalElements = data.count;
+        this.page.totalPages = Math.ceil(
+          this.page.totalElements / this.page.size
+        );
+        this.customersBuffer = this.customers.slice(0, this.bufferSize);
+      });
   }
 
-  onCustomerChange(e){
-    if(e){
+  onCustomerChange(e) {
+    if (e) {
       this.selectedCustomer = e;
-      this.router.navigate(['customer-details/' + this.selectedCustomer.id]);
-    }else{
+      this.router.navigate(["customer-details/" + this.selectedCustomer.id]);
+    } else {
       this.selectedCustomer = null;
-      this.searchParamCustomer = '';
+      this.searchParamCustomer = "";
       this.getAllCustomer();
     }
   }
 
-onScrollToEnd() {
-      this.fetchMore();
+  onScrollToEnd() {
+    this.fetchMore();
   }
 
-onScroll({ end }) {
+  onScroll({ end }) {
     if (this.loading || this.customers.length <= this.customersBuffer.length) {
-        return;
+      return;
     }
 
-    if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.customersBuffer.length) {
-        this.fetchMore();
+    if (
+      end + this.numberOfItemsFromEndBeforeFetchingMore >=
+      this.customersBuffer.length
+    ) {
+      this.fetchMore();
     }
-}
+  }
 
-private fetchMore() {
-
+  private fetchMore() {
     let more;
-   // const len = this.customersBuffer.length;
-    if(this.count < this.page.totalPages){
-    this.count++;
-    this.page.pageNumber = this.count;
-    let obj;
-    obj = {
-      limit: this.page.size,
-      page: this.page.pageNumber,
-      search_param:this.searchParamCustomer
-    };
-    // if(this.searchParam){
-    //    obj = {
-    //     limit: this.page.size,
-    //     page: this.page.pageNumber,
-    //     search_param:this.searchParam
-    //   };
-    // }else{
-    //    obj = {
-    //     limit: this.page.size,
-    //     page: this.page.pageNumber
-    //   };
-    // }
+    // const len = this.customersBuffer.length;
+    if (this.count < this.page.totalPages) {
+      this.count++;
+      this.page.pageNumber = this.count;
+      let obj;
+      obj = {
+        limit: this.page.size,
+        page: this.page.pageNumber,
+        search_param: this.searchParamCustomer,
+      };
+      // if(this.searchParam){
+      //    obj = {
+      //     limit: this.page.size,
+      //     page: this.page.pageNumber,
+      //     search_param:this.searchParam
+      //   };
+      // }else{
+      //    obj = {
+      //     limit: this.page.size,
+      //     page: this.page.pageNumber
+      //   };
+      // }
 
+      // if(this.customerType){
+      //   this.customersBuffer = [];
+      //   switch (this.customerType) {
+      //     case 'all':
+      //       delete obj['is_retailer'];
+      //       delete obj['is_wholesaler'];
+      //       break;
+      //     case 'wholesaler':
+      //       obj.is_wholesaler = 1;
+      //       break;
+      //     case 'retailer':
+      //       obj.is_retailer = 1;
+      //       break;
 
-  // if(this.customerType){
-  //   this.customersBuffer = [];
-  //   switch (this.customerType) {
-  //     case 'all':
-  //       delete obj['is_retailer'];
-  //       delete obj['is_wholesaler'];
-  //       break;
-  //     case 'wholesaler':
-  //       obj.is_wholesaler = 1;
-  //       break;
-  //     case 'retailer':
-  //       obj.is_retailer = 1;
-  //       break;
+      //     default:
+      //       break;
+      //   }
+      // }
 
-  //     default:
-  //       break;
-  //   }
-  // }
-
-
-      this._service.get("get-customer-list",obj).subscribe(
+      this._service.get("get-customer-list", obj).subscribe(
         (res) => {
           more = res.results;
           //  const more = this.customers.slice(len, this.bufferSize + len);
           this.loading = true;
           // using timeout here to simulate backend API delay
           setTimeout(() => {
-              this.loading = false;
-              this.customersBuffer = this.customersBuffer.concat(more);
-          }, 100)
+            this.loading = false;
+            this.customersBuffer = this.customersBuffer.concat(more);
+          }, 100);
         },
         (err) => {}
       );
     }
-
-}
-
-
-getAllCustomer(){
-  let obj;
-  obj = {
-    limit: this.page.size,
-    page: this.page.pageNumber,
-    search_param:this.searchParamCustomer
-  };
-
-  // if(this.customerType){
-  //   switch (this.customerType) {
-  //     case 'all':
-  //       delete obj['is_retailer'];
-  //       delete obj['is_wholesaler'];
-  //       break;
-  //     case 'wholesaler':
-  //       obj.is_wholesaler = 1;
-  //       break;
-  //     case 'retailer':
-  //       obj.is_retailer = 1;
-  //       break;
-
-  //     default:
-  //       break;
-  //   }
-  // }
-  this.blockUI.start("Loading...");
-  this._service.get("get-customer-list",obj).subscribe(
-    (res) => {
-      this.customers = res.results;
-      this.page.totalElements = res.count;
-      this.page.totalPages = Math.ceil(this.page.totalElements / this.page.size);
-      if(this.customers) this.customersBuffer = this.customers.slice(0, this.bufferSize);
-      this.blockUI.stop();
-    },
-    (err) => {
-      this.blockUI.stop();
-    }
-  );
-}
-
-private fakeServiceCustomer(term) {
-
-  this.page.size = 50;
-  this.page.pageNumber = 1;
-  this.searchParam = term;
-
-  let obj;
-  obj = {
-    limit: this.page.size,
-    page: this.page.pageNumber,
-    search_param:this.searchParam
-  };
-
-
-  if(this.customerType){
-    switch (this.customerType) {
-      case 'all':
-        delete obj['is_retailer'];
-        delete obj['is_wholesaler'];
-        break;
-      case 'wholesaler':
-        obj.is_wholesaler = 1;
-        break;
-      case 'retailer':
-        obj.is_retailer = 1;
-        break;
-
-      default:
-        break;
-    }
   }
 
-  let params = new HttpParams();
-  if (obj) {
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        params = params.append(key, obj[key]);
+  getAllCustomer() {
+    let obj;
+    obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber,
+      search_param: this.searchParamCustomer,
+    };
+
+    // if(this.customerType){
+    //   switch (this.customerType) {
+    //     case 'all':
+    //       delete obj['is_retailer'];
+    //       delete obj['is_wholesaler'];
+    //       break;
+    //     case 'wholesaler':
+    //       obj.is_wholesaler = 1;
+    //       break;
+    //     case 'retailer':
+    //       obj.is_retailer = 1;
+    //       break;
+
+    //     default:
+    //       break;
+    //   }
+    // }
+    this.blockUI.start("Loading...");
+    this._service.get("get-customer-list", obj).subscribe(
+      (res) => {
+        this.customers = res.results;
+        this.page.totalElements = res.count;
+        this.page.totalPages = Math.ceil(
+          this.page.totalElements / this.page.size
+        );
+        if (this.customers)
+          this.customersBuffer = this.customers.slice(0, this.bufferSize);
+        this.blockUI.stop();
+      },
+      (err) => {
+        this.blockUI.stop();
+      }
+    );
+  }
+
+  private fakeServiceCustomer(term) {
+    this.page.size = 50;
+    this.page.pageNumber = 1;
+    this.searchParam = term;
+
+    let obj;
+    obj = {
+      limit: this.page.size,
+      page: this.page.pageNumber,
+      search_param: this.searchParam,
+    };
+
+    if (this.customerType) {
+      switch (this.customerType) {
+        case "all":
+          delete obj["is_retailer"];
+          delete obj["is_wholesaler"];
+          break;
+        case "wholesaler":
+          obj.is_wholesaler = 1;
+          break;
+        case "retailer":
+          obj.is_retailer = 1;
+          break;
+
+        default:
+          break;
       }
     }
-  }
-  return this.http.get<any>(environment.apiUrl + 'get-customer-list', { params }).pipe(
-    map(res => {
-      return res;
-    })
-  );
-}
 
+    let params = new HttpParams();
+    if (obj) {
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          params = params.append(key, obj[key]);
+        }
+      }
+    }
+    return this.http
+      .get<any>(environment.apiUrl + "get-customer-list", { params })
+      .pipe(
+        map((res) => {
+          return res;
+        })
+      );
+  }
 
   onSIMChange(e) {
-
     // if (e) {
     //   this.replaceSIMForm.controls["sim_replace_id"].setValue(e.id);
     // }
 
-    if(e){
+    if (e) {
       this.replaceSIMForm.controls["sim_replace_id"].setValue(e.id);
-      if (e.ICCID_no){
+      if (e.ICCID_no) {
         this.replaceSIMForm.controls["sim_replace_iccid"].setValue(e.ICCID_no);
         this.replaceSIMForm.controls["sim_replace_iccid"].disable();
 
-        if (e.phone_number){
-         this.replaceSIMForm.controls["sim_replace_phone_number"].setValue(e.phone_number);
-         this.replaceSIMForm.controls["sim_replace_phone_number"].disable();
-        }else{
-         this.replaceSIMForm.controls["sim_replace_phone_number"].setValue(null);
-         this.replaceSIMForm.controls["sim_replace_phone_number"].enable();
+        if (e.phone_number) {
+          this.replaceSIMForm.controls["sim_replace_phone_number"].setValue(
+            e.phone_number
+          );
+          this.replaceSIMForm.controls["sim_replace_phone_number"].disable();
+        } else {
+          this.replaceSIMForm.controls["sim_replace_phone_number"].setValue(
+            null
+          );
+          this.replaceSIMForm.controls["sim_replace_phone_number"].enable();
         }
+      } else {
+        this.replaceSIMForm.controls["sim_replace_iccid"].setValue(null);
+        this.replaceSIMForm.controls["sim_replace_iccid"].enable();
 
-       }else {
-         this.replaceSIMForm.controls["sim_replace_iccid"].setValue(null);
-         this.replaceSIMForm.controls["sim_replace_iccid"].enable();
-
-         this.replaceSIMForm.controls["sim_replace_phone_number"].setValue(null);
-         this.replaceSIMForm.controls["sim_replace_phone_number"].enable();
-       }
-    }else{
+        this.replaceSIMForm.controls["sim_replace_phone_number"].setValue(null);
+        this.replaceSIMForm.controls["sim_replace_phone_number"].enable();
+      }
+    } else {
       this.replaceSIMForm.controls["sim_replace_iccid"].setValue(null);
       this.replaceSIMForm.controls["sim_replace_phone_number"].setValue(null);
       this.replaceSIMForm.controls["sim_replace_iccid"].disable();
@@ -1522,71 +1687,69 @@ private fakeServiceCustomer(term) {
     }
   }
 
-
-
-
-
-
-
-
-
   /// for SIM
   onSearchSIM() {
-    this.simsInput$.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
-      switchMap(term => this.fakeServiceSIM(term))
-    ).subscribe((data : any) => {
-      this.sims = data.results;
-      this.pageSIM.totalElements = data.count;
-      this.pageSIM.totalPages = Math.ceil(this.pageSIM.totalElements / this.pageSIM.size);
-      this.simsBuffer = this.sims.slice(0, this.simsBufferSize);
-      })
+    this.simsInput$
+      .pipe(
+        debounceTime(200),
+        distinctUntilChanged(),
+        switchMap((term) => this.fakeServiceSIM(term))
+      )
+      .subscribe((data: any) => {
+        this.sims = data.results;
+        this.pageSIM.totalElements = data.count;
+        this.pageSIM.totalPages = Math.ceil(
+          this.pageSIM.totalElements / this.pageSIM.size
+        );
+        this.simsBuffer = this.sims.slice(0, this.simsBufferSize);
+      });
   }
 
- onScrollToEndSIM() {
-      this.fetchMoreSIM();
+  onScrollToEndSIM() {
+    this.fetchMoreSIM();
   }
 
-onScrollSIM({ end }) {
+  onScrollSIM({ end }) {
     if (this.loadingSIM || this.sims.length <= this.simsBuffer.length) {
-        return;
+      return;
     }
 
-    if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.simsBuffer.length) {
-        this.fetchMoreSIM();
+    if (
+      end + this.numberOfItemsFromEndBeforeFetchingMore >=
+      this.simsBuffer.length
+    ) {
+      this.fetchMoreSIM();
     }
-}
+  }
 
-private fetchMoreSIM() {
-
+  private fetchMoreSIM() {
     let more;
 
-    if(this.simsCount < this.pageSIM.totalPages){
-    this.simsCount++;
-    this.pageSIM.pageNumber = this.simsCount;
-    let obj;
-    if(this.simsSearchParam){
-       obj = {
-        limit: this.pageSIM.size,
-        page: this.pageSIM.pageNumber,
-        search_param:this.simsSearchParam
-      };
-    }else{
-       obj = {
-        limit: this.pageSIM.size,
-        page: this.pageSIM.pageNumber
-      };
-    }
+    if (this.simsCount < this.pageSIM.totalPages) {
+      this.simsCount++;
+      this.pageSIM.pageNumber = this.simsCount;
+      let obj;
+      if (this.simsSearchParam) {
+        obj = {
+          limit: this.pageSIM.size,
+          page: this.pageSIM.pageNumber,
+          search_param: this.simsSearchParam,
+        };
+      } else {
+        obj = {
+          limit: this.pageSIM.size,
+          page: this.pageSIM.pageNumber,
+        };
+      }
 
-  //  if(this.is_phone_sim){
-  //     obj.is_phone_sim = 1;
-  //   }else{
-  //     obj.is_phone_sim = 0;
-  //   }
-   obj.sim_type = this.simType;
+      //  if(this.is_phone_sim){
+      //     obj.is_phone_sim = 1;
+      //   }else{
+      //     obj.is_phone_sim = 0;
+      //   }
+      obj.sim_type = this.simType;
 
-      this._service.get("stock/get-subscriptable-sim-list",obj).subscribe(
+      this._service.get("stock/get-subscriptable-sim-list", obj).subscribe(
         (res) => {
           console.log(res);
           more = res.results;
@@ -1594,80 +1757,166 @@ private fetchMoreSIM() {
           this.loadingSIM = true;
           // using timeout here to simulate backend API delay
           setTimeout(() => {
-              this.loadingSIM = false;
-              this.simsBuffer = this.simsBuffer.concat(more);
-          }, 100)
+            this.loadingSIM = false;
+            this.simsBuffer = this.simsBuffer.concat(more);
+          }, 100);
         },
         (err) => {}
       );
     }
-
-}
-
-
-getSIM(){
-  let obj;
-  if(this.simsSearchParam){
-     obj = {
-      limit: this.pageSIM.size,
-      page: this.pageSIM.pageNumber,
-      search_param:this.simsSearchParam
-    };
-  }else{
-     obj = {
-      limit: this.pageSIM.size,
-      page: this.pageSIM.pageNumber
-    };
   }
 
-  obj.sim_type = this.simType;
+  getSIM() {
+    let obj;
+    if (this.simsSearchParam) {
+      obj = {
+        limit: this.pageSIM.size,
+        page: this.pageSIM.pageNumber,
+        search_param: this.simsSearchParam,
+      };
+    } else {
+      obj = {
+        limit: this.pageSIM.size,
+        page: this.pageSIM.pageNumber,
+      };
+    }
 
-  this._service.get("stock/get-subscriptable-sim-list",obj).subscribe(
-    (res) => {
-      this.sims = res.results;
-      this.pageSIM.totalElements = res.count;
-      this.pageSIM.totalPages = Math.ceil(this.pageSIM.totalElements / this.pageSIM.size);
-      this.simsBuffer = this.sims.slice(0, this.simsBufferSize);
-    },
-    (err) => {}
-  );
-}
+    obj.sim_type = this.simType;
 
-private fakeServiceSIM(term) {
-
-  this.pageSIM.size = 50;
-  this.pageSIM.pageNumber = 1;
-  this.simsSearchParam = term;
-
-  let obj;
-  if(this.simsSearchParam){
-     obj = {
-      limit: this.pageSIM.size,
-      page: this.pageSIM.pageNumber,
-      search_param:this.simsSearchParam
-    };
-  }else{
-     obj = {
-      limit: this.pageSIM.size,
-      page: this.pageSIM.pageNumber
-    };
+    this._service.get("stock/get-subscriptable-sim-list", obj).subscribe(
+      (res) => {
+        this.sims = res.results;
+        this.pageSIM.totalElements = res.count;
+        this.pageSIM.totalPages = Math.ceil(
+          this.pageSIM.totalElements / this.pageSIM.size
+        );
+        this.simsBuffer = this.sims.slice(0, this.simsBufferSize);
+      },
+      (err) => {}
+    );
   }
 
-  obj.sim_type = this.simType;
+  private fakeServiceSIM(term) {
+    this.pageSIM.size = 50;
+    this.pageSIM.pageNumber = 1;
+    this.simsSearchParam = term;
 
-  let params = new HttpParams();
-  if (obj) {
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        params = params.append(key, obj[key]);
+    let obj;
+    if (this.simsSearchParam) {
+      obj = {
+        limit: this.pageSIM.size,
+        page: this.pageSIM.pageNumber,
+        search_param: this.simsSearchParam,
+      };
+    } else {
+      obj = {
+        limit: this.pageSIM.size,
+        page: this.pageSIM.pageNumber,
+      };
+    }
+
+    obj.sim_type = this.simType;
+
+    let params = new HttpParams();
+    if (obj) {
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          params = params.append(key, obj[key]);
+        }
       }
     }
+    return this.http
+      .get<any>(environment.apiUrl + "stock/get-subscriptable-sim-list", {
+        params,
+      })
+      .pipe(
+        map((res) => {
+          return res;
+        })
+      );
   }
-  return this.http.get<any>(environment.apiUrl + 'stock/get-subscriptable-sim-list', { params }).pipe(
-    map(res => {
-      return res;
-    })
-  );
-}
 
+  modalHideProfile() {
+    this.RegistrerForm.reset();
+    this.modalRef.hide();
+    this.submitted = false;
+    this.RegistrerForm.controls["email"].enable();
+  }
+
+  getItem(row, template: TemplateRef<any>) {
+    // this.RegistrerForm.controls["password"].setValidators(null);
+    // this.RegistrerForm.controls["password"].updateValueAndValidity();
+    // this.RegistrerForm.controls["confirmPassword"].setValidators(null);
+    // this.RegistrerForm.controls["confirmPassword"].updateValueAndValidity();
+    this.btnSaveText = "Update";
+    this.RegistrerForm.controls["id"].setValue(row.id);
+    this.RegistrerForm.controls["customer_code"].setValue(row.customer_code);
+    this.RegistrerForm.controls["nid"].setValue(row.nid);
+    this.RegistrerForm.controls["fax"].setValue(row.fax);
+    this.RegistrerForm.controls["telephone"].setValue(row.telephone);
+    this.RegistrerForm.controls["acc_number"].setValue(row.acc_number);
+    this.RegistrerForm.controls["email"].setValue(row.email);
+    this.RegistrerForm.controls["email"].disable();
+    this.RegistrerForm.controls["mobile"].setValue(row.mobile);
+    this.RegistrerForm.controls["alternative_mobile"].setValue(
+      row.alternative_mobile
+    );
+    this.RegistrerForm.controls["address_one"].setValue(row.address_one);
+    this.RegistrerForm.controls["address_two"].setValue(row.address_two);
+    this.RegistrerForm.controls["firstName"].setValue(row.first_name);
+    this.RegistrerForm.controls["lastName"].setValue(row.last_name);
+    this.RegistrerForm.controls["preferred_payment_method"].setValue(
+      row.preferred_payment_method
+    );
+    // this.RegistrerForm.controls['confirmPassword'].setValue(null);
+    // this.RegistrerForm.controls['password'].setValue(null);
+    this.modalRef = this.modalService.show(template, this.modalConfigLg);
+  }
+
+  onFormSubmitProfile() {
+    this.submitted = true;
+    if (this.RegistrerForm.invalid) {
+      return;
+    }
+    let id = this.RegistrerForm.value.id;
+
+    this.blockUI.start("Updating...");
+
+    const obj = {
+      // email: this.RegistrerForm.value.email.trim(),
+      first_name: this.RegistrerForm.value.firstName.trim(),
+      last_name: this.RegistrerForm.value.lastName.trim(),
+      mobile: this.RegistrerForm.value.mobile.trim(),
+      alternative_mobile: this.RegistrerForm.value.alternative_mobile,
+      occupation: this.RegistrerForm.value.occupation,
+      nid: this.RegistrerForm.value.nid,
+      address_one: this.RegistrerForm.value.address_one,
+      address_two: this.RegistrerForm.value.address_two,
+      fax: this.RegistrerForm.value.fax,
+      acc_number: this.RegistrerForm.value.acc_number,
+      telephone: this.RegistrerForm.value.telephone,
+      preferred_payment_method:
+        this.RegistrerForm.value.preferred_payment_method,
+    };
+
+    this._service.put("update-user-profile/" + id, obj).subscribe(
+      (data) => {
+        this.blockUI.stop();
+        if (data.IsReport == "Success") {
+          this.toastr.success(data.Msg, "Success!", { timeOut: 4000 });
+          this.modalHideProfile();
+          this.getCustomer();
+        } else {
+          this.toastr.error(data.Msg, "Error!", {
+            closeButton: true,
+            disableTimeOut: true,
+          });
+        }
+      },
+      (err) => {
+        this.blockUI.stop();
+        this.toastr.error(err.Msg || err, "Error!", { timeOut: 2000 });
+      }
+    );
+  }
 }
